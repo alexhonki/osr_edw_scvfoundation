@@ -1,0 +1,116 @@
+FUNCTION "osr.scv.foundation.db.functions::MatchResultsDetails" ( IN i_entity_id NVARCHAR(20) )
+       RETURNS TABLE (	GROUP_ID Integer,
+        				ENTITY_ID VARCHAR(20),
+        				GROUP_ROW_COUNT INTEGER,
+        				SOURCE_SYSTEM NVARCHAR(10),
+        				SYSTEM_ID NVARCHAR(10),
+        				FIRST_NAME NVARCHAR(50),
+        				MIDDLE_NAME NVARCHAR(50),
+        				LAST_NAME NVARCHAR(80),
+					    BIRTHDT VARCHAR(8),
+					    ADDRNUMBER NVARCHAR(10), 
+        				ADDRESS_COUNTRY NVARCHAR(100),
+					    ADDRESS_LOCALITY NVARCHAR(100),
+					    ADDRESS_REGION NVARCHAR(64),
+					    ADDRESS_POSTCODE NVARCHAR(20),
+					    ADDRESS_PRIM_NAME NVARCHAR(100),
+					    ADDRESS_PRIM_NUMBER NVARCHAR(40),
+        				MATCH_ROW INTEGER,
+        				RELATED_ROW INTEGER,
+        				SCORE INTEGER,
+        				POLICY_NAME NVARCHAR(256),
+        				RULE_NAME NVARCHAR(256)
+
+        			  )
+       SQL SECURITY INVOKER AS 
+BEGIN 
+/*****************************  
+       Write your function logic 
+ *****************************/ 
+
+	DECLARE l_latestExecutionID INTEGER;
+
+	-- Retrieve latest task execution ID
+	SELECT MAX(TASK_EXECUTION_ID) INTO l_latestExecutionID 
+	FROM "osr.scv.foundation.db.synonyms::MATCH_TRACING" 
+	WHERE TASK_NAME = 'osr.scv.foundation.db.flowgraphs::MatchBusinessPartners';
+	
+	--lt_overview =	
+				return	SELECT 
+		            	a.GROUP_ID,
+						a.ENTITY_ID,
+						ROW_NUMBER() OVER (PARTITION BY ENTITY_ID) AS GROUP_ROW_COUNT,
+		            	a.SOURCE_SYSTEM,
+		            	a.SYSTEM_ID,
+		            	COALESCE(e.FNAME_ORIG_BUT, f.FNAME_ORIG_TMR) AS FIRST_NAME,
+		            	COALESCE(e.MNAME_ORIG_BUT, f.MNAME_ORIG_TMR) AS MIDDLE_NAME,
+		            	COALESCE(e.LNAME_ORIG_BUT, f.LNAME_ORIG_TMR) AS LAST_NAME,
+		            	COALESCE(e.BIRTHDT_ORIG_BUT, f.BIRTHDT_ORIG_TMR) AS BIRTHDT,
+		            	e1.ADDRNUMBER,
+		            	COALESCE(e1.COUNTRY_ORIG_ADRC, f.COUNTRY_ORIG_TMR) AS ADDRESS_COUNTRY,
+						COALESCE(e1.CITY_ORIG_ADRC, f.CITY_ORIG_TMR) AS ADDRESS_LOCALITY,
+						COALESCE(e1.REGION_ORIG_ADRC, f.REGION_ORIG_TMR) AS ADDRESS_REGION,
+						COALESCE(e1.POSTCODE_ORIG_ADRC, f.POSTCODE_ORIG_TMR) AS ADDRESS_POSTCODE,
+		            	COALESCE(e1.STREET_ORIG_ADRC, f.STREET_ORIG_TMR) AS ADDRESS_PRIM_NAME,
+		            	COALESCE(e1.STREET_NUMBER_ORIG_ADRC, f.STREET_NUMBER_ORIG_TMR) AS ADDRESS_PRIM_NUMBER,
+		            	a."Match_ROW_ID" as MATCH_ROW, 
+		            	b.RELATED_ROW_ID as RELATED_ROW, 
+		            	b.SCORE, 
+		                b.POLICY_NAME,
+		                b.RULE_NAME
+		                      
+		                FROM   "osr.scv.foundation.db.data::MatchResults.MatchResults" AS a 
+		                -- Add original fields
+		                --- BUT000
+		                LEFT OUTER JOIN ( 
+		                			      SELECT BIRTHDT AS BIRTHDT_ORIG_BUT, NAME_FIRST AS FNAME_ORIG_BUT, NAMEMIDDLE AS MNAME_ORIG_BUT, NAME_LAST AS LNAME_ORIG_BUT, "Cleanse_TABLE_ID", "Cleanse_ROW_ID", "PARTNER" FROM "osr.scv.foundation.db.synonyms::BUT000"
+		                					
+		                				) as e
+		                ON a."Cleanse_ROW_ID_BUT" = e."Cleanse_ROW_ID" AND a."Cleanse_TABLE_ID_BUT" = e."Cleanse_TABLE_ID" AND a."SYSTEM_ID" = e."PARTNER" and a."SOURCE_SYSTEM" = 'RMS'
+		                -- ADRC
+		                LEFT OUTER JOIN (
+		                				 SELECT ADDRNUMBER, COUNTRY as COUNTRY_ORIG_ADRC, REGION AS REGION_ORIG_ADRC, CITY1 AS CITY_ORIG_ADRC, STREET AS STREET_ORIG_ADRC, HOUSE_NUM1 AS STREET_NUMBER_ORIG_ADRC, POST_CODE1 as POSTCODE_ORIG_ADRC, "Cleanse_TABLE_ID", "Cleanse_ROW_ID"
+		                				 FROM "osr.scv.foundation.db.synonyms::ADRC"
+		                				) as e1
+		                ON a."Cleanse_TABLE_ID_ADRC" = e1."Cleanse_TABLE_ID" AND a."Cleanse_ROW_ID_ADRC" = e1."Cleanse_ROW_ID" AND a."SOURCE_SYSTEM" = 'RMS'
+		                -- TMR
+		                LEFT OUTER JOIN ( 
+		                			      SELECT DATE_OF_BIRTH AS BIRTHDT_ORIG_TMR, FIRST_NAME AS FNAME_ORIG_TMR, MIDDLE_NAME AS MNAME_ORIG_TMR, FAMILY_ORG_NAME AS LNAME_ORIG_TMR, COUNTRY as COUNTRY_ORIG_TMR, STATE AS REGION_ORIG_TMR, SUBURB AS CITY_ORIG_TMR, STREET_NAME AS STREET_ORIG_TMR, STREET_NO AS STREET_NUMBER_ORIG_TMR, POSTCODE as POSTCODE_ORIG_TMR, "Cleanse_TABLE_ID", "RUN_NUMBER", "CUSTOMER_REF" FROM "osr.scv.foundation.db.synonyms::TMR_Customers"
+		                					
+		                				) as f
+		                ON a."Cleanse_ROW_ID_TMR" = f."RUN_NUMBER" AND a."Cleanse_TABLE_ID_TMR" = f."Cleanse_TABLE_ID" AND a."SYSTEM_ID" = f."CUSTOMER_REF" AND a."SOURCE_SYSTEM" = 'TMR'			
+		                -- Add match tracing statistics
+		                LEFT OUTER JOIN (SELECT * 
+		                                 FROM   "osr.scv.foundation.db.synonyms::MATCH_TRACING" 
+		                                ) AS b
+		                ON a."Match_ROW_ID" = b.ROW_ID
+		                	AND b.TASK_EXECUTION_ID = :l_latestExecutionID
+	                		AND b.TASK_NAME = 'osr.scv.foundation.db.flowgraphs::MatchBusinessPartners'  
+						WHERE ENTITY_ID = :i_entity_id
+							--AND (b.POLICY_NAME NOT LIKE '%CustSourceSystem%' OR b.POLICY_NAME IS NULL)
+		                ORDER  BY a.GROUP_ID ASC, 
+		                          SOURCE_SYSTEM ASC, 
+		                          SYSTEM_ID DESC 
+					    ; 
+	/*
+	return SELECT GROUP_ID,
+				  ENTITY_ID,
+				  POLICY_NAME, 
+			      SOURCE_SYSTEM,
+			      SYSTEM_ID,
+				  FNAME_ORIG AS FIRST_NAME, 
+				  MNAME_ORIG AS MIDDLE_NAME, 
+				  LNAME_ORIG AS LAST_NAME,
+				  BIRTHDT_ORIG AS BIRTHDT,
+				  COUNTRY_ORIG AS ADDRESS_COUNTRY,
+				  CITY_ORIG AS ADDRESS_LOCALITY,
+				  REGION_ORIG AS ADDRESS_REGION,
+				  POSTCODE_ORIG AS ADDRESS_POSTCODE,
+				  STREET_ORIG AS ADDRESS_PRIM_NAME,
+				  STREET_NUMBER_ORIG AS ADDRESS_PRIM_NUMBER,
+				  "Match_ROW_ID" as MATCH_ROW, 
+				  RELATED_ROW_ID as RELATED_ROW, 
+				  SCORE
+	FROM :lt_overview;
+	*/
+END;

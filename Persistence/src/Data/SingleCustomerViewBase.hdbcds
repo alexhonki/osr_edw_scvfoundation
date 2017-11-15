@@ -1,0 +1,73 @@
+namespace osr.scv.foundation.db.data;
+
+context SingleCustomerViewBase {
+
+    /*@@layout{"layoutInfo":{}}*/
+    entity Header {
+        key SCV_ID           : String(10);
+            BEST_GROUP_ID    : Integer;
+            BEST_TITLE       : String(10);
+            BEST_FIRST_NAME  : String(50);
+            BEST_MIDDLE_NAME : String(50);
+            BEST_LAST_NAME   : String(80);
+            BEST_BIRTH_DATE  : LocalDate;
+            BEST_GENDER      : String(10);
+            MODIFIED_TST     : UTCTimestamp;
+    };
+
+    /*@@layout{"layoutInfo":{}}*/
+    entity Person {
+        key PERSON_ID          : String(10);
+        key GROUP_ID           : Integer;
+        key SOURCE_SYSTEM      : String(10);
+        key SYSTEM_ID          : String(20);
+            STD_PERSON_GN      : String(50);
+            STD_PERSON_GN2     : String(50);
+            STD_PERSON_FN_FULL : String(80);
+            ORIG_FIRST_NAME    : String(50);
+            ORIG_MIDDLE_NAME   : String(50);
+            ORIG_LAST_NAME     : String(80);
+            MODIFIED_TST       : UTCTimestamp;
+    };
+
+    /*@@layout{"layoutInfo":{}}*/
+    entity Address {
+        ADDRESS_ID                : String(10);
+        GROUP_ID                  : Integer;
+        SOURCE_SYSTEM             : String(10);
+        SYSTEM_ID                 : String(20);
+        SOURCE_ADDRESS_ID         : String(10);
+        SOURCE_ADDRESS_TYPE       : String(10);
+        STD_ADDR_COUNTRY_NAME     : String(100);
+        STD_ADDR_LOCALITY_FULL    : String(64);
+        STD_ADDR_REGION_FULL      : String(64);
+        STD_ADDR_POSTCODE_FULL    : String(20);
+        STD_ADDR_PRIM_FULL_NAME   : String(100);
+        STD_ADDR_PRIM_NUMBER_FULL : String(40);
+        ORIG_COUNTRY              : String(100);
+        ORIG_LOCALITY             : String(64);
+        ORIG_REGION               : String(64);
+        ORIG_POSTCODE             : String(20);
+        ORIG_STREET_NAME          : String(100);
+        ORIG_STREET_NUMBER        : String(40);
+        MODIFIED_TST              : UTCTimestamp;
+        VALID_FROM                : LocalDate;
+        VALID_TO                  : LocalDate;
+    };
+
+    /*@@layout{"layoutInfo":{}}*/
+    entity ContactDetails {
+        CONTACT_ID            : String(10);
+        GROUP_ID              : Integer;
+        SOURCE_SYSTEM         : String(10);
+        SYSTEM_ID             : String(20);
+        MOB_PHONE_NUMBER      : String(20);
+        MOB_PHONE_COMMENTS    : String(64);
+        PHONE_NUMBER          : String(20);
+        PHONE_NUMBER_COMMENTS : String(64);
+        EMAIL                 : String(100);
+        MODIFIED_TST          : LocalDate;
+        VALID_FROM            : LocalDate;
+        VALID_TO              : LocalDate;
+    };
+};

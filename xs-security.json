@@ -1,0 +1,12 @@
+{
+	"xsappname": "OSR_SCV_FOUNDATION",
+	"scopes": [{
+		"name": "$XSAPPNAME.SCV_FOUNDATION_VIEW",
+		"description": "SCV Foundation View"
+	}],
+	"role-templates": [{
+		"name": "OSR_SCV_FOUNDATION_VIEW",
+		"description": "Role for viewing OSR SCV Foundation",
+		"scope-references": ["$XSAPPNAME.SCV_FOUNDATION_VIEW"]
+	}]
+}

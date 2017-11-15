@@ -1,0 +1,14 @@
+{
+  "osr.scv.foundation.db.synonyms::MATCH_TRACING": {
+    "target": {
+      "object": "MATCH_TRACING",
+      "schema": "_SYS_TASK"
+    }
+  },
+  "osr.scv.foundation.db.synonyms::MATCH_GROUP_INFO": {
+    "target": {
+      "object": "MATCH_GROUP_INFO",
+      "schema": "_SYS_TASK"
+    }
+  }
+}

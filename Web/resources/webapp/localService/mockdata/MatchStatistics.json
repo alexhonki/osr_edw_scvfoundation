@@ -1,0 +1,19 @@
+{  
+   "Objects":[  
+      {  
+         "KPI":"KPI_001",
+         "KPI_INFO":"Total number of groups",
+         "MAX(GROUP_ID)":242503
+      },
+      {  
+         "KPI":"KPI_002",
+         "KPI_INFO":"Number of groups with different IDs within each group",
+         "MAX(GROUP_ID)":9841
+      },
+      {  
+         "KPI":"KPI_003",
+         "KPI_INFO":"Number of groups with different IDs within each group for system RMS only",
+         "MAX(GROUP_ID)":1157
+      }
+   ]
+}

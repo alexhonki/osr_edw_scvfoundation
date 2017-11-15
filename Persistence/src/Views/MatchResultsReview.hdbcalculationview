@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="osr.scv.foundation.db.views::MatchResultsReview" applyPrivilegeType="NONE" dataCategory="DEFAULT" schemaVersion="3.0" outputViewType="Projection" cacheInvalidationPeriod="NONE" enforceSqlExecution="true" cacheEnabled="false">
+<descriptions defaultDescription="Match Results Review"/>
+<localVariables/>
+<variableMappings/>
+<dataSources>
+  <DataSource id="osr.scv.foundation.db.data::MatchResultsReview.Review">
+    <resourceUri>osr.scv.foundation.db.data::MatchResultsReview.Review</resourceUri>
+  </DataSource>
+</dataSources>
+<calculationViews>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_1" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="ENTITY_ID">
+        <descriptions defaultDescription="ENTITY_ID"/>
+      </viewAttribute>
+      <viewAttribute id="MATCH_ROW" aggregationType="sum">
+        <descriptions defaultDescription="MATCH_ROW"/>
+      </viewAttribute>
+      <viewAttribute id="GROUP_ID" aggregationType="sum">
+        <descriptions defaultDescription="GROUP_ID"/>
+      </viewAttribute>
+      <viewAttribute id="REVIEW_GROUP">
+        <descriptions defaultDescription="REVIEW_GROUP"/>
+      </viewAttribute>
+      <viewAttribute id="GROUP_COUNT" aggregationType="sum">
+        <descriptions defaultDescription="GROUP_COUNT"/>
+      </viewAttribute>
+      <viewAttribute id="GROUP_CATEGORY" aggregationType="sum">
+        <descriptions defaultDescription="GROUP_CATEGORY"/>
+      </viewAttribute>
+      <viewAttribute id="SOURCE_SYSTEM">
+        <descriptions defaultDescription="SOURCE_SYSTEM"/>
+      </viewAttribute>
+      <viewAttribute id="FIRST_NAME">
+        <descriptions defaultDescription="FIRST_NAME"/>
+      </viewAttribute>
+      <viewAttribute id="MIDDLE_NAME">
+        <descriptions defaultDescription="MIDDLE_NAME"/>
+      </viewAttribute>
+      <viewAttribute id="LAST_NAME">
+        <descriptions defaultDescription="LAST_NAME"/>
+      </viewAttribute>
+      <viewAttribute id="STRATEGY">
+        <descriptions defaultDescription="STRATEGY"/>
+      </viewAttribute>
+      <viewAttribute id="STRATEGY_RESOLVED">
+        <descriptions defaultDescription="STRATEGY_RESOLVED"/>
+      </viewAttribute>
+      <viewAttribute id="STRATEGY_RESOLVED_STATUS">
+        <descriptions defaultDescription="STRATEGY_RESOLVED_STATUS"/>
+      </viewAttribute>
+      <viewAttribute id="AVG_SCORE" aggregationType="sum">
+        <descriptions defaultDescription="AVG_SCORE"/>
+      </viewAttribute>
+      <viewAttribute id="SYSTEM_ID">
+        <descriptions defaultDescription="SYSTEM_ID"/>
+      </viewAttribute>
+      <viewAttribute id="GROUP_ROW_COUNT" aggregationType="sum">
+        <descriptions defaultDescription="GROUP_ROW_COUNT"/>
+      </viewAttribute>
+      <viewAttribute id="RELATED_ROW" aggregationType="sum">
+        <descriptions defaultDescription="RELATED_ROW"/>
+      </viewAttribute>
+      <viewAttribute id="SCORE" aggregationType="sum">
+        <descriptions defaultDescription="SCORE"/>
+      </viewAttribute>
+      <viewAttribute id="PROMOTED_TO_SCV">
+        <descriptions defaultDescription="PROMOTED_TO_SCV"/>
+      </viewAttribute>
+      <viewAttribute id="PROMOTION_TIMESTAMP" aggregationType="min">
+        <descriptions defaultDescription="PROMOTION_TIMESTAMP"/>
+      </viewAttribute>
+      <viewAttribute id="PROMOTED_BY">
+        <descriptions defaultDescription="PROMOTED_BY"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="osr.scv.foundation.db.data::MatchResultsReview.Review">
+      <mapping xsi:type="Calculation:AttributeMapping" target="ENTITY_ID" source="ENTITY_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ROW" source="MATCH_ROW"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="GROUP_ID" source="GROUP_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="REVIEW_GROUP" source="REVIEW_GROUP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="GROUP_COUNT" source="GROUP_COUNT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="GROUP_CATEGORY" source="GROUP_CATEGORY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SOURCE_SYSTEM" source="SOURCE_SYSTEM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FIRST_NAME" source="FIRST_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MIDDLE_NAME" source="MIDDLE_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="LAST_NAME" source="LAST_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STRATEGY" source="STRATEGY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STRATEGY_RESOLVED" source="STRATEGY_RESOLVED"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STRATEGY_RESOLVED_STATUS" source="STRATEGY_RESOLVED_STATUS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="AVG_SCORE" source="AVG_SCORE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SYSTEM_ID" source="SYSTEM_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="GROUP_ROW_COUNT" source="GROUP_ROW_COUNT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RELATED_ROW" source="RELATED_ROW"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SCORE" source="SCORE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PROMOTED_TO_SCV" source="PROMOTED_TO_SCV"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PROMOTION_TIMESTAMP" source="PROMOTION_TIMESTAMP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PROMOTED_BY" source="PROMOTED_BY"/>
+    </input></calculationView>
+</calculationViews>
+<logicalModel id="Projection_1">
+  <attributes>
+    <attribute id="ENTITY_ID" order="2" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="ENTITY_ID"/>
+      <keyMapping columnObjectName="Projection_1" columnName="ENTITY_ID"/>
+    </attribute>
+    <attribute id="MATCH_ROW" order="3" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="MATCH_ROW"/>
+      <keyMapping columnObjectName="Projection_1" columnName="MATCH_ROW"/>
+    </attribute>
+    <attribute id="GROUP_ID" order="4" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="GROUP_ID"/>
+      <keyMapping columnObjectName="Projection_1" columnName="GROUP_ID"/>
+    </attribute>
+    <attribute id="REVIEW_GROUP" order="5" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="REVIEW_GROUP"/>
+      <keyMapping columnObjectName="Projection_1" columnName="REVIEW_GROUP"/>
+    </attribute>
+    <attribute id="GROUP_COUNT" order="6" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="GROUP_COUNT"/>
+      <keyMapping columnObjectName="Projection_1" columnName="GROUP_COUNT"/>
+    </attribute>
+    <attribute id="GROUP_CATEGORY" order="7" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="GROUP_CATEGORY"/>
+      <keyMapping columnObjectName="Projection_1" columnName="GROUP_CATEGORY"/>
+    </attribute>
+    <attribute id="SOURCE_SYSTEM" order="8" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="SOURCE_SYSTEM"/>
+      <keyMapping columnObjectName="Projection_1" columnName="SOURCE_SYSTEM"/>
+    </attribute>
+    <attribute id="FIRST_NAME" order="9" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="FIRST_NAME"/>
+      <keyMapping columnObjectName="Projection_1" columnName="FIRST_NAME"/>
+    </attribute>
+    <attribute id="MIDDLE_NAME" order="10" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="MIDDLE_NAME"/>
+      <keyMapping columnObjectName="Projection_1" columnName="MIDDLE_NAME"/>
+    </attribute>
+    <attribute id="LAST_NAME" order="11" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="LAST_NAME"/>
+      <keyMapping columnObjectName="Projection_1" columnName="LAST_NAME"/>
+    </attribute>
+    <attribute id="STRATEGY" order="12" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="STRATEGY"/>
+      <keyMapping columnObjectName="Projection_1" columnName="STRATEGY"/>
+    </attribute>
+    <attribute id="STRATEGY_RESOLVED" order="13" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="STRATEGY_RESOLVED"/>
+      <keyMapping columnObjectName="Projection_1" columnName="STRATEGY_RESOLVED"/>
+    </attribute>
+    <attribute id="STRATEGY_RESOLVED_STATUS" order="14" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="STRATEGY_RESOLVED_STATUS"/>
+      <keyMapping columnObjectName="Projection_1" columnName="STRATEGY_RESOLVED_STATUS"/>
+    </attribute>
+    <attribute id="AVG_SCORE" order="15" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="AVG_SCORE"/>
+      <keyMapping columnObjectName="Projection_1" columnName="AVG_SCORE"/>
+    </attribute>
+    <attribute id="SYSTEM_ID" order="16" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="SYSTEM_ID"/>
+      <keyMapping columnObjectName="Projection_1" columnName="SYSTEM_ID"/>
+    </attribute>
+    <attribute id="GROUP_ROW_COUNT" order="17" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="GROUP_ROW_COUNT"/>
+      <keyMapping columnObjectName="Projection_1" columnName="GROUP_ROW_COUNT"/>
+    </attribute>
+    <attribute id="RELATED_ROW" order="18" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="RELATED_ROW"/>
+      <keyMapping columnObjectName="Projection_1" columnName="RELATED_ROW"/>
+    </attribute>
+    <attribute id="SCORE" order="19" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="SCORE"/>
+      <keyMapping columnObjectName="Projection_1" columnName="SCORE"/>
+    </attribute>
+  </attributes>
+  <calculatedAttributes>
+    <calculatedAttribute id="NAME" order="1" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false" key="true">
+      <descriptions defaultDescription="NAME"/>
+      <keyCalculation datatype="NVARCHAR" expressionLanguage="SQL" length="256">
+        <formula>CONCAT(CONCAT(&quot;LAST_NAME&quot;, ', '), CONCAT(&quot;FIRST_NAME&quot;, CONCAT(' ',CASE WHEN &quot;MIDDLE_NAME&quot; IS NULL THEN '' ELSE &quot;MIDDLE_NAME&quot; END)))</formula>
+      </keyCalculation>
+    </calculatedAttribute></calculatedAttributes>
+  <baseMeasures/>
+  <calculatedMeasures/>
+  <restrictedMeasures/></logicalModel>
+<layout>
+  <shapes>
+    <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+      <upperLeftCorner x="100" y="105"/>
+    
+      <rectangleSize width="140"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="Projection_1" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="85" y="243"/>
+      <rectangleSize height="30" width="140"/>
+    </shape>
+  </shapes>
+</layout>
+</Calculation:scenario>

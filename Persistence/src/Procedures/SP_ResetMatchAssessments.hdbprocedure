@@ -1,0 +1,14 @@
+PROCEDURE "osr.scv.foundation.db.Procedures::SP_ResetMatchAssessments" ( )
+   LANGUAGE SQLSCRIPT
+   SQL SECURITY INVOKER
+   --DEFAULT SCHEMA <default_schema_name>
+   --READS SQL DATA 
+   AS
+BEGIN
+   /*************************************
+       Reset match assessments
+   *************************************/
+   
+   TRUNCATE TABLE "osr.scv.foundation.db.data::MatchResultsReview.Assessments";
+   
+END

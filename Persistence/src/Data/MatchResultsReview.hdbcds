@@ -1,0 +1,81 @@
+namespace osr.scv.foundation.db.data;
+
+context MatchResultsReview {
+
+    /*@@layout{"layoutInfo":{}}*/
+    entity Assessments {
+        key ENTITY_ID : String(10);
+        key TIMESTAMP : UTCTimestamp;
+            STRATEGY  : String(10);
+            CODE      : String(10);
+            COMMENT   : String(512);
+            USER      : String(10);
+    };
+
+    entity Promotions {
+        key ENTITY_ID : String(10);
+        key TIMESTAMP : UTCTimestamp;
+            USER      : String(10);
+    };
+
+    entity Review {
+        key MATCH_ROW                : Integer;
+        key SOURCE_SYSTEM            : String(10);
+        key SYSTEM_ID                : String(10);
+            ENTITY_ID                : String(20);
+            GROUP_ID                 : Integer;
+            REVIEW_GROUP             : String(1);
+            GROUP_COUNT              : Integer;
+            GROUP_ROW_COUNT          : Integer;
+            GROUP_CATEGORY           : Integer;
+            FIRST_NAME               : String(50);
+            MIDDLE_NAME              : String(50);
+            LAST_NAME                : String(80);
+            RELATED_ROW              : Integer;
+            SCORE                    : Integer;
+            AVG_SCORE                : Integer;
+            STRATEGY                 : String(10);
+            STRATEGY_RESOLVED        : String(10);
+            STRATEGY_RESOLVED_STATUS : String(10);
+            PROMOTED_TO_SCV          : String(1);
+            PROMOTION_TIMESTAMP      : UTCTimestamp;
+            PROMOTED_BY              : String(10);
+            RMS_DUPLICATES			 : String(1);
+    }
+    technical configuration {
+        index index_0 on (PROMOTED_TO_SCV);
+    };
+
+    entity ReviewShadow {
+        key MATCH_ROW                : Integer;
+        key SOURCE_SYSTEM            : String(10);
+        key SYSTEM_ID                : String(10);
+            ENTITY_ID                : String(20);
+            GROUP_ID                 : Integer;
+            REVIEW_GROUP             : String(1);
+            GROUP_COUNT              : Integer;
+            GROUP_ROW_COUNT          : Integer;
+            GROUP_CATEGORY           : Integer;
+            FIRST_NAME               : String(50);
+            MIDDLE_NAME              : String(50);
+            LAST_NAME                : String(80);
+            RELATED_ROW              : Integer;
+            SCORE                    : Integer;
+            AVG_SCORE                : Integer;
+            STRATEGY                 : String(10);
+            STRATEGY_RESOLVED        : String(10);
+            STRATEGY_RESOLVED_STATUS : String(10);
+            PROMOTED_TO_SCV          : String(1);
+            PROMOTION_TIMESTAMP      : UTCTimestamp;
+            PROMOTED_BY              : String(10);
+            RMS_DUPLICATES			 : String(1);
+    }
+    technical configuration {
+        index index_0 on (PROMOTED_TO_SCV);
+    };
+
+    /*@@layout{"layoutInfo":{"x":-278,"y":9.5}}*/
+    type StringValues {
+        STRING_VALUE : String(50);
+    };
+};

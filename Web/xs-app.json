@@ -1,0 +1,26 @@
+{
+	"welcomeFile": "webapp/index.html",
+	"authenticationMethod": "route",
+	"routes": [{
+		"source": "/webapp/rest/.*",
+		"destination": "Services_url",
+		"scope": "$XSAPPNAME.SCV_FOUNDATION_VIEW"
+	}, {
+		"source": "(.*)(.xsjs)",
+		"destination": "Services_url",
+		"csrfProtection": false,
+		"authenticationType": "xsuaa"
+	}, {
+		"source": "(.*)(.xsodata)",
+		"destination": "Services_url",
+		"authenticationType": "xsuaa"
+	}, {
+		"source": "^/(.*)$",
+		"localDir": "resources",
+		"scope": "$XSAPPNAME.SCV_FOUNDATION_VIEW",
+		"replace": {
+			"pathSuffixes": ["index.html", "odataTest.html"],
+			"vars": ["ui5liburl"]
+		}
+	}]
+}

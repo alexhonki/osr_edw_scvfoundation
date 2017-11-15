@@ -1,0 +1,13 @@
+/*
+ * OSR SCV Match Results - Service to override system match recommendations
+ * SAP Australia, September 2017
+ */
+ 
+service {       
+    
+    "osr.scv.foundation.db.data::MatchResultsReview.Assessments" as "matchAssessments";
+}    
+
+settings { 
+    metadata cache-control "max-age= 604800";
+}

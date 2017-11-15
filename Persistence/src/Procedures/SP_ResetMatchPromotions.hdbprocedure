@@ -1,0 +1,20 @@
+PROCEDURE "osr.scv.foundation.db.Procedures::SP_ResetMatchPromotions" ( )
+   LANGUAGE SQLSCRIPT
+   SQL SECURITY INVOKER
+   --DEFAULT SCHEMA <default_schema_name>
+   --READS SQL DATA 
+   AS
+BEGIN
+   /*************************************
+       Prepare match results review 
+   *************************************/
+   
+   DECLARE l_latestExecutionID INTEGER;
+
+	-- Retrieve latest task execution ID
+	SELECT MAX(TASK_EXECUTION_ID) INTO l_latestExecutionID 
+	FROM "osr.scv.foundation.db.synonyms::MATCH_TRACING" 
+	WHERE TASK_NAME = 'osr.scv.foundation.db.flowgraphs::MatchBusinessPartners';
+   
+   
+END

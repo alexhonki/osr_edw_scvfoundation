@@ -1,0 +1,73 @@
+namespace osr.scv.foundation.db.data;
+
+using "osr.scv.foundation.db.synonyms::MATCH_TRACING" as MATCH_TRACING;
+
+context MatchResults {
+
+    /*@@layout{"layoutInfo":{}}*/
+    entity MatchResults {
+        key Match_TABLE_ID         : Integer    not null;
+        key Match_ROW_ID           : Integer    not null;
+        key SOURCE_SYSTEM          : String(10) not null;
+        key SYSTEM_ID              : String(20) not null;
+            GROUP_ID               : Integer;
+            REVIEW_GROUP           : String(1);
+            CONFLICT_GROUP         : String(1);
+            ENTITY_ID              : String(20);
+            Cleanse_TABLE_ID_BUT   : Integer;
+            Cleanse_ROW_ID_BUT     : Integer;
+            Cleanse_TABLE_ID_ADRC  : Integer;
+            Cleanse_ROW_ID_ADRC    : Integer;
+            Cleanse_TABLE_ID_TMR   : Integer;
+            Cleanse_ROW_ID_TMR     : Integer;
+            Cleanse_TABLE_ID_RTA_T : Integer;
+            Cleanse_ROW_ID_RTA_T   : Integer;
+            SHOW_IN_REVIEW         : String(1);
+            AVERAGE_SCORE          : Integer;
+            GROUP_CATEGORY         : Integer;
+            RMS_DUPLICATES		   : String(1);
+    }
+    technical configuration {
+        unique index index_0 on (Match_ROW_ID);
+               index index_1 on (ENTITY_ID);
+               index index_2 on (GROUP_ID);
+               index index_3 on (SHOW_IN_REVIEW);
+               index index_4 on (GROUP_CATEGORY);
+               index index_5 on (RMS_DUPLICATES);
+    };
+
+
+    /*@@layout{"layoutInfo":{}}*/
+    entity MatchResultsShadow {
+        key Match_TABLE_ID         : Integer    not null;
+        key Match_ROW_ID           : Integer    not null;
+        key SOURCE_SYSTEM          : String(10) not null;
+        key SYSTEM_ID              : String(20) not null;
+            GROUP_ID               : Integer;
+            REVIEW_GROUP           : String(1);
+            CONFLICT_GROUP         : String(1);
+            ENTITY_ID              : String(20);
+            Cleanse_TABLE_ID_BUT   : Integer;
+            Cleanse_ROW_ID_BUT     : Integer;
+            Cleanse_TABLE_ID_ADRC  : Integer;
+            Cleanse_ROW_ID_ADRC    : Integer;
+            Cleanse_TABLE_ID_TMR   : Integer;
+            Cleanse_ROW_ID_TMR     : Integer;
+            Cleanse_TABLE_ID_RTA_T : Integer;
+            Cleanse_ROW_ID_RTA_T   : Integer;
+            SHOW_IN_REVIEW         : String(1);
+            AVERAGE_SCORE          : Integer;
+            GROUP_CATEGORY         : Integer;
+            RMS_DUPLICATES		   : String(1);
+    }
+    technical configuration {
+        unique index index_0 on (Match_ROW_ID);
+               index index_1 on (ENTITY_ID);
+               index index_2 on (GROUP_ID);
+               index index_3 on (SHOW_IN_REVIEW);
+               index index_4 on (GROUP_CATEGORY);
+               index index_5 on (RMS_DUPLICATES);
+    };
+
+    
+    };

@@ -1,0 +1,66 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "OSR Single Customer View API",
+    "description": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
+    "version": "0.0.1"
+  },
+  "servers": [
+    {
+      "url": "https://vlosrhd4db.osr.qld.gov.au/v1",
+      "description": "OSR SCV Production"
+    }
+  ],
+  "paths": {
+    "/search": {
+      "get": {
+        "summary": "Returns a list of business partners matching a given search string.",
+        "description": "The search results include a matching score",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "ln",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Last Name"
+          },
+          {
+            "in": "query",
+            "name": "fn",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "First Name"
+          },
+          {
+            "in": "query",
+            "name": "dob",
+            "schema": {
+              "type": "integer"
+            },
+            "required": false,
+            "description": "Date of Birth"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A JSON array of business partners matching the given search criteria",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

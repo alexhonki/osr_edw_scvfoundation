@@ -1,0 +1,35 @@
+PROCEDURE "osr.scv.foundation.db.Procedures.Util::SP_UtilSplitString" ( 
+   	 
+   	 /*
+		Utility stored procedure: Split String
+	
+		Author: Alexander Bauer, SAP
+		 			
+	*/
+	 	 	 	 
+	 IN  i_string		NVARCHAR(4096) 						
+	,IN  i_separator	NVARCHAR(1)			DEFAULT ','
+	,OUT ot_result 		TABLE (STRING_VALUE NVARCHAR(50))												
+) 
+   LANGUAGE SQLSCRIPT
+   SQL SECURITY INVOKER
+   AS
+	
+BEGIN	
+			
+	  	DECLARE _items 		NVARCHAR(50) 	ARRAY;
+  		DECLARE _text 		NVARCHAR(4096);
+  		DECLARE _index 		INTEGER;
+  		_text := :i_string;
+  		_index := 1;
+
+  		WHILE LOCATE(:_text,:i_separator) > 0 DO
+  			_items[:_index] := SUBSTR_BEFORE(:_text,:i_separator);
+  			_text := SUBSTR_AFTER(:_text,:i_separator);
+  			_index := :_index + 1;
+  		END WHILE;
+  		_items[:_index] := :_text;  		
+  	  	
+  	  	ot_result = UNNEST(:_items) AS ("STRING_VALUE");
+  			  		  		  		  
+  	END;	

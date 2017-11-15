@@ -1,0 +1,31 @@
+{
+	"dependencies": {
+		"@sap/xsjs": "1.16.3",
+		"@sap/xsenv": "1.2.7",
+		"@sap/hdbext": "^4.3.0",
+		"async": "2.1.4",
+		"body-parser": "1.17.1",
+		"death": "1.1.0",
+		"express": "4.15.2",
+		"lodash": "4.17.4",
+		"passport": "0.3.2",
+		"request": "2.79.0",
+		"util": "0.10.3",
+		"swagger-ui-express": "2.0.6"
+	},
+	"description": "OSR SCV Foundation Services Module",
+	"devDependencies": {
+		"@sap/xsjs-test": "2.0.9"
+	},
+	"files": [],
+	"main": "server.js",
+	"name": "Services",
+	"scripts": {
+		"start": "node server.js",
+		"test": "node testrun.js"
+	},
+	"engines": {
+		"node": "6.x"
+	},
+	"version": "1.0.0"
+}

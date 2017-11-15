@@ -1,0 +1,12 @@
+{
+	"role":{
+		"name": "osr.scv.foundation.db.roles::external_access",
+		"object_privileges": [ 
+		{		
+				"name": "osr.scv.foundation.db.data::MatchResults.MatchResults",
+				"type": "TABLE",
+				"privileges": ["SELECT"]
+			}
+		]
+     }
+}

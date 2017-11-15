@@ -1,0 +1,14 @@
+{
+	"logical-OSR-EDW-FOUNDATION-grantor": {
+		"object_owner": { 
+			"container_roles": [
+				"osr.edw.foundation.db.roles::external_access_g#"
+			]
+		},
+		"application_user": {
+			"container_roles": [
+				"osr.edw.foundation.db.roles::external_access"
+			]
+		}
+	}
+}

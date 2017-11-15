@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="osr.scv.foundation.db.views::MatchResultsAssessments" applyPrivilegeType="NONE" dataCategory="DEFAULT" schemaVersion="3.0" outputViewType="Projection" cacheInvalidationPeriod="NONE" enforceSqlExecution="false">
+<descriptions defaultDescription="OSR SCV - Match Results Details View"/>
+<localVariables/>
+<variableMappings/>
+<dataSources>
+  <DataSource id="osr.scv.foundation.db.data::MatchResultsReview.Assessments">
+    <resourceUri>osr.scv.foundation.db.data::MatchResultsReview.Assessments</resourceUri>
+  </DataSource>
+</dataSources>
+<calculationViews/>
+<logicalModel id="osr.scv.foundation.db.data::MatchResultsReview.Assessments">
+  <attributes>
+    <attribute id="TIMESTAMP" key="true" order="1" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="TIMESTAMP"/>
+      <keyMapping columnObjectName="MatchResultsReview.Assessments" columnName="TIMESTAMP"/>
+    </attribute>
+    <attribute id="ENTITY_ID" key="true" order="2" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="ENTITY_ID"/>
+      <keyMapping columnObjectName="MatchResultsReview.Assessments" columnName="ENTITY_ID"/>
+    </attribute>
+    <attribute id="STRATEGY" order="3" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="STRATEGY"/>
+      <keyMapping columnObjectName="MatchResultsReview.Assessments" columnName="STRATEGY"/>
+    </attribute>
+    <attribute id="CODE" order="4" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CODE"/>
+      <keyMapping columnObjectName="MatchResultsReview.Assessments" columnName="CODE"/>
+    </attribute>
+    <attribute id="USER" order="5" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="USER"/>
+      <keyMapping columnObjectName="MatchResultsReview.Assessments" columnName="USER"/>
+    </attribute>
+    <attribute id="COMMENT" order="6" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="COMMENT"/>
+      <keyMapping columnObjectName="MatchResultsReview.Assessments" columnName="COMMENT"/>
+    </attribute>
+  </attributes>
+  <calculatedAttributes/>
+  <baseMeasures/>
+  <calculatedMeasures/>
+  <restrictedMeasures/></logicalModel>
+<layout>
+  <shapes>
+    <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+      <upperLeftCorner x="82" y="105"/>
+    
+      <rectangleSize width="140"/>
+    </shape>
+  </shapes>
+</layout>
+</Calculation:scenario>

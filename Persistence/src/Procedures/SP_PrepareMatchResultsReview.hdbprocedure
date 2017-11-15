@@ -1,0 +1,99 @@
+PROCEDURE "osr.scv.foundation.db.Procedures::SP_PrepareMatchResultsReview" ( )
+   LANGUAGE SQLSCRIPT
+   SQL SECURITY INVOKER
+   --DEFAULT SCHEMA <default_schema_name>
+   --READS SQL DATA 
+   AS
+BEGIN
+   /*************************************
+       Prepare match results review 
+   *************************************/
+   
+   DECLARE l_latestExecutionID INTEGER;
+
+	-- Retrieve latest task execution ID
+	SELECT MAX(TASK_EXECUTION_ID) INTO l_latestExecutionID 
+	FROM "osr.scv.foundation.db.synonyms::MATCH_TRACING" 
+	WHERE TASK_NAME = 'osr.scv.foundation.db.flowgraphs::MatchBusinessPartners';
+	
+	-- Identify match groups with multiple RMS business partners
+	lt_rms_duplicate_groups = SELECT GROUP_ID, SOURCE_SYSTEM
+							  FROM "osr.scv.foundation.db.data::MatchResults.MatchResults"
+							  GROUP BY GROUP_ID, SOURCE_SYSTEM
+							  HAVING COUNT(DISTINCT SYSTEM_ID) > 1 
+								AND GROUP_ID IS NOT NULL 
+								AND SOURCE_SYSTEM = 'RMS';
+								
+	UPDATE "osr.scv.foundation.db.data::MatchResults.MatchResults" SET RMS_DUPLICATES = '';
+   
+    UPDATE "osr.scv.foundation.db.data::MatchResults.MatchResults" a SET a.RMS_DUPLICATES = 'X' 
+    FROM "osr.scv.foundation.db.data::MatchResults.MatchResults" a, :lt_rms_duplicate_groups b
+    WHERE a.GROUP_ID = b.GROUP_ID;							
+   
+   -- Calculate average score
+   lt_average_group_score = SELECT m.GROUP_ID, AVG(s.SCORE) as AVG_SCORE
+								 FROM "osr.scv.foundation.db.data::MatchResults.MatchResults" m
+								 LEFT OUTER JOIN (
+												  SELECT * 
+												  FROM "osr.scv.foundation.db.synonyms::MATCH_TRACING" s1 
+												  WHERE  TASK_NAME = 'osr.scv.foundation.db.flowgraphs::MatchBusinessPartners' 
+													AND TASK_EXECUTION_ID = :l_latestExecutionID
+											     ) AS s
+	        					 ON m."Match_ROW_ID" = s.ROW_ID
+								 WHERE s.POLICY_NAME NOT LIKE '%CustSourceSystem%' OR s.POLICY_NAME IS NULL
+								 GROUP BY GROUP_ID
+								 ;
+								 
+   UPDATE "osr.scv.foundation.db.data::MatchResults.MatchResults" SET AVERAGE_SCORE = NULL;
+   
+   UPDATE "osr.scv.foundation.db.data::MatchResults.MatchResults" a SET a.AVERAGE_SCORE = b.AVG_SCORE 
+   FROM "osr.scv.foundation.db.data::MatchResults.MatchResults" a, :lt_average_group_score b
+   WHERE a.GROUP_ID = b.GROUP_ID;
+   
+   
+   -- Identify survivor record per match group to be displayed in review UI start screen
+   lt_survivor_match_records = SELECT "Match_ROW_ID" FROM (
+														   SELECT 
+												    		"Match_ROW_ID",
+								                        	ROW_NUMBER() OVER (PARTITION BY GROUP_ID ORDER BY SOURCE_SYSTEM DESC, SYSTEM_ID DESC) AS GROUP_ROW_COUNT
+							                               FROM "osr.scv.foundation.db.data::MatchResults.MatchResults"
+														  )
+							   WHERE GROUP_ROW_COUNT = 1;
+   
+   UPDATE "osr.scv.foundation.db.data::MatchResults.MatchResults" SET SHOW_IN_REVIEW = NULL;
+   UPDATE "osr.scv.foundation.db.data::MatchResults.MatchResults" SET SHOW_IN_REVIEW = 'X' WHERE GROUP_ID IS NULL;
+   
+   UPDATE "osr.scv.foundation.db.data::MatchResults.MatchResults" a
+   SET a.SHOW_IN_REVIEW = 'X'
+   FROM "osr.scv.foundation.db.data::MatchResults.MatchResults" a, :lt_survivor_match_records b
+   WHERE a."Match_ROW_ID" = b."Match_ROW_ID";
+   
+   -- Set group category
+   lt_group_category = SELECT DISTINCT m.GROUP_ID, CASE WHEN m.GROUP_ID IS NULL THEN 0 WHEN m.AVERAGE_SCORE = 100 THEN 1 WHEN m.AVERAGE_SCORE >= 95 THEN 2 ELSE 3 END AS GROUP_CATEGORY
+								 FROM "osr.scv.foundation.db.data::MatchResults.MatchResults" m;
+								 
+   UPDATE "osr.scv.foundation.db.data::MatchResults.MatchResults" SET GROUP_CATEGORY = NULL;
+   UPDATE "osr.scv.foundation.db.data::MatchResults.MatchResults" a
+	SET a.GROUP_CATEGORY = b.GROUP_CATEGORY 
+   FROM "osr.scv.foundation.db.data::MatchResults.MatchResults" a, :lt_group_category b
+   WHERE a.GROUP_ID = b.GROUP_ID;
+   
+   -- Override group category for RMS records only which fall into category 1, but should be in category 0
+   lt_group_override = SELECT GROUP_ID, 0 AS GROUP_CATEGORY, COUNT(DISTINCT SYSTEM_ID), MAX(SOURCE_SYSTEM), MIN(SOURCE_SYSTEM) FROM "osr.scv.foundation.db.data::MatchResults.MatchResults" 
+					   GROUP BY GROUP_ID 
+					   HAVING COUNT(DISTINCT SYSTEM_ID) = 1
+					    AND MIN(SOURCE_SYSTEM) = 'RMS' 
+						AND MAX(SOURCE_SYSTEM) = 'RMS' 
+					    AND GROUP_ID IS NOT NULL;
+   UPDATE "osr.scv.foundation.db.data::MatchResults.MatchResults" a
+	SET a.GROUP_CATEGORY = b.GROUP_CATEGORY 
+   FROM "osr.scv.foundation.db.data::MatchResults.MatchResults" a, :lt_group_override b
+   WHERE a.GROUP_ID = b.GROUP_ID;
+   
+   -- Fill match results review table
+   TRUNCATE TABLE "osr.scv.foundation.db.data::MatchResultsReview.Review";
+   TRUNCATE TABLE "osr.scv.foundation.db.data::MatchResultsReview.ReviewShadow";
+   INSERT INTO "osr.scv.foundation.db.data::MatchResultsReview.Review" (SELECT * FROM "osr.scv.foundation.db.functions::MatchResultsReview"());
+   INSERT INTO "osr.scv.foundation.db.data::MatchResultsReview.ReviewShadow" (SELECT * FROM "osr.scv.foundation.db.functions::MatchResultsReview"());
+   
+END

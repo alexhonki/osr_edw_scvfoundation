@@ -1,0 +1,175 @@
+<mvc:View controllerName="myCompany.myApp.controller.Object" xmlns:mvc="sap.ui.core.mvc" xmlns:semantic="sap.m.semantic"
+	xmlns:form="sap.ui.layout.form" xmlns="sap.m" xmlns:core="sap.ui.core" xmlns:l="sap.ui.layout">
+	<semantic:FullscreenPage id="page" busy="{objectView>/busy}" busyIndicatorDelay="{objectView>/delay}" navButtonPress="onNavBack"
+		showNavButton="true" title="{i18n>objectTitle}">
+		<semantic:content>
+			<ObjectHeader fufullScreenOptimized="true" id="objectHeader" responsive="true" title="{NAME}" numberUnit="%"
+				numberState="{ path: 'AVG_SCORE', formatter: '.formatter.scoreState' }" number="{AVG_SCORE}">
+				<attributes>
+					<!--<ObjectAttribute id="oaGroupId" title="Group ID" text="{ path: 'GROUP_ID' }"/>-->
+					<ObjectAttribute id="oaEntityId" title="Entity ID" text="{ path: 'ENTITY_ID' }"/>
+					<ObjectAttribute title="Source System" text="{ path: 'SOURCE_SYSTEM'}"/>
+				</attributes>
+				<statuses>
+					<ObjectStatus  title="Current Strategy" text="{= ${STRATEGY_RESOLVED} }" state="{= ${STRATEGY_RESOLVED_STATUS} }" visible="true"/>
+					<!--<ProgressIndicator percentValue="{UnitsInStock}" displayValue="{UnitsInStock}" showValue="true"
+						state="{ path: 'UnitsInStock', formatter: '.formatter.quantityState'}"/>-->
+				</statuses>
+			
+				<headerContainer>
+					<IconTabBar id="itb1" selectedKey="key1" upperCase="true" expandable="false" class="sapUiResponsiveContentPadding">
+						<items>
+							<IconTabFilter text="Entity Info" key="key1">
+								<content>
+									<!--<Panel class="sapUiNoContentPadding" headerText="{i18n>ObjectSupplierTabTitle}">-->
+									<!--<Panel class="sapUiNoContentPadding">
+										<content>-->
+									<Table id="detailsTable" busyIndicatorDelay="{worklistView>/tableBusyDelay}" class="sapUiResponsiveMargin sapUiNoMarginTop" growing="true"
+										growingScrollToLoad="true" noDataText="{worklistView>/tableNoDataText}" updateFinished="onUpdateFinished" width="auto"
+										items="{ path: 'matchResults', sorter: { path: 'GROUP_ID', descending: false }}">
+										<headerToolbar>
+											<Toolbar>
+												<!--<Title id="tableHeader" text="{worklistView>/worklistTableTitle}"/>
+														<ToolbarSpacer/>-->
+												<Button id="promoteButton" type="Accept" text="Promote" enabled="{= ${STRATEGY_RESOLVED}.match('Review') ? true : false}" pressed="true"
+													press="onPromote" visible="{= ${STRATEGY_RESOLVED}.match('Review') ? true : false}"/>
+												<Button id="rejectButton" type="Reject" text="Reject" enabled="{= ${STRATEGY_RESOLVED}.match('Promote') ? true : false}" pressed="true"
+													press="onReject" visible="{= ${STRATEGY_RESOLVED}.match('Promote') ? true : false}"/>
+												<!--<SearchField id="searchField" search="onSearch" tooltip="{i18n>worklistSearchTooltip}" width="auto"/>-->
+											</Toolbar>
+										</headerToolbar>
+										<columns>
+											<Column id="c1">
+												<Text id="t1" text="System"/>
+											</Column>
+											<Column id="c2">
+												<Text id="t2" text="System ID"/>
+											</Column>
+											<Column id="c3">
+												<Text id="t3" text="Date of Birth"/>
+											</Column>
+											<Column id="c4">
+												<Text id="t4" text="Last Name"/>
+											</Column>
+											<Column id="c5">
+												<Text id="t5" text="First Middle Name"/>
+											</Column>
+											<Column id="c6">
+												<Text id="t6" text="Address Number"/>
+											</Column>
+											<!--<Column id="c7">
+												<Text id="t7" text="Address Type"/>
+											</Column>-->
+											<Column id="c8">
+												<Text id="t8" text="Country"/>
+											</Column>
+											<Column id="c9">
+												<Text id="t9" text="Region"/>
+											</Column>
+											<Column id="c10">
+												<Text id="t10" text="Postcode"/>
+											</Column>
+											<Column id="c11">
+												<Text id="t11" text="City"/>
+											</Column>
+											<Column id="c12">
+												<Text id="t12" text="Street"/>
+											</Column>
+											<Column id="c13">
+												<Text id="t13" text="Street Number"/>
+											</Column>
+											<Column id="c14">
+												<Text id="t14" text="Match Policy"/>
+											</Column>
+											<!--<Column id="c15">
+												<Text id="t15" text="Rule"/>
+											</Column>-->
+											<Column id="c16" hAlign="Right">
+												<Text id="t16" text="Score"/>
+											</Column>
+											<Column id="c17" hAlign="Right">
+												<Text id="t17" text="Row"/>
+											</Column>
+											<Column id="c18" hAlign="Right">
+												<Text id="t18" text="Matching Row"/>
+											</Column>
+										</columns>
+										<items>
+											<ColumnListItem>
+												<cells>
+													<Text id='cell01' text="{SOURCE_SYSTEM}"/>
+													<Text id='cell02' text="{SYSTEM_ID}"/>
+													<Text id='cell03' text="{BIRTHDT}"/>
+													<Text id='cell04' text="{LAST_NAME}"/>
+													<Text id='cell05' text="{FIRST_MIDDLE_NAME}"/>
+													<Text id='cell06' text="{ADDRNUMBER}"/>
+													<!--<Text text="{ADR_KIND}"/>-->
+													<Text id='cell07' text="{ADDRESS_COUNTRY}"/>
+													<Text id='cell08' text="{ADDRESS_REGION}"/>
+													<Text id='cell09' text="{ADDRESS_POSTCODE}"/>
+													<Text id='cell10' text="{ADDRESS_LOCALITY}"/>
+													<Text id='cell11' text="{ADDRESS_PRIM_NAME}"/>
+													<Text id='cell12' text="{ADDRESS_PRIM_NUMBER}"/>
+													<Text id='cell13' text="{POLICY_NAME}"/>
+													<!--<Text text="{RULE_NAME}"/>-->
+													<Text id='cell14' text="{SCORE}"/>
+													<Text id='cell15' text="{MATCH_ROW}"/>
+													<Text id='cell16' text="{RELATED_ROW}"/>
+												</cells>
+											</ColumnListItem>
+										</items>
+									</Table>
+									<!--	</content>
+									</Panel>-->
+								</content>
+							</IconTabFilter>
+							<IconTabFilter text="Change Log" key="key2" visible="false">
+								<content>
+									<l:VerticalLayout class="sapUiContentPadding" width="100%">
+										<l:content>
+											<Table id="changeLogTable" busyIndicatorDelay="{worklistView>/tableBusyDelay}" class="sapUiResponsiveMargin sapUiNoMarginTop" growing="true"
+												growingScrollToLoad="true" noDataText="{worklistView>/tableNoDataText}" updateFinished="onUpdateFinished" width="auto"
+												items="{ path: 'matchAssessments', sorter: { path: 'TIMESTAMP', descending: true }}">
+												<columns>
+													<Column id="c111" mergeDuplicates="true">
+														<Text id="t111" text="Strategy"/>
+													</Column>
+													<Column id="c222" mergeDuplicates="true">
+														<Text id="t222" text="User ID"/>
+													</Column>
+													<Column id="c333">
+														<Text id="t333" text="Timestamp"/>
+													</Column>
+													<Column id="c444">
+														<Text id="t444" text="Code"/>
+													</Column>
+													<Column id="c555">
+														<Text id="t555" text="Comment"/>
+													</Column>
+												</columns>
+												<items>
+													<ColumnListItem>
+														<cells>
+															<Text text="{STRATEGY}"/>
+															<Text text="{USER}"/>
+															<Text text="{TIMESTAMP}"/>
+															<Text text="{CODE}"/>
+															<Text text="{COMMENT}"/>
+														</cells>
+													</ColumnListItem>
+												</items>
+											</Table>
+										</l:content>
+									</l:VerticalLayout>
+								</content>
+							</IconTabFilter>
+						</items>
+					</IconTabBar>
+				</headerContainer>
+			</ObjectHeader>
+		</semantic:content>
+		<semantic:sendEmailAction>
+			<semantic:SendEmailAction id="shareEmail" press="onShareEmailPress"/>
+		</semantic:sendEmailAction>
+	</semantic:FullscreenPage>
+</mvc:View>

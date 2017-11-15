@@ -1,0 +1,33 @@
+{
+	"osr.scv.foundation.db.synonyms::BUT000": {
+		"target": {
+			"object": "osr.edw.foundation.db.data.transformation::L2_RMS_Cleansed_BusinessPartner.DSO_Cleansed_BUT000.active_data",
+			"schema.configure": "logical-OSR-EDW-FOUNDATION-grantor/schema"
+		}
+	},
+	"osr.scv.foundation.db.synonyms::BUT021_FS": {
+		"target": {
+			"object": "osr.edw.foundation.db.data.transformation::L2_RMS_Cleansed_BusinessPartner.DSO_Cleansed_BUT021FS.active_data",
+			"schema.configure": "logical-OSR-EDW-FOUNDATION-grantor/schema"
+		}
+	},
+	"osr.scv.foundation.db.synonyms::ADRC": {
+		"target": {
+			"object": "osr.edw.foundation.db.data.transformation::L2_RMS_Cleansed_BusinessPartner.DSO_Cleansed_ADRC.active_data",
+			"schema.configure": "logical-OSR-EDW-FOUNDATION-grantor/schema"
+		}
+	},	
+	"osr.scv.foundation.db.synonyms::TMR_Customers": {
+		"target": {
+			"object": "osr.edw.foundation.db.data.transformation::L2_TMR_Cleansed_CustomerContact.DSO_Cleansed_CustomerContact.active_data",
+			"schema.configure": "logical-OSR-EDW-FOUNDATION-grantor/schema"
+		}
+	},
+	"osr.scv.foundation.db.synonyms::RTA_Tenant": {
+		"target": {
+			"object": "osr.edw.foundation.db.data.transformation::L2_RTA_Cleansed_PropertyTenant.DSO_Cleansed_Tenant.active_data",
+			"schema.configure": "logical-OSR-EDW-FOUNDATION-grantor/schema"
+		}
+	}	
+}
+

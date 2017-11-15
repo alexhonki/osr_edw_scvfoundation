@@ -1,0 +1,53 @@
+/*
+ * OSR SCV Match Results - Main service
+ * SAP Australia, September 2017
+ */
+
+service {       
+    
+    // Main service for reviewing match results (master view)
+    "osr.scv.foundation.db.views::MatchResultsReview" as "matchResultsReview"
+    keys ("ENTITY_ID")
+    navigates ("avp" as "matchResults", "matchResultsReviewWithAssessments" as "matchAssessments"); 
+    
+    // Service to list details for an entity
+    "osr.scv.foundation.db.views::MatchResultsDetails" as "matchResultsDetails"
+    keys ("ENTITY_ID", "MATCH_ROW", "GROUP_ROW_COUNT")
+    parameters via key and entity;
+    
+    association via parameters "avp"
+     principal "matchResultsReview"("ENTITY_ID") multiplicity "1"
+     dependent "matchResultsDetails"("IP_ENTITY_ID") multiplicity "*";
+    
+    
+    // Main service for reviewing match results (master view)
+    //"osr.scv.foundation.db.views::MatchResultsReview" as "matchResultsReview"
+    //keys ("ENTITY_ID")
+    //navigates ("matchResultsReviewWithDetails" as "matchResults", "matchResultsReviewWithAssessments" as "matchAssessments"); 
+    
+    // Service to list details for an entity
+    //"osr.scv.foundation.db.views::MatchResultsDetails" as "matchResultsDetails"
+    //keys ("ENTITY_ID", "MATCH_ROW")
+    //parameters via entity "InputParams" results property "Results"
+    //;
+    
+    // Service to list strategy change logs for an entity
+    "osr.scv.foundation.db.views::MatchResultsAssessments" as "matchResultsAssessments"
+    keys generate local "GenID";
+    
+    // Create master-detail association for match results
+    //association "matchResultsReviewWithDetails" 
+    	//with referential constraint 
+    	//principal "matchResultsReview"("ENTITY_ID") multiplicity "1" 
+    	//dependent "matchResultsDetails"("ENTITY_ID") multiplicity "*";
+    	
+	// Create master-detail association for strategy change logs
+    association "matchResultsReviewWithAssessments" 
+    	with referential constraint 
+    	principal "matchResultsReview"("ENTITY_ID") multiplicity "1" 
+    	dependent "matchResultsAssessments"("ENTITY_ID") multiplicity "*";     	
+}
+   
+settings { 
+    metadata cache-control "max-age= 604800";
+}
