@@ -175,9 +175,9 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="NAMEMIDDLE" source="NAMEMIDDLE"/>
     </input>
     <filter>(lower(&quot;NAME_LAST&quot;) NOT LIKE '%duplicate%' AND NAME_LAST NOT LIKE '%&amp;%' AND lower(&quot;NAME_LAST&quot;) NOT LIKE '%trust%' AND lower(&quot;NAME_LAST&quot;) NOT LIKE '%executor%' AND lower(&quot;NAME_LAST&quot;) NOT LIKE '%copy%' AND lower(&quot;NAME_LAST&quot;) NOT LIKE '%[0-9]%')
-    OR
+    AND
 (lower(&quot;NAME_FIRST&quot;) NOT LIKE '%duplicate%' AND NAME_FIRST NOT LIKE '%&amp;%' AND lower(&quot;NAME_FIRST&quot;) NOT LIKE '%trust%' AND lower(&quot;NAME_FIRST&quot;) NOT LIKE '%executor%' AND lower(&quot;NAME_FIRST&quot;) NOT LIKE '%copy%' AND lower(&quot;NAME_FIRST&quot;) NOT LIKE '%[0-9]%')
-    OR
+    AND
 (lower(&quot;NAMEMIDDLE&quot;) NOT LIKE '%duplicate%' AND NAMEMIDDLE NOT LIKE '%&amp;%' AND lower(&quot;NAMEMIDDLE&quot;) NOT LIKE '%trust%' AND lower(&quot;NAMEMIDDLE&quot;) NOT LIKE '%executor%' AND lower(&quot;NAMEMIDDLE&quot;) NOT LIKE '%copy%' AND lower(&quot;NAMEMIDDLE&quot;) NOT LIKE '%[0-9]%')
 
 
@@ -2401,21 +2401,21 @@
 <layout>
   <shapes>
     <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
-      <upperLeftCorner x="541.7777961603211" y="112"/>
+      <upperLeftCorner x="541" y="112"/>
     
       <rectangleSize width="140"/>
     </shape>
   
     <shape expanded="false" modelObjectName="P_BusinessPartners" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="92.00000000000003" y="776.9999952316284"/>
+      <upperLeftCorner x="92" y="776"/>
       <rectangleSize height="30" width="223"/>
     </shape>
     <shape expanded="true" modelObjectName="P_TimedependendAddressUsage" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="365" y="776.9999952316284"/>
+      <upperLeftCorner x="365" y="776"/>
       <rectangleSize height="30" width="268"/>
     </shape>
     <shape expanded="true" modelObjectName="J_BPsWithTimeDependendAddresses" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="158.09929384525972" y="636.9999964237213"/>
+      <upperLeftCorner x="158" y="636"/>
       <rectangleSize height="30" width="316"/>
     </shape>
     <shape modelObjectName="P_BusinessPartners" modelObjectNameSpace="J_BPsWithTimeDependendAddresses" modelObjectType="JoinNodeInput">
@@ -2427,7 +2427,7 @@
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="J_RMS_BPsWithAddresses" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="231.76596051192644" y="496.9999976158142"/>
+      <upperLeftCorner x="231" y="496"/>
       <rectangleSize height="30" width="253"/>
     </shape>
     <shape modelObjectName="J_BPsWithTimeDependendAddresses" modelObjectNameSpace="J_RMS_BPsWithAddresses" modelObjectType="JoinNodeInput">
@@ -2439,25 +2439,25 @@
       <rectangleSize width="264"/>
     </shape>
     <shape expanded="true" modelObjectName="P_Addresses" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="524.0992938452597" y="636.9999964237213"/>
+      <upperLeftCorner x="524" y="636"/>
       <rectangleSize height="30" width="140"/>
     </shape>
     <shape expanded="true" modelObjectName="U_AllMatchFields" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="481.77779616032115" y="217"/>
+      <upperLeftCorner x="481" y="217"/>
       <rectangleSize height="30" width="260"/>
     </shape>
     <shape expanded="true" modelObjectName="A_AddressNumber" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="264.74353410194465" y="371.9999988079071"/>
+      <upperLeftCorner x="264" y="371"/>
       <rectangleSize height="30" width="140"/>
     </shape>
   
     <shape expanded="true" modelObjectName="P_TMR_Customers" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="738.7435341019445" y="371.9999988079071"/>
+      <upperLeftCorner x="738" y="371"/>
       <rectangleSize height="30" width="226"/>
     </shape>
   
     <shape expanded="true" modelObjectName="P_RTA_Tenant" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="454.74353410194453" y="371.9999988079071"/>
+      <upperLeftCorner x="454" y="371"/>
       <rectangleSize height="30" width="234"/>
     </shape></shapes>
 </layout>
