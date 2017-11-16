@@ -84,10 +84,10 @@
 										<Text text="{REVIEW_GROUP}"/>
 										<!--<ObjectNumber number="{GROUP_CATEGORY}"/>-->
 										<Text text="{NAME}" wrapping="false"/>
-										<Text text="{SOURCE_SYSTEM}"/>
-										<ObjectNumber number="{AVG_SCORE}"/>
-										<ObjectStatus text="{STRATEGY_RESOLVED}" state="{STRATEGY_RESOLVED_STATUS}"/>
-										<!--<ObjectNumber unit="EUR" number="{ path: 'UnitPrice', formatter: '.formatter.num;berUnit' }"/>
+										<Text text="{SOURCE_SYSTEM}" />
+										<ObjectNumber number="{AVG_SCORE}"  state="{ path: 'AVG_SCORE', formatter: '.formatter.matchState' }" />
+										<ObjectStatus text="{STRATEGY_RESOLVED}" />
+										<!--<ObjectNumber unit="EUR" number="{ path: 'UnitPrice', formatter: '.formatter.numberUnit' }"/>
 										<ObjectNumber number="{UnitsOnOrder}" unit="PC"/>
 										<ObjectNumber number="{UnitsInStock}" unit="PC" state="{ path: 'UnitsInStock', formatter: '.formatter.quantityState' }"/>-->
 									</cells>

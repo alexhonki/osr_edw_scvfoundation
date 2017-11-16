@@ -16,7 +16,7 @@
 				"type": "OData",
 				"settings": {
 					"odataVersion": "2.0"
-			
+
 				}
 			}
 		},
@@ -72,10 +72,15 @@
 				"dataSource": "mainService",
 				"settings": {
 					"metadataUrlParams": {
-						
+
 					}
 				}
 			}
+		},
+		"resources": {
+			"css": [{
+				"uri": "css/style.css"
+			}]
 		},
 		"routing": {
 			"config": {
@@ -88,18 +93,15 @@
 					"target": "notFound"
 				}
 			},
-			"routes": [
-				{
-					"pattern": "",
-					"name": "worklist",
-					"target": "worklist"
-				},
-				{
-					"pattern": "Entities/{objectId}",
-					"name": "object",
-					"target": "object"
-				}
-			],
+			"routes": [{
+				"pattern": "",
+				"name": "worklist",
+				"target": "worklist"
+			}, {
+				"pattern": "Entities/{objectId}",
+				"name": "object",
+				"target": "object"
+			}],
 			"targets": {
 				"worklist": {
 					"viewName": "Worklist",

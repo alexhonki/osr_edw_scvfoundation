@@ -18,3 +18,11 @@ html[dir="rtl"] .myAppDemoWT .myCustomButton.sapMBtn {
 .myAppDemoWTProductRating .sapMRI {
 	vertical-align: initial;
 }
+
+.redBackground {
+	background-color: red !important;
+}
+
+.fadeMatchPolicy {
+	color: Gainsboro !important;
+}

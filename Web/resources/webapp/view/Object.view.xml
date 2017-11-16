@@ -25,7 +25,7 @@
 									<!--<Panel class="sapUiNoContentPadding">
 										<content>-->
 									<Table id="detailsTable" fixedLayout="false" busyIndicatorDelay="{worklistView>/tableBusyDelay}" class="sapUiResponsiveMargin sapUiNoMarginTop" growing="true"
-										growingScrollToLoad="true" noDataText="{worklistView>/tableNoDataText}" updateFinished="onUpdateFinished" width="auto"
+										growingScrollToLoad="true" noDataText="{worklistView>/tableNoDataText}" updateFinished="onAfterRendering" width="auto"
 										items="{ path: 'matchResults', sorter: { path: 'GROUP_ID', descending: false }}">
 										<headerToolbar>
 											<Toolbar>
@@ -104,15 +104,16 @@
 													<Text id='cell05' text="{FIRST_MIDDLE_NAME}"/>
 													<Text id='cell06' text="{ADDRNUMBER}"/>
 													<!--<Text text="{ADR_KIND}"/>-->
-													<Text id='cell07' text="{ADDRESS_COUNTRY}"/>
+													<Text id='cell07' text="{ADDRESS_COUNTRY}" />
 													<Text id='cell08' text="{ADDRESS_REGION}"/>
 													<Text id='cell09' text="{ADDRESS_POSTCODE}"/>
 													<Text id='cell10' text="{ADDRESS_LOCALITY}"/>
 													<Text id='cell11' text="{ADDRESS_PRIM_NAME}"/>
 													<Text id='cell12' text="{ADDRESS_PRIM_NUMBER}"/>
-													<Text id='cell13' text="{POLICY_NAME}"/>
+													<Text id='cell13' text="{path: 'POLICY_NAME'}" />
 													<!--<Text text="{RULE_NAME}"/>-->
-													<Text id='cell14' text="{SCORE}"/>
+													<ObjectNumber number="{SCORE}"  state="{ path: 'SCORE', formatter: '.formatter.matchState' }" />
+													<!--<Text id='cell14' text="{SCORE}"/>-->
 													<Text id='cell15' text="{MATCH_ROW}"/>
 													<Text id='cell16' text="{RELATED_ROW}"/>
 												</cells>

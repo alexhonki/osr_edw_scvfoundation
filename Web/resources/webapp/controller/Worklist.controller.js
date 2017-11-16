@@ -259,8 +259,8 @@ sap.ui.define([
 			};
 			
 			// Global filters
-			var rmsDuplicatesFilter = new sap.ui.model.Filter("RMS_DUPLICATES", sap.ui.model.FilterOperator.EQ, "\'X\'");
-			var rmsAllDuplicatesFilter = new sap.ui.model.Filter("RMS_DUPLICATES", sap.ui.model.FilterOperator.NE,  "\'-\'");
+			var rmsDuplicatesFilter = new sap.ui.model.Filter("RMS_DUPLICATES", sap.ui.model.FilterOperator.EQ, "X");
+			var rmsAllDuplicatesFilter = new sap.ui.model.Filter("RMS_DUPLICATES", sap.ui.model.FilterOperator.NE,  "-");
 			
 			this._mGlobalFilters = {
 				"rmsDuplicates": rmsDuplicatesFilter,

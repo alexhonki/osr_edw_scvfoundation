@@ -50,6 +50,31 @@ sap.ui.define([
 			});
 
 		},
+		
+		/**
+		 * Called when the worklist controller is instantiated.
+		 * @public
+		 */
+		onAfterRendering: function() {
+			var oTable = this.getView().byId("detailsTable");
+			var aItems = oTable.getItems();
+			var i = 0;
+			var x = 0;
+			if (aItems && aItems.length > 0) {
+				for (i = 0; i < aItems.length; i++) {
+					var aCells = aItems[i].getCells();
+					if (aCells[12].getText() === "Date, CustSourceSystem, CustSourceId") {
+						//you can set the style via Jquery
+						//$("#" + aItems[i].getId()).css("background-color", "red");
+						//or add the style
+						for (x = 0; x < aCells.length; x++) {
+							aCells[x].addStyleClass("fadeMatchPolicy");
+						}
+						//aItems[i].addStyleClass("redBackground");
+					}
+				}
+			}
+		},
 
 		/* =========================================================== */
 		/* event handlers                                              */
@@ -211,7 +236,6 @@ sap.ui.define([
 			});
 		},
 
-	
 		/**
 		 *  Accepts a matching group to be promotes into the SCV layer
 		 */
@@ -229,7 +253,7 @@ sap.ui.define([
 					end = new Date().getTime();
 				}
 			}
-			
+
 			function refresh() {
 				wait(1000);
 				//that.getView().getModel().loadData(this.getView().getBindingContext().getPath());
