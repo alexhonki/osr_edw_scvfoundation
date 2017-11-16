@@ -37,6 +37,7 @@ modules:
           name: Services_url
           url: '~{url}'
           forwardAuthToken: true
+          timeout: 240000
       - name: ui5-lib
         properties:
           ui5liburl: '~{url}'

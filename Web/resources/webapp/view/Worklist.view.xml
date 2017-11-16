@@ -8,10 +8,10 @@
 		<semantic:subHeader>
 				<Toolbar>
 				<ToolbarSpacer/>
-				<SegmentedButton selectedKey="kids" press="handleToggleDuplicateViewButtonPress">
+				<SegmentedButton id="segmentedButton" selectedKey="rmsDuplicates">
 					<items>
-						<SegmentedButtonItem text="RMS Duplicates" key="rms_duplicates" />
-						<SegmentedButtonItem text="All Duplicates" key="all_duplicates" />
+						<SegmentedButtonItem id="rmsDuplicates" text="RMS Duplicates" key="rmsDuplicates" press="handleToggleDuplicateViewButtonPress"/>
+						<SegmentedButtonItem id="allDuplicates" text="All Duplicates" key="allDuplicates" press="handleToggleDuplicateViewButtonPress"/>
 					</items>
 				</SegmentedButton>
 				<ToolbarSpacer/>
@@ -21,18 +21,18 @@
 		<semantic:content>
 			<IconTabBar id="iconTabBar" select="onQuickFilter" expandable="false" applyContentPadding="false">
 				<items>
-					<IconTabFilter design="Horizontal" key="all" showAll="true" count="{worklistView>/countAllStr}" text="{i18n>WorklistFilterAllEntities}" formatter=".formatter.numberUnit"/>
+					<IconTabFilter id="all" design="Horizontal" key="all" showAll="true" count="{worklistView>/countAllStr}" text="{i18n>WorklistFilterAllEntities}" formatter=".formatter.numberUnit"/>
 					<IconTabSeparator/>
-					<IconTabFilter design="Horizontal" key="uniqueMatchEntities" icon="sap-icon://message-information" count="{worklistView>/uniqueMatchEntitiesCountStr} ({worklistView>/uniqueMatchEntitiesCountPercent})"
+					<IconTabFilter id="uniqueMatchEntities" design="Horizontal" key="uniqueMatchEntities" icon="sap-icon://message-information" count="{worklistView>/uniqueMatchEntitiesCountStr} ({worklistView>/uniqueMatchEntitiesCountPercent})"
 						text="Unique"/>
-					<IconTabSeparator icon="sap-icon://overflow" />
-					<IconTabFilter design="Horizontal" key="identicalMatchEntities" icon="sap-icon://message-success" iconColor="Positive" count="{worklistView>/identicalMatchEntitiesCountStr} ({worklistView>/identicalMatchEntitiesCountPercent})"
+					<IconTabSeparator icon="sap-icon://less" />
+					<IconTabFilter id="identicalMatchEntities" design="Horizontal" key="identicalMatchEntities" icon="sap-icon://message-success" iconColor="Positive" count="{worklistView>/identicalMatchEntitiesCountStr} ({worklistView>/identicalMatchEntitiesCountPercent})"
 						 text="Identical"/>
-					<IconTabSeparator icon="sap-icon://overflow" />
-					<IconTabFilter design="Horizontal" key="recommendedMatchEntities" icon="sap-icon://message-warning" iconColor="Critical" count="{worklistView>/recommendedMatchEntitiesCountStr} ({worklistView>/recommendedMatchEntitiesCountPercent})"
+					<IconTabSeparator icon="sap-icon://less" />
+					<IconTabFilter id="recommendedMatchEntities" design="Horizontal" key="recommendedMatchEntities" icon="sap-icon://message-warning" iconColor="Critical" count="{worklistView>/recommendedMatchEntitiesCountStr} ({worklistView>/recommendedMatchEntitiesCountPercent})"
 						 text="Recommended" />
-					<IconTabSeparator icon="sap-icon://overflow" />
-					<IconTabFilter design="Horizontal" key="similarMatchEntities" icon="sap-icon://message-error" iconColor="Negative" count="{worklistView>/similarMatchEntitiesCountStr} ({worklistView>/similarMatchEntitiesCountPercent})"
+					<IconTabSeparator icon="sap-icon://less" />
+					<IconTabFilter id="similarMatchEntities" design="Horizontal" key="similarMatchEntities" icon="sap-icon://message-error" iconColor="Negative" count="{worklistView>/similarMatchEntitiesCountStr} ({worklistView>/similarMatchEntitiesCountPercent})"
 						text="Similar"/>
 				</items>
 				<content>
@@ -40,7 +40,7 @@
 						<content>
 							<Table id="table" busyIndicatorDelay="{worklistView>/tableBusyDelay}" class="sapUiResponsiveMargin sapUiNoMarginTop" growing="true"
 							growingScrollToLoad="true" noDataText="{worklistView>/tableNoDataText}" updateFinished="onUpdateFinished" width="auto" mode="MultiSelect"
-							items="{ path: '/matchResultsReview', sorter: { path: 'GROUP_ID', descending: false }, filters : [{ path : 'RMS_DUPLICATES', operator : 'EQ', value1 : 'X' }]}">
+							items="{ path: '/matchResultsReview', sorter: { path: 'GROUP_ID', descending: false }, filters : [{ path : 'RMS_DUPLICATES', operator : 'EQ', value1 : '\'X\'' }]}">
 							<headerToolbar>
 								<Toolbar>
 									<Title id="tableHeader" text="{worklistView>/worklistTableTitle}"/>

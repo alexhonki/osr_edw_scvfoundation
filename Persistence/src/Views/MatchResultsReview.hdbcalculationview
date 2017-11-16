@@ -9,7 +9,7 @@
   </DataSource>
 </dataSources>
 <calculationViews>
-  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_1" filterExpressionLanguage="SQL">
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_1">
     <viewAttributes>
       <viewAttribute id="ENTITY_ID">
         <descriptions defaultDescription="ENTITY_ID"/>
@@ -74,6 +74,10 @@
       <viewAttribute id="PROMOTED_BY">
         <descriptions defaultDescription="PROMOTED_BY"/>
       </viewAttribute>
+    
+      <viewAttribute id="RMS_DUPLICATES">
+        <descriptions defaultDescription="RMS_DUPLICATES"/>
+      </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
@@ -99,6 +103,8 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="PROMOTED_TO_SCV" source="PROMOTED_TO_SCV"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="PROMOTION_TIMESTAMP" source="PROMOTION_TIMESTAMP"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="PROMOTED_BY" source="PROMOTED_BY"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="RMS_DUPLICATES" source="RMS_DUPLICATES"/>
     </input></calculationView>
 </calculationViews>
 <logicalModel id="Projection_1">
@@ -174,6 +180,11 @@
     <attribute id="SCORE" order="19" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="SCORE"/>
       <keyMapping columnObjectName="Projection_1" columnName="SCORE"/>
+    </attribute>
+  
+    <attribute id="RMS_DUPLICATES" order="20" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="RMS_DUPLICATES"/>
+      <keyMapping columnObjectName="Projection_1" columnName="RMS_DUPLICATES"/>
     </attribute>
   </attributes>
   <calculatedAttributes>

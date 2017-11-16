@@ -181,7 +181,8 @@ sap.ui.define([
 				shortage: 0,
 				outOfStock: 0,
 				countAll: 0,
-				countAllStr: ""
+				countAllStr: "",
+				globalFilter: "rmsDuplicates"
 
 			});
 			this.setModel(oViewModel, "worklistView");
@@ -226,7 +227,7 @@ sap.ui.define([
 				"similarMatchEntities": similarMatchEntitiesFilters,
 				"all": []
 			};
-
+			
 			this._mFiltersNames = {
 				"a": aSurnameFilter,
 				"b": bSurnameFilter,
@@ -255,6 +256,15 @@ sap.ui.define([
 				"y": ySurnameFilter,
 				"z": zSurnameFilter,
 				"all": []
+			};
+			
+			// Global filters
+			var rmsDuplicatesFilter = new sap.ui.model.Filter("RMS_DUPLICATES", sap.ui.model.FilterOperator.EQ, "\'X\'");
+			var rmsAllDuplicatesFilter = new sap.ui.model.Filter("RMS_DUPLICATES", sap.ui.model.FilterOperator.NE,  "\'-\'");
+			
+			this._mGlobalFilters = {
+				"rmsDuplicates": rmsDuplicatesFilter,
+				"allDuplicates": rmsAllDuplicatesFilter
 			};
 
 			// Make sure, busy indication is showing immediately so there is no
@@ -321,10 +331,11 @@ sap.ui.define([
 						oViewModel.setProperty("/countAll", oData);
 						oViewModel.setProperty("/countAllStr", formatter.localePresentation(parseInt(oData)));
 					},
-					filters: this.getCategoryFilters('all')
+					filters: [this.getCategoryFilters('all')]
 						//filters: []
 				});
 
+				
 				// read the count for the high confidence matches
 				this.getModel().read("/matchResultsReview/$count", {
 					success: function(oData) {
@@ -377,6 +388,7 @@ sap.ui.define([
 						//filters: [this._mFilters.similarMatchEntities]
 						//this._mFiltersNames[sKey]
 				});
+				
 
 			} else {
 				sTitle = this.getResourceBundle().getText("worklistTableTitle");
@@ -509,35 +521,63 @@ sap.ui.define([
 			});
 		},
 
-		handleToggleDuplicateViewButtonPress: function() {
+		handleToggleDuplicateViewButtonPress: function(oEvent) {
 
-			var sKey = oEvent.getParameter("selectedKey");
+			var oViewModel = this.getModel("worklistView");
+			var sKey = oEvent.getSource().getKey();
 			
+			if (sKey === 'rmsDuplicates') {
+				// Show RMS duplicates only
+				oViewModel.setProperty("/globalFilter", "rmsDuplicates");
+			} else {
+				oViewModel.setProperty("/globalFilter", "allDuplicates");
+			}
+			
+			// Get selected category and trigger click event
+			//this.getView().byId(this.getView().byId("iconTabBar").getSelectedKey()).click();
+			
+			var oIconTabBar = this.getView().byId("iconTabBar");
+    		var oEvent = new sap.ui.base.Event("customSelect",oIconTabBar,{"selectedKey": oIconTabBar.getSelectedKey() ,"item":this.getView().byId(this.getView().byId("iconTabBar").getSelectedKey())});
+			this.onQuickFilter(oEvent);
+			
+			
+			
+			// Trigger refresh
+			//var oBinding = this._oTable.getBinding("items");
+			//oBinding.filter(new sap.ui.model.Filter([this._mGlobalFilters.rmsDuplicates], true), sap.ui.model.FilterType.Application);
 		},
 
 		/**
 		 * Gets the filters set by the current UI state for a given category
+		 * 
+		 * 
 		 */
 		getCategoryFilters: function(sCategory) {
 
+			var oViewModel = this.getModel("worklistView");
+			
 			if (sCategory === 'all') {
 				if (this.getView().byId("subIconTabBar").getSelectedKey() !== 'all') {
-					return [new sap.ui.model.Filter([
+					return new sap.ui.model.Filter([
+						this._mGlobalFilters[oViewModel.getProperty("/globalFilter")],
 						this._mFiltersNames[this.getView().byId("subIconTabBar").getSelectedKey()]
-					], true)];
+					], true);
 				} else {
 					// Return empty array
-					return this._mFilters.all;
+					//return this._mFilters.all;
+					return this._mGlobalFilters[oViewModel.getProperty("/globalFilter")];
 				}
 			} else {
 
 				if (this.getView().byId("subIconTabBar").getSelectedKey() !== 'all') {
 					return new sap.ui.model.Filter([
+						this._mGlobalFilters[oViewModel.getProperty("/globalFilter")],
 						this._mFiltersNames[this.getView().byId("subIconTabBar").getSelectedKey()],
 						this._mFilters[sCategory]
 					], true);
 				} else {
 					return new sap.ui.model.Filter([
+						this._mGlobalFilters[oViewModel.getProperty("/globalFilter")],
 						this._mFilters[sCategory]
 					], true);
 				}
@@ -576,6 +616,7 @@ sap.ui.define([
 		 */
 		onQuickFilter: function(oEvent) {
 
+			var oViewModel = this.getModel("worklistView");
 			var oSearch = this.getView().byId("searchField");
 			var icon = oSearch.$().find('.sapUiSearchFieldIco');
 			if (icon.prop('title')) {
@@ -587,17 +628,26 @@ sap.ui.define([
 
 			if (oEvent.oSource.sId.indexOf("subIconTabBar") > 0) {
 				// Letter filter tab
-				if (sKey == 'all') {
-					oBinding.filter(this._mFilters[this.getView().byId("iconTabBar").getSelectedKey()], sap.ui.model.FilterType.Application);
+				if (sKey === 'all') {
+					
+					if (this.getView().byId("iconTabBar").getSelectedKey() === 'all') {
+						oBinding.filter(new sap.ui.model.Filter([this._mGlobalFilters[oViewModel.getProperty("/globalFilter")]], true), sap.ui.model.FilterType.Application);
+					} else {
+						//oBinding.filter(this._mFilters[this.getView().byId("iconTabBar").getSelectedKey()], sap.ui.model.FilterType.Application);
+						oBinding.filter(new sap.ui.model.Filter([this._mGlobalFilters[oViewModel.getProperty("/globalFilter")], this._mFilters[this.getView().byId("iconTabBar").getSelectedKey()]], true), sap.ui.model.FilterType.Application);	
+					}	
+					
 				} else {
 
 					// Filter for a specific letter is set, now check if category filter
-					if (this.getView().byId("iconTabBar").getSelectedKey() == 'all') {
-						oBinding.filter(this._mFiltersNames[sKey], sap.ui.model.FilterType.Application);
+					if (this.getView().byId("iconTabBar").getSelectedKey() === 'all') {
+						//oBinding.filter(this._mFiltersNames[sKey], sap.ui.model.FilterType.Application);
+						oBinding.filter(new sap.ui.model.Filter([this._mGlobalFilters[oViewModel.getProperty("/globalFilter")], this._mFiltersNames[sKey]], true), sap.ui.model.FilterType.Application);
 					} else {
 						// Set new filter for letter and combine with current filter selection for group category
 						oBinding.filter(
 							new sap.ui.model.Filter([
+								this._mGlobalFilters[oViewModel.getProperty("/globalFilter")],
 								this._mFilters[this.getView().byId("iconTabBar").getSelectedKey()],
 								this._mFiltersNames[sKey]
 							], true), sap.ui.model.FilterType.Application);
@@ -607,20 +657,29 @@ sap.ui.define([
 
 			} else {
 				// Category filter tab
-				if (sKey == 'all') {
+				if (sKey === 'all') {
+					
 					// All categories, set filter for letter selection only
-					oBinding.filter(this._mFiltersNames[this.getView().byId("subIconTabBar").getSelectedKey()], sap.ui.model.FilterType.Application);
+					//oBinding.filter(this._mFiltersNames[this.getView().byId("subIconTabBar").getSelectedKey()], sap.ui.model.FilterType.Application
+					if (this.getView().byId("subIconTabBar").getSelectedKey() === 'all') {
+						oBinding.filter(new sap.ui.model.Filter([this._mGlobalFilters[oViewModel.getProperty("/globalFilter")]], true), sap.ui.model.FilterType.Application);	
+					} else {
+						oBinding.filter(new sap.ui.model.Filter([this._mGlobalFilters[oViewModel.getProperty("/globalFilter")], this._mFiltersNames[this.getView().byId("subIconTabBar").getSelectedKey()]], true), sap.ui.model.FilterType.Application);
+					} 
+					
 				} else {
 
 					// Specific category, check filter for letter selection
-					if (this.getView().byId("subIconTabBar").getSelectedKey() == 'all') {
+					if (this.getView().byId("subIconTabBar").getSelectedKey() === 'all') {
 						// Letter selection is all, only one filter for category required
-						oBinding.filter(this._mFilters[this.getView().byId("iconTabBar").getSelectedKey()], sap.ui.model.FilterType.Application);
+						//oBinding.filter(this._mFilters[this.getView().byId("iconTabBar").getSelectedKey()], sap.ui.model.FilterType.Application);
+						oBinding.filter(new sap.ui.model.Filter([this._mGlobalFilters[oViewModel.getProperty("/globalFilter")], this._mFilters[this.getView().byId("iconTabBar").getSelectedKey()]], true), sap.ui.model.FilterType.Application);
 					} else {
+						
 						// Set new filter for group category and combine with current filter selection for letter
-
 						oBinding.filter(
 							new sap.ui.model.Filter([
+								this._mGlobalFilters[oViewModel.getProperty("/globalFilter")],
 								this._mFiltersNames[this.getView().byId("subIconTabBar").getSelectedKey()],
 								this._mFilters[sKey]
 							], true), sap.ui.model.FilterType.Application);
