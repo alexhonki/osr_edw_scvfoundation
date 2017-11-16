@@ -24,7 +24,7 @@
 									<!--<Panel class="sapUiNoContentPadding" headerText="{i18n>ObjectSupplierTabTitle}">-->
 									<!--<Panel class="sapUiNoContentPadding">
 										<content>-->
-									<Table id="detailsTable" busyIndicatorDelay="{worklistView>/tableBusyDelay}" class="sapUiResponsiveMargin sapUiNoMarginTop" growing="true"
+									<Table id="detailsTable" fixedLayout="false" busyIndicatorDelay="{worklistView>/tableBusyDelay}" class="sapUiResponsiveMargin sapUiNoMarginTop" growing="true"
 										growingScrollToLoad="true" noDataText="{worklistView>/tableNoDataText}" updateFinished="onUpdateFinished" width="auto"
 										items="{ path: 'matchResults', sorter: { path: 'GROUP_ID', descending: false }}">
 										<headerToolbar>
