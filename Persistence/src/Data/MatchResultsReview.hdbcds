@@ -40,7 +40,7 @@ context MatchResultsReview {
             PROMOTED_TO_SCV          : String(1);
             PROMOTION_TIMESTAMP      : UTCTimestamp;
             PROMOTED_BY              : String(10);
-            RMS_DUPLICATES			 : String(1);
+            RMS_DUPLICATES			 : Integer;
     }
     technical configuration {
         index index_0 on (PROMOTED_TO_SCV);
@@ -68,7 +68,7 @@ context MatchResultsReview {
             PROMOTED_TO_SCV          : String(1);
             PROMOTION_TIMESTAMP      : UTCTimestamp;
             PROMOTED_BY              : String(10);
-            RMS_DUPLICATES			 : String(1);
+            RMS_DUPLICATES			 : Integer;
     }
     technical configuration {
         index index_0 on (PROMOTED_TO_SCV);

@@ -1,7 +1,9 @@
-FUNCTION "osr.scv.foundation.db.functions::MatchResultsDetails" ( IN i_entity_id NVARCHAR(20) )
-       RETURNS TABLE (	GROUP_ID Integer,
+FUNCTION "osr.scv.foundation.db.functions::MatchResultsDetailsSingle" ( IN i_match_row NVARCHAR(20) )
+       RETURNS TABLE (	
+    					POLICY_NAME NVARCHAR(256),
+    					SCORE Integer,
+    					GROUP_ID Integer,
         				ENTITY_ID VARCHAR(20),
-        				GROUP_ROW_COUNT INTEGER,
         				SOURCE_SYSTEM NVARCHAR(10),
         				SYSTEM_ID NVARCHAR(10),
         				FIRST_NAME NVARCHAR(50),
@@ -15,11 +17,7 @@ FUNCTION "osr.scv.foundation.db.functions::MatchResultsDetails" ( IN i_entity_id
 					    ADDRESS_POSTCODE NVARCHAR(20),
 					    ADDRESS_PRIM_NAME NVARCHAR(100),
 					    ADDRESS_PRIM_NUMBER NVARCHAR(40),
-        				MATCH_ROW INTEGER,
-        				RELATED_ROW INTEGER,
-        				SCORE INTEGER,
-        				POLICY_NAME NVARCHAR(256),
-        				RULE_NAME NVARCHAR(256)
+        				MATCH_ROW INTEGER
 
         			  )
        SQL SECURITY INVOKER AS 
@@ -29,6 +27,7 @@ BEGIN
  *****************************/ 
 
 	DECLARE l_latestExecutionID INTEGER;
+	DECLARE l_match_row INTEGER;
 
 	-- Retrieve latest task execution ID
 	SELECT MAX(TASK_EXECUTION_ID) INTO l_latestExecutionID 
@@ -36,10 +35,27 @@ BEGIN
 	WHERE TASK_NAME = 'osr.scv.foundation.db.flowgraphs::MatchBusinessPartners';
 	
 	--lt_overview =	
-				return	SELECT 
+				
+				l_match_row = TO_INT(:i_match_row);
+				
+				lt_related_rows = SELECT RELATED_ROW_ID, POLICY_NAME, SCORE FROM "osr.scv.foundation.db.data::MatchResults.MatchResults" AS a
+				LEFT OUTER JOIN (SELECT * 
+		                                 FROM   "osr.scv.foundation.db.synonyms::MATCH_TRACING" 
+		                                ) AS b
+		                ON a."Match_ROW_ID" = b.ROW_ID
+		                	AND b.TASK_EXECUTION_ID = :l_latestExecutionID
+	                		AND b.TASK_NAME = 'osr.scv.foundation.db.flowgraphs::MatchBusinessPartners'
+			    WHERE a."Match_ROW_ID" = :l_match_row;
+
+				lt_target_match_rows =  
+				
+						SELECT b.POLICY_NAME, b.SCORE, a.* FROM (
+						
+						SELECT * FROM (
+						
+						SELECT 
 		            	a.GROUP_ID,
 						a.ENTITY_ID,
-						ROW_NUMBER() OVER (PARTITION BY ENTITY_ID) AS GROUP_ROW_COUNT,
 		            	a.SOURCE_SYSTEM,
 		            	a.SYSTEM_ID,
 		            	COALESCE(e.FNAME_ORIG_BUT, f.FNAME_ORIG_TMR) AS FIRST_NAME,
@@ -53,11 +69,7 @@ BEGIN
 						COALESCE(e1.POSTCODE_ORIG_ADRC, f.POSTCODE_ORIG_TMR) AS ADDRESS_POSTCODE,
 		            	COALESCE(e1.STREET_ORIG_ADRC, f.STREET_ORIG_TMR) AS ADDRESS_PRIM_NAME,
 		            	COALESCE(e1.STREET_NUMBER_ORIG_ADRC, f.STREET_NUMBER_ORIG_TMR) AS ADDRESS_PRIM_NUMBER,
-		            	a."Match_ROW_ID" as MATCH_ROW, 
-		            	b.RELATED_ROW_ID as RELATED_ROW, 
-		            	b.SCORE, 
-		                b.POLICY_NAME,
-		                b.RULE_NAME
+		            	a."Match_ROW_ID" as MATCH_ROW
 		                      
 		                FROM   "osr.scv.foundation.db.data::MatchResults.MatchResults" AS a 
 		                -- Add original fields
@@ -86,13 +98,43 @@ BEGIN
 		                ON a."Match_ROW_ID" = b.ROW_ID
 		                	AND b.TASK_EXECUTION_ID = :l_latestExecutionID
 	                		AND b.TASK_NAME = 'osr.scv.foundation.db.flowgraphs::MatchBusinessPartners'  
-						WHERE ENTITY_ID = :i_entity_id
-							--AND (b.POLICY_NAME NOT LIKE '%CustSourceSystem%' OR b.POLICY_NAME IS NULL)
+					
+						WHERE a."Match_ROW_ID" IN (SELECT RELATED_ROW_ID FROM :lt_related_rows) 
+						--	AND b.RELATED_ROW_ID = :l_match_row
 		                ORDER  BY SOURCE_SYSTEM ASC, 
 		                          SYSTEM_ID DESC,
 		                          b.SCORE ASC,
 		                          MATCH_ROW ASC
-					    ; 
+					    
+					    
+					    ) a
+					   
+					    GROUP BY
+					    GROUP_ID,
+						ENTITY_ID,
+		            	SOURCE_SYSTEM,
+		            	SYSTEM_ID,
+		            	FIRST_NAME,
+		            	MIDDLE_NAME,
+		            	LAST_NAME,
+		            	BIRTHDT,
+		            	ADDRNUMBER,
+		            	ADDRESS_COUNTRY,
+						ADDRESS_LOCALITY,
+						ADDRESS_REGION,
+						ADDRESS_POSTCODE,
+		            	ADDRESS_PRIM_NAME,
+		            	ADDRESS_PRIM_NUMBER,
+		            	MATCH_ROW
+		            	
+		            	) a
+					    INNER JOIN :lt_related_rows b
+					    ON a.MATCH_ROW = b.RELATED_ROW_ID;
+					    
+					   
+						RETURN SELECT * FROM :lt_target_match_rows;
+					    
+					    
 	/*
 	return SELECT GROUP_ID,
 				  ENTITY_ID,

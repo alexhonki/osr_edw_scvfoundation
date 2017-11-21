@@ -21,7 +21,7 @@ FUNCTION "osr.scv.foundation.db.functions::MatchResultsReview" ( )
         				PROMOTED_TO_SCV NVARCHAR(1),
             			PROMOTION_TIMESTAMP TIMESTAMP,
             			PROMOTED_BY NVARCHAR(10),
-            			RMS_DUPLICATES NVARCHAR(1)
+            			RMS_DUPLICATES INTEGER
         			  )
        SQL SECURITY INVOKER AS 
 BEGIN 
