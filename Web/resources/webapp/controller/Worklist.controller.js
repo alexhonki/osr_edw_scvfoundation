@@ -217,7 +217,7 @@ sap.ui.define([
 			var wSurnameFilter = new sap.ui.model.Filter("NAME", sap.ui.model.FilterOperator.StartsWith, "W");
 			var xSurnameFilter = new sap.ui.model.Filter("NAME", sap.ui.model.FilterOperator.StartsWith, "X");
 			var ySurnameFilter = new sap.ui.model.Filter("NAME", sap.ui.model.FilterOperator.StartsWith, "Y");
-			var zSurnameFilter = new sap.ui.model.Filter("NAME", sap.ui.model.FilterOperator.StartsWith, "X");
+			var zSurnameFilter = new sap.ui.model.Filter("NAME", sap.ui.model.FilterOperator.StartsWith, "Z");
 
 			// Create an object of filters
 			this._mFilters = {
@@ -259,8 +259,8 @@ sap.ui.define([
 			};
 			
 			// Global filters
-			var rmsDuplicatesFilter = new sap.ui.model.Filter("RMS_DUPLICATES", sap.ui.model.FilterOperator.EQ, "X");
-			var rmsAllDuplicatesFilter = new sap.ui.model.Filter("RMS_DUPLICATES", sap.ui.model.FilterOperator.NE,  "-");
+			var rmsDuplicatesFilter = new sap.ui.model.Filter("RMS_DUPLICATES", sap.ui.model.FilterOperator.EQ, 1);
+			var rmsAllDuplicatesFilter = new sap.ui.model.Filter("RMS_DUPLICATES", sap.ui.model.FilterOperator.NE,  -1);
 			
 			this._mGlobalFilters = {
 				"rmsDuplicates": rmsDuplicatesFilter,
@@ -461,7 +461,7 @@ sap.ui.define([
 		 */
 		_showObject: function(oItem) {
 			this.getRouter().navTo("object", {
-				objectId: oItem.getBindingContext().getProperty("ENTITY_ID")
+				objectId: oItem.getBindingContext().getProperty("ENTITY_ID") + '|' + oItem.getBindingContext().getProperty("MATCH_ROW")
 			});
 		},
 
@@ -610,7 +610,10 @@ sap.ui.define([
 		},
 
 		/**
-		 * Event handler when a filter tab gets pressed
+		 * Event handler when a filter tab gets pressed.
+		 * 
+		 * Note: This method handles event from both fiter bars!
+		 * 
 		 * @param {sap.ui.base.Event} oEvent the filter tab event
 		 * @public
 		 */

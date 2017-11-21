@@ -24,9 +24,9 @@ BEGIN
 								AND GROUP_ID IS NOT NULL 
 								AND SOURCE_SYSTEM = 'RMS';
 								
-	UPDATE "osr.scv.foundation.db.data::MatchResults.MatchResults" SET RMS_DUPLICATES = '';
+	UPDATE "osr.scv.foundation.db.data::MatchResults.MatchResults" SET RMS_DUPLICATES = 0;
    
-    UPDATE "osr.scv.foundation.db.data::MatchResults.MatchResults" a SET a.RMS_DUPLICATES = 'X' 
+    UPDATE "osr.scv.foundation.db.data::MatchResults.MatchResults" a SET a.RMS_DUPLICATES = 1 
     FROM "osr.scv.foundation.db.data::MatchResults.MatchResults" a, :lt_rms_duplicate_groups b
     WHERE a.GROUP_ID = b.GROUP_ID;							
    
@@ -69,14 +69,14 @@ BEGIN
    WHERE a."Match_ROW_ID" = b."Match_ROW_ID";
    
    -- Set group category
-   lt_group_category = SELECT DISTINCT m.GROUP_ID, CASE WHEN m.GROUP_ID IS NULL THEN 0 WHEN m.AVERAGE_SCORE = 100 THEN 1 WHEN m.AVERAGE_SCORE >= 95 THEN 2 ELSE 3 END AS GROUP_CATEGORY
+   lt_group_category = SELECT DISTINCT m.ENTITY_ID, CASE WHEN m.GROUP_ID IS NULL THEN 0 WHEN m.AVERAGE_SCORE = 100 THEN 1 WHEN m.AVERAGE_SCORE >= 95 THEN 2 ELSE 3 END AS GROUP_CATEGORY
 								 FROM "osr.scv.foundation.db.data::MatchResults.MatchResults" m;
 								 
    UPDATE "osr.scv.foundation.db.data::MatchResults.MatchResults" SET GROUP_CATEGORY = NULL;
    UPDATE "osr.scv.foundation.db.data::MatchResults.MatchResults" a
 	SET a.GROUP_CATEGORY = b.GROUP_CATEGORY 
    FROM "osr.scv.foundation.db.data::MatchResults.MatchResults" a, :lt_group_category b
-   WHERE a.GROUP_ID = b.GROUP_ID;
+   WHERE a.ENTITY_ID = b.ENTITY_ID;
    
    -- Override group category for RMS records only which fall into category 1, but should be in category 0
    lt_group_override = SELECT GROUP_ID, 0 AS GROUP_CATEGORY, COUNT(DISTINCT SYSTEM_ID), MAX(SOURCE_SYSTEM), MIN(SOURCE_SYSTEM) FROM "osr.scv.foundation.db.data::MatchResults.MatchResults" 

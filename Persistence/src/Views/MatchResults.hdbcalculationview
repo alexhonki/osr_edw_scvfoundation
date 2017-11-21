@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" xmlns:Variable="http://www.sap.com/ndb/BiModelVariable.ecore" id="osr.scv.foundation.db.views::MatchResults" applyPrivilegeType="NONE" dataCategory="DEFAULT" schemaVersion="3.0" outputViewType="Projection" cacheInvalidationPeriod="NONE" enforceSqlExecution="true">
+<descriptions defaultDescription="OSR SCV - Match Results View"/>
+<localVariables>
+  <variable id="IP_ENTITY_ID" parameter="true">
+    <descriptions defaultDescription="IP_ENTITY_ID">
+      <comment text="Entity ID"/>
+    </descriptions>
+    <variableProperties datatype="VARCHAR" length="20" mandatory="true">
+      <valueDomain type="empty"/>
+      <selection multiLine="false" type="Single"/>
+      <defaultRange lowValue="1"/>
+    </variableProperties>
+  </variable>
+</localVariables>
+<variableMappings>
+  <mapping xsi:type="Variable:VariableMapping" dataSource="osr.scv.foundation.db.functions::MatchResults">
+    <targetVariable name="I_ENTITY_ID" resourceUri="osr.scv.foundation.db.functions::MatchResults"/>
+    <localVariable>IP_ENTITY_ID</localVariable>
+  </mapping>
+</variableMappings>
+<dataSources>
+  <DataSource id="osr.scv.foundation.db.functions::MatchResults" type="TABLE_FUNCTION">
+    <resourceUri>osr.scv.foundation.db.functions::MatchResults</resourceUri>
+  </DataSource>
+</dataSources>
+<calculationViews/>
+<logicalModel id="osr.scv.foundation.db.functions::MatchResults">
+  <attributes>
+    <attribute id="ENTITY_ID" order="2" displayAttribute="false" attributeHierarchyActive="false" key="true">
+      <descriptions defaultDescription="ENTITY_ID"/>
+      <keyMapping columnObjectName="MatchResults" columnName="ENTITY_ID"/>
+    </attribute>
+    <attribute id="GROUP_ROW_COUNT" order="3" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="GROUP_ROW_COUNT"/>
+      <keyMapping columnObjectName="MatchResults" columnName="GROUP_ROW_COUNT"/>
+    </attribute>
+    <attribute id="GROUP_ID" order="4" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="GROUP_ID"/>
+      <keyMapping columnObjectName="MatchResults" columnName="GROUP_ID"/>
+    </attribute>
+    <attribute id="SOURCE_SYSTEM" order="5" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="SOURCE_SYSTEM"/>
+      <keyMapping columnObjectName="MatchResults" columnName="SOURCE_SYSTEM"/>
+    </attribute>
+    <attribute id="FIRST_NAME" order="6" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="FIRST_NAME"/>
+      <keyMapping columnObjectName="MatchResults" columnName="FIRST_NAME"/>
+    </attribute>
+    <attribute id="MIDDLE_NAME" order="7" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="MIDDLE_NAME"/>
+      <keyMapping columnObjectName="MatchResults" columnName="MIDDLE_NAME"/>
+    </attribute>
+    <attribute id="LAST_NAME" order="8" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="LAST_NAME"/>
+      <keyMapping columnObjectName="MatchResults" columnName="LAST_NAME"/>
+    </attribute>
+  
+    <attribute id="ADDRESS_PRIM_NAME" order="9" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="ADDRESS_PRIM_NAME"/>
+  
+      <keyMapping columnObjectName="MatchResults" columnName="ADDRESS_PRIM_NAME"/>
+  
+    </attribute>
+    <attribute id="ADDRESS_PRIM_NUMBER" order="10" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="ADDRESS_PRIM_NUMBER"/>
+      <keyMapping columnObjectName="MatchResults" columnName="ADDRESS_PRIM_NUMBER"/>
+    </attribute>
+    <attribute id="ADDRESS_REGION" order="11" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="ADDRESS_REGION"/>
+      <keyMapping columnObjectName="MatchResults" columnName="ADDRESS_REGION"/>
+    </attribute>
+    <attribute id="ADDRESS_POSTCODE" order="12" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="ADDRESS_POSTCODE"/>
+      <keyMapping columnObjectName="MatchResults" columnName="ADDRESS_POSTCODE"/>
+    </attribute>
+  
+    <attribute id="BIRTHDT" order="15" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="BIRTHDT"/>
+  
+      <keyMapping columnObjectName="MatchResults" columnName="BIRTHDT"/>
+  
+    </attribute>
+    <attribute id="ADDRNUMBER" order="16" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="ADDRNUMBER"/>
+      <keyMapping columnObjectName="MatchResults" columnName="ADDRNUMBER"/>
+    </attribute>
+    <attribute id="MATCH_ROW" order="17" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="MATCH_ROW"/>
+      <keyMapping columnObjectName="MatchResults" columnName="MATCH_ROW"/>
+    </attribute>
+    <attribute id="SYSTEM_ID" order="18" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="SYSTEM_ID"/>
+      <keyMapping columnObjectName="MatchResults" columnName="SYSTEM_ID"/>
+    </attribute>
+    <attribute id="ADDRESS_COUNTRY" order="19" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="ADDRESS_COUNTRY"/>
+      <keyMapping columnObjectName="MatchResults" columnName="ADDRESS_COUNTRY"/>
+    </attribute>
+    <attribute id="ADDRESS_LOCALITY" order="20" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="ADDRESS_LOCALITY"/>
+      <keyMapping columnObjectName="MatchResults" columnName="ADDRESS_LOCALITY"/>
+    </attribute>
+  </attributes>
+  <calculatedAttributes>
+    <calculatedAttribute id="NAME" order="1" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false" key="true">
+      <descriptions defaultDescription="NAME"/>
+      <keyCalculation datatype="NVARCHAR" expressionLanguage="SQL" length="256">
+        <formula>CONCAT(CONCAT(&quot;LAST_NAME&quot;, ', '), CONCAT(&quot;FIRST_NAME&quot;, CONCAT(' ',CASE WHEN &quot;MIDDLE_NAME&quot; IS NULL THEN '' ELSE &quot;MIDDLE_NAME&quot; END)))</formula>
+      </keyCalculation>
+      </calculatedAttribute>
+  
+    <calculatedAttribute id="ADDRESS" order="13" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="ADDRESS"/>
+  
+      <keyCalculation datatype="NVARCHAR" expressionLanguage="SQL" length="256">
+  
+        <formula>CONCAT(&quot;ADDRESS_PRIM_NUMBER&quot;, CONCAT(' ', &quot;ADDRESS_PRIM_NAME&quot;))</formula>
+  
+      </keyCalculation>
+      </calculatedAttribute>
+  
+    <calculatedAttribute id="FIRST_MIDDLE_NAME" order="14" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="FIRST_MIDDLE_NAME"/>
+  
+      <keyCalculation datatype="NVARCHAR" expressionLanguage="SQL" length="256">
+  
+        <formula>CONCAT(&quot;FIRST_NAME&quot;, CONCAT(' ' , &quot;MIDDLE_NAME&quot;))</formula>
+  
+      </keyCalculation>
+      </calculatedAttribute>
+  
+    <calculatedAttribute id="MATCH_ROW_STR" order="21" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="MATCH_ROW_STR"/>
+      <keyCalculation datatype="NVARCHAR" expressionLanguage="SQL" length="20">
+        <formula>TO_NVARCHAR(&quot;MATCH_ROW&quot;)</formula>
+      </keyCalculation>
+      </calculatedAttribute>
+  </calculatedAttributes>
+  <baseMeasures/>
+  <calculatedMeasures/>
+  <restrictedMeasures/></logicalModel>
+<layout>
+  <shapes>
+    <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+      <upperLeftCorner x="82" y="105"/>
+    
+      <rectangleSize width="140"/>
+    </shape>
+  </shapes>
+</layout>
+</Calculation:scenario>

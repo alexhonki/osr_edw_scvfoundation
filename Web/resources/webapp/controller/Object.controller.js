@@ -52,10 +52,14 @@ sap.ui.define([
 		},
 		
 		/**
-		 * Called when the worklist controller is instantiated.
+		 * Called when the table is rendered.
 		 * @public
 		 */
-		onAfterRendering: function() {
+		onAfterDetailsTableRendering: function() {
+			
+			this.byId("detailsTable").getItems()[0].setSelected(true);
+			
+			/*
 			var oTable = this.getView().byId("detailsTable");
 			var aItems = oTable.getItems();
 			var i = 0;
@@ -74,6 +78,7 @@ sap.ui.define([
 					}
 				}
 			}
+			*/
 		},
 
 		/* =========================================================== */
@@ -125,9 +130,19 @@ sap.ui.define([
 		 */
 		_onObjectMatched: function(oEvent) {
 			//var sObjectPath = "/matchResultsReview('" + oEvent.getParameter("arguments").objectId + "')/matchResults";
-			var sObjectPath = "/matchResultsReview('" + oEvent.getParameter("arguments").objectId + "')";
+			var sObjectPath = "/matchResultsReview('" + oEvent.getParameter("arguments").objectId.split("|")[0] + "')";
 			this._bindView(sObjectPath);
-
+			
+			var matchRow =  oEvent.getParameter("arguments").objectId.split("|")[1];
+			
+			// Related match rows
+			var sObjectPathRelated = "/matchResultsDetailsRelatedParameters(I_MATCH_ROW='" + matchRow + "')/Results";
+			this.byId("detailsTable1").bindItems({path: sObjectPathRelated, template:this.byId("detailsTable1").getBindingInfo("items").template});
+			//zTable.bindItems({path: "/itemstit", template:this.byId("detailsTable").getBindingInfo("items").template});
+			
+			// Pre-select first line
+			//this.byId("detailsTable").getItems()[0].setSelected(true);
+			
 			// Disable change log tab?
 			// Read the change log count for current entity
 			var that = this;
@@ -206,6 +221,22 @@ sap.ui.define([
 		handleStrategyChangeLogLinkPress: function(oEvent) {
 			var domRef = oEvent.getParameter("domRef");
 			this._getPopover().openBy(domRef);
+		},
+		
+		/**
+		 * Event handler when a table item gets pressed
+		 * @param {sap.ui.base.Event} oEvent the table selectionChange event
+		 * @public
+		 */
+		onPress: function(oEvent) {
+			// The source is the list item that got pressed
+			var oItem = oEvent.getSource();
+			var newMatchRow = oItem.getBindingContext().getProperty("MATCH_ROW");
+			
+			// Update the binding
+			var sObjectPathRelated = "/matchResultsDetailsRelatedParameters(I_MATCH_ROW='" + newMatchRow + "')/Results";
+			this.byId("detailsTable1").bindItems({path: sObjectPathRelated, template:this.byId("detailsTable1").getBindingInfo("items").template});
+			
 		},
 
 		/**
