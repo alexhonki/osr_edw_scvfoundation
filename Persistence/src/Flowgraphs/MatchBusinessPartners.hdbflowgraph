@@ -727,7 +727,7 @@
       </attributes>
       <attributes xmi:id="b4c2c35eab1a1dfb3c56407daa50da76" name="STD_ADDR_PRIM_NUMBER" type="NVARCHAR" nullable="true" expression="&quot;STD_ADDR_PRIM_NUMBER&quot;" length="20">
       </attributes>
-      <attributes xmi:id="48281ede8f68379a228bdad814eea8e7" name="BIRTHDT" type="DATE" nullable="true" expression="CASE WHEN &quot;BIRTHDT&quot;=&#x27; &#x27;  THEN NULL ELSE &quot;BIRTHDT&quot; END
+      <attributes xmi:id="48281ede8f68379a228bdad814eea8e7" name="BIRTHDT" type="DATE" nullable="true" expression="CASE WHEN &quot;BIRTHDT&quot; = &#x27;&#x27; OR &quot;BIRTHDT&quot; = &#x27; &#x27;  THEN NULL ELSE &quot;BIRTHDT&quot; END 
 ">
       </attributes>
       <attributes xmi:id="97c4ab27182d59e575dfe7d39717619f" name="ADDR_ASMT_LEVEL" type="NVARCHAR" nullable="true" expression="&quot;ADDR_ASMT_LEVEL&quot;" length="3">
