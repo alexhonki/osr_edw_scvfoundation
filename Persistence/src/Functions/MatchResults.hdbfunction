@@ -29,7 +29,7 @@ BEGIN
 				return	SELECT 
 		            	a.GROUP_ID,
 						a.ENTITY_ID,
-						ROW_NUMBER() OVER (PARTITION BY ENTITY_ID) AS GROUP_ROW_COUNT,
+						GROUP_ROW_INDEX AS GROUP_ROW_COUNT,
 		            	a.SOURCE_SYSTEM,
 		            	a.SYSTEM_ID,
 		            	COALESCE(e.FNAME_ORIG_BUT, f.FNAME_ORIG_TMR) AS FIRST_NAME,
