@@ -57,7 +57,10 @@ sap.ui.define([
 		 */
 		onAfterDetailsTableRendering: function() {
 			
-			//this.byId("detailsTable").getItems()[0].setSelected(true);
+			var oItems = this.byId("detailsTable");
+			if (oItems) {
+				this.byId("detailsTable").getItems()[0].setSelected(true);
+			}
 			
 			/*
 			var oTable = this.getView().byId("detailsTable");
@@ -230,8 +233,8 @@ sap.ui.define([
 		 */
 		onPress: function(oEvent) {
 			// The source is the list item that got pressed
-			var oItem = oEvent.getSource();
-			var newMatchRow = oItem.getBindingContext().getProperty("MATCH_ROW");
+			//var oItem = oEvent.getSource();
+			var newMatchRow = oEvent.getSource().getSelectedItem().getBindingContext().getProperty("MATCH_ROW_STR");
 			
 			// Update the binding
 			var sObjectPathRelated = "/matchResultsDetailsRelatedParameters(I_MATCH_ROW='" + newMatchRow + "')/Results";
