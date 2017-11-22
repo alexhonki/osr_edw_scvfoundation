@@ -25,77 +25,81 @@
 									<!--<Panel class="sapUiNoContentPadding">
 										<content>-->
 									<Table id="detailsTable" fixedLayout="false" busyIndicatorDelay="{worklistView>/tableBusyDelay}" class="sapUiResponsiveMargin sapUiNoMarginTop" growing="true"
-										growingScrollToLoad="true" noDataText="{worklistView>/tableNoDataText}" updateFinished="onAfterDetailsTableRendering" width="auto"
+										growingScrollToLoad="true" noDataText="{worklistView>/tableNoDataText}" updateFinished="onAfterDetailsTableRendering" width="auto" mode="SingleSelectMaster" selectionChange="onPress"
 										items="{ path: 'matchResults', sorter: { path: 'GROUP_ROW_COUNT', descending: false}}">
 										<headerToolbar>
 											<Toolbar>
 												<Title id="tableDetailsHeader" text="Match Group Details"/>
 												<ToolbarSpacer/>
-												<Button id="promoteButton" type="Accept" text="Promote" enabled="{= ${STRATEGY_RESOLVED}.match('Review') ? true : false}" pressed="true"
+												<Button id="acceptButton" type="Accept" text="Accept"/>
+												<Button id="rejectButton" type="Reject" text="Reject"/>
+												<!--<Button id="promoteButton" type="Accept" text="Promote" enabled="{= ${STRATEGY_RESOLVED}.match('Review') ? true : false}" pressed="true"
 													press="onPromote" visible="{= ${STRATEGY_RESOLVED}.match('Review') ? true : false}"/>
 												<Button id="rejectButton" type="Reject" text="Reject" enabled="{= ${STRATEGY_RESOLVED}.match('Promote') ? true : false}" pressed="true"
-													press="onReject" visible="{= ${STRATEGY_RESOLVED}.match('Promote') ? true : false}"/>
-												<!--<SearchField id="searchField" search="onSearch" tooltip="{i18n>worklistSearchTooltip}" width="auto"/>-->
+													press="onReject" visible="{= ${STRATEGY_RESOLVED}.match('Promote') ? true : false}"/>-->
 											</Toolbar>
 										</headerToolbar>
 										<columns>
-											<Column id="c1">
-												<Text id="t1" text="System"/>
+											<Column>
+												<Text text="#"/>
 											</Column>
-											<Column id="c2">
-												<Text id="t2" text="System ID"/>
+											<Column>
+												<Text text="System"/>
 											</Column>
-											<Column id="c3">
-												<Text id="t3" text="Date of Birth"/>
+											<Column>
+												<Text text="System ID"/>
 											</Column>
-											<Column id="c4">
-												<Text id="t4" text="Last Name"/>
+											<Column>
+												<Text text="Date of Birth"/>
 											</Column>
-											<Column id="c5">
-												<Text id="t5" text="First Middle Name"/>
+											<Column>
+												<Text text="Last Name"/>
 											</Column>
-											<Column id="c6">
-												<Text id="t6" text="Address Number"/>
+											<Column>
+												<Text text="First Middle Name"/>
 											</Column>
-											<Column id="c8">
-												<Text id="t8" text="Country"/>
+											<Column>
+												<Text text="Address Number"/>
 											</Column>
-											<Column id="c9">
-												<Text id="t9" text="Region"/>
+											<Column>
+												<Text text="Country"/>
 											</Column>
-											<Column id="c10">
-												<Text id="t10" text="Postcode"/>
+											<Column>
+												<Text text="Region"/>
 											</Column>
-											<Column id="c11">
-												<Text id="t11" text="City"/>
+											<Column>
+												<Text text="Postcode"/>
 											</Column>
-											<Column id="c12">
-												<Text id="t12" text="Street"/>
+											<Column>
+												<Text text="City"/>
 											</Column>
-											<Column id="c13">
-												<Text id="t13" text="Street Number"/>
+											<Column>
+												<Text text="Street"/>
 											</Column>
-											<Column id="c14">
-												<Text id="t14" text="Match Row"/>
+											<Column>
+												<Text text="Street Number"/>
+											</Column>
+											<Column>
+												<Text text="Match Row"/>
 											</Column>
 										</columns>
 										<items>
-											<ColumnListItem press="onPress" type="Active">
+											<ColumnListItem type="Active">
 												<cells>
-													<Text id='cell01' text="{SOURCE_SYSTEM}"/>
-													<Text id='cell02' text="{SYSTEM_ID}"/>
-													<Text id='cell03' text="{BIRTHDT}"/>
-													<Text id='cell04' text="{LAST_NAME}"/>
-													<Text id='cell05' text="{FIRST_MIDDLE_NAME}"/>
-													<Text id='cell06' text="{ADDRNUMBER}"/>
-													<!--<Text text="{ADR_KIND}"/>-->
-													<Text id='cell07' text="{ADDRESS_COUNTRY}" />
-													<Text id='cell08' text="{ADDRESS_REGION}"/>
-													<Text id='cell09' text="{ADDRESS_POSTCODE}"/>
-													<Text id='cell10' text="{ADDRESS_LOCALITY}"/>
-													<Text id='cell11' text="{ADDRESS_PRIM_NAME}"/>
-													<Text id='cell12' text="{ADDRESS_PRIM_NUMBER}"/>
-													<Text id='cell13' text="{MATCH_ROW}"/>
+													<Text text="{GROUP_ROW_COUNT}"/>
+													<Text text="{SOURCE_SYSTEM}"/>
+													<Text text="{SYSTEM_ID}"/>
+													<Text text="{BIRTHDT}"/>
+													<Text text="{LAST_NAME}"/>
+													<Text text="{FIRST_MIDDLE_NAME}"/>
+													<Text text="{ADDRNUMBER}"/>
+													<Text text="{ADDRESS_COUNTRY}" />
+													<Text text="{ADDRESS_REGION}"/>
+													<Text text="{ADDRESS_POSTCODE}"/>
+													<Text text="{ADDRESS_LOCALITY}"/>
+													<Text text="{ADDRESS_PRIM_NAME}"/>
+													<Text text="{ADDRESS_PRIM_NUMBER}"/>
+													<Text text="{MATCH_ROW}"/>
 												</cells>
 											</ColumnListItem>
 										</items>

@@ -51,29 +51,30 @@
 								</Toolbar>
 							</headerToolbar>
 							<columns>
-								<Column id="groupColumn" hAlign="End">
-									<Text id="nameColumnTitle" text="{i18n>TableMatchGroupIdTitle}"	sortProperty="Name" wrapping="false"/>
+								<Column hAlign="End">
+									<Text text="{i18n>TableMatchGroupIdTitle}"	sortProperty="Name" wrapping="false"/>
 								</Column>
-								<Column id="groupCountColumn" hAlign="End">
-									<Text id="nameGroupCountTitle" text="Group Count" wrapping="false"/>
+								<Column hAlign="End">
+									<Text text="Group Count" wrapping="false"/>
 								</Column>
-								<Column id="reviewFlagColumn" hAlign="Center">
-									<Text id="nameReviewFlagTitle" text="Review Flag" wrapping="false"/>
-								</Column>
-								<!--<Column id="categoryColumn">
-									<Text id="nameGroupCategoryTitle" text="Category"/>
+								<!--<Column hAlign="Center">
+									<Text text="Review Flag" wrapping="false"/>
 								</Column>-->
-								<Column id="nameColumn">
-									<Text id="nameNameTitle" text="Name"/>
+								<Column>
+									<Text text="Name"/>
 								</Column>
-								<Column id="sourceColumn">
-									<Text id="nameSourceTitle" text="Source"/>
+								<Column>
+									<Text text="Source"/>
 								</Column>
-								<Column id="avgScoreColumn" hAlign="End" >
-									<Text id="nameAvgScoreTitle" text="Average Score"/>
+								<Column hAlign="End" >
+									<Text text="Average Score"/>
 								</Column>
-								<Column id="statusColumn">
-									<Text id="nameStatusTitle" text="Strategy"/>
+								<Column>
+									<Text text="Strategy"/>
+								</Column>
+
+								<Column>
+									<Text text="Action"/>
 								</Column>
 							</columns>
 							<items>
@@ -81,12 +82,13 @@
 									<cells>
 										<Text text="{GROUP_ID}"/>
 										<Text text="{GROUP_COUNT}"/>
-										<Text text="{REVIEW_GROUP}"/>
+										<!--<Text text="{REVIEW_GROUP}"/>-->
 										<!--<ObjectNumber number="{GROUP_CATEGORY}"/>-->
 										<Text text="{NAME}" wrapping="false"/>
 										<Text text="{SOURCE_SYSTEM}" />
 										<ObjectNumber number="{AVG_SCORE}"  state="{ path: 'AVG_SCORE', formatter: '.formatter.matchState' }" />
 										<ObjectStatus text="{STRATEGY_RESOLVED}" />
+										<ObjectStatus  text="{ACTION_RESOLVED}" />
 										<!--<ObjectNumber unit="EUR" number="{ path: 'UnitPrice', formatter: '.formatter.numberUnit' }"/>
 										<ObjectNumber number="{UnitsOnOrder}" unit="PC"/>
 										<ObjectNumber number="{UnitsInStock}" unit="PC" state="{ path: 'UnitsInStock', formatter: '.formatter.quantityState' }"/>-->

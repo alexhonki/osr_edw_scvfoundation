@@ -21,7 +21,9 @@ FUNCTION "osr.scv.foundation.db.functions::MatchResultsReview" ( )
         				PROMOTED_TO_SCV NVARCHAR(1),
             			PROMOTION_TIMESTAMP TIMESTAMP,
             			PROMOTED_BY NVARCHAR(10),
-            			RMS_DUPLICATES INTEGER
+            			RMS_DUPLICATES INTEGER,
+            			ACTION NVARCHAR(20),
+        				ACTION_RESOLVED NVARCHAR(20)
         			  )
        SQL SECURITY INVOKER AS 
 BEGIN 
@@ -58,6 +60,7 @@ BEGIN
 	                m.AVERAGE_SCORE AS AVG_SCORE,
 	                s.POLICY_NAME,
 	                d.STRATEGY,
+	                d.ACTION,
 	                m.RMS_DUPLICATES
                 FROM "osr.scv.foundation.db.data::MatchResults.MatchResults" m
                 -- Master data BUT000
@@ -87,7 +90,7 @@ BEGIN
                                 AND s1.TASK_NAME = 'osr.scv.foundation.db.flowgraphs::MatchBusinessPartners'              
                 -- Match strategy user overrides
                 LEFT OUTER JOIN (
-                                 SELECT a.ENTITY_ID, a.STRATEGY 
+                                 SELECT a.ENTITY_ID, a.STRATEGY, a.ACTION
                                  FROM "osr.scv.foundation.db.data::MatchResultsReview.Assessments" AS a
                                  INNER JOIN (
                                              -- Latest strategy
@@ -97,15 +100,17 @@ BEGIN
                                             ) AS b
                                  ON a.ENTITY_ID = b.ENTITY_ID
                                 	AND a.TIMESTAMP = b.MAX_TIMESTAMP
-                                ) AS d -- TODO: add latest execution ID for task
+                                ) AS d
                 ON d."ENTITY_ID" = m."ENTITY_ID"                                         
                 WHERE m.SHOW_IN_REVIEW = 'X'
 					AND (
+						 -- Unique records from RMS
 						 m."Match_ROW_ID" IN (SELECT "Match_ROW_ID" FROM "osr.scv.foundation.db.data::MatchResults.MatchResults" WHERE GROUP_ID IS NULL AND SOURCE_SYSTEM = 'RMS')
 						 OR
+						 -- Only match groups which contains at least one record from RMS
 						 m.GROUP_ID IN (SELECT GROUP_ID FROM "osr.scv.foundation.db.data::MatchResults.MatchResults" WHERE GROUP_ID IS NOT NULL AND SOURCE_SYSTEM = 'RMS' GROUP BY GROUP_ID)	
 						)
-                	AND (s.POLICY_NAME NOT LIKE '%CustSourceSystem%' OR s.POLICY_NAME IS NULL)
+                	--AND (s.POLICY_NAME NOT LIKE '%CustSourceSystem%' OR s.POLICY_NAME IS NULL)
 		)
 		;
 	
@@ -131,7 +136,9 @@ BEGIN
 				  '' AS PROMOTED_TO_SCV,
             	  null AS PROMOTION_TIMESTAMP,
                   '' AS PROMOTED_BY,
-                  RMS_DUPLICATES
+                  RMS_DUPLICATES,
+                  ACTION,
+				  CASE WHEN ACTION IS NOT NULL THEN ACTION WHEN (GROUP_CATEGORY = 0 OR GROUP_CATEGORY = 1) THEN 'Auto-Promotion' ELSE '' END AS ACTION_RESOLVED
 	FROM :lt_overview;
 	
 	-- TODO: Apply view filter here

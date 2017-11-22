@@ -57,7 +57,7 @@ sap.ui.define([
 		 */
 		onAfterDetailsTableRendering: function() {
 			
-			this.byId("detailsTable").getItems()[0].setSelected(true);
+			//this.byId("detailsTable").getItems()[0].setSelected(true);
 			
 			/*
 			var oTable = this.getView().byId("detailsTable");

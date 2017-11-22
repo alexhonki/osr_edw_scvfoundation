@@ -26,6 +26,7 @@ context MatchResults {
             AVERAGE_SCORE          : Integer;
             GROUP_CATEGORY         : Integer;
             RMS_DUPLICATES		   : String(1);
+            GROUP_ROW_INDEX		   : Integer;
     }
     technical configuration {
         unique index index_0 on (Match_ROW_ID);
@@ -59,6 +60,7 @@ context MatchResults {
             AVERAGE_SCORE          : Integer;
             GROUP_CATEGORY         : Integer;
             RMS_DUPLICATES		   : String(1);
+            GROUP_ROW_INDEX		   : Integer;
     }
     technical configuration {
         unique index index_0 on (Match_ROW_ID);

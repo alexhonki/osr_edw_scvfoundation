@@ -78,6 +78,13 @@
       <viewAttribute id="RMS_DUPLICATES">
         <descriptions defaultDescription="RMS_DUPLICATES"/>
       </viewAttribute>
+    
+      <viewAttribute id="ACTION">
+        <descriptions defaultDescription="ACTION"/>
+      </viewAttribute>
+      <viewAttribute id="ACTION_RESOLVED">
+        <descriptions defaultDescription="ACTION_RESOLVED"/>
+      </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
@@ -105,6 +112,9 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="PROMOTED_BY" source="PROMOTED_BY"/>
     
       <mapping xsi:type="Calculation:AttributeMapping" target="RMS_DUPLICATES" source="RMS_DUPLICATES"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="ACTION" source="ACTION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ACTION_RESOLVED" source="ACTION_RESOLVED"/>
     </input></calculationView>
 </calculationViews>
 <logicalModel id="Projection_1">
@@ -184,7 +194,18 @@
   
     <attribute id="RMS_DUPLICATES" order="20" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="RMS_DUPLICATES"/>
+  
       <keyMapping columnObjectName="Projection_1" columnName="RMS_DUPLICATES"/>
+  
+    </attribute>
+  
+    <attribute id="ACTION" order="21" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="ACTION"/>
+      <keyMapping columnObjectName="Projection_1" columnName="ACTION"/>
+    </attribute>
+    <attribute id="ACTION_RESOLVED" order="22" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="ACTION_RESOLVED"/>
+      <keyMapping columnObjectName="Projection_1" columnName="ACTION_RESOLVED"/>
     </attribute>
   </attributes>
   <calculatedAttributes>

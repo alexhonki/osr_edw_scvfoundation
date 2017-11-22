@@ -52,19 +52,22 @@ BEGIN
    
    
    -- Identify survivor record per match group to be displayed in review UI start screen
-   lt_survivor_match_records = SELECT "Match_ROW_ID" FROM (
+   lt_survivor_match_records = 
+								SELECT *, CASE WHEN GROUP_ROW_COUNT = 1 THEN 'X' ELSE '' END AS SHOW_IN_REVIEW FROM (
+								SELECT "Match_ROW_ID", GROUP_ROW_COUNT FROM (
 														   SELECT 
 												    		"Match_ROW_ID",
 								                        	ROW_NUMBER() OVER (PARTITION BY GROUP_ID ORDER BY SOURCE_SYSTEM DESC, SYSTEM_ID DESC) AS GROUP_ROW_COUNT
 							                               FROM "osr.scv.foundation.db.data::MatchResults.MatchResults"
 														  )
-							   WHERE GROUP_ROW_COUNT = 1;
+							   --WHERE GROUP_ROW_COUNT = 1;
+							   );
    
    UPDATE "osr.scv.foundation.db.data::MatchResults.MatchResults" SET SHOW_IN_REVIEW = NULL;
    UPDATE "osr.scv.foundation.db.data::MatchResults.MatchResults" SET SHOW_IN_REVIEW = 'X' WHERE GROUP_ID IS NULL;
    
    UPDATE "osr.scv.foundation.db.data::MatchResults.MatchResults" a
-   SET a.SHOW_IN_REVIEW = 'X'
+   SET a.SHOW_IN_REVIEW = b.SHOW_IN_REVIEW, a.GROUP_ROW_INDEX = b.GROUP_ROW_COUNT
    FROM "osr.scv.foundation.db.data::MatchResults.MatchResults" a, :lt_survivor_match_records b
    WHERE a."Match_ROW_ID" = b."Match_ROW_ID";
    
@@ -94,6 +97,6 @@ BEGIN
    TRUNCATE TABLE "osr.scv.foundation.db.data::MatchResultsReview.Review";
    TRUNCATE TABLE "osr.scv.foundation.db.data::MatchResultsReview.ReviewShadow";
    INSERT INTO "osr.scv.foundation.db.data::MatchResultsReview.Review" (SELECT * FROM "osr.scv.foundation.db.functions::MatchResultsReview"());
-   INSERT INTO "osr.scv.foundation.db.data::MatchResultsReview.ReviewShadow" (SELECT * FROM "osr.scv.foundation.db.functions::MatchResultsReview"());
+   INSERT INTO "osr.scv.foundation.db.data::MatchResultsReview.ReviewShadow" (SELECT * FROM "osr.scv.foundation.db.data::MatchResultsReview.Review");
    
 END
