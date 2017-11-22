@@ -273,13 +273,15 @@ sap.ui.define([
 		/**
 		 *  Accepts a matching group to be promotes into the SCV layer
 		 */
-		onPromote: function(oEvent) {
+		onAccept: function(oEvent) {
 
+			// Get current IDs
 			var groupId = this.getView().getBindingContext().getObject().GROUP_ID;
 			var entityId = this.getView().getBindingContext().getObject().ENTITY_ID;
 			var context = "";
 			var that = this;
 
+			// Delay for refresh
 			function wait(ms) {
 				var start = new Date().getTime();
 				var end = start;
@@ -301,13 +303,13 @@ sap.ui.define([
 			}
 
 			var dialog = new Dialog({
-				title: 'Accept Entity',
+				title: 'Accept Match Group',
 				type: 'Message',
 				content: [
 					new sap.ui.layout.VerticalLayout({
 						content: [
 							new Label({
-								text: "You are about to set a new strategy for " + context + ". Please select a reason code and provide a comment.",
+								text: "You are about to accept match group " + context + ". Please select a reason code and provide a comment.",
 								labelFor: "submitDialogTextarea"
 							}),
 							new Label('lblGroupId', {
@@ -365,6 +367,7 @@ sap.ui.define([
 						var payload = {};
 						payload.ENTITY_ID = sap.ui.getCore().byId('lblEntityId').getText();
 						payload.STRATEGY = 'Promote';
+						payload.ACTION = 'Accept';
 						payload.CODE = code;
 						payload.COMMENT = comment;
 						//var data = JSON.stringify(payload);
@@ -444,7 +447,7 @@ sap.ui.define([
 					new sap.ui.layout.VerticalLayout({
 						content: [
 							new Label({
-								text: "You are about to set a new strategy for " + context + ". Please select a reason code and provide a comment.",
+								text: "You are about to reject match group " + context + ". Please select a reason code and provide a comment.",
 								labelFor: "submitDialogTextarea"
 							}),
 							new Label('lblGroupId', {
@@ -509,7 +512,8 @@ sap.ui.define([
 						var comment = sap.ui.getCore().byId('submitDialogTextarea').getValue();
 						var payload = {};
 						payload.ENTITY_ID = sap.ui.getCore().byId('lblEntityId').getText();
-						payload.STRATEGY = 'Review';
+						payload.STRATEGY = 'Promote';
+						payload.ACTION = 'Reject';
 						payload.CODE = code;
 						payload.COMMENT = comment;
 						//var data = JSON.stringify(payload);

@@ -6,13 +6,14 @@
 // Request parameters
 var entityId = $.request.parameters.get("ENTITY_ID");
 var strategy = $.request.parameters.get("STRATEGY");
+var action = $.request.parameters.get("ACTION");
 var code = $.request.parameters.get("CODE");
 var comment = $.request.parameters.get("COMMENT");
 
 var conn = $.db.getConnection();
 var pstmt = conn.prepareStatement(
 	//"UPSERT \"osr.scv.foundation.db.data::MatchResultsReview.Assessments\" VALUES (?, ?, ?, ?, ?, ?) WHERE ENTITY_ID = ?"
-	"INSERT INTO \"osr.scv.foundation.db.data::MatchResultsReview.Assessments\" (\"ENTITY_ID\", \"TIMESTAMP\", \"STRATEGY\", \"CODE\", \"COMMENT\", \"USER\") VALUES (?,?,?,?,?,?)"
+	"INSERT INTO \"osr.scv.foundation.db.data::MatchResultsReview.Assessments\" (\"ENTITY_ID\", \"TIMESTAMP\", \"STRATEGY\", \"CODE\", \"COMMENT\", \"USER\", \"ACTION\") VALUES (?,?,?,?,?,?,?)"
 );
 
 function getTimestamp() {
@@ -89,6 +90,7 @@ try {
 		pstmt.setString(4, code);
 		pstmt.setString(5, comment);
 		pstmt.setString(6, $.session.getUsername());
+		pstmt.setString(7, action);
 		
 		//pstmt.setString(7, taskName);
 		//pstmt.setInteger(8, parseInt(taskId));
@@ -97,24 +99,13 @@ try {
 		// Execute upsert statement
 		pstmt.execute();
 
-		var string_test = "UPDATE \"osr.scv.foundation.db.data::MatchResults.MatchReview\" SET \"STRATEGY\" = '" + strategy + "', \"STRATEGY_RESOLVED\" = '" + strategy + "*', \"STRATEGY_RESOLVED_STATUS\" = '" + strategyResolveStatus + "' WHERE ENTITY_ID = ?";
-		
 		// Update match review table
 		var strategyResolveStatus = strategy.indexOf('Promote') >= 0 ? 'Success' : 'Error';
 		pstmt = conn.prepareStatement(
-			//"INSERT INTO \"osr.scv.foundation.db.data::MatchResults.MatchReview\" (\"STRATEGY\", \"STRATEGY_RESOLVED\", \"STRATEGY_RESOLVED_STATUS\") VALUES (strategy, strategy, strategyResolveStatus)  ?"
-			"UPDATE \"osr.scv.foundation.db.data::MatchResultsReview.Review\" SET \"STRATEGY\" = '" + strategy + "', \"STRATEGY_RESOLVED\" = '" + strategy + "*', \"STRATEGY_RESOLVED_STATUS\" = '" + strategyResolveStatus + "' WHERE ENTITY_ID = ?"
+			"UPDATE \"osr.scv.foundation.db.data::MatchResultsReview.Review\" SET \"STRATEGY\" = '" + strategy + "', \"STRATEGY_RESOLVED\" = '" + strategy + "', \"STRATEGY_RESOLVED_STATUS\" = '" + strategyResolveStatus + "', \"ACTION\" = '" + action + "', \"ACTION_RESOLVED\" = '" + action + "' WHERE ENTITY_ID = ?"
 		);
 		pstmt.setString(1, entityId);
-	
-		pstmt.execute();
-		
-		pstmt = conn.prepareStatement(
-			//"INSERT INTO \"osr.scv.foundation.db.data::MatchResults.MatchReview\" (\"STRATEGY\", \"STRATEGY_RESOLVED\", \"STRATEGY_RESOLVED_STATUS\") VALUES (strategy, strategy, strategyResolveStatus)  ?"
-			"UPDATE \"osr.scv.foundation.db.data::MatchResultsReview.ReviewShadow\" SET \"STRATEGY\" = '" + strategy + "', \"STRATEGY_RESOLVED\" = '" + strategy + "*', \"STRATEGY_RESOLVED_STATUS\" = '" + strategyResolveStatus + "' WHERE ENTITY_ID = ?"
-		);
-		pstmt.setString(1, entityId);
-	
+
 		pstmt.execute();
 		
 		conn.commit();

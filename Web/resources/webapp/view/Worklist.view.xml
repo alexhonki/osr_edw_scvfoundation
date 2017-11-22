@@ -1,10 +1,8 @@
 <mvc:View controllerName="myCompany.myApp.controller.Worklist" xmlns:mvc="sap.ui.core.mvc" xmlns:semantic="sap.m.semantic" xmlns="sap.m">
 	<semantic:FullscreenPage id="page" navButtonPress="onNavBack" showNavButton="true" title="{i18n>worklistViewTitle}">
-		
 		<semantic:customHeaderContent>
 			<Button icon="sap-icon://settings" tooltip="Settings" press="handeSettingsButtonPressed" />
 		</semantic:customHeaderContent>
-		
 		<semantic:subHeader>
 				<Toolbar>
 				<ToolbarSpacer/>
@@ -17,7 +15,6 @@
 				<ToolbarSpacer/>
 			</Toolbar>
 		</semantic:subHeader>
-		
 		<semantic:content>
 			<IconTabBar id="iconTabBar" select="onQuickFilter" expandable="false" applyContentPadding="false">
 				<items>
@@ -86,9 +83,10 @@
 										<!--<ObjectNumber number="{GROUP_CATEGORY}"/>-->
 										<Text text="{NAME}" wrapping="false"/>
 										<Text text="{SOURCE_SYSTEM}" />
-										<ObjectNumber number="{AVG_SCORE}"  state="{ path: 'AVG_SCORE', formatter: '.formatter.matchState' }" />
-										<ObjectStatus text="{STRATEGY_RESOLVED}" />
-										<ObjectStatus  text="{ACTION_RESOLVED}" />
+										<!--<ObjectNumber number="{AVG_SCORE}"  state="{ path: 'AVG_SCORE', formatter: '.formatter.matchState' }" />-->
+										<ObjectNumber number="{AVG_SCORE}" />
+										<ObjectStatus text="{STRATEGY_RESOLVED}" state="{ path: 'STRATEGY_RESOLVED', formatter: '.formatter.strategyState' }"/>
+										<ObjectStatus  text="{ACTION_RESOLVED}" state="{ path: 'ACTION_RESOLVED', formatter: '.formatter.actionState' }" />
 										<!--<ObjectNumber unit="EUR" number="{ path: 'UnitPrice', formatter: '.formatter.numberUnit' }"/>
 										<ObjectNumber number="{UnitsOnOrder}" unit="PC"/>
 										<ObjectNumber number="{UnitsInStock}" unit="PC" state="{ path: 'UnitsInStock', formatter: '.formatter.quantityState' }"/>-->

@@ -83,6 +83,22 @@ sap.ui.define([
 				} else {
 					return ValueState.Error;
 				}
+			},
+			
+			actionState: function(iValue) {
+				if (iValue === 'Reject' || !iValue) {
+					return ValueState.Error;
+				} else {
+					return ValueState.Success;
+				}
+			},
+			
+			strategyState: function(iValue) {
+				if (iValue === 'Review' || !iValue) {
+					return ValueState.Error;
+				} else {
+					return ValueState.Success;
+				}
 			}
 
 		};
