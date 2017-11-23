@@ -4,20 +4,22 @@
 	"routes": [{
 		"source": "/webapp/rest/.*",
 		"destination": "Services_url",
-		"scope": "$XSAPPNAME.SCV_FOUNDATION_VIEW"
+		"scope": "$XSAPPNAME.VIEW"
 	}, {
 		"source": "(.*)(.xsjs)",
 		"destination": "Services_url",
 		"csrfProtection": false,
-		"authenticationType": "xsuaa"
+		"authenticationType": "xsuaa",
+		"scope": "$XSAPPNAME.VIEW"
 	}, {
 		"source": "(.*)(.xsodata)",
 		"destination": "Services_url",
-		"authenticationType": "xsuaa"
+		"authenticationType": "xsuaa",
+		"scope": "$XSAPPNAME.VIEW"
 	}, {
 		"source": "^/(.*)$",
 		"localDir": "resources",
-		"scope": "$XSAPPNAME.SCV_FOUNDATION_VIEW",
+		"scope": "$XSAPPNAME.VIEW",
 		"replace": {
 			"pathSuffixes": ["index.html", "odataTest.html"],
 			"vars": ["ui5liburl"]
