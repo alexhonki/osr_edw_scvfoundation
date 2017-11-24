@@ -1,0 +1,58 @@
+<mvc:View controllerName="osr.scv.match.supervisor.controller.Worklist" 
+		xmlns:mvc="sap.ui.core.mvc" 
+		xmlns:semantic="sap.m.semantic" 
+		xmlns="sap.m" 
+		xmlns:viz="sap.viz.ui5.controls" 
+		xmlns:layout="sap.ui.layout" 
+		xmlns:viz.feeds="sap.viz.ui5.controls.common.feeds" 
+		xmlns:viz.data="sap.viz.ui5.data">
+	<semantic:FullscreenPage id="page" navButtonPress="onNavBack" showNavButton="true" title="Overview Match Assessments - Individuals">
+		<semantic:customHeaderContent>
+			<Button icon="sap-icon://settings" tooltip="Settings" press="handeSettingsButtonPressed" />
+		</semantic:customHeaderContent>
+		<semantic:subHeader>
+				<Toolbar>
+				<ToolbarSpacer/>
+				<SegmentedButton id="segmentedButton" selectedKey="rmsDuplicates">
+					<items>
+						<SegmentedButtonItem id="rmsDuplicates" text="RMS Duplicates" key="rmsDuplicates" press="handleToggleDuplicateViewButtonPress"/>
+						<SegmentedButtonItem id="allDuplicates" text="All Duplicates" key="allDuplicates" press="handleToggleDuplicateViewButtonPress"/>
+					</items>
+				</SegmentedButton>
+				<ToolbarSpacer/>
+			</Toolbar>
+		</semantic:subHeader>
+		<semantic:content>
+			<!--<layout:flexContent>-->
+            <viz:Popover id="idPopOver"></viz:Popover>
+            <viz:VizFrame id="idVizFrame" uiConfig="{applicationSet:'fiori'}"
+                height='100%' width="100%" vizType='stacked_column'>
+                <viz:dataset>
+                    <viz.data:FlattenedDataset data="{/matchAssessmentsReview}">
+                        <viz.data:dimensions>
+                            <viz.data:DimensionDefinition name="Entities"
+                                value="{MATCH_PERSON_FN_FC}" />
+                        </viz.data:dimensions>
+                        <viz.data:measures>
+                            <viz.data:MeasureDefinition name="Promoted"
+                                value="{ENTITIES_PROMOTED}" />
+                            <viz.data:MeasureDefinition name="Review"
+                                value="{ENTITIES_TO_REVIEW}" />
+                        </viz.data:measures>
+                    </viz.data:FlattenedDataset>
+                </viz:dataset>
+
+                <viz:feeds>
+                    <viz.feeds:FeedItem uid="valueAxis" type="Measure"
+                        values="Promoted,Review" />
+                    <viz.feeds:FeedItem uid="categoryAxis" type="Dimension"
+                        values="Entities" />
+                </viz:feeds>
+            </viz:VizFrame>
+        <!--</layout:flexContent>-->
+		</semantic:content>
+		<semantic:positiveAction>
+			<semantic:PositiveAction text="{i18n>PromoteToSCV}" press="onPromoteToSCV"/>
+		</semantic:positiveAction>
+	</semantic:FullscreenPage>
+</mvc:View>

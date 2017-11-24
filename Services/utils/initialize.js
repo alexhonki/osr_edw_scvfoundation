@@ -93,6 +93,6 @@ module.exports = {
 
 		// start server
 		var xsjsApp = xsjs(options);
-		app.use("/webapp/xs", xsjsApp);
+		app.use("/scv/match/srv/xs", xsjsApp);
 	}
 };

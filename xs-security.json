@@ -1,29 +1,19 @@
 {
 	"xsappname": "OSR_SCV_FOUNDATION",
 	"scopes": [{
-			"name": "$XSAPPNAME.VIEW",
-			"description": "SCV Foundation View"
-		}, {
-			"name": "$XSAPPNAME.REVIEW",
-			"description": "SCV Foundation Review"
-		}, {
-			"name": "$XSAPPNAME.SUPERVISOR",
-			"description": "SCV Foundation Supervisor"
-		}
-	],
+		"name": "$XSAPPNAME.REVIEW",
+		"description": "SCV Foundation Review"
+	}, {
+		"name": "$XSAPPNAME.SUPERVISOR",
+		"description": "SCV Foundation Supervisor"
+	}],
 	"role-templates": [{
-		"name": "OSR_SCV_FOUNDATION_VIEW",
-		"description": "Role for viewing OSR SCV Foundation",
-		"scope-references": ["$XSAPPNAME.VIEW"]
-	},
-	{
 		"name": "OSR_SCV_FOUNDATION_REVIEW",
-		"description": "Role for reviewing OSR SCV Foundation",
+		"description": "Role for reviewing OSR SCV match records",
 		"scope-references": ["$XSAPPNAME.REVIEW"]
-	},
-	{
+	}, {
 		"name": "OSR_SCV_FOUNDATION_SUPERVISOR",
-		"description": "Role for promotion into  OSR SCV Foundation",
+		"description": "Role for promotion of match records into OSR SCV Foundation",
 		"scope-references": ["$XSAPPNAME.SUPERVISOR"]
 	}]
 }

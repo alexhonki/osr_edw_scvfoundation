@@ -1,0 +1,15 @@
+/*
+ * OSR SCV Match Results - Service to review system and user match recommendations
+ * SAP Australia, September 2017
+ */
+ 
+service {       
+    
+    "osr.scv.foundation.db.views::MatchResultsAssessmentsReview" as "matchAssessmentsReview"
+    keys generate local "GenID"
+    aggregates always;
+}    
+
+settings { 
+    metadata cache-control "max-age= 604800";
+}

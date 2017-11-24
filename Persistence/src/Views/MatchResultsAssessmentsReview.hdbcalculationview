@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:AccessControl="http://www.sap.com/ndb/SQLCoreModelAccessControl.ecore" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" xmlns:Privilege="http://www.sap.com/ndb/BiModelPrivilege.ecore" id="osr.scv.foundation.db.views::MatchResultsAssessmentsReview" applyPrivilegeType="NONE" dataCategory="CUBE" schemaVersion="3.0" outputViewType="Aggregation" cacheInvalidationPeriod="NONE" enforceSqlExecution="false">
+<descriptions defaultDescription="MatchResultsAssessmentsReview"/>
+<localVariables/>
+<variableMappings/>
+<dataSources>
+  <DataSource id="osr.scv.foundation.db.functions::MatchResultsAssessments" type="TABLE_FUNCTION">
+    <resourceUri>osr.scv.foundation.db.functions::MatchResultsAssessments</resourceUri>
+  </DataSource>
+</dataSources>
+<calculationViews>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_1">
+    <viewAttributes>
+      <viewAttribute id="MATCH_PERSON_FN_FC">
+        <descriptions defaultDescription="MATCH_PERSON_FN_FC"/>
+      </viewAttribute>
+      <viewAttribute id="STRATEGY">
+        <descriptions defaultDescription="STRATEGY"/>
+      </viewAttribute>
+      <viewAttribute id="COUNTER" aggregationType="sum">
+        <descriptions defaultDescription="COUNTER"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="osr.scv.foundation.db.functions::MatchResultsAssessments">
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_FN_FC" source="MATCH_PERSON_FN_FC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STRATEGY" source="STRATEGY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="COUNTER" source="COUNTER"/>
+    </input>
+  </calculationView>
+</calculationViews>
+<logicalModel id="Projection_1">
+  <attributes>
+    <attribute id="MATCH_PERSON_FN_FC" order="1" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="MATCH_PERSON_FN_FC"/>
+      <keyMapping columnObjectName="Projection_1" columnName="MATCH_PERSON_FN_FC"/>
+    </attribute>
+    <attribute id="STRATEGY" order="2" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="STRATEGY"/>
+      <keyMapping columnObjectName="Projection_1" columnName="STRATEGY"/>
+    </attribute>
+  </attributes>
+  <calculatedAttributes/>
+  <baseMeasures>
+    <measure id="COUNTER" order="3" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="COUNTER"/>
+      <measureMapping columnObjectName="Projection_1" columnName="COUNTER"/>
+    </measure>
+  </baseMeasures>
+  <calculatedMeasures/>
+  <restrictedMeasures>
+    <measure id="ENTITIES_PROMOTED" order="4" aggregationType="sum" datatype="INTEGER" length="10" scale="0" baseMeasure="COUNTER">
+      <descriptions defaultDescription="ENTITIES_PROMOTED"/>
+      <restriction logicalOperator="AND">
+        <filter xsi:type="Privilege:AttributeFilter" attributeName="STRATEGY">
+          <valueFilter xsi:type="AccessControl:SingleValueFilter" including="true" value="Promote"/>
+        </filter>
+        <attributeName>STRATEGY</attributeName>
+      </restriction>
+      </measure>
+    <measure id="ENTITIES_TO_REVIEW" order="5" aggregationType="sum" datatype="INTEGER" length="10" scale="0" baseMeasure="COUNTER">
+      <descriptions defaultDescription="ENTITIES_TO_REVIEW"/>
+      <restriction logicalOperator="AND">
+        <filter xsi:type="Privilege:AttributeFilter" attributeName="STRATEGY">
+          <valueFilter xsi:type="AccessControl:SingleValueFilter" including="true" value="Review"/>
+        </filter>
+        <attributeName>STRATEGY</attributeName>
+      </restriction>
+      </measure>
+  </restrictedMeasures>
+  <localDimensions/>
+</logicalModel>
+<layout>
+  <shapes>
+    <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+      <upperLeftCorner x="92" y="112"/>
+    
+      <rectangleSize width="140"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="Projection_1" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="92" y="217"/>
+      <rectangleSize height="30" width="140"/>
+    </shape>
+  </shapes>
+</layout>
+</Calculation:scenario>

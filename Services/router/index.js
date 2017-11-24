@@ -3,5 +3,5 @@
 module.exports = function(app) {
 	
 	// Set routes
-	app.use("/webapp/rest", require("./routes/routes")());
+	app.use("/scv/match/srv/rest", require("./routes/routes")());
 };

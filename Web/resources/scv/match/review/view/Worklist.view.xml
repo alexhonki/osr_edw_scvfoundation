@@ -1,0 +1,112 @@
+<mvc:View controllerName="osr.scv.match.review.controller.Worklist" xmlns:mvc="sap.ui.core.mvc" xmlns:semantic="sap.m.semantic" xmlns="sap.m">
+	<semantic:FullscreenPage id="page" navButtonPress="onNavBack" showNavButton="true" title="{i18n>worklistViewTitle}">
+		<semantic:customHeaderContent>
+			<Button icon="sap-icon://settings" tooltip="Settings" press="handeSettingsButtonPressed" />
+		</semantic:customHeaderContent>
+		<semantic:subHeader>
+				<Toolbar>
+				<ToolbarSpacer/>
+				<SegmentedButton id="segmentedButton" selectedKey="rmsDuplicates">
+					<items>
+						<SegmentedButtonItem id="rmsDuplicates" text="RMS Duplicates" key="rmsDuplicates" press="handleToggleDuplicateViewButtonPress"/>
+						<SegmentedButtonItem id="allDuplicates" text="All Duplicates" key="allDuplicates" press="handleToggleDuplicateViewButtonPress"/>
+					</items>
+				</SegmentedButton>
+				<ToolbarSpacer/>
+			</Toolbar>
+		</semantic:subHeader>
+		<semantic:content>
+			<IconTabBar id="iconTabBar" select="onQuickFilter" expandable="false" applyContentPadding="false">
+				<items>
+					<IconTabFilter id="all" design="Horizontal" key="all" showAll="true" count="{worklistView>/countAllStr}" text="{i18n>WorklistFilterAllEntities}" formatter=".formatter.numberUnit"/>
+					<IconTabSeparator/>
+					<IconTabFilter id="uniqueMatchEntities" design="Horizontal" key="uniqueMatchEntities" icon="sap-icon://message-information" count="{worklistView>/uniqueMatchEntitiesCountStr} ({worklistView>/uniqueMatchEntitiesCountPercent})"
+						text="Unique"/>
+					<IconTabSeparator icon="sap-icon://media-pause" />
+					<IconTabFilter id="identicalMatchEntities" design="Horizontal" key="identicalMatchEntities" icon="sap-icon://message-success" iconColor="Positive" count="{worklistView>/identicalMatchEntitiesCountStr} ({worklistView>/identicalMatchEntitiesCountPercent})"
+						 text="Identical"/>
+					<IconTabSeparator icon="sap-icon://media-pause" />
+					<IconTabFilter id="recommendedMatchEntities" design="Horizontal" key="recommendedMatchEntities" icon="sap-icon://message-warning" iconColor="Critical" count="{worklistView>/recommendedMatchEntitiesCountStr} ({worklistView>/recommendedMatchEntitiesCountPercent})"
+						 text="Recommended" />
+					<IconTabSeparator icon="sap-icon://media-pause" />
+					<IconTabFilter id="similarMatchEntities" design="Horizontal" key="similarMatchEntities" icon="sap-icon://message-error" iconColor="Negative" count="{worklistView>/similarMatchEntitiesCountStr} ({worklistView>/similarMatchEntitiesCountPercent})"
+						text="Similar"/>
+				</items>
+				<content>
+					<IconTabBar id="subIconTabBar" select="onQuickFilter" showOverflowSelectList="true" class="sapUiResponsiveContentPadding" expandable="false">
+						<content>
+							<Table id="table" fixedLayout="false" busyIndicatorDelay="{worklistView>/tableBusyDelay}" class="sapUiResponsiveMargin sapUiNoMarginTop" growing="true"
+							growingScrollToLoad="true" noDataText="{worklistView>/tableNoDataText}" updateFinished="onUpdateFinished" width="auto" mode="MultiSelect"
+							items="{ path: '/matchResultsReview', sorter: { path: 'GROUP_ID', descending: false }, filters : [{ path : 'RMS_DUPLICATES', operator : 'EQ', value1 : 1 }]}">
+							<headerToolbar>
+								<Toolbar>
+									<Title id="tableHeader" text="{worklistView>/worklistTableTitle}"/>
+									<ToolbarSpacer/>
+									<SearchField id="searchField" search="onSearch" tooltip="{i18n>worklistSearchTooltip}" width="auto"/>
+									<ToolbarSpacer/>
+									<Button tooltip="View Settings" icon="sap-icon://drop-down-list" press="handleViewSettingsDialogButtonPressed" />
+								</Toolbar>
+							</headerToolbar>
+							<columns>
+								<Column hAlign="End">
+									<Text text="{i18n>TableMatchGroupIdTitle}"	sortProperty="Name" wrapping="false"/>
+								</Column>
+								<Column hAlign="End">
+									<Text text="Group Count" wrapping="false"/>
+								</Column>
+								<!--<Column hAlign="Center">
+									<Text text="Review Flag" wrapping="false"/>
+								</Column>-->
+								<Column>
+									<Text text="Name"/>
+								</Column>
+								<Column>
+									<Text text="Source"/>
+								</Column>
+								<Column hAlign="End" >
+									<Text text="Average Score"/>
+								</Column>
+								<Column>
+									<Text text="Strategy"/>
+								</Column>
+
+								<Column>
+									<Text text="Action"/>
+								</Column>
+							</columns>
+							<items>
+								<ColumnListItem press="onPress" type="Navigation" >
+									<cells>
+										<Text text="{GROUP_ID}"/>
+										<Text text="{GROUP_COUNT}"/>
+										<!--<Text text="{REVIEW_GROUP}"/>-->
+										<!--<ObjectNumber number="{GROUP_CATEGORY}"/>-->
+										<Text text="{NAME}" wrapping="false"/>
+										<Text text="{SOURCE_SYSTEM}" />
+										<!--<ObjectNumber number="{AVG_SCORE}"  state="{ path: 'AVG_SCORE', formatter: '.formatter.matchState' }" />-->
+										<ObjectNumber number="{AVG_SCORE}" />
+										<ObjectStatus text="{STRATEGY_RESOLVED}" state="{ path: 'STRATEGY_RESOLVED', formatter: '.formatter.strategyState' }"/>
+										<ObjectStatus  text="{ACTION_RESOLVED}" state="{ path: 'ACTION_RESOLVED', formatter: '.formatter.actionState' }" />
+										<!--<ObjectNumber unit="EUR" number="{ path: 'UnitPrice', formatter: '.formatter.numberUnit' }"/>
+										<ObjectNumber number="{UnitsOnOrder}" unit="PC"/>
+										<ObjectNumber number="{UnitsInStock}" unit="PC" state="{ path: 'UnitsInStock', formatter: '.formatter.quantityState' }"/>-->
+									</cells>
+								</ColumnListItem>
+							</items>
+						</Table>	
+						</content>
+					</IconTabBar>
+				</content>
+			</IconTabBar>
+		</semantic:content>
+		<!--<semantic:sendEmailAction>
+			<semantic:SendEmailAction id="shareEmail" press="onShareEmailPress"/>
+		</semantic:sendEmailAction>-->
+		<!--<semantic:positiveAction>
+			<semantic:PositiveAction text="{i18n>PromoteToSCV}" press="onPromoteToSCV"/>
+		</semantic:positiveAction>-->
+		<!--<semantic:negativeAction>
+			<semantic:NegativeAction text="{i18n>FlagForReview}" press="onFlagForReview"/>
+		</semantic:negativeAction>-->
+	</semantic:FullscreenPage>
+</mvc:View>

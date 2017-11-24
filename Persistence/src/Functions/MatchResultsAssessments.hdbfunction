@@ -1,0 +1,70 @@
+FUNCTION "osr.scv.foundation.db.functions::MatchResultsAssessments" ( )
+       RETURNS TABLE (	MATCH_PERSON_FN_FC NVARCHAR(1),
+    					STRATEGY NVARCHAR(10),
+    					COUNTER INTEGER
+        			  )
+       SQL SECURITY INVOKER AS 
+BEGIN 
+/*****************************  
+       Write your function logic 
+ *****************************/ 
+
+		lt_entities_to_promote = 
+		SELECT MATCH_PERSON_FN_FC, STRATEGY, COUNT(*) AS COUNTER FROM (						
+						
+						SELECT 
+		            	a.GROUP_ID,
+						a.ENTITY_ID,
+		            	a.SOURCE_SYSTEM,
+		            	SUBSTRING (COALESCE(e.MATCH_PERSON_FN, f.MATCH_PERSON_FN),1,1) AS MATCH_PERSON_FN_FC,
+		            	COALESCE (a1.STRATEGY,CASE WHEN a1.STRATEGY IS NULL AND (GROUP_CATEGORY = 0 OR GROUP_CATEGORY = 1) THEN 'Promote' ELSE 'Review' END) AS STRATEGY
+		                FROM   "osr.scv.foundation.db.data::MatchResults.MatchResults" AS a 
+		                LEFT OUTER JOIN ( SELECT MATCH_PERSON_FN, "Cleanse_TABLE_ID", "Cleanse_ROW_ID", "PARTNER" FROM "osr.scv.foundation.db.synonyms::BUT000") as e
+		                ON a."Cleanse_ROW_ID_BUT" = e."Cleanse_ROW_ID" AND a."Cleanse_TABLE_ID_BUT" = e."Cleanse_TABLE_ID" AND a."SYSTEM_ID" = e."PARTNER" and a."SOURCE_SYSTEM" = 'RMS'
+		                LEFT OUTER JOIN ( SELECT MATCH_PERSON_FN, "Cleanse_TABLE_ID", "RUN_NUMBER", "CUSTOMER_REF" FROM "osr.scv.foundation.db.synonyms::TMR_Customers") as f
+		                ON a."Cleanse_ROW_ID_TMR" = f."RUN_NUMBER" AND a."Cleanse_TABLE_ID_TMR" = f."Cleanse_TABLE_ID" AND a."SYSTEM_ID" = f."CUSTOMER_REF" AND a."SOURCE_SYSTEM" = 'TMR'
+		                LEFT OUTER JOIN "osr.scv.foundation.db.data::MatchResultsReview.Assessments" a1
+		                ON a.ENTITY_ID = a1.ENTITY_ID
+		                WHERE a.SHOW_IN_REVIEW = 'X'
+							AND (
+									-- Unique records from RMS
+									a."Match_ROW_ID" IN (SELECT "Match_ROW_ID" FROM "osr.scv.foundation.db.data::MatchResults.MatchResults" WHERE GROUP_ID IS NULL AND SOURCE_SYSTEM = 'RMS')
+									OR
+									-- Only match groups which contains at least one record from RMS
+									a.GROUP_ID IN (SELECT GROUP_ID FROM "osr.scv.foundation.db.data::MatchResults.MatchResults" WHERE GROUP_ID IS NOT NULL AND SOURCE_SYSTEM = 'RMS' GROUP BY GROUP_ID)	
+								)
+			) GROUP BY MATCH_PERSON_FN_FC, STRATEGY
+			HAVING STRATEGY = 'Promote';
+			
+			lt_entities_to_review = 
+			SELECT MATCH_PERSON_FN_FC, STRATEGY, COUNT(*) AS COUNTER FROM (						
+						
+						SELECT 
+		            	a.GROUP_ID,
+						a.ENTITY_ID,
+		            	a.SOURCE_SYSTEM,
+		            	SUBSTRING (COALESCE(e.MATCH_PERSON_FN, f.MATCH_PERSON_FN),1,1) AS MATCH_PERSON_FN_FC,
+		            	COALESCE (a1.STRATEGY,CASE WHEN a1.STRATEGY IS NULL AND (GROUP_CATEGORY = 0 OR GROUP_CATEGORY = 1) THEN 'Promote' ELSE 'Review' END) AS STRATEGY
+		                FROM   "osr.scv.foundation.db.data::MatchResults.MatchResults" AS a 
+		                LEFT OUTER JOIN ( SELECT MATCH_PERSON_FN, "Cleanse_TABLE_ID", "Cleanse_ROW_ID", "PARTNER" FROM "osr.scv.foundation.db.synonyms::BUT000") as e
+		                ON a."Cleanse_ROW_ID_BUT" = e."Cleanse_ROW_ID" AND a."Cleanse_TABLE_ID_BUT" = e."Cleanse_TABLE_ID" AND a."SYSTEM_ID" = e."PARTNER" and a."SOURCE_SYSTEM" = 'RMS'
+		                LEFT OUTER JOIN ( SELECT MATCH_PERSON_FN, "Cleanse_TABLE_ID", "RUN_NUMBER", "CUSTOMER_REF" FROM "osr.scv.foundation.db.synonyms::TMR_Customers") as f
+		                ON a."Cleanse_ROW_ID_TMR" = f."RUN_NUMBER" AND a."Cleanse_TABLE_ID_TMR" = f."Cleanse_TABLE_ID" AND a."SYSTEM_ID" = f."CUSTOMER_REF" AND a."SOURCE_SYSTEM" = 'TMR'
+		                LEFT OUTER JOIN "osr.scv.foundation.db.data::MatchResultsReview.Assessments" a1
+		                ON a.ENTITY_ID = a1.ENTITY_ID
+		                WHERE a.SHOW_IN_REVIEW = 'X'
+							AND (
+									-- Unique records from RMS
+									a."Match_ROW_ID" IN (SELECT "Match_ROW_ID" FROM "osr.scv.foundation.db.data::MatchResults.MatchResults" WHERE GROUP_ID IS NULL AND SOURCE_SYSTEM = 'RMS')
+									OR
+									-- Only match groups which contains at least one record from RMS
+									a.GROUP_ID IN (SELECT GROUP_ID FROM "osr.scv.foundation.db.data::MatchResults.MatchResults" WHERE GROUP_ID IS NOT NULL AND SOURCE_SYSTEM = 'RMS' GROUP BY GROUP_ID)	
+								)
+			) GROUP BY MATCH_PERSON_FN_FC, STRATEGY
+			HAVING STRATEGY != 'Promote';			    
+
+	
+		    lt_result = SELECT * FROM :lt_entities_to_promote union all SELECT * FROM :lt_entities_to_review;	                
+
+			return SELECT * FROM :lt_result;
+END;
