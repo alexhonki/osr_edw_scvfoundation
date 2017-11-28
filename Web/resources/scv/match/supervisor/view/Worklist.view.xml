@@ -25,10 +25,10 @@
 		<semantic:content>
 			<!--<layout:flexContent>-->
             <viz:Popover id="idPopOver"></viz:Popover>
-            <viz:VizFrame id="idVizFrame" uiConfig="{applicationSet:'fiori'}" 
-                height='100%' width="100%" vizType='stacked_column' >
+            <viz:VizFrame id="idVizFrame" uiConfig="{applicationSet:'fiori'}" vizProperties="{plotArea: {dataLabel: {visible: true, showTotal: true}}}"
+                height='100%' width="100%" vizType='stacked_column'  >
                 <viz:dataset >
-                    <viz.data:FlattenedDataset data="{/matchAssessmentsReviewParameters(I_RMS_DUPLICATES='1')/Results}">
+                    <viz.data:FlattenedDataset  data="{/matchAssessmentsReviewParameters(I_RMS_DUPLICATES='1')/Results}">
                         <viz.data:dimensions>
                             <viz.data:DimensionDefinition name="Entities" 
                                 value="{MATCH_PERSON_FN_FC}" />
