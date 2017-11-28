@@ -7,7 +7,8 @@ service {
     
     "osr.scv.foundation.db.views::MatchResultsAssessmentsReview" as "matchAssessmentsReview"
     keys generate local "GenID"
-    aggregates always;
+    aggregates always
+    parameters via entity;
 }    
 
 settings { 

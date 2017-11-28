@@ -24,6 +24,10 @@ sap.ui.define([
 		/* lifecycle methods                                           */
 		/* =========================================================== */
 
+		//onAfterRendering: function() {
+	//		this.getView().byId("idVizFrame").getDataset().getBinding("data").filter(new sap.ui.model.Filter("RMS_DUPLICATES", sap.ui.model.FilterOperator.EQ, 1));	
+	//	},
+		
 		/**
 		 * Called when the worklist controller is instantiated.
 		 * @public
@@ -155,6 +159,7 @@ sap.ui.define([
 				"rmsDuplicates": rmsDuplicatesFilter,
 				"allDuplicates": rmsAllDuplicatesFilter
 			};
+			
 
 			// Make sure, busy indication is showing immediately so there is no
 			// break after the busy indication for loading the view's meta data is
@@ -416,19 +421,24 @@ sap.ui.define([
 			if (sKey === 'rmsDuplicates') {
 				// Show RMS duplicates only
 				oViewModel.setProperty("/globalFilter", "rmsDuplicates");
+				this.byId("idVizFrame").getDataset().bindData("/matchAssessmentsReviewParameters(I_RMS_DUPLICATES='1')/Results");
 			} else {
 				oViewModel.setProperty("/globalFilter", "allDuplicates");
+				this.byId("idVizFrame").getDataset().bindData("/matchAssessmentsReviewParameters(I_RMS_DUPLICATES='0')/Results");
 			}
 
 			// Get selected category and trigger click event
 			//this.getView().byId(this.getView().byId("iconTabBar").getSelectedKey()).click();
 
-			var oIconTabBar = this.getView().byId("iconTabBar");
-			var oEvent = new sap.ui.base.Event("customSelect", oIconTabBar, {
-				"selectedKey": oIconTabBar.getSelectedKey(),
-				"item": this.getView().byId(this.getView().byId("iconTabBar").getSelectedKey())
-			});
-			this.onQuickFilter(oEvent);
+			//var oIconTabBar = this.getView().byId("iconTabBar");
+			//var oEvent = new sap.ui.base.Event("customSelect", oIconTabBar, {
+				//"selectedKey": oIconTabBar.getSelectedKey(),
+				//"item": this.getView().byId(this.getView().byId("iconTabBar").getSelectedKey())
+			//});
+			//this.onQuickFilter(oEvent);
+			
+
+
 
 			// Trigger refresh
 			//var oBinding = this._oTable.getBinding("items");

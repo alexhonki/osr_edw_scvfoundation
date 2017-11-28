@@ -1,4 +1,4 @@
-FUNCTION "osr.scv.foundation.db.functions::MatchResultsAssessments" ( )
+FUNCTION "osr.scv.foundation.db.functions::MatchResultsAssessments" ( i_rms_duplicates nvarchar(1) )
        RETURNS TABLE (	MATCH_PERSON_FN_FC NVARCHAR(1),
     					STRATEGY NVARCHAR(10),
     					COUNTER INTEGER
@@ -9,6 +9,18 @@ BEGIN
        Write your function logic 
  *****************************/ 
 
+		DECLARE l_rms_duplicates INTEGER;
+		
+		l_rms_duplicates = TO_INT(:i_rms_duplicates);
+		
+		IF :i_rms_duplicates IS NULL OR :i_rms_duplicates = 0 THEN
+			l_rms_duplicates := 0;
+		ELSE
+			l_rms_duplicates = 1;
+		END IF;
+		
+		
+		
 		lt_entities_to_promote = 
 		SELECT MATCH_PERSON_FN_FC, STRATEGY, COUNT(*) AS COUNTER FROM (						
 						
@@ -25,7 +37,8 @@ BEGIN
 		                ON a."Cleanse_ROW_ID_TMR" = f."RUN_NUMBER" AND a."Cleanse_TABLE_ID_TMR" = f."Cleanse_TABLE_ID" AND a."SYSTEM_ID" = f."CUSTOMER_REF" AND a."SOURCE_SYSTEM" = 'TMR'
 		                LEFT OUTER JOIN "osr.scv.foundation.db.data::MatchResultsReview.Assessments" a1
 		                ON a.ENTITY_ID = a1.ENTITY_ID
-		                WHERE a.SHOW_IN_REVIEW = 'X'
+		                WHERE a.SHOW_IN_REVIEW = 'X' 
+		                	AND RMS_DUPLICATES  >= :i_rms_duplicates
 							AND (
 									-- Unique records from RMS
 									a."Match_ROW_ID" IN (SELECT "Match_ROW_ID" FROM "osr.scv.foundation.db.data::MatchResults.MatchResults" WHERE GROUP_ID IS NULL AND SOURCE_SYSTEM = 'RMS')
@@ -53,6 +66,7 @@ BEGIN
 		                LEFT OUTER JOIN "osr.scv.foundation.db.data::MatchResultsReview.Assessments" a1
 		                ON a.ENTITY_ID = a1.ENTITY_ID
 		                WHERE a.SHOW_IN_REVIEW = 'X'
+							AND RMS_DUPLICATES  >= :i_rms_duplicates
 							AND (
 									-- Unique records from RMS
 									a."Match_ROW_ID" IN (SELECT "Match_ROW_ID" FROM "osr.scv.foundation.db.data::MatchResults.MatchResults" WHERE GROUP_ID IS NULL AND SOURCE_SYSTEM = 'RMS')

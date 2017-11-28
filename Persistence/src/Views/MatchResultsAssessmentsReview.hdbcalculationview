@@ -1,8 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:AccessControl="http://www.sap.com/ndb/SQLCoreModelAccessControl.ecore" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" xmlns:Privilege="http://www.sap.com/ndb/BiModelPrivilege.ecore" id="osr.scv.foundation.db.views::MatchResultsAssessmentsReview" applyPrivilegeType="NONE" dataCategory="CUBE" schemaVersion="3.0" outputViewType="Aggregation" cacheInvalidationPeriod="NONE" enforceSqlExecution="false">
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:AccessControl="http://www.sap.com/ndb/SQLCoreModelAccessControl.ecore" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" xmlns:Privilege="http://www.sap.com/ndb/BiModelPrivilege.ecore" xmlns:Variable="http://www.sap.com/ndb/BiModelVariable.ecore" id="osr.scv.foundation.db.views::MatchResultsAssessmentsReview" applyPrivilegeType="NONE" dataCategory="CUBE" schemaVersion="3.0" outputViewType="Aggregation" cacheInvalidationPeriod="NONE" enforceSqlExecution="false">
 <descriptions defaultDescription="MatchResultsAssessmentsReview"/>
-<localVariables/>
-<variableMappings/>
+<localVariables>
+  <variable id="I_RMS_DUPLICATES" parameter="true">
+    <descriptions defaultDescription=" "/>
+    <variableProperties datatype="NVARCHAR" length="1">
+      <valueDomain type="empty"/>
+      <selection multiLine="false" type="Single"/>
+      <defaultRange lowValue="0"/>
+    </variableProperties>
+  </variable>
+</localVariables>
+<variableMappings>
+  <mapping xsi:type="Variable:VariableMapping" dataSource="osr.scv.foundation.db.functions::MatchResultsAssessments">
+    <targetVariable name="I_RMS_DUPLICATES" resourceUri="osr.scv.foundation.db.functions::MatchResultsAssessments"/>
+    <localVariable>I_RMS_DUPLICATES</localVariable>
+  </mapping>
+</variableMappings>
 <dataSources>
   <DataSource id="osr.scv.foundation.db.functions::MatchResultsAssessments" type="TABLE_FUNCTION">
     <resourceUri>osr.scv.foundation.db.functions::MatchResultsAssessments</resourceUri>
@@ -80,7 +94,7 @@
     </shape>
   
     <shape expanded="true" modelObjectName="Projection_1" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="92" y="217"/>
+      <upperLeftCorner x="115" y="215"/>
       <rectangleSize height="30" width="140"/>
     </shape>
   </shapes>
