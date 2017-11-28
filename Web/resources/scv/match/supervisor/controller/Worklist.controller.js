@@ -312,6 +312,8 @@ sap.ui.define([
 				history.go(-1);
 			}
 		},
+		
+		
 
 		onSearch: function(oEvent) {
 			if (oEvent.getParameters().refreshButtonPressed) {

@@ -25,7 +25,15 @@
 		<semantic:content>
 			<!--<layout:flexContent>-->
             <viz:Popover id="idPopOver"></viz:Popover>
-            <viz:VizFrame id="idVizFrame" uiConfig="{applicationSet:'fiori'}" vizProperties="{plotArea: {dataLabel: {visible: true, showTotal: true}}}"
+            <viz:VizFrame  id="idVizFrame" uiConfig="{applicationSet:'fiori'}" 
+            	vizProperties="{
+            						title: {visible: true, text: 'Number of Entities to Promote or Review'}, 
+            						plotArea: 
+            						{ 
+            							dataLabel: {visible: true, showTotal: true},
+            							colorPalette: ['sapUiChartPaletteSemanticGood', 'sapUiChartPaletteSemanticBad']
+            						}
+            					}"
                 height='100%' width="100%" vizType='stacked_column'  >
                 <viz:dataset >
                     <viz.data:FlattenedDataset  data="{/matchAssessmentsReviewParameters(I_RMS_DUPLICATES='1')/Results}">
@@ -34,7 +42,7 @@
                                 value="{MATCH_PERSON_FN_FC}" />
                         </viz.data:dimensions>
                         <viz.data:measures>
-                            <viz.data:MeasureDefinition name="Promoted"
+                            <viz.data:MeasureDefinition name="Promote"
                                 value="{ENTITIES_PROMOTED}" />
                             <viz.data:MeasureDefinition name="Review"
                                 value="{ENTITIES_TO_REVIEW}" />
@@ -44,7 +52,7 @@
 
                 <viz:feeds>
                     <viz.feeds:FeedItem uid="valueAxis" type="Measure"
-                        values="Promoted,Review" />
+                        values="Promote,Review" />
                     <viz.feeds:FeedItem uid="categoryAxis" type="Dimension"
                         values="Entities"  />
                 </viz:feeds>
