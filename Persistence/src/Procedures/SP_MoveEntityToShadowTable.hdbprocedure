@@ -8,11 +8,11 @@
 */
 PROCEDURE "osr.scv.foundation.db.Procedures::SP_MoveEntityToShadowTable" (
 	
-	IN i_entities		TABLE (ENTITY_ID NVARCHAR(10)),
+	--IN i_entities		TABLE (ENTITY_ID NVARCHAR(10)),
 	IN i_user			NVARCHAR(20),
 	IN i_timestamp		TIMESTAMP,
-	OUT o_return_code	INT, 					-- 0 = execution successful; 1 = execution raised exception.
-	out o_message		NVARCHAR(200) 
+	OUT o_return_code	NVARCHAR(10),
+	OUT o_message		NVARCHAR(200)
 )
    LANGUAGE SQLSCRIPT
    SQL SECURITY INVOKER
@@ -24,13 +24,16 @@ BEGIN
 	-- Declare exception hander for all SQL exceptions.
 	DECLARE EXIT HANDLER FOR SQLEXCEPTION
 	BEGIN
-		o_message :=  'Error Code: ' || ::SQL_ERROR_CODE || ' ' || ::SQL_ERROR_MESSAGE;
-		o_return_code := 1;
+		o_return_code :=  'ERROR';
+		o_message:=  'ERROR: ' || ::SQL_ERROR_CODE || ' ' || ::SQL_ERROR_MESSAGE;
 	END;
 	
-	SELECT COUNT(*) INTO l_number_entities FROM :i_entities;
+	/*
+	IF :i_entities IS NOT NULL THEN
+		SELECT COUNT(*) INTO l_number_entities FROM :i_entities;
+	END IF;
 	
-	IF :l_number_entities > 0 THEN
+	IF :i_entities IS NOT NULL AND :l_number_entities > 0 THEN
 		/*
 		CALL "osr.scv.foundation.db.Procedures.Util::SP_UtilSplitString"(
 			I_STRING => :i_entities,
@@ -42,7 +45,7 @@ BEGIN
 		-- Promote all entities with status 'Promote' or 'Promote*'
 		
 		-- Move entities
-		INSERT INTO "osr.scv.foundation.db.data::MatchResults.MatchResultsShadow"
+		/*INSERT INTO "osr.scv.foundation.db.data::MatchResults.MatchResultsShadow"
 		(
 			SELECT m.* FROM "osr.scv.foundation.db.data::MatchResults.MatchResults" m
 			INNER JOIN (SELECT * FROM :i_entities) r
@@ -64,7 +67,7 @@ BEGIN
 		
 		
 	ELSE
-		
+	*/	
 		-- Promote all entities with status 'Promote' or 'Promote*'
 		
 		-- Move into shadow table, use same CV as in SCV Review UI to get latest strategy per entity
@@ -76,24 +79,27 @@ BEGIN
 		INSERT INTO "osr.scv.foundation.db.data::MatchResults.MatchResultsShadow"
 		(
 			SELECT m.* FROM "osr.scv.foundation.db.data::MatchResults.MatchResults" m
-			INNER JOIN (SELECT * FROM :lt_entities) r
+			INNER JOIN :lt_entities r
 			ON m.ENTITY_ID = r.ENTITY_ID
 		);
-			
+		
+		-- Delete from match results table
+		DELETE FROM "osr.scv.foundation.db.data::MatchResults.MatchResults" WHERE ENTITY_ID IN (SELECT * FROM :lt_entities);
 	   
 	   -- Delete from main UI review table
 	   DELETE FROM "osr.scv.foundation.db.data::MatchResultsReview.Review" WHERE ENTITY_ID IN (SELECT * FROM :lt_entities);
 	   
-	   -- Updata shadow table with SCV promotions
-	   UPDATE "osr.scv.foundation.db.data::MatchResultsReview.ReviewShadow" c SET c.PROMOTED_TO_SCV = 'X', c.PROMOTION_TIMESTAMP = :i_timestamp, c.PROMOTED_BY = :i_user
-	   FROM "osr.scv.foundation.db.data::MatchResultsReview.ReviewShadow" c, :lt_entities d
-	   WHERE c.ENTITY_ID = d.ENTITY_ID;
+	   -- Update shadow table with SCV promotions
+	   --UPDATE "osr.scv.foundation.db.data::MatchResultsReview.ReviewShadow" c SET c.PROMOTED_TO_SCV = 'X', c.PROMOTION_TIMESTAMP = :i_timestamp, c.PROMOTED_BY = :i_user
+	   --FROM "osr.scv.foundation.db.data::MatchResultsReview.ReviewShadow" c, :lt_entities d
+	   --WHERE c.ENTITY_ID = d.ENTITY_ID;
 		
 		-- Update statistics
 		INSERT INTO  "osr.scv.foundation.db.data::MatchResultsReview.Promotions" (
 																				  SELECT *, :i_timestamp, :i_user  FROM :lt_entities
 																				 );
-	END IF;
-	o_return_code := 0;
-	
+        o_return_code := 'SUCCESS';
+        o_message := 'Entitites moved successfully';
+	--END IF;
+
 END

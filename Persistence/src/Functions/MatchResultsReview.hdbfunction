@@ -30,14 +30,6 @@ BEGIN
 /*****************************  
        SCV Review UI - Match Results Review
  *****************************/ 
-
-	
-	DECLARE l_latestExecutionID INTEGER;
-
-	-- Retrieve latest task execution ID
-	SELECT MAX(TASK_EXECUTION_ID) INTO l_latestExecutionID 
-	FROM "osr.scv.foundation.db.synonyms::MATCH_TRACING" 
-	WHERE TASK_NAME = 'osr.scv.foundation.db.flowgraphs::MatchBusinessPartners';
 	
 	lt_overview =
 	
@@ -78,16 +70,12 @@ BEGIN
                                 AND m."Cleanse_TABLE_ID_TMR" = t."Cleanse_TABLE_ID"
                                 AND m."SYSTEM_ID" = t."CUSTOMER_REF"         
                 -- Match tracing
-                LEFT OUTER JOIN (SELECT TOP 1 DISTINCT TASK_EXECUTION_ID, TASK_NAME, ROW_ID, RELATED_ROW_ID, POLICY_NAME, SCORE FROM "osr.scv.foundation.db.synonyms::MATCH_TRACING") as s
+                LEFT OUTER JOIN (SELECT TOP 1 DISTINCT ROW_ID, RELATED_ROW_ID, POLICY_NAME, SCORE FROM  "osr.scv.foundation.db.data::MatchResults.MatchTracing") as s
                 --LEFT OUTER JOIN "osr.scv.foundation.db.synonyms::MATCH_TRACING" s
                 ON m."Match_ROW_ID" = s.ROW_ID
-                                AND s.TASK_EXECUTION_ID = :l_latestExecutionID
-                                AND s.TASK_NAME = 'osr.scv.foundation.db.flowgraphs::MatchBusinessPartners'
                 -- Match group information
-                LEFT OUTER JOIN "osr.scv.foundation.db.synonyms::MATCH_GROUP_INFO" s1
+                LEFT OUTER JOIN  "osr.scv.foundation.db.data::MatchResults.MatchGroupInfo" s1
                 ON m."GROUP_ID" = s1.GROUP_ID
-                                AND s1.TASK_EXECUTION_ID = :l_latestExecutionID
-                                AND s1.TASK_NAME = 'osr.scv.foundation.db.flowgraphs::MatchBusinessPartners'              
                 -- Match strategy user overrides
                 LEFT OUTER JOIN (
                                  SELECT a.ENTITY_ID, a.STRATEGY, a.ACTION

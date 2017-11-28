@@ -30,8 +30,6 @@ sap.ui.define([
 		 */
 		onInit: function() {
 
-		
-
 			var oViewModel,
 				iOriginalBusyDelay,
 				oTable = this.byId("table");
@@ -118,7 +116,7 @@ sap.ui.define([
 				"similarMatchEntities": similarMatchEntitiesFilters,
 				"all": []
 			};
-			
+
 			this._mFiltersNames = {
 				"a": aSurnameFilter,
 				"b": bSurnameFilter,
@@ -148,11 +146,11 @@ sap.ui.define([
 				"z": zSurnameFilter,
 				"all": []
 			};
-			
+
 			// Global filters
 			var rmsDuplicatesFilter = new sap.ui.model.Filter("RMS_DUPLICATES", sap.ui.model.FilterOperator.EQ, 1);
-			var rmsAllDuplicatesFilter = new sap.ui.model.Filter("RMS_DUPLICATES", sap.ui.model.FilterOperator.NE,  -1);
-			
+			var rmsAllDuplicatesFilter = new sap.ui.model.Filter("RMS_DUPLICATES", sap.ui.model.FilterOperator.NE, -1);
+
 			this._mGlobalFilters = {
 				"rmsDuplicates": rmsDuplicatesFilter,
 				"allDuplicates": rmsAllDuplicatesFilter
@@ -162,7 +160,7 @@ sap.ui.define([
 			// break after the busy indication for loading the view's meta data is
 			// ended (see promise 'oWhenMetadataIsLoaded' in AppController)
 			//oTable.attachEventOnce("updateFinished", function() {
-				// Restore original busy indicator delay for worklist's table
+			// Restore original busy indicator delay for worklist's table
 			//	oViewModel.setProperty("/tableBusyDelay", iOriginalBusyDelay);
 			//});
 		},
@@ -226,7 +224,6 @@ sap.ui.define([
 						//filters: []
 				});
 
-				
 				// read the count for the high confidence matches
 				this.getModel().read("/matchResultsReview/$count", {
 					success: function(oData) {
@@ -279,7 +276,6 @@ sap.ui.define([
 						//filters: [this._mFilters.similarMatchEntities]
 						//this._mFiltersNames[sKey]
 				});
-				
 
 			} else {
 				sTitle = this.getResourceBundle().getText("worklistTableTitle");
@@ -416,23 +412,24 @@ sap.ui.define([
 
 			var oViewModel = this.getModel("worklistView");
 			var sKey = oEvent.getSource().getKey();
-			
+
 			if (sKey === 'rmsDuplicates') {
 				// Show RMS duplicates only
 				oViewModel.setProperty("/globalFilter", "rmsDuplicates");
 			} else {
 				oViewModel.setProperty("/globalFilter", "allDuplicates");
 			}
-			
+
 			// Get selected category and trigger click event
 			//this.getView().byId(this.getView().byId("iconTabBar").getSelectedKey()).click();
-			
+
 			var oIconTabBar = this.getView().byId("iconTabBar");
-    		var oEvent = new sap.ui.base.Event("customSelect",oIconTabBar,{"selectedKey": oIconTabBar.getSelectedKey() ,"item":this.getView().byId(this.getView().byId("iconTabBar").getSelectedKey())});
+			var oEvent = new sap.ui.base.Event("customSelect", oIconTabBar, {
+				"selectedKey": oIconTabBar.getSelectedKey(),
+				"item": this.getView().byId(this.getView().byId("iconTabBar").getSelectedKey())
+			});
 			this.onQuickFilter(oEvent);
-			
-			
-			
+
 			// Trigger refresh
 			//var oBinding = this._oTable.getBinding("items");
 			//oBinding.filter(new sap.ui.model.Filter([this._mGlobalFilters.rmsDuplicates], true), sap.ui.model.FilterType.Application);
@@ -446,7 +443,7 @@ sap.ui.define([
 		getCategoryFilters: function(sCategory) {
 
 			var oViewModel = this.getModel("worklistView");
-			
+
 			if (sCategory === 'all') {
 				if (this.getView().byId("subIconTabBar").getSelectedKey() !== 'all') {
 					return new sap.ui.model.Filter([
@@ -523,20 +520,23 @@ sap.ui.define([
 			if (oEvent.oSource.sId.indexOf("subIconTabBar") > 0) {
 				// Letter filter tab
 				if (sKey === 'all') {
-					
+
 					if (this.getView().byId("iconTabBar").getSelectedKey() === 'all') {
-						oBinding.filter(new sap.ui.model.Filter([this._mGlobalFilters[oViewModel.getProperty("/globalFilter")]], true), sap.ui.model.FilterType.Application);
+						oBinding.filter(new sap.ui.model.Filter([this._mGlobalFilters[oViewModel.getProperty("/globalFilter")]], true), sap.ui.model.FilterType
+							.Application);
 					} else {
 						//oBinding.filter(this._mFilters[this.getView().byId("iconTabBar").getSelectedKey()], sap.ui.model.FilterType.Application);
-						oBinding.filter(new sap.ui.model.Filter([this._mGlobalFilters[oViewModel.getProperty("/globalFilter")], this._mFilters[this.getView().byId("iconTabBar").getSelectedKey()]], true), sap.ui.model.FilterType.Application);	
-					}	
-					
+						oBinding.filter(new sap.ui.model.Filter([this._mGlobalFilters[oViewModel.getProperty("/globalFilter")], this._mFilters[this.getView()
+							.byId("iconTabBar").getSelectedKey()]], true), sap.ui.model.FilterType.Application);
+					}
+
 				} else {
 
 					// Filter for a specific letter is set, now check if category filter
 					if (this.getView().byId("iconTabBar").getSelectedKey() === 'all') {
 						//oBinding.filter(this._mFiltersNames[sKey], sap.ui.model.FilterType.Application);
-						oBinding.filter(new sap.ui.model.Filter([this._mGlobalFilters[oViewModel.getProperty("/globalFilter")], this._mFiltersNames[sKey]], true), sap.ui.model.FilterType.Application);
+						oBinding.filter(new sap.ui.model.Filter([this._mGlobalFilters[oViewModel.getProperty("/globalFilter")], this._mFiltersNames[sKey]],
+							true), sap.ui.model.FilterType.Application);
 					} else {
 						// Set new filter for letter and combine with current filter selection for group category
 						oBinding.filter(
@@ -552,24 +552,27 @@ sap.ui.define([
 			} else {
 				// Category filter tab
 				if (sKey === 'all') {
-					
+
 					// All categories, set filter for letter selection only
 					//oBinding.filter(this._mFiltersNames[this.getView().byId("subIconTabBar").getSelectedKey()], sap.ui.model.FilterType.Application
 					if (this.getView().byId("subIconTabBar").getSelectedKey() === 'all') {
-						oBinding.filter(new sap.ui.model.Filter([this._mGlobalFilters[oViewModel.getProperty("/globalFilter")]], true), sap.ui.model.FilterType.Application);	
+						oBinding.filter(new sap.ui.model.Filter([this._mGlobalFilters[oViewModel.getProperty("/globalFilter")]], true), sap.ui.model.FilterType
+							.Application);
 					} else {
-						oBinding.filter(new sap.ui.model.Filter([this._mGlobalFilters[oViewModel.getProperty("/globalFilter")], this._mFiltersNames[this.getView().byId("subIconTabBar").getSelectedKey()]], true), sap.ui.model.FilterType.Application);
-					} 
-					
+						oBinding.filter(new sap.ui.model.Filter([this._mGlobalFilters[oViewModel.getProperty("/globalFilter")], this._mFiltersNames[this
+							.getView().byId("subIconTabBar").getSelectedKey()]], true), sap.ui.model.FilterType.Application);
+					}
+
 				} else {
 
 					// Specific category, check filter for letter selection
 					if (this.getView().byId("subIconTabBar").getSelectedKey() === 'all') {
 						// Letter selection is all, only one filter for category required
 						//oBinding.filter(this._mFilters[this.getView().byId("iconTabBar").getSelectedKey()], sap.ui.model.FilterType.Application);
-						oBinding.filter(new sap.ui.model.Filter([this._mGlobalFilters[oViewModel.getProperty("/globalFilter")], this._mFilters[this.getView().byId("iconTabBar").getSelectedKey()]], true), sap.ui.model.FilterType.Application);
+						oBinding.filter(new sap.ui.model.Filter([this._mGlobalFilters[oViewModel.getProperty("/globalFilter")], this._mFilters[this.getView()
+							.byId("iconTabBar").getSelectedKey()]], true), sap.ui.model.FilterType.Application);
 					} else {
-						
+
 						// Set new filter for group category and combine with current filter selection for letter
 						oBinding.filter(
 							new sap.ui.model.Filter([
@@ -667,7 +670,6 @@ sap.ui.define([
 		 * @public
 		 */
 		onPromoteToSCV: function() {
-			var aSelectedEntities;
 
 			var that = this;
 
@@ -682,155 +684,66 @@ sap.ui.define([
 			function refresh() {
 				wait(1000);
 				//that.getView().getModel().loadData(this.getView().getBindingContext().getPath());
-				that.byId("table").getModel().refresh(true);
+				that.byId("idVizFrame").getModel().refresh(true);
+			}
+			
+			function setBusy(bBusy) {
+				that.byId("idVizFrame").setBusy(bBusy);
 			}
 
-			aSelectedEntities = this.byId("table").getSelectedItems();
-			var dialog;
+			var dialog = new Dialog({
+				title: 'Confirm',
+				type: 'Message',
+				content: new Text({
+					text: 'Promote all entities to SCV layer? Note: This will move all entities with strategy \'Promote\' to the SCV foundation layer.'
+				}),
+				beginButton: new Button({
+					text: 'Promote',
+					press: function() {
 
-			if (aSelectedEntities.length > 0) {
+						var payload = {};
+						var data = JSON.stringify(payload);
+						
+						// Set to busy
+						setBusy(true);
 
-				//Some entities were selected, only transfer these
-				dialog = new Dialog({
-					title: 'Confirm',
-					type: 'Message',
-					content: new Text({
-						text: 'Promote selected entities to SCV layer?'
-					}),
-					beginButton: new Button({
-						text: 'Promote',
-						press: function() {
+						$.ajax({
+							type: "POST",
+							url: "/scv/match/srv/xs/supervisor/moveEntitiesToShadowTable.xsjs",
+							contentType: "application/json",
+							data: data,
+							dataType: "json",
+							crossDomain: true,
 
-							var payload = {};
-							var entities = [];
-							var i, oEntity, oEntityId;
-							var obj;
-
-							for (i = 0; i < aSelectedEntities.length; i++) {
-								obj = {};
-								oEntity = aSelectedEntities[i];
-								oEntityId = oEntity.getBindingContext().getProperty("ENTITY_ID");
-								obj.ENTITY_ID = oEntityId;
-								entities.push(obj);
-								//sPath = oProduct.getBindingContextPath();
-								//this.getModel().remove(sPath, {
-								//	success : this._handleUnlistActionResult.bind(this, oProductId, true, i + 1, aSelectedEntities.length),
-								//	error : this._handleUnlistActionResult.bind(this, oProductId, false, i + 1, aSelectedEntities.length)
-								//});
+							success: function(data) {
+								refresh();
+								MessageToast.show('All Entities promoted!');
+								setBusy(false);
+							},
+							error: function(data) {
+								var message = JSON.stringify(data);
+								alert(message);
+								setBusy(false);
 							}
+						});
 
-							payload.entities = entities;
-							var data = JSON.stringify(payload);
 
-							$.ajax({
-								type: "POST",
-								url: "/scv//match/srv/xs/supervisor/moveEntitiesToShadowTable.xsjs",
-								contentType: "application/json",
-								data: data,
-								dataType: "json",
-								crossDomain: true,
-
-								success: function(data) {
-									// Refresh model
-									//sap.ui.getCore().byId("table").getModel().refresh(true);
-									refresh();
-									MessageToast.show('Selected Entities promoted!');
-								},
-								error: function(data) {
-									var message = JSON.stringify(data);
-									alert(message);
-								}
-							});
-
-							dialog.close();
-						}
-					}),
-					endButton: new Button({
-						text: 'Cancel',
-						press: function() {
-							dialog.close();
-						}
-					}),
-					afterClose: function() {
-						dialog.destroy();
+						dialog.close();
 					}
-				});
-
-				dialog.open();
-
-			} else {
-
-				// Transfer all entities flagged for promotion to shadow table
-				var dialog = new Dialog({
-					title: 'No Entities Selected',
-					type: 'Message',
-					content: new Text({
-						text: 'No entities selected for promotion to SCV.'
-					}),
-					beginButton: new Button({
-						text: 'OK',
-						press: function() {
-							dialog.close();
-						}
-					}),
-					afterClose: function() {
-						dialog.destroy();
+				}),
+				endButton: new Button({
+					text: 'Cancel',
+					press: function() {
+						dialog.close();
 					}
-				});
+				}),
+				afterClose: function() {
+					dialog.destroy();
+				}
+			});
 
-				dialog.open();
+			dialog.open();
 
-				/*dialog = new Dialog({
-					title: 'Confirm',
-					type: 'Message',
-					content: new Text({
-						text: 'Promote all entities to SCV layer? Note: This will move all entities with status \'Promote\' to the SCV foundation layer.'
-					}),
-					beginButton: new Button({
-						text: 'Promote',
-						press: function() {
-
-							var payload = {};
-							payload.entities = aSelectedEntities;
-							var data = JSON.stringify(payload);
-
-							$.ajax({
-								type: "POST",
-								url: "/webapp/xs/scv/moveEntitiesToShadowTable.xsjs",
-								contentType: "application/json",
-								data: data,
-								dataType: "json",
-								crossDomain: true,
-
-								success: function(data) {
-									// Refresh model
-									//sap.ui.getCore().byId("table").getModel().refresh(true);
-									refresh();
-									MessageToast.show('All Entities promoted!');
-								},
-								error: function(data) {
-									var message = JSON.stringify(data);
-									alert(message);
-								}
-							});
-
-							dialog.close();
-						}
-					}),
-					endButton: new Button({
-						text: 'Cancel',
-						press: function() {
-							dialog.close();
-						}
-					}),
-					afterClose: function() {
-						dialog.destroy();
-					}
-				});
-
-				dialog.open();*/
-
-			}
 		},
 
 		handleViewSettingsDialogButtonPressed: function(oEvent) {

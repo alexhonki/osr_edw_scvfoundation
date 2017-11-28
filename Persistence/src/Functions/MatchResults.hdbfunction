@@ -23,9 +23,6 @@ BEGIN
        Write your function logic 
  *****************************/ 
 
-	DECLARE l_latestExecutionID INTEGER;
-
-	--lt_overview =	
 				return	SELECT 
 		            	a.GROUP_ID,
 						a.ENTITY_ID,
@@ -71,25 +68,4 @@ BEGIN
 		                          SYSTEM_ID DESC
 
 					    ; 
-	/*
-	return SELECT GROUP_ID,
-				  ENTITY_ID,
-				  POLICY_NAME, 
-			      SOURCE_SYSTEM,
-			      SYSTEM_ID,
-				  FNAME_ORIG AS FIRST_NAME, 
-				  MNAME_ORIG AS MIDDLE_NAME, 
-				  LNAME_ORIG AS LAST_NAME,
-				  BIRTHDT_ORIG AS BIRTHDT,
-				  COUNTRY_ORIG AS ADDRESS_COUNTRY,
-				  CITY_ORIG AS ADDRESS_LOCALITY,
-				  REGION_ORIG AS ADDRESS_REGION,
-				  POSTCODE_ORIG AS ADDRESS_POSTCODE,
-				  STREET_ORIG AS ADDRESS_PRIM_NAME,
-				  STREET_NUMBER_ORIG AS ADDRESS_PRIM_NUMBER,
-				  "Match_ROW_ID" as MATCH_ROW, 
-				  RELATED_ROW_ID as RELATED_ROW, 
-				  SCORE
-	FROM :lt_overview;
-	*/
 END;

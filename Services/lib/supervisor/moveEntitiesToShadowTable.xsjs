@@ -40,38 +40,40 @@ function getTimestamp() {
 /**
  * Moves entities to match results shadow table
  */
-function moveEntitiesToShadowTable(entities) {
+function moveEntitiesToShadowTable() {
 	var conn = $.hdb.getConnection();
-	var output = JSON.stringify(entities);
+	//var output = JSON.stringify(entities);
 	var fnMoveEntitiesToShadowTable = conn.loadProcedure("osr.scv.foundation.db.Procedures::SP_MoveEntityToShadowTable");
 	var result = fnMoveEntitiesToShadowTable({
-		I_ENTITIES: entities,
+		//I_ENTITIES: entities,
 		I_USER: $.session.getUsername(),
 		I_TIMESTAMP: getTimestamp()
 	});
 	conn.commit();
 	conn.close();
 
-	if (result && result.EX_ERROR != null) {
+	if (result && result.o_return_code === "ERROR") {
 		return {
-			body: result,
-			status: $.net.http.BAD_REQUEST
+			result: "ERROR"
 		};
 	} else {
 		return {
-			body: output,
-			status: $.net.http.CREATED
+			result: "SUCCESS"
 		};
 	}
 }
 
-var body = $.request.body.asString();
-var obj = JSON.parse(body);
-//console.log("body: " + body);
-//console.log(obj.entities);
-
 // validate the inputs here!
-var output = moveEntitiesToShadowTable(obj.entities);
-$.response.contentType = "application/json";
-$.response.setBody(output.body);
-$.response.status = output.status;
+var output = moveEntitiesToShadowTable();
+var response = {};
+if (output.result === "ERROR") {
+		$.response.status = 500;
+		$.response.status = $.net.http.INTERNAL_SERVER_ERROR;
+		response = {"status": "error", "data": {}, "message": "Internal server error!" };
+		$.response.setBody(response);			
+} else {
+		$.response.status = 201;
+		$.response.status = $.net.http.CREATED;
+		response = {"status": "success", "data": {}, "message": "Request successful!" };
+		$.response.setBody(response);
+}

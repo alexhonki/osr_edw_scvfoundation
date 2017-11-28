@@ -28,14 +28,6 @@ BEGIN
        Write your function logic 
  *****************************/ 
 
-	DECLARE l_latestExecutionID INTEGER;
-
-	-- Retrieve latest task execution ID
-	SELECT MAX(TASK_EXECUTION_ID) INTO l_latestExecutionID 
-	FROM "osr.scv.foundation.db.synonyms::MATCH_TRACING" 
-	WHERE TASK_NAME = 'osr.scv.foundation.db.flowgraphs::MatchBusinessPartners';
-	
-	--lt_overview =	
 				return	SELECT 
 		            	a.GROUP_ID,
 						a.ENTITY_ID,
@@ -81,37 +73,13 @@ BEGIN
 		                ON a."Cleanse_ROW_ID_TMR" = f."RUN_NUMBER" AND a."Cleanse_TABLE_ID_TMR" = f."Cleanse_TABLE_ID" AND a."SYSTEM_ID" = f."CUSTOMER_REF" AND a."SOURCE_SYSTEM" = 'TMR'			
 		                -- Add match tracing statistics
 		                LEFT OUTER JOIN (SELECT * 
-		                                 FROM   "osr.scv.foundation.db.synonyms::MATCH_TRACING" 
+		                                 FROM   "osr.scv.foundation.db.data::MatchResults.MatchTracing" 
 		                                ) AS b
 		                ON a."Match_ROW_ID" = b.ROW_ID
-		                	AND b.TASK_EXECUTION_ID = :l_latestExecutionID
-	                		AND b.TASK_NAME = 'osr.scv.foundation.db.flowgraphs::MatchBusinessPartners'  
 						WHERE ENTITY_ID = :i_entity_id
-							--AND (b.POLICY_NAME NOT LIKE '%CustSourceSystem%' OR b.POLICY_NAME IS NULL)
 		                ORDER  BY SOURCE_SYSTEM ASC, 
 		                          SYSTEM_ID DESC,
 		                          b.SCORE ASC,
 		                          MATCH_ROW ASC
 					    ; 
-	/*
-	return SELECT GROUP_ID,
-				  ENTITY_ID,
-				  POLICY_NAME, 
-			      SOURCE_SYSTEM,
-			      SYSTEM_ID,
-				  FNAME_ORIG AS FIRST_NAME, 
-				  MNAME_ORIG AS MIDDLE_NAME, 
-				  LNAME_ORIG AS LAST_NAME,
-				  BIRTHDT_ORIG AS BIRTHDT,
-				  COUNTRY_ORIG AS ADDRESS_COUNTRY,
-				  CITY_ORIG AS ADDRESS_LOCALITY,
-				  REGION_ORIG AS ADDRESS_REGION,
-				  POSTCODE_ORIG AS ADDRESS_POSTCODE,
-				  STREET_ORIG AS ADDRESS_PRIM_NAME,
-				  STREET_NUMBER_ORIG AS ADDRESS_PRIM_NUMBER,
-				  "Match_ROW_ID" as MATCH_ROW, 
-				  RELATED_ROW_ID as RELATED_ROW, 
-				  SCORE
-	FROM :lt_overview;
-	*/
 END;
