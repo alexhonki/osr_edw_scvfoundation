@@ -8,12 +8,12 @@
  */
 function getTimestamp() {
 	var d = new Date();
-	var month = d.getMonth().toString();
-	var day = d.getDate().toString();
-	var year = d.getFullYear();
-	var hours = d.getHours().toString();
-	var minutes = d.getMinutes().toString();
-	var seconds = d.getSeconds().toString();
+	var month = d.getUTCMonth().toString();
+	var day = d.getUTCDate().toString();
+	var year = d.getUTCFullYear();
+	var hours = d.getUTCHours().toString();
+	var minutes = d.getUTCMinutes().toString();
+	var seconds = d.getUTCSeconds().toString();
 	if (month.length < 2) {
 		month = '0' + month;
 	}
