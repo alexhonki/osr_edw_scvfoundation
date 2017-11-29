@@ -218,7 +218,7 @@
 														<cells>
 															<Text text="{STRATEGY}"/>
 															<Text text="{USER}"/>
-															<Text text="{TIMESTAMP}"/>
+															<Text text="{path: 'TIMESTAMP', type: 'sap.ui.model.type.DateTime'}"/>
 															<Text text="{CODE}"/>
 															<Text text="{COMMENT}"/>
 														</cells>
