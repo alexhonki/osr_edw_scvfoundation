@@ -7,7 +7,7 @@ context MatchResultsReview {
         key ENTITY_ID : String(10);
         key TIMESTAMP : UTCTimestamp;
             STRATEGY  : String(10);
-            ACTION	  : String(20);
+            ACTION    : String(20);
             CODE      : String(10);
             COMMENT   : String(512);
             USER      : String(10);
@@ -41,9 +41,10 @@ context MatchResultsReview {
             PROMOTED_TO_SCV          : String(1);
             PROMOTION_TIMESTAMP      : UTCTimestamp;
             PROMOTED_BY              : String(10);
-            RMS_DUPLICATES			 : Integer;
-            ACTION					 : String(20);
-            ACTION_RESOLVED			 : String(20);
+            RMS_DUPLICATES           : Integer;
+            ACTION                   : String(20);
+            ACTION_RESOLVED          : String(20);
+            MATCH_PERSON_FN          : String(50);
     }
     technical configuration {
         index index_0 on (PROMOTED_TO_SCV);
@@ -71,9 +72,10 @@ context MatchResultsReview {
             PROMOTED_TO_SCV          : String(1);
             PROMOTION_TIMESTAMP      : UTCTimestamp;
             PROMOTED_BY              : String(10);
-            RMS_DUPLICATES			 : Integer;
-            ACTION					 : String(20);
-            ACTION_RESOLVED			 : String(20);
+            RMS_DUPLICATES           : Integer;
+            ACTION                   : String(20);
+            ACTION_RESOLVED          : String(20);
+            MATCH_PERSON_FN          : String(80);
     }
     technical configuration {
         index index_0 on (PROMOTED_TO_SCV);

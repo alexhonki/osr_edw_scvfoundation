@@ -85,6 +85,10 @@
       <viewAttribute id="ACTION_RESOLVED">
         <descriptions defaultDescription="ACTION_RESOLVED"/>
       </viewAttribute>
+    
+      <viewAttribute id="MATCH_PERSON_FN">
+        <descriptions defaultDescription="MATCH_PERSON_FN"/>
+      </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
@@ -115,6 +119,8 @@
     
       <mapping xsi:type="Calculation:AttributeMapping" target="ACTION" source="ACTION"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="ACTION_RESOLVED" source="ACTION_RESOLVED"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_FN" source="MATCH_PERSON_FN"/>
     </input></calculationView>
 </calculationViews>
 <logicalModel id="Projection_1">
@@ -201,11 +207,20 @@
   
     <attribute id="ACTION" order="21" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="ACTION"/>
+  
       <keyMapping columnObjectName="Projection_1" columnName="ACTION"/>
+  
     </attribute>
     <attribute id="ACTION_RESOLVED" order="22" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="ACTION_RESOLVED"/>
       <keyMapping columnObjectName="Projection_1" columnName="ACTION_RESOLVED"/>
+    </attribute>
+  
+    <attribute id="MATCH_PERSON_FN" order="23" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="MATCH_PERSON_FN"/>
+  
+      <keyMapping columnObjectName="Projection_1" columnName="MATCH_PERSON_FN"/>
+  
     </attribute>
   </attributes>
   <calculatedAttributes>
