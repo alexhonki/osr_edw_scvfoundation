@@ -77,7 +77,7 @@ resources:
     parameters:
       service-name: OSR_SCV_FOUNDATION-uaa
       service-plan: space
-      config_path: ./xs-security.json
+      path: ./xs-security.json
   - name: ui5-lib
     type: configuration
     parameters:
