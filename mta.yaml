@@ -56,7 +56,7 @@ modules:
     requires:
       - name: OsrScvFoundationContainer
       - name:  OSR_SCV_FOUNDATION-dws
-#      - name: OSR_SCV_FOUNDATION_DWF-uaa
+      - name: OSR_SCV_FOUNDATION_DWF-uaa
 
 resources:
   - name: OsrScvFoundationContainer
