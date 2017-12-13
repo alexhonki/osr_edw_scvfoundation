@@ -12,6 +12,7 @@ sap.ui.define([
 	'sap/m/IconTabSeparator',
 	'sap/m/Button',
 	'sap/m/Dialog'
+	
 ], function(BaseController, JSONModel, formatter, Filter, Sorter, FilterOperator, MessageToast, MessageBox, IconTabFilter, Text,
 	IconTabSeparator, Button, Dialog) {
 	"use strict";
@@ -37,7 +38,15 @@ sap.ui.define([
 			var oViewModel,
 				iOriginalBusyDelay,
 				oTable = this.byId("table");
+			
+			this.renderCount = 0;
+			// Register listener for data received event for data set binding
+            //this.getView().byId("idVizFrame").getDataset().getBinding("data").attachDataReceived(handleChartDataReceived, this);
 
+			
+			//this.renderCount = 0;
+			
+			
 			// Put down worklist table's original value for busy indicator delay,
 			// so it can be restored later on. Busy handling on the table is
 			// taken care of by the table itself.
@@ -189,6 +198,9 @@ sap.ui.define([
 				oTable = oEvent.getSource(),
 				oViewModel = this.getModel("worklistView"),
 				iTotalItems = oEvent.getParameter("total");
+			
+			
+			
 			// only update the counter if the length is final and
 			// the table is not empty
 			if (iTotalItems && oTable.getBinding("items").isLengthFinal()) {
@@ -340,6 +352,7 @@ sap.ui.define([
 		 * @public
 		 */
 		onRefresh: function() {
+
 			this._oTable.getBinding("items").refresh();
 		},
 
@@ -414,9 +427,18 @@ sap.ui.define([
 				styleClass: this.getOwnerComponent().getContentDensityClass()
 			});
 		},
-
+		
+		onChartRenderComplete: function (){
+			if (this.renderCount === 1){
+				this.byId("idVizFrame").setBusy(false);
+				this.renderCount = 0;
+			}else{
+				this.renderCount = this.renderCount + 1;
+			}
+		},
+		
 		handleToggleDuplicateViewButtonPress: function(oEvent) {
-
+			this.byId("idVizFrame").setBusy(true);
 			var oViewModel = this.getModel("worklistView");
 			var sKey = oEvent.getSource().getKey();
 
@@ -809,6 +831,9 @@ sap.ui.define([
 			//oView.byId("vsdFilterBar").setVisible(aFilters.length > 0);
 			//oView.byId("vsdFilterLabel").setText(mParams.filterString);
 		}
+		
+		
 
 	});
+
 });

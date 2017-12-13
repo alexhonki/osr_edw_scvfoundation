@@ -7,9 +7,7 @@
 		xmlns:viz.feeds="sap.viz.ui5.controls.common.feeds" 
 		xmlns:viz.data="sap.viz.ui5.data">
 	<semantic:FullscreenPage id="page" navButtonPress="onNavBack" showNavButton="true" title="Overview Match Assessments - Individuals">
-		<semantic:customHeaderContent>
-			<Button icon="sap-icon://settings" tooltip="Settings" press="handeSettingsButtonPressed" />
-		</semantic:customHeaderContent>
+
 		<semantic:subHeader>
 				<Toolbar>
 				<ToolbarSpacer/>
@@ -25,7 +23,7 @@
 		<semantic:content>
 			<!--<layout:flexContent>-->
             <viz:Popover id="idPopOver"></viz:Popover>
-            <viz:VizFrame  id="idVizFrame" uiConfig="{applicationSet:'fiori'}" 
+            <viz:VizFrame  renderComplete = "onChartRenderComplete" id="idVizFrame" uiConfig="{applicationSet:'fiori'}" 
             	vizProperties="{
             						title: {visible: true, text: 'Number of Entities to Promote or Review'}, 
             						plotArea: 

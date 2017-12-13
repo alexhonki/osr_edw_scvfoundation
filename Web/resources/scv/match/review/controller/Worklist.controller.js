@@ -140,6 +140,10 @@ sap.ui.define([
 				key: 'z',
 				text: 'Z'
 			}));
+			oIconTabBar.addItem(new IconTabFilter({
+				key: 'other',
+				text: 'Other'
+			}));
 
 			var oViewModel,
 				iOriginalBusyDelay,
@@ -218,6 +222,10 @@ sap.ui.define([
 			var xSurnameFilter = new sap.ui.model.Filter("LAST_NAME", sap.ui.model.FilterOperator.StartsWith, "X");
 			var ySurnameFilter = new sap.ui.model.Filter("LAST_NAME", sap.ui.model.FilterOperator.StartsWith, "Y");
 			var zSurnameFilter = new sap.ui.model.Filter("LAST_NAME", sap.ui.model.FilterOperator.StartsWith, "Z");
+			var otherSurnameFilter = new sap.ui.model.Filter([
+									new sap.ui.model.Filter("LAST_NAME", sap.ui.model.FilterOperator.BT,"","@"),
+									new sap.ui.model.Filter("LAST_NAME", sap.ui.model.FilterOperator.BT,"[","~")
+				], false);
 
 			// Create an object of filters
 			this._mFilters = {
@@ -255,6 +263,7 @@ sap.ui.define([
 				"x": xSurnameFilter,
 				"y": ySurnameFilter,
 				"z": zSurnameFilter,
+				"other": otherSurnameFilter,
 				"all": []
 			};
 			

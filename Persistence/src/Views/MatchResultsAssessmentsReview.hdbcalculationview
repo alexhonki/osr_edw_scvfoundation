@@ -34,6 +34,10 @@
       <viewAttribute id="COUNTER" aggregationType="sum">
         <descriptions defaultDescription="COUNTER"/>
       </viewAttribute>
+    
+      <viewAttribute id="MATCH_PERSON_FN_FC_SORT">
+        <descriptions defaultDescription="MATCH_PERSON_FN_FC_SORT"/>
+      </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
@@ -41,30 +45,36 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_FN_FC" source="MATCH_PERSON_FN_FC"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="STRATEGY" source="STRATEGY"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="COUNTER" source="COUNTER"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_FN_FC_SORT" source="MATCH_PERSON_FN_FC_SORT"/>
     </input>
   </calculationView>
 </calculationViews>
 <logicalModel id="Projection_1">
   <attributes>
-    <attribute id="MATCH_PERSON_FN_FC" order="1" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="MATCH_PERSON_FN_FC_SORT" order="1" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="MATCH_PERSON_FN_FC_SORT"/>
+      <keyMapping columnObjectName="Projection_1" columnName="MATCH_PERSON_FN_FC_SORT"/>
+    </attribute>
+    <attribute id="MATCH_PERSON_FN_FC" order="2" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="MATCH_PERSON_FN_FC"/>
       <keyMapping columnObjectName="Projection_1" columnName="MATCH_PERSON_FN_FC"/>
     </attribute>
-    <attribute id="STRATEGY" order="2" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="STRATEGY" order="3" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="STRATEGY"/>
       <keyMapping columnObjectName="Projection_1" columnName="STRATEGY"/>
     </attribute>
   </attributes>
   <calculatedAttributes/>
   <baseMeasures>
-    <measure id="COUNTER" order="3" aggregationType="sum" measureType="simple">
+    <measure id="COUNTER" order="4" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="COUNTER"/>
       <measureMapping columnObjectName="Projection_1" columnName="COUNTER"/>
     </measure>
   </baseMeasures>
   <calculatedMeasures/>
   <restrictedMeasures>
-    <measure id="ENTITIES_PROMOTED" order="4" aggregationType="sum" datatype="INTEGER" length="10" scale="0" baseMeasure="COUNTER">
+    <measure id="ENTITIES_PROMOTED" order="5" aggregationType="sum" datatype="INTEGER" length="10" scale="0" baseMeasure="COUNTER">
       <descriptions defaultDescription="ENTITIES_PROMOTED"/>
       <restriction logicalOperator="AND">
         <filter xsi:type="Privilege:AttributeFilter" attributeName="STRATEGY">
@@ -73,7 +83,7 @@
         <attributeName>STRATEGY</attributeName>
       </restriction>
       </measure>
-    <measure id="ENTITIES_TO_REVIEW" order="5" aggregationType="sum" datatype="INTEGER" length="10" scale="0" baseMeasure="COUNTER">
+    <measure id="ENTITIES_TO_REVIEW" order="6" aggregationType="sum" datatype="INTEGER" length="10" scale="0" baseMeasure="COUNTER">
       <descriptions defaultDescription="ENTITIES_TO_REVIEW"/>
       <restriction logicalOperator="AND">
         <filter xsi:type="Privilege:AttributeFilter" attributeName="STRATEGY">

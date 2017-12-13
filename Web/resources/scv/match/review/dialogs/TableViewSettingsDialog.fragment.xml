@@ -11,6 +11,7 @@
 			<ViewSettingsItem text="Source" key="SOURCE_SYSTEM" />
 			<ViewSettingsItem text="Average Score" key="AVG_SCORE" />
 			<ViewSettingsItem text="Strategy" key="STRATEGY_RESOLVED" />
+			<ViewSettingsItem text="Action" key="ACTION_RESOLVED" />
 		</sortItems>
 		<!--<groupItems>
 			<ViewSettingsItem text="Supplier" key="SupplierName" />
