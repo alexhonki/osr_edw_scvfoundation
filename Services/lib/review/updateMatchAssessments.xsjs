@@ -101,8 +101,9 @@ try {
 
 		// Update match review table
 		var strategyResolveStatus = strategy.indexOf('Promote') >= 0 ? 'Success' : 'Error';
+		var actionResolveStatus = action.indexOf('Accept') >= 0 ? 'Success' : 'Error';
 		pstmt = conn.prepareStatement(
-			"UPDATE \"osr.scv.foundation.db.data::MatchResultsReview.Review\" SET \"STRATEGY\" = '" + strategy + "', \"STRATEGY_RESOLVED\" = '" + strategy + "', \"STRATEGY_RESOLVED_STATUS\" = '" + strategyResolveStatus + "', \"ACTION\" = '" + action + "', \"ACTION_RESOLVED\" = '" + action + "' WHERE ENTITY_ID = ?"
+			"UPDATE \"osr.scv.foundation.db.data::MatchResultsReview.Review\" SET \"STRATEGY\" = '" + strategy + "', \"STRATEGY_RESOLVED\" = '" + strategy + "', \"STRATEGY_RESOLVED_STATUS\" = '" + strategyResolveStatus + "', \"ACTION\" = '" + action + "', \"ACTION_RESOLVED\" = '" + action + "', \"ACTION_RESOLVED_STATUS\" = '" + actionResolveStatus +  "' WHERE ENTITY_ID = ?"
 		);
 		pstmt.setString(1, entityId);
 

@@ -8,7 +8,7 @@ context MatchResultsReview {
         key TIMESTAMP : UTCTimestamp;
             STRATEGY  : String(10);
             ACTION    : String(20);
-            CODE      : String(10);
+            CODE      : String(60);
             COMMENT   : String(512);
             USER      : String(10);
     };
@@ -45,6 +45,7 @@ context MatchResultsReview {
             ACTION                   : String(20);
             ACTION_RESOLVED          : String(20);
             MATCH_PERSON_FN          : String(50);
+            ACTION_RESOLVED_STATUS   : String(10);
     }
     technical configuration {
         index index_0 on (PROMOTED_TO_SCV);
@@ -76,12 +77,13 @@ context MatchResultsReview {
             ACTION                   : String(20);
             ACTION_RESOLVED          : String(20);
             MATCH_PERSON_FN          : String(80);
+            ACTION_RESOLVED_STATUS   : String(10);
     }
     technical configuration {
         index index_0 on (PROMOTED_TO_SCV);
     };
 
-    /*@@layout{"layoutInfo":{"x":-278,"y":9.5}}*/
+    /*@@layout{"layoutInfo":{"x":-506,"y":11.5}}*/
     type StringValues {
         STRING_VALUE : String(50);
     };

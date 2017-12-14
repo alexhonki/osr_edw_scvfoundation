@@ -369,6 +369,7 @@ sap.ui.define([
 						payload.ENTITY_ID = sap.ui.getCore().byId('lblEntityId').getText();
 						payload.STRATEGY = 'Promote';
 						payload.ACTION = 'Accept';
+						payload.ACTION_RESOLVED_STATUS = 'Success';
 						payload.CODE = code;
 						payload.COMMENT = comment;
 						//var data = JSON.stringify(payload);
@@ -509,12 +510,14 @@ sap.ui.define([
 					enabled: false,
 					press: function() {
 
-						var code = sap.ui.getCore().byId('rejectReasonComboBox').getSelectedKey();
+						//var code = sap.ui.getCore().byId('rejectReasonComboBox').getSelectedKey();
+						var code = sap.ui.getCore().byId('rejectReasonComboBox').getValue()+ " ("+sap.ui.getCore().byId('rejectReasonComboBox').getSelectedKey()+") ";
 						var comment = sap.ui.getCore().byId('submitDialogTextarea').getValue();
 						var payload = {};
 						payload.ENTITY_ID = sap.ui.getCore().byId('lblEntityId').getText();
 						payload.STRATEGY = 'Promote';
 						payload.ACTION = 'Reject';
+						payload.ACTION_RESOLVED_STATUS = 'Error';
 						payload.CODE = code;
 						payload.COMMENT = comment;
 						//var data = JSON.stringify(payload);

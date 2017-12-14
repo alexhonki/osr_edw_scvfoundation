@@ -85,7 +85,9 @@
       <viewAttribute id="ACTION_RESOLVED">
         <descriptions defaultDescription="ACTION_RESOLVED"/>
       </viewAttribute>
-    
+      <viewAttribute id="ACTION_RESOLVED_STATUS">
+        <descriptions defaultDescription="ACTION_RESOLVED_STATUS"/>
+      </viewAttribute>
       <viewAttribute id="MATCH_PERSON_FN">
         <descriptions defaultDescription="MATCH_PERSON_FN"/>
       </viewAttribute>
@@ -119,7 +121,7 @@
     
       <mapping xsi:type="Calculation:AttributeMapping" target="ACTION" source="ACTION"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="ACTION_RESOLVED" source="ACTION_RESOLVED"/>
-    
+      <mapping xsi:type="Calculation:AttributeMapping" target="ACTION_RESOLVED_STATUS" source="ACTION_RESOLVED_STATUS"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_FN" source="MATCH_PERSON_FN"/>
     </input></calculationView>
 </calculationViews>
@@ -215,12 +217,13 @@
       <descriptions defaultDescription="ACTION_RESOLVED"/>
       <keyMapping columnObjectName="Projection_1" columnName="ACTION_RESOLVED"/>
     </attribute>
-  
-    <attribute id="MATCH_PERSON_FN" order="23" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="ACTION_RESOLVED_STATUS" order="23" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="ACTION_RESOLVED_STATUS"/>
+      <keyMapping columnObjectName="Projection_1" columnName="ACTION_RESOLVED_STATUS"/>
+    </attribute>
+    <attribute id="MATCH_PERSON_FN" order="24" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="MATCH_PERSON_FN"/>
-  
       <keyMapping columnObjectName="Projection_1" columnName="MATCH_PERSON_FN"/>
-  
     </attribute>
   </attributes>
   <calculatedAttributes>
@@ -229,7 +232,7 @@
       <keyCalculation datatype="NVARCHAR" expressionLanguage="SQL" length="256">
         <formula>CONCAT(CONCAT(&quot;LAST_NAME&quot;, ', '), CONCAT(&quot;FIRST_NAME&quot;, CONCAT(' ',CASE WHEN &quot;MIDDLE_NAME&quot; IS NULL THEN '' ELSE &quot;MIDDLE_NAME&quot; END)))</formula>
       </keyCalculation>
-    </calculatedAttribute></calculatedAttributes>
+      </calculatedAttribute></calculatedAttributes>
   <baseMeasures/>
   <calculatedMeasures/>
   <restrictedMeasures/></logicalModel>

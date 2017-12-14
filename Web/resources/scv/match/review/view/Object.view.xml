@@ -12,7 +12,7 @@
 				</attributes>
 				<statuses>
 					<ObjectStatus  title="Strategy" text="{= ${STRATEGY_RESOLVED} }" state="{= ${STRATEGY_RESOLVED_STATUS} }" visible="true"/>
-					<ObjectStatus  title="Action" text="{= ${ACTION_RESOLVED} }" state="{= ${ACTION_RESOLVED} }" visible="true"/>
+					<ObjectStatus  title="Action" text="{= ${ACTION_RESOLVED} }" state="{= ${ACTION_RESOLVED_STATUS} }" visible="true"/>
 					<!--<ProgressIndicator percentValue="{UnitsInStock}" displayValue="{UnitsInStock}" showValue="true"
 						state="{ path: 'UnitsInStock', formatter: '.formatter.quantityState'}"/>-->
 				</statuses>
