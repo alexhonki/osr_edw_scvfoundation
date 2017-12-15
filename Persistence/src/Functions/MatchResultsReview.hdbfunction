@@ -63,7 +63,6 @@ BEGIN
                 LEFT OUTER JOIN (
                                  SELECT MATCH_PERSON_FN, NAME_FIRST AS FNAME_ORIG_BUT, NAMEMIDDLE AS MNAME_ORIG_BUT, NAME_LAST AS LNAME_ORIG_BUT, "Cleanse_TABLE_ID", "Cleanse_ROW_ID", "PARTNER" 
                                  FROM "osr.scv.foundation.db.synonyms::BUT000"
-                                 WHERE PARTNER = '0002660034'
                                 ) as r
                 ON m."Cleanse_ROW_ID_BUT" = r."Cleanse_ROW_ID" AND m."Cleanse_TABLE_ID_BUT" = r."Cleanse_TABLE_ID" AND m."SYSTEM_ID" = r."PARTNER"
                 -- Master data TMR
