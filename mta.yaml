@@ -83,7 +83,7 @@ resources:
     parameters:
       ID: 'com.sap.ui5.dist.sapui5-dist-xsa.XSAC_SAPUI5_FESV3:sapui5_fesv3'
       name: sapui5_fesv3
-      version: =1.44.15
+      version: =1.44.25
   - name: OSR_SCV_FOUNDATION-dws
     properties:
        dwf-edw-client-name: ${service-name}
