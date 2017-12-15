@@ -12,7 +12,7 @@ sap.ui.define([
 	'sap/m/IconTabSeparator',
 	'sap/m/Button',
 	'sap/m/Dialog'
-	
+
 ], function(BaseController, JSONModel, formatter, Filter, Sorter, FilterOperator, MessageToast, MessageBox, IconTabFilter, Text,
 	IconTabSeparator, Button, Dialog) {
 	"use strict";
@@ -25,10 +25,12 @@ sap.ui.define([
 		/* lifecycle methods                                           */
 		/* =========================================================== */
 
-		//onAfterRendering: function() {
-	//		this.getView().byId("idVizFrame").getDataset().getBinding("data").filter(new sap.ui.model.Filter("RMS_DUPLICATES", sap.ui.model.FilterOperator.EQ, 1));	
-	//	},
-		
+		/*onAfterRendering: function() {
+			// Register listener for data received event for data set binding
+			//this.that.getView().byId("idVizFrame").getDataset().getBinding("data").attachDataReceived(this.byId("idVizFrame").setBusy(false));
+			//this.that.getView().byId("idVizFrame").getModel().attachRequestCompleted(function(oEvent){this.that.byId("idVizFrame").setBusy(false)};);
+		},*/
+
 		/**
 		 * Called when the worklist controller is instantiated.
 		 * @public
@@ -38,15 +40,9 @@ sap.ui.define([
 			var oViewModel,
 				iOriginalBusyDelay,
 				oTable = this.byId("table");
-			
-			this.renderCount = 0;
-			// Register listener for data received event for data set binding
-            //this.getView().byId("idVizFrame").getDataset().getBinding("data").attachDataReceived(handleChartDataReceived, this);
 
-			
-			//this.renderCount = 0;
-			
-			
+
+
 			// Put down worklist table's original value for busy indicator delay,
 			// so it can be restored later on. Busy handling on the table is
 			// taken care of by the table itself.
@@ -168,7 +164,6 @@ sap.ui.define([
 				"rmsDuplicates": rmsDuplicatesFilter,
 				"allDuplicates": rmsAllDuplicatesFilter
 			};
-			
 
 			// Make sure, busy indication is showing immediately so there is no
 			// break after the busy indication for loading the view's meta data is
@@ -198,9 +193,7 @@ sap.ui.define([
 				oTable = oEvent.getSource(),
 				oViewModel = this.getModel("worklistView"),
 				iTotalItems = oEvent.getParameter("total");
-			
-			
-			
+
 			// only update the counter if the length is final and
 			// the table is not empty
 			if (iTotalItems && oTable.getBinding("items").isLengthFinal()) {
@@ -324,8 +317,6 @@ sap.ui.define([
 				history.go(-1);
 			}
 		},
-		
-		
 
 		onSearch: function(oEvent) {
 			if (oEvent.getParameters().refreshButtonPressed) {
@@ -428,17 +419,23 @@ sap.ui.define([
 			});
 		},
 		
-		onChartRenderComplete: function (){
-			if (this.renderCount === 1){
-				this.byId("idVizFrame").setBusy(false);
-				this.renderCount = 0;
-			}else{
-				this.renderCount = this.renderCount + 1;
-			}
+		// Once data is received the busy state is switched off
+		switchBusyOff: function() {
+			this.byId("idVizFrame").setBusy(false);
 		},
 		
 		handleToggleDuplicateViewButtonPress: function(oEvent) {
+			
+			// Register listener for data received event. Bind the switchBusyOff method to the successful execution of th model.
+			var oModel = this.getModel();
+			oModel.read("/matchAssessmentsReview", {
+				success: this.switchBusyOff.bind(this)
+				//error : function(oData){ console.log(oData); 
+			});
+			
+			// Switch on the busy symbol 
 			this.byId("idVizFrame").setBusy(true);
+			
 			var oViewModel = this.getModel("worklistView");
 			var sKey = oEvent.getSource().getKey();
 
@@ -456,13 +453,10 @@ sap.ui.define([
 
 			//var oIconTabBar = this.getView().byId("iconTabBar");
 			//var oEvent = new sap.ui.base.Event("customSelect", oIconTabBar, {
-				//"selectedKey": oIconTabBar.getSelectedKey(),
-				//"item": this.getView().byId(this.getView().byId("iconTabBar").getSelectedKey())
+			//"selectedKey": oIconTabBar.getSelectedKey(),
+			//"item": this.getView().byId(this.getView().byId("iconTabBar").getSelectedKey())
 			//});
 			//this.onQuickFilter(oEvent);
-			
-
-
 
 			// Trigger refresh
 			//var oBinding = this._oTable.getBinding("items");
@@ -720,7 +714,7 @@ sap.ui.define([
 				//that.getView().getModel().loadData(this.getView().getBindingContext().getPath());
 				that.byId("idVizFrame").getModel().refresh(true);
 			}
-			
+
 			function setBusy(bBusy) {
 				that.byId("idVizFrame").setBusy(bBusy);
 			}
@@ -737,7 +731,7 @@ sap.ui.define([
 
 						var payload = {};
 						var data = JSON.stringify(payload);
-						
+
 						// Set to busy
 						setBusy(true);
 
@@ -760,7 +754,6 @@ sap.ui.define([
 								setBusy(false);
 							}
 						});
-
 
 						dialog.close();
 					}
@@ -831,8 +824,6 @@ sap.ui.define([
 			//oView.byId("vsdFilterBar").setVisible(aFilters.length > 0);
 			//oView.byId("vsdFilterLabel").setText(mParams.filterString);
 		}
-		
-		
 
 	});
 
