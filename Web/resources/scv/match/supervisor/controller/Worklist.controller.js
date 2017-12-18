@@ -25,26 +25,31 @@ sap.ui.define([
 		/* lifecycle methods                                           */
 		/* =========================================================== */
 
-		/*onAfterRendering: function() {
-			// Register listener for data received event for data set binding
-			//this.that.getView().byId("idVizFrame").getDataset().getBinding("data").attachDataReceived(this.byId("idVizFrame").setBusy(false));
-			//this.that.getView().byId("idVizFrame").getModel().attachRequestCompleted(function(oEvent){this.that.byId("idVizFrame").setBusy(false)};);
-		},*/
+		onAfterRendering: function() {
+
+			var vizFrame = this.byId("idVizFrame");
+			vizFrame.getModel().attachRequestSent(function() {
+				//sap.ui.core.BusyIndicator.show(0);
+				vizFrame.setBusy(true);
+			});
+			vizFrame.getModel().attachRequestCompleted(function() {
+				//sap.ui.core.BusyIndicator.hide();
+				vizFrame.setBusy(false);
+			});
+
+		},
 
 		/**
 		 * Called when the worklist controller is instantiated.
 		 * @public
 		 */
 		onInit: function() {
-			
-		
+
 			this.oModel = [];
-			
+
 			var oViewModel,
 				iOriginalBusyDelay,
 				oTable = this.byId("table");
-
-
 
 			// Put down worklist table's original value for busy indicator delay,
 			// so it can be restored later on. Busy handling on the table is
@@ -421,31 +426,16 @@ sap.ui.define([
 				styleClass: this.getOwnerComponent().getContentDensityClass()
 			});
 		},
-		
-		// Once data is received the busy state is switched off
-		switchBusyOff: function(oData) {
-			var dataSet = this.byId("idVizFrame").getDataset().insertData(this.oModel);
-			dataSet.destroyData();
-			dataSet.insertData(oData);
-			this.byId("idVizFrame").setBusy(false);
-		},
-		
+
+		/**
+		 * Toggle global filter to display RMS duplicates or all entities
+		 */
 		handleToggleDuplicateViewButtonPress: function(oEvent) {
-			
-			// Register listener for data received event. Bind the switchBusyOff method to the successful execution of th model.
-/*			var oModel = this.getModel();
-			oModel.read("/matchAssessmentsReview", {
-				success: this.switchBusyOff.bind(this)
-				//error : function(oData){ console.log(oData); 
-			});*/
-			
-			// Switch on the busy symbol 
-			this.byId("idVizFrame").setBusy(true);
-			
+
 			var oViewModel = this.getModel("worklistView");
 			var sKey = oEvent.getSource().getKey();
 
-			if (sKey === 'rmsDuplicates') { 
+			if (sKey === 'rmsDuplicates') {
 				// Show RMS duplicates only
 				oViewModel.setProperty("/globalFilter", "rmsDuplicates");
 				this.byId("idVizFrame").getDataset().bindData("/matchAssessmentsReviewParameters(I_RMS_DUPLICATES='1')/Results");
@@ -453,37 +443,8 @@ sap.ui.define([
 				this.oModel = this.getModel();
 				oViewModel.setProperty("/globalFilter", "allDuplicates");
 				var that = this;
-				this.oModel.read("/matchAssessmentsReviewParameters(I_RMS_DUPLICATES='0')/Results",{
-					success: function (oData, Response){
-					var dataSet = that.byId("idVizFrame").getDataset().insertData(that.oModel);
-					dataSet.destroyData();
-					dataSet.insertData(oData);
-					this.byId("idVizFrame").setBusy(false);
-					}
-					//success:( this.switchBusyOff.bind(this)) //{
-					//success: function (oData, Response){
-						//this.byId("idVizFrame").getDataset().insertData(oData)
-//						dataSet.destroyData();
-//						dataSet.insertData(oData);
-						//this.switchBusyOff()
-					//};
-				});
-				//this.byId("idVizFrame").getDataset().bindData("/matchAssessmentsReviewParameters(I_RMS_DUPLICATES='0')/Results");
+				this.byId("idVizFrame").getDataset().bindData("/matchAssessmentsReviewParameters(I_RMS_DUPLICATES='0')/Results");
 			}
-
-			// Get selected category and trigger click event
-			//this.getView().byId(this.getView().byId("iconTabBar").getSelectedKey()).click();
-
-			//var oIconTabBar = this.getView().byId("iconTabBar");
-			//var oEvent = new sap.ui.base.Event("customSelect", oIconTabBar, {
-			//"selectedKey": oIconTabBar.getSelectedKey(),
-			//"item": this.getView().byId(this.getView().byId("iconTabBar").getSelectedKey())
-			//});
-			//this.onQuickFilter(oEvent);
-
-			// Trigger refresh
-			//var oBinding = this._oTable.getBinding("items");
-			//oBinding.filter(new sap.ui.model.Filter([this._mGlobalFilters.rmsDuplicates], true), sap.ui.model.FilterType.Application);
 		},
 
 		/**
