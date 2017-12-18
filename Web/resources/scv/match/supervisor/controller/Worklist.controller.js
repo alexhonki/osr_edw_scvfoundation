@@ -36,7 +36,10 @@ sap.ui.define([
 		 * @public
 		 */
 		onInit: function() {
-
+			
+		
+			this.oModel = [];
+			
 			var oViewModel,
 				iOriginalBusyDelay,
 				oTable = this.byId("table");
@@ -420,18 +423,21 @@ sap.ui.define([
 		},
 		
 		// Once data is received the busy state is switched off
-		switchBusyOff: function() {
+		switchBusyOff: function(oData) {
+			var dataSet = this.byId("idVizFrame").getDataset().insertData(this.oModel);
+			dataSet.destroyData();
+			dataSet.insertData(oData);
 			this.byId("idVizFrame").setBusy(false);
 		},
 		
 		handleToggleDuplicateViewButtonPress: function(oEvent) {
 			
 			// Register listener for data received event. Bind the switchBusyOff method to the successful execution of th model.
-			var oModel = this.getModel();
+/*			var oModel = this.getModel();
 			oModel.read("/matchAssessmentsReview", {
 				success: this.switchBusyOff.bind(this)
 				//error : function(oData){ console.log(oData); 
-			});
+			});*/
 			
 			// Switch on the busy symbol 
 			this.byId("idVizFrame").setBusy(true);
@@ -444,8 +450,25 @@ sap.ui.define([
 				oViewModel.setProperty("/globalFilter", "rmsDuplicates");
 				this.byId("idVizFrame").getDataset().bindData("/matchAssessmentsReviewParameters(I_RMS_DUPLICATES='1')/Results");
 			} else {
+				this.oModel = this.getModel();
 				oViewModel.setProperty("/globalFilter", "allDuplicates");
-				this.byId("idVizFrame").getDataset().bindData("/matchAssessmentsReviewParameters(I_RMS_DUPLICATES='0')/Results");
+				
+				this.oModel.read("/matchAssessmentsReviewParameters(I_RMS_DUPLICATES='0')/Results",{
+					success: function (oData, Response){
+					var dataSet = this.byId("idVizFrame").getDataset().insertData(this.oModel);
+					dataSet.destroyData();
+					dataSet.insertData(oData);
+					this.byId("idVizFrame").setBusy(false);
+					}
+					//success:( this.switchBusyOff.bind(this)) //{
+					//success: function (oData, Response){
+						//this.byId("idVizFrame").getDataset().insertData(oData)
+//						dataSet.destroyData();
+//						dataSet.insertData(oData);
+						//this.switchBusyOff()
+					//};
+				});
+				//this.byId("idVizFrame").getDataset().bindData("/matchAssessmentsReviewParameters(I_RMS_DUPLICATES='0')/Results");
 			}
 
 			// Get selected category and trigger click event
