@@ -1,9 +1,0 @@
-{
-  "osr.scv.foundation.db.views::MatchResultsReview.Review": {
-    "target": {
-      "object": "osr.scv.foundation.db.data::MatchResultsReview.Review",
-      "schema": "OSR_SCV_FOUNDATION_OSRSCVFOUNDATIONCONTAINER_2",
-      "database": "SD4"
-    }
-  }
-}
