@@ -452,10 +452,10 @@ sap.ui.define([
 			} else {
 				this.oModel = this.getModel();
 				oViewModel.setProperty("/globalFilter", "allDuplicates");
-				
+				var that = this;
 				this.oModel.read("/matchAssessmentsReviewParameters(I_RMS_DUPLICATES='0')/Results",{
 					success: function (oData, Response){
-					var dataSet = this.byId("idVizFrame").getDataset().insertData(this.oModel);
+					var dataSet = that.byId("idVizFrame").getDataset().insertData(that.oModel);
 					dataSet.destroyData();
 					dataSet.insertData(oData);
 					this.byId("idVizFrame").setBusy(false);
