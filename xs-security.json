@@ -6,12 +6,7 @@
 	}, {
 		"name": "$XSAPPNAME.SUPERVISOR",
 		"description": "SCV Foundation Supervisor"
-	}, {
-		"name": "$XSAPPNAME.TOE",
-		"description": "Task orchestration engine Scope",
-		"grant-as-authority-to-apps": ["dwf-runtime", "dwf-toe"]
 	}],
-	"authorities": ["$XSAPPNAME.TOE"],
 	"role-templates": [{
 		"name": "OSR_SCV_FOUNDATION_REVIEW",
 		"description": "Role for reviewing OSR SCV match records",
@@ -20,11 +15,5 @@
 		"name": "OSR_SCV_FOUNDATION_SUPERVISOR",
 		"description": "Role for promotion of match records into OSR SCV Foundation",
 		"scope-references": ["$XSAPPNAME.SUPERVISOR"]
-	}, {
-		"name": "concept_viewer_template",
-		"description": "OAuth Sample app roles",
-		"scope-references": [
-			"$XSAPPNAME.TOE",
-			"cloud_controller.read"]
 	}]
 }
