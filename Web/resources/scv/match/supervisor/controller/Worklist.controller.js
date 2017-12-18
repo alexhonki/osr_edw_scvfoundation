@@ -445,7 +445,7 @@ sap.ui.define([
 			var oViewModel = this.getModel("worklistView");
 			var sKey = oEvent.getSource().getKey();
 
-			if (sKey === 'rmsDuplicates') {
+			if (sKey === 'rmsDuplicates') { 
 				// Show RMS duplicates only
 				oViewModel.setProperty("/globalFilter", "rmsDuplicates");
 				this.byId("idVizFrame").getDataset().bindData("/matchAssessmentsReviewParameters(I_RMS_DUPLICATES='1')/Results");
