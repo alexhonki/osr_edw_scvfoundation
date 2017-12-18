@@ -58,6 +58,9 @@ modules:
     #  - name: OSR_SCV_FOUNDATION_DWF-uaa
       - name: OsrScvFoundationContainer
       - name: OSR_SCV_FOUNDATION-dws
+    #properties:
+    # API_END_POINT: "${xs-api-url}"
+    # SAP_JWT_TRUST_ACL: "[{\"clientid\":\"*\",\"identityzone\":\"*\"}]"
 
 resources:
   - name: OsrScvFoundationContainer
