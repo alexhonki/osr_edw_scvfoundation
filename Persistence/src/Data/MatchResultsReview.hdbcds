@@ -83,7 +83,6 @@ context MatchResultsReview {
         index index_0 on (PROMOTED_TO_SCV);
     };
 
-    /*@@layout{"layoutInfo":{"x":-506,"y":11.5}}*/
     type StringValues {
         STRING_VALUE : String(50);
     };

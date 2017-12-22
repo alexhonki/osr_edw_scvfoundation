@@ -113,8 +113,7 @@ BEGIN
    
    -- Fill match results review table
    TRUNCATE TABLE "osr.scv.foundation.db.data::MatchResultsReview.Review";
-   TRUNCATE TABLE "osr.scv.foundation.db.data::MatchResultsReview.ReviewShadow";
    INSERT INTO "osr.scv.foundation.db.data::MatchResultsReview.Review" (SELECT * FROM "osr.scv.foundation.db.functions::MatchResultsReview"());
-   INSERT INTO "osr.scv.foundation.db.data::MatchResultsReview.ReviewShadow" (SELECT * FROM "osr.scv.foundation.db.data::MatchResultsReview.Review");
+
    
 END

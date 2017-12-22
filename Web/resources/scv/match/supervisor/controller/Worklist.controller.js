@@ -47,16 +47,7 @@ sap.ui.define([
 
 			this.oModel = [];
 
-			var oViewModel,
-				iOriginalBusyDelay,
-				oTable = this.byId("table");
-
-			// Put down worklist table's original value for busy indicator delay,
-			// so it can be restored later on. Busy handling on the table is
-			// taken care of by the table itself.
-			//iOriginalBusyDelay = oTable.getBusyIndicatorDelay();
-			//this._oTable = oTable;
-			// keeps the search state
+			var oViewModel;
 			this._oTableSearchState = [];
 
 			// Model used to manipulate control states
@@ -172,14 +163,6 @@ sap.ui.define([
 				"rmsDuplicates": rmsDuplicatesFilter,
 				"allDuplicates": rmsAllDuplicatesFilter
 			};
-
-			// Make sure, busy indication is showing immediately so there is no
-			// break after the busy indication for loading the view's meta data is
-			// ended (see promise 'oWhenMetadataIsLoaded' in AppController)
-			//oTable.attachEventOnce("updateFinished", function() {
-			// Restore original busy indicator delay for worklist's table
-			//	oViewModel.setProperty("/tableBusyDelay", iOriginalBusyDelay);
-			//});
 		},
 
 		/* =========================================================== */
@@ -251,9 +234,6 @@ sap.ui.define([
 							'%');
 					},
 					filters: [this.getCategoryFilters('uniqueMatchEntities')]
-						//filters: [this._mFilters.uniqueMatchEntities]
-						//filters: [currentFilters]
-
 				});
 
 				// read the count for the high confidence matches
@@ -265,7 +245,6 @@ sap.ui.define([
 							'%');
 					},
 					filters: [this.getCategoryFilters('identicalMatchEntities')]
-						//filters: [this._mFilters.identicalMatchEntities]
 				});
 
 				// read the count for the medium confidence matches
@@ -277,9 +256,6 @@ sap.ui.define([
 							1) + '%');
 					},
 					filters: [this.getCategoryFilters('recommendedMatchEntities')]
-						//filters: [this._mFilters.recommendedMatchEntities]
-						//this._mFiltersNames[sKey]
-
 				});
 
 				// read the count for the low confidence matches
@@ -291,8 +267,6 @@ sap.ui.define([
 							'%');
 					},
 					filters: [this.getCategoryFilters('similarMatchEntities')]
-						//filters: [this._mFilters.similarMatchEntities]
-						//this._mFiltersNames[sKey]
 				});
 
 			} else {
@@ -338,7 +312,6 @@ sap.ui.define([
 				var sQuery = oEvent.getParameter("query");
 
 				if (sQuery && sQuery.length > 0) {
-					// Convert search string to lower case (on backend, convert column content to lowercase as well)
 					oTableSearchState = [new Filter("tolower(NAME)", FilterOperator.Contains, "'" + sQuery.toLowerCase() + "'")];
 				}
 				this._applySearch(oTableSearchState);
@@ -409,11 +382,6 @@ sap.ui.define([
 			if (oTableSearchState.length !== 0) {
 				oViewModel.setProperty("/tableNoDataText", this.getResourceBundle().getText("worklistNoDataWithSearchText"));
 			}
-
-			// Reset icon tab filters
-			//this.getView().byId("iconTabBar").setSelectedKey('all');
-			//this.getView().byId("subIconTabBar").setSelectedKey('all');
-
 		},
 
 		/**
@@ -537,7 +505,6 @@ sap.ui.define([
 						oBinding.filter(new sap.ui.model.Filter([this._mGlobalFilters[oViewModel.getProperty("/globalFilter")]], true), sap.ui.model.FilterType
 							.Application);
 					} else {
-						//oBinding.filter(this._mFilters[this.getView().byId("iconTabBar").getSelectedKey()], sap.ui.model.FilterType.Application);
 						oBinding.filter(new sap.ui.model.Filter([this._mGlobalFilters[oViewModel.getProperty("/globalFilter")], this._mFilters[this.getView()
 							.byId("iconTabBar").getSelectedKey()]], true), sap.ui.model.FilterType.Application);
 					}
@@ -546,7 +513,6 @@ sap.ui.define([
 
 					// Filter for a specific letter is set, now check if category filter
 					if (this.getView().byId("iconTabBar").getSelectedKey() === 'all') {
-						//oBinding.filter(this._mFiltersNames[sKey], sap.ui.model.FilterType.Application);
 						oBinding.filter(new sap.ui.model.Filter([this._mGlobalFilters[oViewModel.getProperty("/globalFilter")], this._mFiltersNames[sKey]],
 							true), sap.ui.model.FilterType.Application);
 					} else {
@@ -566,7 +532,6 @@ sap.ui.define([
 				if (sKey === 'all') {
 
 					// All categories, set filter for letter selection only
-					//oBinding.filter(this._mFiltersNames[this.getView().byId("subIconTabBar").getSelectedKey()], sap.ui.model.FilterType.Application
 					if (this.getView().byId("subIconTabBar").getSelectedKey() === 'all') {
 						oBinding.filter(new sap.ui.model.Filter([this._mGlobalFilters[oViewModel.getProperty("/globalFilter")]], true), sap.ui.model.FilterType
 							.Application);
@@ -580,7 +545,6 @@ sap.ui.define([
 					// Specific category, check filter for letter selection
 					if (this.getView().byId("subIconTabBar").getSelectedKey() === 'all') {
 						// Letter selection is all, only one filter for category required
-						//oBinding.filter(this._mFilters[this.getView().byId("iconTabBar").getSelectedKey()], sap.ui.model.FilterType.Application);
 						oBinding.filter(new sap.ui.model.Filter([this._mGlobalFilters[oViewModel.getProperty("/globalFilter")], this._mFilters[this.getView()
 							.byId("iconTabBar").getSelectedKey()]], true), sap.ui.model.FilterType.Application);
 					} else {
@@ -695,7 +659,6 @@ sap.ui.define([
 
 			function refresh() {
 				wait(1000);
-				//that.getView().getModel().loadData(this.getView().getBindingContext().getPath());
 				that.byId("idVizFrame").getModel().refresh(true);
 			}
 
@@ -803,10 +766,6 @@ sap.ui.define([
 				aFilters.push(oFilter);
 			});
 			oBinding.filter(aFilters);
-
-			// update filter bar
-			//oView.byId("vsdFilterBar").setVisible(aFilters.length > 0);
-			//oView.byId("vsdFilterLabel").setText(mParams.filterString);
 		}
 
 	});
