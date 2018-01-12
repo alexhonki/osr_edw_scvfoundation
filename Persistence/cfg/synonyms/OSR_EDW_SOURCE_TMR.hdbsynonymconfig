@@ -1,0 +1,20 @@
+{
+	"osr.scv.foundation.db.synonyms::TMR_CustContact": {
+		"target": {
+			"object": "osr.edw.propagation.md.tmr::CDS_CUST.DSO.CUSTCONTACT.active_data",
+			"schema.configure": "logical-OSR-EDW-SOURCE-TMR-grantor/schema"
+		}
+	},
+	"osr.scv.foundation.db.synonyms::TMR_CustMain": {
+		"target": {
+			"object": "osr.edw.propagation.md.tmr::CDS_CUST.DSO.CUSTMAIN.active_data",
+			"schema.configure": "logical-OSR-EDW-SOURCE-TMR-grantor/schema"
+		}
+	},
+	"osr.scv.foundation.db.synonyms::TMR_CustMain_ChangeLog": {
+		"target": {
+			"object": "osr.edw.propagation.md.tmr::CDS_CUST.DSO.CUSTMAIN.change_log",
+			"schema.configure": "logical-OSR-EDW-SOURCE-TMR-grantor/schema"
+		}
+	}
+}

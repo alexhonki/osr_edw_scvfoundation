@@ -1,0 +1,28 @@
+FUNCTION "osr.scv.foundation.db.functions::CustContactPhone" (  )
+       RETURNS TABLE (	CUSTOMER_REF NVARCHAR(20),
+    					Z_CHANGE_TIME TIMESTAMP,
+    					SMS_CONTACT_NUMBER NVARCHAR(50)
+    					
+        				
+        			  )
+       SQL SECURITY INVOKER AS 
+BEGIN 
+/*****************************  
+       Write your function logic 
+ *****************************/ 
+
+				return	SELECT 
+						b.CUSTOMER_REF,
+						MAX(b.Z_CHANGE_TIME) as Z_CHANGE_TIME,
+						MAX(b.SMS_CONTACT_NUMBER) as SMS_CONTACT_NUMBER
+						FROM "osr.scv.foundation.db.synonyms::TMR_CustContact" b
+							INNER JOIN 
+								(SELECT 
+						    	CUSTOMER_REF,
+						        MAX(Z_CHANGE_TIME) as Z_CHANGE_TIME
+						        FROM "osr.scv.foundation.db.synonyms::TMR_CustContact"
+						        GROUP BY CUSTOMER_REF) a ON 
+								a.CUSTOMER_REF = b.CUSTOMER_REF AND a.Z_CHANGE_TIME = b.Z_CHANGE_TIME
+						GROUP BY b.CUSTOMER_REF
+					    ;
+END;
