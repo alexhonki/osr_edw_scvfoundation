@@ -16,11 +16,8 @@
   <DataSource id="osr.scv.foundation.db.data::RTA_Tenant_Placeholder.RTA_Tenant_Placeholder">
     <resourceUri>osr.scv.foundation.db.data::RTA_Tenant_Placeholder.RTA_Tenant_Placeholder</resourceUri>
   </DataSource>
-  <DataSource id="osr.scv.foundation.db.synonyms::TMR_CustMain">
-    <resourceUri>osr.scv.foundation.db.synonyms::TMR_CustMain</resourceUri>
-  </DataSource>
-  <DataSource id="osr.scv.foundation.db.functions::CustContactPhone" type="TABLE_FUNCTION">
-    <resourceUri>osr.scv.foundation.db.functions::CustContactPhone</resourceUri>
+  <DataSource id="osr.scv.foundation.db.functions::CustomerMain" type="TABLE_FUNCTION">
+    <resourceUri>osr.scv.foundation.db.functions::CustomerMain</resourceUri>
   </DataSource>
 </dataSources>
 <calculationViews>
@@ -135,7 +132,11 @@
         <descriptions defaultDescription="NAMEMIDDLE"/>
       </viewAttribute>
     </viewAttributes>
-    <calculatedViewAttributes/>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="CC_BIRTHDT" datatype="DATE" expressionLanguage="SQL">
+        <formula>TO_DATE(&quot;BIRTHDT&quot;)</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
     <restrictedViewAttributes/>
     <input node="osr.scv.foundation.db.synonyms::BUT000">
       <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
@@ -343,6 +344,10 @@
       <viewAttribute id="BIRTHDT">
         <descriptions defaultDescription="BIRTHDT"/>
       </viewAttribute>
+    
+      <viewAttribute id="CC_BIRTHDT">
+        <descriptions defaultDescription="CC_BIRTHDT"/>
+      </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
@@ -380,6 +385,8 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="Cleanse_ROW_ID_BUT" source="Cleanse_ROW_ID_BUT"/>
     
       <mapping xsi:type="Calculation:AttributeMapping" target="BIRTHDT" source="BIRTHDT"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_BIRTHDT" source="CC_BIRTHDT"/>
     </input>
     <input node="P_TimedependendAddressUsage">
       <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT_1" source="CLIENT"/>
@@ -629,6 +636,10 @@
       <viewAttribute id="ADDR_ASMT_TYPE">
         <descriptions defaultDescription="ADDR_ASMT_TYPE"/>
       </viewAttribute>
+    
+      <viewAttribute id="CC_BIRTHDT">
+        <descriptions defaultDescription="CC_BIRTHDT"/>
+      </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
@@ -673,6 +684,8 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="XDFADU" source="XDFADU"/>
     
       <mapping xsi:type="Calculation:AttributeMapping" target="BIRTHDT" source="BIRTHDT"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_BIRTHDT" source="CC_BIRTHDT"/>
     </input>
     <input node="P_Addresses">
       <mapping xsi:type="Calculation:AttributeMapping" target="DATE_FROM" source="DATE_FROM"/>
@@ -886,6 +899,33 @@
   </calculationView>
   <calculationView xsi:type="Calculation:UnionView" id="U_AllMatchFields">
     <viewAttributes>
+      <viewAttribute id="MATCH_PERSON_GN_STD6">
+        <descriptions defaultDescription="MATCH_PERSON_GN_STD6"/>
+      </viewAttribute>
+      <viewAttribute datatype="VARCHAR" length="10" id="SOURCE_SYSTEM">
+        <descriptions defaultDescription="SOURCE_SYSTEM"/>
+      </viewAttribute>
+      <viewAttribute id="CLEANSE_TABLE_ID_BUT">
+        <descriptions defaultDescription="CLEANSE_TABLE_ID"/>
+      </viewAttribute>
+      <viewAttribute id="CLEANSE_ROW_ID_BUT">
+        <descriptions defaultDescription="CLEANSE_ROW_ID"/>
+      </viewAttribute>
+      <viewAttribute id="ADDRNUMBER">
+        <descriptions defaultDescription="ADDRNUMBER"/>
+      </viewAttribute>
+      <viewAttribute id="Cleanse_TABLE_ID_ADRC" aggregationType="sum">
+        <descriptions defaultDescription="Cleanse_TABLE_ID"/>
+      </viewAttribute>
+      <viewAttribute id="Cleanse_ROW_ID_ADRC" aggregationType="sum">
+        <descriptions defaultDescription="Cleanse_ROW_ID"/>
+      </viewAttribute>
+      <viewAttribute id="Cleanse_TABLE_ID_RTA_T" aggregationType="sum">
+        <descriptions defaultDescription="Cleanse_TABLE_ID"/>
+      </viewAttribute>
+      <viewAttribute id="Cleanse_ROW_ID_RTA_T" aggregationType="sum">
+        <descriptions defaultDescription="Cleanse_ROW_ID"/>
+      </viewAttribute>
       <viewAttribute id="MATCH_PERSON_GN">
         <descriptions defaultDescription="MATCH_PERSON_GN"/>
       </viewAttribute>
@@ -903,9 +943,6 @@
       </viewAttribute>
       <viewAttribute id="MATCH_PERSON_GN_STD5">
         <descriptions defaultDescription="MATCH_PERSON_GN_STD5"/>
-      </viewAttribute>
-      <viewAttribute id="MATCH_PERSON_GN_STD6">
-        <descriptions defaultDescription="MATCH_PERSON_GN_STD6"/>
       </viewAttribute>
       <viewAttribute id="MATCH_PERSON_GN2">
         <descriptions defaultDescription="MATCH_PERSON_GN2"/>
@@ -988,27 +1025,12 @@
       <viewAttribute id="MATCH_PHONE">
         <descriptions defaultDescription="MATCH_PHONE"/>
       </viewAttribute>
-      <viewAttribute datatype="VARCHAR" length="10" id="SOURCE_SYSTEM">
-        <descriptions defaultDescription="SOURCE_SYSTEM"/>
-      </viewAttribute>
-    
-      <viewAttribute id="SYSTEM_ID">
-        <descriptions defaultDescription="SYSTEM_ID"/>
-      </viewAttribute>
-      <viewAttribute id="CLEANSE_TABLE_ID_BUT">
-        <descriptions defaultDescription="CLEANSE_TABLE_ID"/>
-      </viewAttribute>
-      <viewAttribute id="CLEANSE_ROW_ID_BUT">
-        <descriptions defaultDescription="CLEANSE_ROW_ID"/>
-      </viewAttribute>
-    
       <viewAttribute id="MATCH_ADDR_WING">
         <descriptions defaultDescription="MATCH_ADDR_WING"/>
       </viewAttribute>
       <viewAttribute id="MATCH_ADDR_FLOOR">
         <descriptions defaultDescription="MATCH_ADDR_FLOOR"/>
       </viewAttribute>
-    
       <viewAttribute id="STD_ADDR_COUNTRY_NAME">
         <descriptions defaultDescription="STD_ADDR_COUNTRY_NAME"/>
       </viewAttribute>
@@ -1024,7 +1046,6 @@
       <viewAttribute id="STD_ADDR_BUILDING_NAME">
         <descriptions defaultDescription="STD_ADDR_BUILDING_NAME"/>
       </viewAttribute>
-    
       <viewAttribute id="STD_ADDR_POSTCODE1">
         <descriptions defaultDescription="STD_ADDR_POSTCODE1"/>
       </viewAttribute>
@@ -1043,126 +1064,49 @@
       <viewAttribute id="ADDR_SCRIPT_CODE">
         <descriptions defaultDescription="ADDR_SCRIPT_CODE"/>
       </viewAttribute>
-      <viewAttribute id="ADDR_ASMT_INFO">
-        <descriptions defaultDescription="ADDR_ASMT_INFO"/>
-      </viewAttribute>
       <viewAttribute id="ADDR_ASMT_TYPE">
         <descriptions defaultDescription="ADDR_ASMT_TYPE"/>
       </viewAttribute>
-      <viewAttribute id="ADDRNUMBER">
-        <descriptions defaultDescription="ADDRNUMBER"/>
+      <viewAttribute id="STD_ADDR_PRIM_NAME_FULL">
+        <descriptions defaultDescription="STD_ADDR_PRIM_NAME_FULL"/>
       </viewAttribute>
-      <viewAttribute id="Cleanse_TABLE_ID_ADRC" aggregationType="sum">
-        <descriptions defaultDescription="Cleanse_TABLE_ID"/>
-      </viewAttribute>
-      <viewAttribute id="Cleanse_ROW_ID_ADRC" aggregationType="sum">
-        <descriptions defaultDescription="Cleanse_ROW_ID"/>
-      </viewAttribute>
-      <viewAttribute id="Cleanse_TABLE_ID_TMR" aggregationType="sum">
-        <descriptions defaultDescription="Cleanse_TABLE_ID"/>
+      <viewAttribute id="MATCH_PHONE2">
+        <descriptions defaultDescription="MATCH_PHONE2"/>
       </viewAttribute>
       <viewAttribute id="Cleanse_ROW_ID_TMR" aggregationType="sum">
         <descriptions defaultDescription="Cleanse_ROW_ID"/>
       </viewAttribute>
-      <viewAttribute id="Cleanse_TABLE_ID_RTA_T" aggregationType="sum">
+      <viewAttribute id="BIRTHDT">
+        <descriptions defaultDescription="DATE_OF_BIRTH"/>
+      </viewAttribute>
+      <viewAttribute id="ADDR_ASMT_INFO">
+        <descriptions defaultDescription="ADDR_ASMT_INFO"/>
+      </viewAttribute>
+      <viewAttribute id="Cleanse_TABLE_ID_TMR" aggregationType="sum">
         <descriptions defaultDescription="Cleanse_TABLE_ID"/>
       </viewAttribute>
-      <viewAttribute id="Cleanse_ROW_ID_RTA_T" aggregationType="sum">
-        <descriptions defaultDescription="Cleanse_ROW_ID"/>
-      </viewAttribute>
-    
-      <viewAttribute id="STD_ADDR_PRIM_NAME_FULL">
-        <descriptions defaultDescription="STD_ADDR_PRIM_NAME_FULL"/>
-      </viewAttribute>
-    
-      <viewAttribute id="BIRTHDT">
-        <descriptions defaultDescription="BIRTHDT"/>
-      </viewAttribute>
-      <viewAttribute id="MATCH_PHONE2">
-        <descriptions defaultDescription="MATCH_PHONE2"/>
+      <viewAttribute id="SYSTEM_ID">
+        <descriptions defaultDescription="SYSTEM_ID"/>
       </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
     <input node="A_AddressNumber" emptyUnionBehavior="NO_ROW">
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_GN" source="MATCH_PERSON_GN"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_GN_STD" source="MATCH_PERSON_GN_STD"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_GN_STD2" source="MATCH_PERSON_GN_STD2"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_GN_STD3" source="MATCH_PERSON_GN_STD3"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_GN_STD4" source="MATCH_PERSON_GN_STD4"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_GN_STD5" source="MATCH_PERSON_GN_STD5"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_GN_STD6" source="MATCH_PERSON_GN_STD6"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_GN2" source="MATCH_PERSON_GN2"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_GN2_STD" source="MATCH_PERSON_GN2_STD"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_GN2_STD2" source="MATCH_PERSON_GN2_STD2"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_GN2_STD3" source="MATCH_PERSON_GN2_STD3"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_GN2_STD4" source="MATCH_PERSON_GN2_STD4"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_GN2_STD5" source="MATCH_PERSON_GN2_STD5"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_GN2_STD6" source="MATCH_PERSON_GN2_STD6"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_FN" source="MATCH_PERSON_FN"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_FN_STD" source="MATCH_PERSON_FN_STD"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_MATPOST" source="MATCH_PERSON_MATPOST"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_MATPOST_STD" source="MATCH_PERSON_MATPOST_STD"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON" source="MATCH_PERSON"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_COUNTRY" source="MATCH_ADDR_COUNTRY"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_POSTCODE1" source="MATCH_ADDR_POSTCODE1"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_REGION" source="MATCH_ADDR_REGION"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_LOCALITY" source="MATCH_ADDR_LOCALITY"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_LOCALITY2" source="MATCH_ADDR_LOCALITY2"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_BUILDING" source="MATCH_ADDR_BUILDING"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_PRIM_NAME" source="MATCH_ADDR_PRIM_NAME"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_PRIM_NAME2" source="MATCH_ADDR_PRIM_NAME2"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_PRIM_TYPE" source="MATCH_ADDR_PRIM_TYPE"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_PRIM_DIR" source="MATCH_ADDR_PRIM_DIR"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_PRIM_NUMBER" source="MATCH_ADDR_PRIM_NUMBER"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_BLOCK" source="MATCH_ADDR_BLOCK"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_STAIRWELL" source="MATCH_ADDR_STAIRWELL"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_UNIT" source="MATCH_ADDR_UNIT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PHONE" source="MATCH_PHONE"/>
       <mapping xsi:type="Calculation:ConstantAttributeMapping" target="SOURCE_SYSTEM" null="false" value="RMS"/>
-    
-      <mapping xsi:type="Calculation:AttributeMapping" target="SYSTEM_ID" source="PARTNER"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CLEANSE_TABLE_ID_BUT" source="Cleanse_TABLE_ID_BUT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CLEANSE_ROW_ID_BUT" source="Cleanse_ROW_ID_BUT"/>
-    
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_WING" source="MATCH_ADDR_WING"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_FLOOR" source="MATCH_ADDR_FLOOR"/>
-    
-      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_COUNTRY_NAME" source="STD_ADDR_COUNTRY_NAME"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_LOCALITY" source="STD_ADDR_LOCALITY"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_REGION" source="STD_ADDR_REGION"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_ADDRESS_DELIVERY" source="STD_ADDR_ADDRESS_DELIVERY"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_BUILDING_NAME" source="STD_ADDR_BUILDING_NAME"/>
-    
-      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_POSTCODE1" source="STD_ADDR_POSTCODE1"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_PRIM_ADDRESS" source="STD_ADDR_PRIM_ADDRESS"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_PRIM_NUMBER" source="STD_ADDR_PRIM_NUMBER"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="ADDR_INFO_CODE" source="ADDR_INFO_CODE"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="ADDR_ASMT_LEVEL" source="ADDR_ASMT_LEVEL"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="ADDR_SCRIPT_CODE" source="ADDR_SCRIPT_CODE"/>
-      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="ADDR_ASMT_INFO" null="true" value=""/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="ADDR_ASMT_TYPE" source="ADDR_ASMT_TYPE"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="ADDRNUMBER" source="ADDRNUMBER"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="Cleanse_TABLE_ID_ADRC" source="Cleanse_TABLE_ID_ADRC"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="Cleanse_ROW_ID_ADRC" source="Cleanse_ROW_ID_ADRC"/>
-      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="Cleanse_TABLE_ID_TMR" null="true" value=""/>
-      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="Cleanse_ROW_ID_TMR" null="true" value=""/>
       <mapping xsi:type="Calculation:ConstantAttributeMapping" target="Cleanse_TABLE_ID_RTA_T" null="true" value=""/>
       <mapping xsi:type="Calculation:ConstantAttributeMapping" target="Cleanse_ROW_ID_RTA_T" null="true" value=""/>
-    
-      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_PRIM_NAME_FULL" source="STD_ADDR_PRIM_NAME_FULL"/>
-    
-      <mapping xsi:type="Calculation:AttributeMapping" target="BIRTHDT" source="BIRTHDT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PHONE2" source="MATCH_PHONE2"/>
-    </input>
-    <input node="J_TMR_CustomersWithSMSNumbers" emptyUnionBehavior="NO_ROW">
       <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_GN" source="MATCH_PERSON_GN"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_GN_STD" source="MATCH_PERSON_GN_STD"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_GN_STD2" source="MATCH_PERSON_GN_STD2"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_GN_STD3" source="MATCH_PERSON_GN_STD3"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_GN_STD4" source="MATCH_PERSON_GN_STD4"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_GN_STD5" source="MATCH_PERSON_GN_STD5"/>
-      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="MATCH_PERSON_GN_STD6" null="true" value=""/>
       <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_GN2" source="MATCH_PERSON_GN2"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_GN2_STD" source="MATCH_PERSON_GN2_STD"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_GN2_STD2" source="MATCH_PERSON_GN2_STD2"/>
@@ -1190,89 +1134,114 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_STAIRWELL" source="MATCH_ADDR_STAIRWELL"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_UNIT" source="MATCH_ADDR_UNIT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PHONE" source="MATCH_PHONE"/>
-      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="SOURCE_SYSTEM" null="false" value="TMR"/>
-    
-      <mapping xsi:type="Calculation:AttributeMapping" target="SYSTEM_ID" source="CUSTOMER_REF"/>
-      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CLEANSE_TABLE_ID_BUT" null="true"/>
-      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CLEANSE_ROW_ID_BUT" null="true"/>
-    
       <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_WING" source="MATCH_ADDR_WING"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_FLOOR" source="MATCH_ADDR_FLOOR"/>
-    
       <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_COUNTRY_NAME" source="STD_ADDR_COUNTRY_NAME"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_LOCALITY" source="STD_ADDR_LOCALITY"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_REGION" source="STD_ADDR_REGION"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_ADDRESS_DELIVERY" source="STD_ADDR_ADDRESS_DELIVERY"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_BUILDING_NAME" source="STD_ADDR_BUILDING_NAME"/>
-    
       <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_POSTCODE1" source="STD_ADDR_POSTCODE1"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_PRIM_ADDRESS" source="STD_ADDR_PRIM_ADDRESS"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_PRIM_NUMBER" source="STD_ADDR_PRIM_NUMBER"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="ADDR_INFO_CODE" source="ADDR_INFO_CODE"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="ADDR_ASMT_LEVEL" source="ADDR_ASMT_LEVEL"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="ADDR_SCRIPT_CODE" source="ADDR_SCRIPT_CODE"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="ADDR_ASMT_INFO" source="ADDR_ASMT_INFO"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="ADDR_ASMT_TYPE" source="ADDR_ASMT_TYPE"/>
-      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="ADDRNUMBER" null="true" value=""/>
-      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="Cleanse_TABLE_ID_ADRC" null="true" value=""/>
-      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="Cleanse_ROW_ID_ADRC" null="true" value=""/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="Cleanse_TABLE_ID_TMR" source="Cleanse_TABLE_ID"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="Cleanse_ROW_ID_TMR" source="Cleanse_ROW_ID"/>
-      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="Cleanse_TABLE_ID_RTA_T" null="true" value=""/>
-      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="Cleanse_ROW_ID_RTA_T" null="true" value=""/>
-    
       <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_PRIM_NAME_FULL" source="STD_ADDR_PRIM_NAME_FULL"/>
-    
-      <mapping xsi:type="Calculation:AttributeMapping" target="BIRTHDT" source="DATE_OF_BIRTH"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PHONE2" source="MATCH_PHONE2"/>
+      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="Cleanse_ROW_ID_TMR" null="true" value=""/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BIRTHDT" source="CC_BIRTHDT"/>
+      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="ADDR_ASMT_INFO" null="true" value=""/>
+      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="Cleanse_TABLE_ID_TMR" null="true" value=""/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SYSTEM_ID" source="PARTNER"/>
     </input>
   
     <input node="P_RTA_Tenant" emptyUnionBehavior="NO_ROW">
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_GN" source="MATCH_PERSON_GN"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_GN_STD" source="MATCH_PERSON_GN_STD"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_GN_STD2" source="MATCH_PERSON_GN_STD2"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_GN_STD3" source="MATCH_PERSON_GN_STD3"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_GN_STD4" source="MATCH_PERSON_GN2_STD4"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_GN_STD5" source="MATCH_PERSON_GN_STD5"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_GN_STD6" source="MATCH_PERSON_GN2_STD6"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_GN2" source="MATCH_PERSON_GN2"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_GN2_STD" source="MATCH_PERSON_GN2_STD"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_GN2_STD2" source="MATCH_PERSON_GN2_STD2"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_GN2_STD3" source="MATCH_PERSON_GN2_STD3"/>
-      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="MATCH_PERSON_GN2_STD4" null="true" value=""/>
-      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="MATCH_PERSON_GN2_STD5" null="true" value=""/>
-      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="MATCH_PERSON_GN2_STD6" null="true" value=""/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_FN" source="MATCH_PERSON_FN"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_FN_STD" source="MATCH_PERSON_FN_STD"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_MATPOST" source="MATCH_PERSON_MATPOST"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_MATPOST_STD" source="MATCH_PERSON_MATPOST_STD"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON" source="MATCH_PERSON"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_COUNTRY" source="MATCH_ADDR_COUNTRY"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_POSTCODE1" source="MATCH_ADDR_POSTCODE1"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_REGION" source="MATCH_ADDR_REGION"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_LOCALITY" source="MATCH_ADDR_LOCALITY"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_LOCALITY2" source="MATCH_ADDR_LOCALITY2"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_BUILDING" source="MATCH_ADDR_BUILDING"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_PRIM_NAME" source="MATCH_ADDR_PRIM_NAME"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_PRIM_NAME2" source="MATCH_ADDR_PRIM_NAME2"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_PRIM_TYPE" source="MATCH_ADDR_PRIM_TYPE"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_PRIM_DIR" source="MATCH_ADDR_PRIM_DIR"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_PRIM_NUMBER" source="MATCH_ADDR_PRIM_NUMBER"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_BLOCK" source="MATCH_ADDR_BLOCK"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_STAIRWELL" source="MATCH_ADDR_STAIRWELL"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_UNIT" source="MATCH_ADDR_UNIT"/>
-      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="MATCH_PHONE" null="true" value=""/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_GN_STD6" source="MATCH_PERSON_GN_STD6"/>
       <mapping xsi:type="Calculation:ConstantAttributeMapping" target="SOURCE_SYSTEM" null="false" value="RTA_TENANT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="SYSTEM_ID" source="TenancyOSRPropertyIdentifier"/>
       <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CLEANSE_TABLE_ID_BUT" null="true"/>
       <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CLEANSE_ROW_ID_BUT" null="true"/>
-    
+  
+      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="ADDRNUMBER" null="true" value=""/>
+  
+      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="Cleanse_TABLE_ID_ADRC" null="true" value=""/>
+  
+      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="Cleanse_ROW_ID_ADRC" null="true" value=""/>
+  
+      <mapping xsi:type="Calculation:AttributeMapping" target="Cleanse_TABLE_ID_RTA_T" source="Cleanse_TABLE_ID_RTA_T"/>
+  
+      <mapping xsi:type="Calculation:AttributeMapping" target="Cleanse_ROW_ID_RTA_T" source="Cleanse_ROW_ID_RTA_T"/>
+  
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_GN" source="MATCH_PERSON_GN"/>
+  
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_GN_STD" source="MATCH_PERSON_GN_STD"/>
+  
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_GN_STD2" source="MATCH_PERSON_GN_STD2"/>
+  
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_GN_STD3" source="MATCH_PERSON_GN_STD3"/>
+  
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_GN_STD4" source="MATCH_PERSON_GN_STD4"/>
+  
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_GN_STD5" source="MATCH_PERSON_GN_STD5"/>
+  
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_GN2" source="MATCH_PERSON_GN2"/>
+  
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_GN2_STD" source="MATCH_PERSON_GN2_STD"/>
+  
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_GN2_STD2" source="MATCH_PERSON_GN2_STD2"/>
+  
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_GN2_STD3" source="MATCH_PERSON_GN2_STD3"/>
+  
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_GN2_STD4" source="MATCH_PERSON_GN2_STD4"/>
+  
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_GN2_STD5" source="MATCH_PERSON_GN2_STD5"/>
+  
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_GN2_STD6" source="MATCH_PERSON_GN2_STD6"/>
+  
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_FN" source="MATCH_PERSON_FN"/>
+  
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_FN_STD" source="MATCH_PERSON_FN_STD"/>
+  
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_MATPOST" source="MATCH_PERSON_MATPOST"/>
+  
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_MATPOST_STD" source="MATCH_PERSON_MATPOST_STD"/>
+  
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON" source="MATCH_PERSON"/>
+  
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_COUNTRY" source="MATCH_ADDR_COUNTRY"/>
+  
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_POSTCODE1" source="MATCH_ADDR_POSTCODE1"/>
+  
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_REGION" source="MATCH_ADDR_REGION"/>
+  
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_LOCALITY" source="MATCH_ADDR_LOCALITY"/>
+  
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_LOCALITY2" source="MATCH_ADDR_LOCALITY2"/>
+  
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_BUILDING" source="MATCH_ADDR_BUILDING"/>
+  
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_PRIM_NAME" source="MATCH_ADDR_PRIM_NAME"/>
+  
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_PRIM_NAME2" source="MATCH_ADDR_PRIM_NAME2"/>
+  
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_PRIM_TYPE" source="MATCH_ADDR_PRIM_TYPE"/>
+  
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_PRIM_DIR" source="MATCH_ADDR_PRIM_DIR"/>
+  
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_PRIM_NUMBER" source="MATCH_ADDR_PRIM_NUMBER"/>
+  
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_BLOCK" source="MATCH_ADDR_BLOCK"/>
+  
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_STAIRWELL" source="MATCH_ADDR_STAIRWELL"/>
+  
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_UNIT" source="MATCH_ADDR_UNIT"/>
+  
+      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="MATCH_PHONE" null="true" value=""/>
   
       <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_WING" source="MATCH_ADDR_WING"/>
   
       <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_FLOOR" source="MATCH_ADDR_FLOOR"/>
-  
-    
   
       <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_COUNTRY_NAME" source="STD_ADDR_COUNTRY_NAME"/>
   
@@ -1280,11 +1249,9 @@
   
       <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_REGION" source="STD_ADDR_REGION"/>
   
-      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_ADDRESS_DELIVERY" source="STD_ADDR_SINGLE_ADDRESS"/>
+      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="STD_ADDR_ADDRESS_DELIVERY" null="true" value=""/>
   
       <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_BUILDING_NAME" source="STD_ADDR_BUILDING_NAME"/>
-  
-    
   
       <mapping xsi:type="Calculation:ConstantAttributeMapping" target="STD_ADDR_POSTCODE1" null="true" value=""/>
   
@@ -1298,38 +1265,111 @@
   
       <mapping xsi:type="Calculation:ConstantAttributeMapping" target="ADDR_SCRIPT_CODE" null="true" value=""/>
   
-      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="ADDR_ASMT_INFO" null="true" value=""/>
-  
       <mapping xsi:type="Calculation:AttributeMapping" target="ADDR_ASMT_TYPE" source="ADDR_ASMT_TYPE"/>
-  
-      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="ADDRNUMBER" null="true" value=""/>
-  
-      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="Cleanse_TABLE_ID_ADRC" null="true" value=""/>
-  
-      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="Cleanse_ROW_ID_ADRC" null="true" value=""/>
-  
-      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="Cleanse_TABLE_ID_TMR" null="true" value=""/>
-  
-      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="Cleanse_ROW_ID_TMR" null="true" value=""/>
-  
-      <mapping xsi:type="Calculation:AttributeMapping" target="Cleanse_TABLE_ID_RTA_T" source="Cleanse_TABLE_ID_RTA_T"/>
-  
-      <mapping xsi:type="Calculation:AttributeMapping" target="Cleanse_ROW_ID_RTA_T" source="Cleanse_ROW_ID_RTA_T"/>
-  
-    
   
       <mapping xsi:type="Calculation:ConstantAttributeMapping" target="STD_ADDR_PRIM_NAME_FULL" null="true" value=""/>
   
-    
+      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="MATCH_PHONE2" null="true" value=""/>
+  
+      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="Cleanse_ROW_ID_TMR" null="true" value=""/>
   
       <mapping xsi:type="Calculation:ConstantAttributeMapping" target="BIRTHDT" null="true" value=""/>
   
-      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="MATCH_PHONE2" null="true" value=""/>
+      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="ADDR_ASMT_INFO" null="true" value=""/>
   
+      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="Cleanse_TABLE_ID_TMR" null="true" value=""/>
+  
+      <mapping xsi:type="Calculation:AttributeMapping" target="SYSTEM_ID" source="TenancyOSRPropertyIdentifier"/>
+  
+    </input>
+  
+    <input node="P_TMRCustomers" emptyUnionBehavior="NO_ROW">
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_GN_STD6" source="MATCH_PERSON_GN_STD6"/>
+      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="SOURCE_SYSTEM" null="false" value="TMR"/>
+      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CLEANSE_TABLE_ID_BUT" null="true" value=""/>
+      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CLEANSE_ROW_ID_BUT" null="true" value=""/>
+      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="ADDRNUMBER" null="true" value=""/>
+      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="Cleanse_TABLE_ID_ADRC" null="true" value=""/>
+      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="Cleanse_ROW_ID_ADRC" null="true" value=""/>
+      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="Cleanse_TABLE_ID_RTA_T" null="true" value=""/>
+      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="Cleanse_ROW_ID_RTA_T" null="true" value=""/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_GN" source="MATCH_PERSON_GN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_GN_STD" source="MATCH_PERSON_GN_STD"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_GN_STD2" source="MATCH_PERSON_GN_STD2"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_GN_STD3" source="MATCH_PERSON_GN_STD3"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_GN_STD4" source="MATCH_PERSON_GN_STD4"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_GN_STD5" source="MATCH_PERSON_GN_STD5"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_GN2" source="MATCH_PERSON_GN2"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_GN2_STD" source="MATCH_PERSON_GN2_STD"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_GN2_STD2" source="MATCH_PERSON_GN2_STD2"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_GN2_STD3" source="MATCH_PERSON_GN2_STD3"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_GN2_STD4" source="MATCH_PERSON_GN2_STD4"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_GN2_STD5" source="MATCH_PERSON_GN2_STD5"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_GN2_STD6" source="MATCH_PERSON_GN2_STD6"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_FN" source="MATCH_PERSON_FN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_FN_STD" source="MATCH_PERSON_FN_STD"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_MATPOST" source="MATCH_PERSON_MATPOST"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_MATPOST_STD" source="MATCH_PERSON_MATPOST_STD"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON" source="MATCH_PERSON"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_COUNTRY" source="MATCH_ADDR_COUNTRY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_POSTCODE1" source="MATCH_ADDR_POSTCODE1"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_REGION" source="MATCH_ADDR_REGION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_LOCALITY" source="MATCH_ADDR_LOCALITY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_LOCALITY2" source="MATCH_ADDR_LOCALITY2"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_BUILDING" source="MATCH_ADDR_BUILDING"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_PRIM_NAME" source="MATCH_ADDR_PRIM_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_PRIM_NAME2" source="MATCH_ADDR_PRIM_NAME2"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_PRIM_TYPE" source="MATCH_ADDR_PRIM_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_PRIM_DIR" source="MATCH_ADDR_PRIM_DIR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_PRIM_NUMBER" source="MATCH_ADDR_PRIM_NUMBER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_BLOCK" source="MATCH_ADDR_BLOCK"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_STAIRWELL" source="MATCH_ADDR_STAIRWELL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_UNIT" source="MATCH_ADDR_UNIT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PHONE" source="MATCH_PHONE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_WING" source="MATCH_ADDR_WING"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_FLOOR" source="MATCH_ADDR_FLOOR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_COUNTRY_NAME" source="STD_ADDR_COUNTRY_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_LOCALITY" source="STD_ADDR_LOCALITY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_REGION" source="STD_ADDR_REGION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_ADDRESS_DELIVERY" source="STD_ADDR_ADDRESS_DELIVERY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_BUILDING_NAME" source="STD_ADDR_BUILDING_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_POSTCODE1" source="STD_ADDR_POSTCODE1"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_PRIM_ADDRESS" source="STD_ADDR_PRIM_ADDRESS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_PRIM_NUMBER" source="STD_ADDR_PRIM_NUMBER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ADDR_INFO_CODE" source="ADDR_INFO_CODE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ADDR_ASMT_LEVEL" source="ADDR_ASMT_LEVEL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ADDR_SCRIPT_CODE" source="ADDR_SCRIPT_CODE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ADDR_ASMT_TYPE" source="ADDR_ASMT_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_PRIM_NAME_FULL" source="STD_ADDR_PRIM_NAME_FULL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PHONE2" source="MATCH_PHONE2"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="Cleanse_ROW_ID_TMR" source="Z_RUN_SEQ_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BIRTHDT" source="DATE_OF_BIRTH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ADDR_ASMT_INFO" source="ADDR_ASMT_INFO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="Cleanse_TABLE_ID_TMR" source="Cleanse_TABLE_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SYSTEM_ID" source="CUSTOMER_REF"/>
     </input>
   </calculationView>
   <calculationView xsi:type="Calculation:AggregationView" id="A_AddressNumber">
     <viewAttributes>
+      <viewAttribute id="MATCH_PERSON_GN_STD6">
+        <descriptions defaultDescription="MATCH_PERSON_GN_STD6"/>
+      </viewAttribute>
+      <viewAttribute id="Cleanse_TABLE_ID_BUT">
+        <descriptions defaultDescription="Cleanse_TABLE_ID_BUT"/>
+      </viewAttribute>
+      <viewAttribute id="Cleanse_ROW_ID_BUT">
+        <descriptions defaultDescription="Cleanse_ROW_ID_BUT"/>
+      </viewAttribute>
+    
+      <viewAttribute id="ADDRNUMBER">
+        <descriptions defaultDescription="ADDRNUMBER"/>
+      </viewAttribute>
+      <viewAttribute id="Cleanse_TABLE_ID_ADRC">
+        <descriptions defaultDescription="Cleanse_TABLE_ID_ADRC"/>
+      </viewAttribute>
+      <viewAttribute id="Cleanse_ROW_ID_ADRC">
+        <descriptions defaultDescription="Cleanse_ROW_ID_ADRC"/>
+      </viewAttribute>
       <viewAttribute id="MATCH_PERSON_GN">
         <descriptions defaultDescription="MATCH_PERSON_GN"/>
       </viewAttribute>
@@ -1347,9 +1387,6 @@
       </viewAttribute>
       <viewAttribute id="MATCH_PERSON_GN_STD5">
         <descriptions defaultDescription="MATCH_PERSON_GN_STD5"/>
-      </viewAttribute>
-      <viewAttribute id="MATCH_PERSON_GN_STD6">
-        <descriptions defaultDescription="MATCH_PERSON_GN_STD6"/>
       </viewAttribute>
       <viewAttribute id="MATCH_PERSON_GN2">
         <descriptions defaultDescription="MATCH_PERSON_GN2"/>
@@ -1432,15 +1469,6 @@
       <viewAttribute id="MATCH_PHONE">
         <descriptions defaultDescription="MATCH_PHONE"/>
       </viewAttribute>
-      <viewAttribute id="PARTNER">
-        <descriptions defaultDescription="PARTNER"/>
-      </viewAttribute>
-      <viewAttribute id="Cleanse_TABLE_ID_BUT">
-        <descriptions defaultDescription="Cleanse_TABLE_ID_BUT"/>
-      </viewAttribute>
-      <viewAttribute id="Cleanse_ROW_ID_BUT">
-        <descriptions defaultDescription="Cleanse_ROW_ID_BUT"/>
-      </viewAttribute>
       <viewAttribute id="MATCH_ADDR_WING">
         <descriptions defaultDescription="MATCH_ADDR_WING"/>
       </viewAttribute>
@@ -1483,24 +1511,17 @@
       <viewAttribute id="ADDR_ASMT_TYPE">
         <descriptions defaultDescription="ADDR_ASMT_TYPE"/>
       </viewAttribute>
-    
-      <viewAttribute id="ADDRNUMBER">
-        <descriptions defaultDescription="ADDRNUMBER"/>
-      </viewAttribute>
-      <viewAttribute id="Cleanse_TABLE_ID_ADRC">
-        <descriptions defaultDescription="Cleanse_TABLE_ID_ADRC"/>
-      </viewAttribute>
-      <viewAttribute id="Cleanse_ROW_ID_ADRC">
-        <descriptions defaultDescription="Cleanse_ROW_ID_ADRC"/>
-      </viewAttribute>
       <viewAttribute id="STD_ADDR_PRIM_NAME_FULL">
         <descriptions defaultDescription="STD_ADDR_PRIM_NAME_FULL"/>
+      </viewAttribute>
+      <viewAttribute id="MATCH_PHONE2">
+        <descriptions defaultDescription="MATCH_PHONE2"/>
       </viewAttribute>
       <viewAttribute id="BIRTHDT">
         <descriptions defaultDescription="BIRTHDT"/>
       </viewAttribute>
-      <viewAttribute id="MATCH_PHONE2">
-        <descriptions defaultDescription="MATCH_PHONE2"/>
+      <viewAttribute id="PARTNER">
+        <descriptions defaultDescription="PARTNER"/>
       </viewAttribute>
       <viewAttribute id="CLIENT">
         <descriptions defaultDescription="CLIENT"/>
@@ -1555,7 +1576,11 @@
       </viewAttribute>
       <viewAttribute id="ADDRNUMBER_1">
         <descriptions defaultDescription="ADDRNUMBER_1"/>
-      </viewAttribute></viewAttributes>
+      </viewAttribute>
+      <viewAttribute id="CC_BIRTHDT">
+        <descriptions defaultDescription="CC_BIRTHDT"/>
+      </viewAttribute>
+    </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
     <input node="J_RMS_BPsWithAddresses">
@@ -1634,10 +1659,21 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="ADDR_INFO_CODE" source="ADDR_INFO_CODE"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="ADDR_ASMT_LEVEL" source="ADDR_ASMT_LEVEL"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="ADDR_ASMT_TYPE" source="ADDR_ASMT_TYPE"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_BIRTHDT" source="CC_BIRTHDT"/>
     </input>
   </calculationView>
-  <calculationView xsi:type="Calculation:JoinView" id="J_TMR_CustomersWithSMSNumbers" cardinality="CN_1" joinType="leftOuter">
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_RTA_Tenant" filterExpressionLanguage="SQL">
     <viewAttributes>
+      <viewAttribute id="MATCH_PERSON_GN_STD6">
+        <descriptions defaultDescription="MATCH_PERSON_GN_STD6"/>
+      </viewAttribute>
+      <viewAttribute id="Cleanse_TABLE_ID_RTA_T" aggregationType="sum">
+        <descriptions defaultDescription="Cleanse_TABLE_ID"/>
+      </viewAttribute>
+      <viewAttribute id="Cleanse_ROW_ID_RTA_T" aggregationType="sum">
+        <descriptions defaultDescription="Cleanse_ROW_ID"/>
+      </viewAttribute>
       <viewAttribute id="MATCH_PERSON_GN">
         <descriptions defaultDescription="MATCH_PERSON_GN"/>
       </viewAttribute>
@@ -1734,12 +1770,6 @@
       <viewAttribute id="MATCH_ADDR_UNIT">
         <descriptions defaultDescription="MATCH_ADDR_UNIT"/>
       </viewAttribute>
-      <viewAttribute id="MATCH_PHONE">
-        <descriptions defaultDescription="MATCH_PHONE"/>
-      </viewAttribute>
-      <viewAttribute id="CUSTOMER_REF">
-        <descriptions defaultDescription="CUSTOMER_REF"/>
-      </viewAttribute>
       <viewAttribute id="MATCH_ADDR_WING">
         <descriptions defaultDescription="MATCH_ADDR_WING"/>
       </viewAttribute>
@@ -1755,264 +1785,22 @@
       <viewAttribute id="STD_ADDR_REGION">
         <descriptions defaultDescription="STD_ADDR_REGION"/>
       </viewAttribute>
-      <viewAttribute id="STD_ADDR_ADDRESS_DELIVERY">
-        <descriptions defaultDescription="STD_ADDR_ADDRESS_DELIVERY"/>
-      </viewAttribute>
       <viewAttribute id="STD_ADDR_BUILDING_NAME">
         <descriptions defaultDescription="STD_ADDR_BUILDING_NAME"/>
-      </viewAttribute>
-      <viewAttribute id="STD_ADDR_POSTCODE1">
-        <descriptions defaultDescription="STD_ADDR_POSTCODE1"/>
-      </viewAttribute>
-      <viewAttribute id="STD_ADDR_PRIM_ADDRESS">
-        <descriptions defaultDescription="STD_ADDR_PRIM_ADDRESS"/>
-      </viewAttribute>
-      <viewAttribute id="STD_ADDR_PRIM_NUMBER">
-        <descriptions defaultDescription="STD_ADDR_PRIM_NUMBER"/>
-      </viewAttribute>
-      <viewAttribute id="ADDR_INFO_CODE">
-        <descriptions defaultDescription="ADDR_INFO_CODE"/>
       </viewAttribute>
       <viewAttribute id="ADDR_ASMT_LEVEL">
         <descriptions defaultDescription="ADDR_ASMT_LEVEL"/>
       </viewAttribute>
-      <viewAttribute id="ADDR_SCRIPT_CODE">
-        <descriptions defaultDescription="ADDR_SCRIPT_CODE"/>
-      </viewAttribute>
-      <viewAttribute id="ADDR_ASMT_INFO">
-        <descriptions defaultDescription="ADDR_ASMT_INFO"/>
-      </viewAttribute>
       <viewAttribute id="ADDR_ASMT_TYPE">
         <descriptions defaultDescription="ADDR_ASMT_TYPE"/>
-      </viewAttribute>
-      <viewAttribute id="Cleanse_TABLE_ID" aggregationType="sum">
-        <descriptions defaultDescription="Cleanse_TABLE_ID"/>
-      </viewAttribute>
-      <viewAttribute id="Cleanse_ROW_ID" aggregationType="sum">
-        <descriptions defaultDescription="Cleanse_ROW_ID"/>
-      </viewAttribute>
-      <viewAttribute id="STD_ADDR_PRIM_NAME_FULL">
-        <descriptions defaultDescription="STD_ADDR_PRIM_NAME_FULL"/>
-      </viewAttribute>
-      <viewAttribute id="DATE_OF_BIRTH">
-        <descriptions defaultDescription="DATE_OF_BIRTH"/>
-      </viewAttribute>
-      <viewAttribute id="MATCH_PHONE2">
-        <descriptions defaultDescription="SMS_CONTACT_NUMBER"/>
-      </viewAttribute>
-    
-      <viewAttribute id="MATCH_PERSON_GN_STD6">
-        <descriptions defaultDescription="MATCH_PERSON_GN_STD6"/>
-      </viewAttribute>
-      <viewAttribute id="ADDR_LATITUDE" aggregationType="sum">
-        <descriptions defaultDescription="ADDR_LATITUDE"/>
-      </viewAttribute>
-      <viewAttribute id="ADDR_LONGITUDE" aggregationType="sum">
-        <descriptions defaultDescription="ADDR_LONGITUDE"/>
-      </viewAttribute>
-      <viewAttribute id="CURRENT_POSTAL_ADDR_EFf_DT">
-        <descriptions defaultDescription="CURRENT_POSTAL_ADDR_EFf_DT"/>
-      </viewAttribute>
-      <viewAttribute id="CUSTOMER_TYPE">
-        <descriptions defaultDescription="CUSTOMER_TYPE"/>
-      </viewAttribute></viewAttributes>
-    <calculatedViewAttributes/>
-    <restrictedViewAttributes/>
-    <input node="P_TMR_CustMain">
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_GN" source="MATCH_PERSON_GN"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_GN_STD" source="MATCH_PERSON_GN_STD"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_GN_STD2" source="MATCH_PERSON_GN_STD2"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_GN_STD3" source="MATCH_PERSON_GN_STD3"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_GN_STD4" source="MATCH_PERSON_GN_STD4"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_GN_STD5" source="MATCH_PERSON_GN_STD5"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_GN2" source="MATCH_PERSON_GN2"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_GN2_STD" source="MATCH_PERSON_GN2_STD"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_GN2_STD2" source="MATCH_PERSON_GN2_STD2"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_GN2_STD3" source="MATCH_PERSON_GN2_STD3"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_GN2_STD4" source="MATCH_PERSON_GN2_STD4"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_GN2_STD5" source="MATCH_PERSON_GN2_STD5"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_GN2_STD6" source="MATCH_PERSON_GN2_STD6"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_FN" source="MATCH_PERSON_FN"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_FN_STD" source="MATCH_PERSON_FN_STD"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_MATPOST" source="MATCH_PERSON_MATPOST"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_MATPOST_STD" source="MATCH_PERSON_MATPOST_STD"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON" source="MATCH_PERSON"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_COUNTRY" source="MATCH_ADDR_COUNTRY"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_POSTCODE1" source="MATCH_ADDR_POSTCODE1"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_REGION" source="MATCH_ADDR_REGION"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_LOCALITY" source="MATCH_ADDR_LOCALITY"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_LOCALITY2" source="MATCH_ADDR_LOCALITY2"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_BUILDING" source="MATCH_ADDR_BUILDING"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_PRIM_NAME" source="MATCH_ADDR_PRIM_NAME"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_PRIM_NAME2" source="MATCH_ADDR_PRIM_NAME2"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_PRIM_TYPE" source="MATCH_ADDR_PRIM_TYPE"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_PRIM_DIR" source="MATCH_ADDR_PRIM_DIR"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_PRIM_NUMBER" source="MATCH_ADDR_PRIM_NUMBER"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_BLOCK" source="MATCH_ADDR_BLOCK"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_STAIRWELL" source="MATCH_ADDR_STAIRWELL"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_UNIT" source="MATCH_ADDR_UNIT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PHONE" source="MATCH_PHONE"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_REF" source="CUSTOMER_REF"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_WING" source="MATCH_ADDR_WING"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_FLOOR" source="MATCH_ADDR_FLOOR"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_COUNTRY_NAME" source="STD_ADDR_COUNTRY_NAME"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_LOCALITY" source="STD_ADDR_LOCALITY"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_REGION" source="STD_ADDR_REGION"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_ADDRESS_DELIVERY" source="STD_ADDR_ADDRESS_DELIVERY"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_BUILDING_NAME" source="STD_ADDR_BUILDING_NAME"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_POSTCODE1" source="STD_ADDR_POSTCODE1"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_PRIM_ADDRESS" source="STD_ADDR_PRIM_ADDRESS"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_PRIM_NUMBER" source="STD_ADDR_PRIM_NUMBER"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="ADDR_INFO_CODE" source="ADDR_INFO_CODE"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="ADDR_ASMT_LEVEL" source="ADDR_ASMT_LEVEL"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="ADDR_SCRIPT_CODE" source="ADDR_SCRIPT_CODE"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="ADDR_ASMT_INFO" source="ADDR_ASMT_INFO"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="ADDR_ASMT_TYPE" source="ADDR_ASMT_TYPE"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="Cleanse_TABLE_ID" source="Cleanse_TABLE_ID"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="Cleanse_ROW_ID" source="Cleanse_ROW_ID"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_PRIM_NAME_FULL" source="STD_ADDR_PRIM_NAME_FULL"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="DATE_OF_BIRTH" source="DATE_OF_BIRTH"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_GN_STD6" source="MATCH_PERSON_GN_STD6"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="ADDR_LATITUDE" source="ADDR_LATITUDE"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="ADDR_LONGITUDE" source="ADDR_LONGITUDE"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CURRENT_POSTAL_ADDR_EFf_DT" source="CURRENT_POSTAL_ADDR_EFf_DT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_TYPE" source="CUSTOMER_TYPE"/>
-    </input>
-    <input node="P_TMR_CustContact_Phone">
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PHONE2" source="SMS_CONTACT_NUMBER"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_REF" source="CUSTOMER_REF"/>
-    </input>
-    <joinAttribute name="CUSTOMER_REF"/>
-  </calculationView>
-  <calculationView xsi:type="Calculation:ProjectionView" id="P_RTA_Tenant" filterExpressionLanguage="SQL">
-    <viewAttributes>
-      <viewAttribute id="MATCH_PERSON_GN">
-        <descriptions defaultDescription="MATCH_PERSON_GN"/>
-      </viewAttribute>
-      <viewAttribute id="MATCH_PERSON_GN_STD">
-        <descriptions defaultDescription="MATCH_PERSON_GN_STD"/>
-      </viewAttribute>
-      <viewAttribute id="MATCH_PERSON_GN_STD2">
-        <descriptions defaultDescription="MATCH_PERSON_GN_STD2"/>
-      </viewAttribute>
-      <viewAttribute id="MATCH_PERSON_GN_STD3">
-        <descriptions defaultDescription="MATCH_PERSON_GN_STD3"/>
-      </viewAttribute>
-      <viewAttribute id="MATCH_PERSON_GN2_STD4">
-        <descriptions defaultDescription="MATCH_PERSON_GN2_STD4"/>
-      </viewAttribute>
-      <viewAttribute id="MATCH_PERSON_GN_STD5">
-        <descriptions defaultDescription="MATCH_PERSON_GN_STD5"/>
-      </viewAttribute>
-      <viewAttribute id="MATCH_PERSON_GN2_STD6">
-        <descriptions defaultDescription="MATCH_PERSON_GN2_STD6"/>
-      </viewAttribute>
-      <viewAttribute id="MATCH_PERSON_GN2">
-        <descriptions defaultDescription="MATCH_PERSON_GN2"/>
-      </viewAttribute>
-      <viewAttribute id="MATCH_PERSON_GN2_STD">
-        <descriptions defaultDescription="MATCH_PERSON_GN2_STD"/>
-      </viewAttribute>
-      <viewAttribute id="MATCH_PERSON_GN2_STD2">
-        <descriptions defaultDescription="MATCH_PERSON_GN2_STD2"/>
-      </viewAttribute>
-      <viewAttribute id="MATCH_PERSON_GN2_STD3">
-        <descriptions defaultDescription="MATCH_PERSON_GN2_STD3"/>
-      </viewAttribute>
-      <viewAttribute id="MATCH_PERSON_FN">
-        <descriptions defaultDescription="MATCH_PERSON_FN"/>
-      </viewAttribute>
-      <viewAttribute id="MATCH_PERSON_FN_STD">
-        <descriptions defaultDescription="MATCH_PERSON_FN_STD"/>
-      </viewAttribute>
-      <viewAttribute id="MATCH_PERSON_MATPOST">
-        <descriptions defaultDescription="MATCH_PERSON_MATPOST"/>
-      </viewAttribute>
-      <viewAttribute id="MATCH_PERSON_MATPOST_STD">
-        <descriptions defaultDescription="MATCH_PERSON_MATPOST_STD"/>
-      </viewAttribute>
-      <viewAttribute id="MATCH_PERSON">
-        <descriptions defaultDescription="MATCH_PERSON"/>
-      </viewAttribute>
-      <viewAttribute id="MATCH_ADDR_COUNTRY">
-        <descriptions defaultDescription="MATCH_ADDR_COUNTRY"/>
-      </viewAttribute>
-      <viewAttribute id="MATCH_ADDR_POSTCODE1">
-        <descriptions defaultDescription="MATCH_ADDR_POSTCODE1"/>
-      </viewAttribute>
-      <viewAttribute id="MATCH_ADDR_REGION">
-        <descriptions defaultDescription="MATCH_ADDR_REGION"/>
-      </viewAttribute>
-      <viewAttribute id="MATCH_ADDR_LOCALITY">
-        <descriptions defaultDescription="MATCH_ADDR_LOCALITY"/>
-      </viewAttribute>
-      <viewAttribute id="MATCH_ADDR_LOCALITY2">
-        <descriptions defaultDescription="MATCH_ADDR_LOCALITY2"/>
-      </viewAttribute>
-      <viewAttribute id="MATCH_ADDR_BUILDING">
-        <descriptions defaultDescription="MATCH_ADDR_BUILDING"/>
-      </viewAttribute>
-      <viewAttribute id="MATCH_ADDR_PRIM_NAME">
-        <descriptions defaultDescription="MATCH_ADDR_PRIM_NAME"/>
-      </viewAttribute>
-      <viewAttribute id="MATCH_ADDR_PRIM_NAME2">
-        <descriptions defaultDescription="MATCH_ADDR_PRIM_NAME2"/>
-      </viewAttribute>
-      <viewAttribute id="MATCH_ADDR_PRIM_TYPE">
-        <descriptions defaultDescription="MATCH_ADDR_PRIM_TYPE"/>
-      </viewAttribute>
-      <viewAttribute id="MATCH_ADDR_PRIM_DIR">
-        <descriptions defaultDescription="MATCH_ADDR_PRIM_DIR"/>
-      </viewAttribute>
-      <viewAttribute id="MATCH_ADDR_PRIM_NUMBER">
-        <descriptions defaultDescription="MATCH_ADDR_PRIM_NUMBER"/>
-      </viewAttribute>
-      <viewAttribute id="MATCH_ADDR_BLOCK">
-        <descriptions defaultDescription="MATCH_ADDR_BLOCK"/>
-      </viewAttribute>
-      <viewAttribute id="MATCH_ADDR_STAIRWELL">
-        <descriptions defaultDescription="MATCH_ADDR_STAIRWELL"/>
-      </viewAttribute>
-      <viewAttribute id="MATCH_ADDR_UNIT">
-        <descriptions defaultDescription="MATCH_ADDR_UNIT"/>
       </viewAttribute>
     
     
       <viewAttribute id="TenancyOSRPropertyIdentifier">
         <descriptions defaultDescription="TenancyOSRPropertyIdentifier"/>
       </viewAttribute>
-      <viewAttribute id="MATCH_ADDR_WING">
-        <descriptions defaultDescription="MATCH_ADDR_WING"/>
-      </viewAttribute>
-      <viewAttribute id="MATCH_ADDR_FLOOR">
-        <descriptions defaultDescription="MATCH_ADDR_FLOOR"/>
-      </viewAttribute>
-      <viewAttribute id="STD_ADDR_COUNTRY_NAME">
-        <descriptions defaultDescription="STD_ADDR_COUNTRY_NAME"/>
-      </viewAttribute>
-      <viewAttribute id="STD_ADDR_LOCALITY">
-        <descriptions defaultDescription="STD_ADDR_LOCALITY"/>
-      </viewAttribute>
-      <viewAttribute id="STD_ADDR_REGION">
-        <descriptions defaultDescription="STD_ADDR_REGION"/>
-      </viewAttribute>
       <viewAttribute id="STD_ADDR_SINGLE_ADDRESS">
         <descriptions defaultDescription="STD_ADDR_SINGLE_ADDRESS"/>
-      </viewAttribute>
-      <viewAttribute id="STD_ADDR_BUILDING_NAME">
-        <descriptions defaultDescription="STD_ADDR_BUILDING_NAME"/>
-      </viewAttribute>
-      <viewAttribute id="ADDR_ASMT_LEVEL">
-        <descriptions defaultDescription="ADDR_ASMT_LEVEL"/>
-      </viewAttribute>
-      <viewAttribute id="ADDR_ASMT_TYPE">
-        <descriptions defaultDescription="ADDR_ASMT_TYPE"/>
-      </viewAttribute>
-      <viewAttribute id="Cleanse_TABLE_ID_RTA_T" aggregationType="sum">
-        <descriptions defaultDescription="Cleanse_TABLE_ID"/>
-      </viewAttribute>
-      <viewAttribute id="Cleanse_ROW_ID_RTA_T" aggregationType="sum">
-        <descriptions defaultDescription="Cleanse_ROW_ID"/>
       </viewAttribute>
       <viewAttribute id="STD_ADDR_POSTCODE_FULL">
         <descriptions defaultDescription="STD_ADDR_POSTCODE_FULL"/>
@@ -2031,15 +1819,6 @@
       </viewAttribute>
       <viewAttribute id="PARTITION" aggregationType="sum">
         <descriptions defaultDescription="PARTITION"/>
-      </viewAttribute>
-      <viewAttribute id="MATCH_PERSON_GN_STD4">
-        <descriptions defaultDescription="MATCH_PERSON_GN_STD4"/>
-      </viewAttribute>
-      <viewAttribute id="MATCH_PERSON_GN_STD6">
-        <descriptions defaultDescription="MATCH_PERSON_GN_STD6"/>
-      </viewAttribute>
-      <viewAttribute id="MATCH_PERSON_GN2_STD5">
-        <descriptions defaultDescription="MATCH_PERSON_GN2_STD5"/>
       </viewAttribute>
       <viewAttribute id="GEO_ASMT_LEVEL">
         <descriptions defaultDescription="GEO_ASMT_LEVEL"/>
@@ -2105,8 +1884,11 @@
     </input>
     <filter>&quot;PATH&quot; = 'DONOTLOAD'</filter>
   </calculationView>
-  <calculationView xsi:type="Calculation:ProjectionView" id="P_TMR_CustMain" filterExpressionLanguage="SQL">
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_TMRCustomers">
     <viewAttributes>
+      <viewAttribute id="MATCH_PERSON_GN_STD6">
+        <descriptions defaultDescription="MATCH_PERSON_GN_STD6"/>
+      </viewAttribute>
       <viewAttribute id="MATCH_PERSON_GN">
         <descriptions defaultDescription="MATCH_PERSON_GN"/>
       </viewAttribute>
@@ -2206,9 +1988,6 @@
       <viewAttribute id="MATCH_PHONE">
         <descriptions defaultDescription="MATCH_PHONE"/>
       </viewAttribute>
-      <viewAttribute id="CUSTOMER_REF">
-        <descriptions defaultDescription="CUSTOMER_REF"/>
-      </viewAttribute>
       <viewAttribute id="MATCH_ADDR_WING">
         <descriptions defaultDescription="MATCH_ADDR_WING"/>
       </viewAttribute>
@@ -2227,6 +2006,7 @@
       <viewAttribute id="STD_ADDR_ADDRESS_DELIVERY">
         <descriptions defaultDescription="STD_ADDR_ADDRESS_DELIVERY"/>
       </viewAttribute>
+    
       <viewAttribute id="STD_ADDR_BUILDING_NAME">
         <descriptions defaultDescription="STD_ADDR_BUILDING_NAME"/>
       </viewAttribute>
@@ -2248,30 +2028,32 @@
       <viewAttribute id="ADDR_SCRIPT_CODE">
         <descriptions defaultDescription="ADDR_SCRIPT_CODE"/>
       </viewAttribute>
-      <viewAttribute id="ADDR_ASMT_INFO">
-        <descriptions defaultDescription="ADDR_ASMT_INFO"/>
-      </viewAttribute>
       <viewAttribute id="ADDR_ASMT_TYPE">
         <descriptions defaultDescription="ADDR_ASMT_TYPE"/>
       </viewAttribute>
-      <viewAttribute id="Cleanse_TABLE_ID" aggregationType="sum">
-        <descriptions defaultDescription="Cleanse_TABLE_ID"/>
-      </viewAttribute>
-      <viewAttribute id="Cleanse_ROW_ID" aggregationType="sum">
-        <descriptions defaultDescription="Cleanse_ROW_ID"/>
-      </viewAttribute>
-    
       <viewAttribute id="STD_ADDR_PRIM_NAME_FULL">
         <descriptions defaultDescription="STD_ADDR_PRIM_NAME_FULL"/>
+      </viewAttribute>
+      <viewAttribute id="MATCH_PHONE2">
+        <descriptions defaultDescription="MATCH_PHONE2"/>
+      </viewAttribute>
+      <viewAttribute id="Z_RUN_SEQ_ID" aggregationType="sum">
+        <descriptions defaultDescription="Z_RUN_SEQ_ID"/>
       </viewAttribute>
       <viewAttribute id="DATE_OF_BIRTH">
         <descriptions defaultDescription="DATE_OF_BIRTH"/>
       </viewAttribute>
-    
-    
-    
-      <viewAttribute id="MATCH_PERSON_GN_STD6">
-        <descriptions defaultDescription="MATCH_PERSON_GN_STD6"/>
+      <viewAttribute id="ADDR_ASMT_INFO">
+        <descriptions defaultDescription="ADDR_ASMT_INFO"/>
+      </viewAttribute>
+      <viewAttribute id="Cleanse_TABLE_ID" aggregationType="sum">
+        <descriptions defaultDescription="Cleanse_TABLE_ID"/>
+      </viewAttribute>
+      <viewAttribute id="CUSTOMER_REF">
+        <descriptions defaultDescription="CUSTOMER_REF"/>
+      </viewAttribute>
+      <viewAttribute id="Cleanse_ROW_ID" aggregationType="sum">
+        <descriptions defaultDescription="Cleanse_ROW_ID"/>
       </viewAttribute>
       <viewAttribute id="ADDR_LATITUDE" aggregationType="sum">
         <descriptions defaultDescription="ADDR_LATITUDE"/>
@@ -2284,371 +2066,329 @@
       </viewAttribute>
       <viewAttribute id="CUSTOMER_TYPE">
         <descriptions defaultDescription="CUSTOMER_TYPE"/>
-      </viewAttribute>
-    </viewAttributes>
+      </viewAttribute></viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
-    <input node="osr.scv.foundation.db.synonyms::TMR_CustMain">
-      <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_REF" source="CUSTOMER_REF"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_GN" source="MATCH_PERSON_GN"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_GN_STD" source="MATCH_PERSON_GN_STD"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_GN_STD2" source="MATCH_PERSON_GN_STD2"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_GN_STD3" source="MATCH_PERSON_GN_STD3"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_GN_STD4" source="MATCH_PERSON_GN_STD4"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_GN_STD5" source="MATCH_PERSON_GN_STD5"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_GN_STD6" source="MATCH_PERSON_GN_STD6"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_GN2" source="MATCH_PERSON_GN2"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_GN2_STD" source="MATCH_PERSON_GN2_STD"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_GN2_STD2" source="MATCH_PERSON_GN2_STD2"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_GN2_STD3" source="MATCH_PERSON_GN2_STD3"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_GN2_STD4" source="MATCH_PERSON_GN2_STD4"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_GN2_STD5" source="MATCH_PERSON_GN2_STD5"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_GN2_STD6" source="MATCH_PERSON_GN2_STD6"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_FN" source="MATCH_PERSON_FN"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_FN_STD" source="MATCH_PERSON_FN_STD"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_MATPOST" source="MATCH_PERSON_MATPOST"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_MATPOST_STD" source="MATCH_PERSON_MATPOST_STD"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON" source="MATCH_PERSON"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_COUNTRY" source="MATCH_ADDR_COUNTRY"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_POSTCODE1" source="MATCH_ADDR_POSTCODE1"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_REGION" source="MATCH_ADDR_REGION"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_LOCALITY" source="MATCH_ADDR_LOCALITY"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_LOCALITY2" source="MATCH_ADDR_LOCALITY2"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_BUILDING" source="MATCH_ADDR_BUILDING"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_PRIM_NAME" source="MATCH_ADDR_PRIM_NAME"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_PRIM_NAME2" source="MATCH_ADDR_PRIM_NAME2"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_PRIM_TYPE" source="MATCH_ADDR_PRIM_TYPE"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_PRIM_DIR" source="MATCH_ADDR_PRIM_DIR"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_PRIM_NUMBER" source="MATCH_ADDR_PRIM_NUMBER"/>
+    <input node="osr.scv.foundation.db.functions::CustomerMain">
       <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_BLOCK" source="MATCH_ADDR_BLOCK"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_STAIRWELL" source="MATCH_ADDR_STAIRWELL"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_WING" source="MATCH_ADDR_WING"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_FLOOR" source="MATCH_ADDR_FLOOR"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_UNIT" source="MATCH_ADDR_UNIT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PHONE" source="MATCH_PHONE"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="Cleanse_TABLE_ID" source="Cleanse_TABLE_ID"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="Cleanse_ROW_ID" source="Z_RUN_SEQ_ID"/>
-    
-      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_COUNTRY_NAME" source="STD_ADDR_COUNTRY_NAME"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_LOCALITY" source="STD_ADDR_LOCALITY"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_REGION" source="STD_ADDR_REGION"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_ADDRESS_DELIVERY" source="STD_ADDR_ADDRESS_DELIVERY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="Cleanse_ROW_ID" source="Cleanse_ROW_ID"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_BUILDING_NAME" source="STD_ADDR_BUILDING_NAME"/>
-    
-      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_POSTCODE1" source="STD_ADDR_POSTCODE1"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_PRIM_ADDRESS" source="STD_ADDR_PRIM_ADDRESS"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_PRIM_NUMBER" source="STD_ADDR_PRIM_NUMBER"/>
-    
-      <mapping xsi:type="Calculation:AttributeMapping" target="ADDR_LATITUDE" source="ADDR_LATITUDE"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="ADDR_LONGITUDE" source="ADDR_LONGITUDE"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CURRENT_POSTAL_ADDR_EFf_DT" source="CURRENT_POSTAL_ADDR_EFf_DT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="ADDR_INFO_CODE" source="ADDR_INFO_CODE"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="ADDR_SCRIPT_CODE" source="ADDR_SCRIPT_CODE"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="ADDR_ASMT_INFO" source="ADDR_ASMT_INFO"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="ADDR_ASMT_TYPE" source="ADDR_ASMT_TYPE"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="ADDR_ASMT_LEVEL" source="ADDR_ASMT_LEVEL"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="DATE_OF_BIRTH" source="DATE_OF_BIRTH"/>
-    
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_GN_STD3" source="MATCH_PERSON_GN_STD3"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_GN_STD" source="MATCH_PERSON_GN_STD"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_STAIRWELL" source="MATCH_ADDR_STAIRWELL"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_PRIM_NAME_FULL" source="STD_ADDR_PRIM_NAME_FULL"/>
-    
-      <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_TYPE" source="CUSTOMER_TYPE"/>
-    </input>
-    <filter>&quot;CUSTOMER_TYPE&quot; = 'I'</filter>
-  </calculationView>
-  <calculationView xsi:type="Calculation:ProjectionView" id="P_TMR_CustContact_Phone">
-    <viewAttributes>
-      <viewAttribute id="SMS_CONTACT_NUMBER">
-        <descriptions defaultDescription="SMS_CONTACT_NUMBER"/>
-      </viewAttribute>
-      <viewAttribute id="CUSTOMER_REF">
-        <descriptions defaultDescription="CUSTOMER_REF"/>
-      </viewAttribute>
-    </viewAttributes>
-    <calculatedViewAttributes/>
-    <restrictedViewAttributes/>
-    <input node="osr.scv.foundation.db.functions::CustContactPhone">
-      <mapping xsi:type="Calculation:AttributeMapping" target="SMS_CONTACT_NUMBER" source="SMS_CONTACT_NUMBER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_POSTCODE1" source="STD_ADDR_POSTCODE1"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_GN_STD5" source="MATCH_PERSON_GN_STD5"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_FN_STD" source="MATCH_PERSON_FN_STD"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_GN_STD4" source="MATCH_PERSON_GN_STD4"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_GN_STD2" source="MATCH_PERSON_GN_STD2"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_UNIT" source="MATCH_ADDR_UNIT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DATE_OF_BIRTH" source="DATE_OF_BIRTH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_PRIM_ADDRESS" source="STD_ADDR_PRIM_ADDRESS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_GN2" source="MATCH_PERSON_GN2"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_MATPOST" source="MATCH_PERSON_MATPOST"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PHONE" source="MATCH_PHONE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_GN_STD6" source="MATCH_PERSON_GN_STD6"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_PRIM_NUMBER" source="STD_ADDR_PRIM_NUMBER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_GN2_STD" source="MATCH_PERSON_GN2_STD"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_MATPOST_STD" source="MATCH_PERSON_MATPOST_STD"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_REF" source="CUSTOMER_REF"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ADDR_LATITUDE" source="ADDR_LATITUDE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ADDR_INFO_CODE" source="ADDR_INFO_CODE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_GN2_STD2" source="MATCH_PERSON_GN2_STD2"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON" source="MATCH_PERSON"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_BUILDING" source="MATCH_ADDR_BUILDING"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_GN" source="MATCH_PERSON_GN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_WING" source="MATCH_ADDR_WING"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ADDR_LONGITUDE" source="ADDR_LONGITUDE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ADDR_ASMT_LEVEL" source="ADDR_ASMT_LEVEL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_GN2_STD3" source="MATCH_PERSON_GN2_STD3"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_COUNTRY" source="MATCH_ADDR_COUNTRY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_PRIM_NAME" source="MATCH_ADDR_PRIM_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_FLOOR" source="MATCH_ADDR_FLOOR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CURRENT_POSTAL_ADDR_EFf_DT" source="CURRENT_POSTAL_ADDR_EFf_DT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ADDR_SCRIPT_CODE" source="ADDR_SCRIPT_CODE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_GN2_STD4" source="MATCH_PERSON_GN2_STD4"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_POSTCODE1" source="MATCH_ADDR_POSTCODE1"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_PRIM_NAME2" source="MATCH_ADDR_PRIM_NAME2"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_TYPE" source="CUSTOMER_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_COUNTRY_NAME" source="STD_ADDR_COUNTRY_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ADDR_ASMT_INFO" source="ADDR_ASMT_INFO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_GN2_STD5" source="MATCH_PERSON_GN2_STD5"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_REGION" source="MATCH_ADDR_REGION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_PRIM_TYPE" source="MATCH_ADDR_PRIM_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="Z_RUN_SEQ_ID" source="Z_RUN_SEQ_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_LOCALITY" source="STD_ADDR_LOCALITY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ADDR_ASMT_TYPE" source="ADDR_ASMT_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_GN2_STD6" source="MATCH_PERSON_GN2_STD6"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_LOCALITY" source="MATCH_ADDR_LOCALITY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_PRIM_DIR" source="MATCH_ADDR_PRIM_DIR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PHONE2" source="MATCH_PHONE2"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_REGION" source="STD_ADDR_REGION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="Cleanse_TABLE_ID" source="Cleanse_TABLE_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_FN" source="MATCH_PERSON_FN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_LOCALITY2" source="MATCH_ADDR_LOCALITY2"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_PRIM_NUMBER" source="MATCH_ADDR_PRIM_NUMBER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_ADDRESS_DELIVERY" source="STD_ADDR_ADDRESS_DELIVERY"/>
     </input>
   </calculationView>
 </calculationViews>
 <logicalModel id="U_AllMatchFields">
   <attributes>
-  
-    <attribute id="BIRTHDT" order="1" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="BIRTHDT"/>
-  
-      <keyMapping columnObjectName="U_AllMatchFields" columnName="BIRTHDT"/>
-  
-    </attribute>
-    <attribute id="SOURCE_SYSTEM" key="true" order="2" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="SOURCE_SYSTEM" key="true" order="1" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="SOURCE_SYSTEM"/>
       <keyMapping columnObjectName="U_AllMatchFields" columnName="SOURCE_SYSTEM"/>
     </attribute>
-    <attribute id="SYSTEM_ID" key="true" order="3" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="SYSTEM_ID"/>
-      <keyMapping columnObjectName="U_AllMatchFields" columnName="SYSTEM_ID"/>
-    </attribute>
-    <attribute id="MATCH_PERSON_GN" order="4" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="MATCH_PERSON_GN"/>
-      <keyMapping columnObjectName="U_AllMatchFields" columnName="MATCH_PERSON_GN"/>
-    </attribute>
-    <attribute id="MATCH_PERSON_GN_STD" order="5" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="MATCH_PERSON_GN_STD"/>
-      <keyMapping columnObjectName="U_AllMatchFields" columnName="MATCH_PERSON_GN_STD"/>
-    </attribute>
-    <attribute id="MATCH_PERSON_GN_STD2" order="6" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="MATCH_PERSON_GN_STD2"/>
-      <keyMapping columnObjectName="U_AllMatchFields" columnName="MATCH_PERSON_GN_STD2"/>
-    </attribute>
-    <attribute id="MATCH_PERSON_GN_STD3" order="7" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="MATCH_PERSON_GN_STD3"/>
-      <keyMapping columnObjectName="U_AllMatchFields" columnName="MATCH_PERSON_GN_STD3"/>
-    </attribute>
-    <attribute id="MATCH_PERSON_GN_STD4" order="8" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="MATCH_PERSON_GN_STD4"/>
-      <keyMapping columnObjectName="U_AllMatchFields" columnName="MATCH_PERSON_GN_STD4"/>
-    </attribute>
-    <attribute id="MATCH_PERSON_GN_STD5" order="9" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="MATCH_PERSON_GN_STD5"/>
-      <keyMapping columnObjectName="U_AllMatchFields" columnName="MATCH_PERSON_GN_STD5"/>
-    </attribute>
-    <attribute id="MATCH_PERSON_GN_STD6" order="10" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="MATCH_PERSON_GN_STD6" order="2" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="MATCH_PERSON_GN_STD6"/>
       <keyMapping columnObjectName="U_AllMatchFields" columnName="MATCH_PERSON_GN_STD6"/>
     </attribute>
-    <attribute id="MATCH_PERSON_GN2" order="11" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="MATCH_PERSON_GN2"/>
-      <keyMapping columnObjectName="U_AllMatchFields" columnName="MATCH_PERSON_GN2"/>
-    </attribute>
-    <attribute id="MATCH_PERSON_GN2_STD" order="12" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="MATCH_PERSON_GN2_STD"/>
-      <keyMapping columnObjectName="U_AllMatchFields" columnName="MATCH_PERSON_GN2_STD"/>
-    </attribute>
-    <attribute id="MATCH_PERSON_GN2_STD2" order="13" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="MATCH_PERSON_GN2_STD2"/>
-      <keyMapping columnObjectName="U_AllMatchFields" columnName="MATCH_PERSON_GN2_STD2"/>
-    </attribute>
-    <attribute id="MATCH_PERSON_GN2_STD3" order="14" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="MATCH_PERSON_GN2_STD3"/>
-      <keyMapping columnObjectName="U_AllMatchFields" columnName="MATCH_PERSON_GN2_STD3"/>
-    </attribute>
-    <attribute id="MATCH_PERSON_GN2_STD4" order="15" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="MATCH_PERSON_GN2_STD4"/>
-      <keyMapping columnObjectName="U_AllMatchFields" columnName="MATCH_PERSON_GN2_STD4"/>
-    </attribute>
-    <attribute id="MATCH_PERSON_GN2_STD5" order="16" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="MATCH_PERSON_GN2_STD5"/>
-      <keyMapping columnObjectName="U_AllMatchFields" columnName="MATCH_PERSON_GN2_STD5"/>
-    </attribute>
-    <attribute id="MATCH_PERSON_GN2_STD6" order="17" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="MATCH_PERSON_GN2_STD6"/>
-      <keyMapping columnObjectName="U_AllMatchFields" columnName="MATCH_PERSON_GN2_STD6"/>
-    </attribute>
-    <attribute id="MATCH_PERSON_FN" order="18" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="MATCH_PERSON_FN"/>
-      <keyMapping columnObjectName="U_AllMatchFields" columnName="MATCH_PERSON_FN"/>
-    </attribute>
-    <attribute id="MATCH_PERSON_FN_STD" order="19" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="MATCH_PERSON_FN_STD"/>
-      <keyMapping columnObjectName="U_AllMatchFields" columnName="MATCH_PERSON_FN_STD"/>
-    </attribute>
-    <attribute id="MATCH_PERSON_MATPOST" order="20" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="MATCH_PERSON_MATPOST"/>
-      <keyMapping columnObjectName="U_AllMatchFields" columnName="MATCH_PERSON_MATPOST"/>
-    </attribute>
-    <attribute id="MATCH_PERSON_MATPOST_STD" order="21" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="MATCH_PERSON_MATPOST_STD"/>
-      <keyMapping columnObjectName="U_AllMatchFields" columnName="MATCH_PERSON_MATPOST_STD"/>
-    </attribute>
-    <attribute id="MATCH_PERSON" order="22" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="MATCH_PERSON"/>
-      <keyMapping columnObjectName="U_AllMatchFields" columnName="MATCH_PERSON"/>
-    </attribute>
-    <attribute id="MATCH_ADDR_COUNTRY" order="23" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="MATCH_ADDR_COUNTRY"/>
-      <keyMapping columnObjectName="U_AllMatchFields" columnName="MATCH_ADDR_COUNTRY"/>
-    </attribute>
-    <attribute id="MATCH_ADDR_POSTCODE1" order="24" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="MATCH_ADDR_POSTCODE1"/>
-      <keyMapping columnObjectName="U_AllMatchFields" columnName="MATCH_ADDR_POSTCODE1"/>
-    </attribute>
-    <attribute id="MATCH_ADDR_REGION" order="25" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="MATCH_ADDR_REGION"/>
-      <keyMapping columnObjectName="U_AllMatchFields" columnName="MATCH_ADDR_REGION"/>
-    </attribute>
-    <attribute id="MATCH_ADDR_LOCALITY" order="26" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="MATCH_ADDR_LOCALITY"/>
-      <keyMapping columnObjectName="U_AllMatchFields" columnName="MATCH_ADDR_LOCALITY"/>
-    </attribute>
-    <attribute id="MATCH_ADDR_LOCALITY2" order="27" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="MATCH_ADDR_LOCALITY2"/>
-      <keyMapping columnObjectName="U_AllMatchFields" columnName="MATCH_ADDR_LOCALITY2"/>
-    </attribute>
-    <attribute id="MATCH_ADDR_BUILDING" order="28" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="MATCH_ADDR_BUILDING"/>
-      <keyMapping columnObjectName="U_AllMatchFields" columnName="MATCH_ADDR_BUILDING"/>
-    </attribute>
-    <attribute id="MATCH_ADDR_PRIM_NAME" order="29" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="MATCH_ADDR_PRIM_NAME"/>
-      <keyMapping columnObjectName="U_AllMatchFields" columnName="MATCH_ADDR_PRIM_NAME"/>
-    </attribute>
-    <attribute id="MATCH_ADDR_PRIM_NAME2" order="30" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="MATCH_ADDR_PRIM_NAME2"/>
-      <keyMapping columnObjectName="U_AllMatchFields" columnName="MATCH_ADDR_PRIM_NAME2"/>
-    </attribute>
-    <attribute id="MATCH_ADDR_PRIM_TYPE" order="31" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="MATCH_ADDR_PRIM_TYPE"/>
-      <keyMapping columnObjectName="U_AllMatchFields" columnName="MATCH_ADDR_PRIM_TYPE"/>
-    </attribute>
-    <attribute id="MATCH_ADDR_PRIM_DIR" order="32" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="MATCH_ADDR_PRIM_DIR"/>
-      <keyMapping columnObjectName="U_AllMatchFields" columnName="MATCH_ADDR_PRIM_DIR"/>
-    </attribute>
-    <attribute id="MATCH_ADDR_PRIM_NUMBER" order="33" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="MATCH_ADDR_PRIM_NUMBER"/>
-      <keyMapping columnObjectName="U_AllMatchFields" columnName="MATCH_ADDR_PRIM_NUMBER"/>
-    </attribute>
-    <attribute id="MATCH_ADDR_BLOCK" order="34" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="MATCH_ADDR_BLOCK"/>
-      <keyMapping columnObjectName="U_AllMatchFields" columnName="MATCH_ADDR_BLOCK"/>
-    </attribute>
-    <attribute id="MATCH_ADDR_STAIRWELL" order="35" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="MATCH_ADDR_STAIRWELL"/>
-      <keyMapping columnObjectName="U_AllMatchFields" columnName="MATCH_ADDR_STAIRWELL"/>
-    </attribute>
-    <attribute id="MATCH_ADDR_UNIT" order="36" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="MATCH_ADDR_UNIT"/>
-      <keyMapping columnObjectName="U_AllMatchFields" columnName="MATCH_ADDR_UNIT"/>
-    </attribute>
-    <attribute id="MATCH_PHONE" order="37" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="MATCH_PHONE"/>
-      <keyMapping columnObjectName="U_AllMatchFields" columnName="MATCH_PHONE"/>
-    </attribute>
-  
-    <attribute id="MATCH_ADDR_WING" order="38" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="MATCH_ADDR_WING"/>
-  
-      <keyMapping columnObjectName="U_AllMatchFields" columnName="MATCH_ADDR_WING"/>
-  
-    </attribute>
-    <attribute id="MATCH_ADDR_FLOOR" order="39" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="MATCH_ADDR_FLOOR"/>
-      <keyMapping columnObjectName="U_AllMatchFields" columnName="MATCH_ADDR_FLOOR"/>
-    </attribute>
-  
-    <attribute id="STD_ADDR_COUNTRY_NAME" order="40" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="STD_ADDR_COUNTRY_NAME"/>
-  
-      <keyMapping columnObjectName="U_AllMatchFields" columnName="STD_ADDR_COUNTRY_NAME"/>
-  
-    </attribute>
-    <attribute id="STD_ADDR_LOCALITY" order="41" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="STD_ADDR_LOCALITY"/>
-      <keyMapping columnObjectName="U_AllMatchFields" columnName="STD_ADDR_LOCALITY"/>
-    </attribute>
-    <attribute id="STD_ADDR_REGION" order="42" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="STD_ADDR_REGION"/>
-      <keyMapping columnObjectName="U_AllMatchFields" columnName="STD_ADDR_REGION"/>
-    </attribute>
-    <attribute id="STD_ADDR_ADDRESS_DELIVERY" order="43" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="STD_ADDR_ADDRESS_DELIVERY"/>
-      <keyMapping columnObjectName="U_AllMatchFields" columnName="STD_ADDR_ADDRESS_DELIVERY"/>
-    </attribute>
-    <attribute id="STD_ADDR_BUILDING_NAME" order="44" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="STD_ADDR_BUILDING_NAME"/>
-      <keyMapping columnObjectName="U_AllMatchFields" columnName="STD_ADDR_BUILDING_NAME"/>
-    </attribute>
-  
-    <attribute id="STD_ADDR_POSTCODE1" order="45" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="STD_ADDR_POSTCODE1"/>
-  
-      <keyMapping columnObjectName="U_AllMatchFields" columnName="STD_ADDR_POSTCODE1"/>
-  
-    </attribute>
-    <attribute id="STD_ADDR_PRIM_ADDRESS" order="46" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="STD_ADDR_PRIM_ADDRESS"/>
-      <keyMapping columnObjectName="U_AllMatchFields" columnName="STD_ADDR_PRIM_ADDRESS"/>
-    </attribute>
-  
-    <attribute id="STD_ADDR_PRIM_NUMBER" order="47" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="STD_ADDR_PRIM_NUMBER"/>
-  
-      <keyMapping columnObjectName="U_AllMatchFields" columnName="STD_ADDR_PRIM_NUMBER"/>
-  
-    </attribute>
-    <attribute id="ADDR_ASMT_LEVEL" order="48" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="ADDR_ASMT_LEVEL"/>
-      <keyMapping columnObjectName="U_AllMatchFields" columnName="ADDR_ASMT_LEVEL"/>
-    </attribute>
-    <attribute id="ADDR_ASMT_INFO" order="49" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="ADDR_ASMT_INFO"/>
-      <keyMapping columnObjectName="U_AllMatchFields" columnName="ADDR_ASMT_INFO"/>
-    </attribute>
-    <attribute id="ADDR_ASMT_TYPE" order="50" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="ADDR_ASMT_TYPE"/>
-      <keyMapping columnObjectName="U_AllMatchFields" columnName="ADDR_ASMT_TYPE"/>
-    </attribute>
-    <attribute id="ADDRNUMBER" order="51" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="ADDRNUMBER" order="3" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="ADDRNUMBER"/>
       <keyMapping columnObjectName="U_AllMatchFields" columnName="ADDRNUMBER"/>
     </attribute>
   
-    <attribute id="ADDR_INFO_CODE" order="52" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="ADDR_INFO_CODE"/>
-  
-      <keyMapping columnObjectName="U_AllMatchFields" columnName="ADDR_INFO_CODE"/>
-  
-    </attribute>
-    <attribute id="ADDR_SCRIPT_CODE" order="53" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="ADDR_SCRIPT_CODE"/>
-      <keyMapping columnObjectName="U_AllMatchFields" columnName="ADDR_SCRIPT_CODE"/>
-    </attribute>
-  
-    <attribute id="CLEANSE_TABLE_ID_BUT" order="54" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="CLEANSE_TABLE_ID_BUT" order="4" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="CLEANSE_TABLE_ID"/>
   
       <keyMapping columnObjectName="U_AllMatchFields" columnName="CLEANSE_TABLE_ID_BUT"/>
   
     </attribute>
-    <attribute id="CLEANSE_ROW_ID_BUT" order="55" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="CLEANSE_ROW_ID_BUT" order="5" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="CLEANSE_ROW_ID"/>
       <keyMapping columnObjectName="U_AllMatchFields" columnName="CLEANSE_ROW_ID_BUT"/>
     </attribute>
-    <attribute id="Cleanse_TABLE_ID_ADRC" order="56" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="Cleanse_TABLE_ID_ADRC" order="6" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Cleanse_TABLE_ID"/>
       <keyMapping columnObjectName="U_AllMatchFields" columnName="Cleanse_TABLE_ID_ADRC"/>
     </attribute>
-    <attribute id="Cleanse_ROW_ID_ADRC" order="57" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="Cleanse_ROW_ID_ADRC" order="7" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Cleanse_ROW_ID"/>
       <keyMapping columnObjectName="U_AllMatchFields" columnName="Cleanse_ROW_ID_ADRC"/>
     </attribute>
-    <attribute id="Cleanse_TABLE_ID_TMR" order="58" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="Cleanse_TABLE_ID_RTA_T" order="8" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Cleanse_TABLE_ID"/>
-      <keyMapping columnObjectName="U_AllMatchFields" columnName="Cleanse_TABLE_ID_TMR"/>
+      <keyMapping columnObjectName="U_AllMatchFields" columnName="Cleanse_TABLE_ID_RTA_T"/>
+    </attribute>
+    <attribute id="Cleanse_ROW_ID_RTA_T" order="9" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Cleanse_ROW_ID"/>
+      <keyMapping columnObjectName="U_AllMatchFields" columnName="Cleanse_ROW_ID_RTA_T"/>
+    </attribute>
+    <attribute id="MATCH_PERSON_GN" order="10" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="MATCH_PERSON_GN"/>
+      <keyMapping columnObjectName="U_AllMatchFields" columnName="MATCH_PERSON_GN"/>
+    </attribute>
+    <attribute id="MATCH_PERSON_GN_STD" order="11" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="MATCH_PERSON_GN_STD"/>
+      <keyMapping columnObjectName="U_AllMatchFields" columnName="MATCH_PERSON_GN_STD"/>
+    </attribute>
+    <attribute id="MATCH_PERSON_GN_STD2" order="12" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="MATCH_PERSON_GN_STD2"/>
+      <keyMapping columnObjectName="U_AllMatchFields" columnName="MATCH_PERSON_GN_STD2"/>
+    </attribute>
+    <attribute id="MATCH_PERSON_GN_STD3" order="13" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="MATCH_PERSON_GN_STD3"/>
+      <keyMapping columnObjectName="U_AllMatchFields" columnName="MATCH_PERSON_GN_STD3"/>
+    </attribute>
+    <attribute id="MATCH_PERSON_GN_STD4" order="14" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="MATCH_PERSON_GN_STD4"/>
+      <keyMapping columnObjectName="U_AllMatchFields" columnName="MATCH_PERSON_GN_STD4"/>
+    </attribute>
+    <attribute id="MATCH_PERSON_GN_STD5" order="15" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="MATCH_PERSON_GN_STD5"/>
+      <keyMapping columnObjectName="U_AllMatchFields" columnName="MATCH_PERSON_GN_STD5"/>
+    </attribute>
+    <attribute id="MATCH_PERSON_GN2" order="16" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="MATCH_PERSON_GN2"/>
+      <keyMapping columnObjectName="U_AllMatchFields" columnName="MATCH_PERSON_GN2"/>
+    </attribute>
+    <attribute id="MATCH_PERSON_GN2_STD" order="17" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="MATCH_PERSON_GN2_STD"/>
+      <keyMapping columnObjectName="U_AllMatchFields" columnName="MATCH_PERSON_GN2_STD"/>
+    </attribute>
+    <attribute id="MATCH_PERSON_GN2_STD2" order="18" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="MATCH_PERSON_GN2_STD2"/>
+      <keyMapping columnObjectName="U_AllMatchFields" columnName="MATCH_PERSON_GN2_STD2"/>
+    </attribute>
+    <attribute id="MATCH_PERSON_GN2_STD3" order="19" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="MATCH_PERSON_GN2_STD3"/>
+      <keyMapping columnObjectName="U_AllMatchFields" columnName="MATCH_PERSON_GN2_STD3"/>
+    </attribute>
+    <attribute id="MATCH_PERSON_GN2_STD4" order="20" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="MATCH_PERSON_GN2_STD4"/>
+      <keyMapping columnObjectName="U_AllMatchFields" columnName="MATCH_PERSON_GN2_STD4"/>
+    </attribute>
+    <attribute id="MATCH_PERSON_GN2_STD5" order="21" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="MATCH_PERSON_GN2_STD5"/>
+      <keyMapping columnObjectName="U_AllMatchFields" columnName="MATCH_PERSON_GN2_STD5"/>
+    </attribute>
+    <attribute id="MATCH_PERSON_GN2_STD6" order="22" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="MATCH_PERSON_GN2_STD6"/>
+      <keyMapping columnObjectName="U_AllMatchFields" columnName="MATCH_PERSON_GN2_STD6"/>
+    </attribute>
+    <attribute id="MATCH_PERSON_FN" order="23" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="MATCH_PERSON_FN"/>
+      <keyMapping columnObjectName="U_AllMatchFields" columnName="MATCH_PERSON_FN"/>
+    </attribute>
+    <attribute id="MATCH_PERSON_FN_STD" order="24" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="MATCH_PERSON_FN_STD"/>
+      <keyMapping columnObjectName="U_AllMatchFields" columnName="MATCH_PERSON_FN_STD"/>
+    </attribute>
+    <attribute id="MATCH_PERSON_MATPOST" order="25" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="MATCH_PERSON_MATPOST"/>
+      <keyMapping columnObjectName="U_AllMatchFields" columnName="MATCH_PERSON_MATPOST"/>
+    </attribute>
+    <attribute id="MATCH_PERSON_MATPOST_STD" order="26" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="MATCH_PERSON_MATPOST_STD"/>
+      <keyMapping columnObjectName="U_AllMatchFields" columnName="MATCH_PERSON_MATPOST_STD"/>
+    </attribute>
+    <attribute id="MATCH_PERSON" order="27" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="MATCH_PERSON"/>
+      <keyMapping columnObjectName="U_AllMatchFields" columnName="MATCH_PERSON"/>
+    </attribute>
+    <attribute id="MATCH_ADDR_COUNTRY" order="28" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="MATCH_ADDR_COUNTRY"/>
+      <keyMapping columnObjectName="U_AllMatchFields" columnName="MATCH_ADDR_COUNTRY"/>
+    </attribute>
+    <attribute id="MATCH_ADDR_POSTCODE1" order="29" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="MATCH_ADDR_POSTCODE1"/>
+      <keyMapping columnObjectName="U_AllMatchFields" columnName="MATCH_ADDR_POSTCODE1"/>
+    </attribute>
+    <attribute id="MATCH_ADDR_REGION" order="30" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="MATCH_ADDR_REGION"/>
+      <keyMapping columnObjectName="U_AllMatchFields" columnName="MATCH_ADDR_REGION"/>
+    </attribute>
+    <attribute id="MATCH_ADDR_LOCALITY" order="31" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="MATCH_ADDR_LOCALITY"/>
+      <keyMapping columnObjectName="U_AllMatchFields" columnName="MATCH_ADDR_LOCALITY"/>
+    </attribute>
+    <attribute id="MATCH_ADDR_LOCALITY2" order="32" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="MATCH_ADDR_LOCALITY2"/>
+      <keyMapping columnObjectName="U_AllMatchFields" columnName="MATCH_ADDR_LOCALITY2"/>
+    </attribute>
+    <attribute id="MATCH_ADDR_BUILDING" order="33" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="MATCH_ADDR_BUILDING"/>
+      <keyMapping columnObjectName="U_AllMatchFields" columnName="MATCH_ADDR_BUILDING"/>
+    </attribute>
+    <attribute id="MATCH_ADDR_PRIM_NAME" order="34" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="MATCH_ADDR_PRIM_NAME"/>
+      <keyMapping columnObjectName="U_AllMatchFields" columnName="MATCH_ADDR_PRIM_NAME"/>
+    </attribute>
+    <attribute id="MATCH_ADDR_PRIM_NAME2" order="35" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="MATCH_ADDR_PRIM_NAME2"/>
+      <keyMapping columnObjectName="U_AllMatchFields" columnName="MATCH_ADDR_PRIM_NAME2"/>
+    </attribute>
+    <attribute id="MATCH_ADDR_PRIM_TYPE" order="36" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="MATCH_ADDR_PRIM_TYPE"/>
+      <keyMapping columnObjectName="U_AllMatchFields" columnName="MATCH_ADDR_PRIM_TYPE"/>
+    </attribute>
+    <attribute id="MATCH_ADDR_PRIM_DIR" order="37" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="MATCH_ADDR_PRIM_DIR"/>
+      <keyMapping columnObjectName="U_AllMatchFields" columnName="MATCH_ADDR_PRIM_DIR"/>
+    </attribute>
+    <attribute id="MATCH_ADDR_PRIM_NUMBER" order="38" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="MATCH_ADDR_PRIM_NUMBER"/>
+      <keyMapping columnObjectName="U_AllMatchFields" columnName="MATCH_ADDR_PRIM_NUMBER"/>
+    </attribute>
+    <attribute id="MATCH_ADDR_BLOCK" order="39" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="MATCH_ADDR_BLOCK"/>
+      <keyMapping columnObjectName="U_AllMatchFields" columnName="MATCH_ADDR_BLOCK"/>
+    </attribute>
+    <attribute id="MATCH_ADDR_STAIRWELL" order="40" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="MATCH_ADDR_STAIRWELL"/>
+      <keyMapping columnObjectName="U_AllMatchFields" columnName="MATCH_ADDR_STAIRWELL"/>
+    </attribute>
+    <attribute id="MATCH_ADDR_UNIT" order="41" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="MATCH_ADDR_UNIT"/>
+      <keyMapping columnObjectName="U_AllMatchFields" columnName="MATCH_ADDR_UNIT"/>
+    </attribute>
+    <attribute id="MATCH_PHONE" order="42" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="MATCH_PHONE"/>
+      <keyMapping columnObjectName="U_AllMatchFields" columnName="MATCH_PHONE"/>
+    </attribute>
+    <attribute id="MATCH_ADDR_WING" order="43" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="MATCH_ADDR_WING"/>
+      <keyMapping columnObjectName="U_AllMatchFields" columnName="MATCH_ADDR_WING"/>
+    </attribute>
+    <attribute id="MATCH_ADDR_FLOOR" order="44" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="MATCH_ADDR_FLOOR"/>
+      <keyMapping columnObjectName="U_AllMatchFields" columnName="MATCH_ADDR_FLOOR"/>
+    </attribute>
+    <attribute id="STD_ADDR_COUNTRY_NAME" order="45" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="STD_ADDR_COUNTRY_NAME"/>
+      <keyMapping columnObjectName="U_AllMatchFields" columnName="STD_ADDR_COUNTRY_NAME"/>
+    </attribute>
+    <attribute id="STD_ADDR_LOCALITY" order="46" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="STD_ADDR_LOCALITY"/>
+      <keyMapping columnObjectName="U_AllMatchFields" columnName="STD_ADDR_LOCALITY"/>
+    </attribute>
+    <attribute id="STD_ADDR_REGION" order="47" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="STD_ADDR_REGION"/>
+      <keyMapping columnObjectName="U_AllMatchFields" columnName="STD_ADDR_REGION"/>
+    </attribute>
+    <attribute id="STD_ADDR_ADDRESS_DELIVERY" order="48" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="STD_ADDR_ADDRESS_DELIVERY"/>
+      <keyMapping columnObjectName="U_AllMatchFields" columnName="STD_ADDR_ADDRESS_DELIVERY"/>
+    </attribute>
+    <attribute id="STD_ADDR_BUILDING_NAME" order="49" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="STD_ADDR_BUILDING_NAME"/>
+      <keyMapping columnObjectName="U_AllMatchFields" columnName="STD_ADDR_BUILDING_NAME"/>
+    </attribute>
+    <attribute id="STD_ADDR_POSTCODE1" order="50" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="STD_ADDR_POSTCODE1"/>
+      <keyMapping columnObjectName="U_AllMatchFields" columnName="STD_ADDR_POSTCODE1"/>
+    </attribute>
+    <attribute id="STD_ADDR_PRIM_ADDRESS" order="51" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="STD_ADDR_PRIM_ADDRESS"/>
+      <keyMapping columnObjectName="U_AllMatchFields" columnName="STD_ADDR_PRIM_ADDRESS"/>
+    </attribute>
+    <attribute id="STD_ADDR_PRIM_NUMBER" order="52" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="STD_ADDR_PRIM_NUMBER"/>
+      <keyMapping columnObjectName="U_AllMatchFields" columnName="STD_ADDR_PRIM_NUMBER"/>
+    </attribute>
+    <attribute id="ADDR_INFO_CODE" order="53" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="ADDR_INFO_CODE"/>
+      <keyMapping columnObjectName="U_AllMatchFields" columnName="ADDR_INFO_CODE"/>
+    </attribute>
+    <attribute id="ADDR_ASMT_LEVEL" order="54" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="ADDR_ASMT_LEVEL"/>
+      <keyMapping columnObjectName="U_AllMatchFields" columnName="ADDR_ASMT_LEVEL"/>
+    </attribute>
+    <attribute id="ADDR_SCRIPT_CODE" order="55" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="ADDR_SCRIPT_CODE"/>
+      <keyMapping columnObjectName="U_AllMatchFields" columnName="ADDR_SCRIPT_CODE"/>
+    </attribute>
+    <attribute id="ADDR_ASMT_TYPE" order="56" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="ADDR_ASMT_TYPE"/>
+      <keyMapping columnObjectName="U_AllMatchFields" columnName="ADDR_ASMT_TYPE"/>
+    </attribute>
+    <attribute id="STD_ADDR_PRIM_NAME_FULL" order="57" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="STD_ADDR_PRIM_NAME_FULL"/>
+      <keyMapping columnObjectName="U_AllMatchFields" columnName="STD_ADDR_PRIM_NAME_FULL"/>
+    </attribute>
+    <attribute id="MATCH_PHONE2" order="58" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="MATCH_PHONE2"/>
+      <keyMapping columnObjectName="U_AllMatchFields" columnName="MATCH_PHONE2"/>
     </attribute>
     <attribute id="Cleanse_ROW_ID_TMR" order="59" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Cleanse_ROW_ID"/>
       <keyMapping columnObjectName="U_AllMatchFields" columnName="Cleanse_ROW_ID_TMR"/>
     </attribute>
-    <attribute id="Cleanse_TABLE_ID_RTA_T" order="60" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="BIRTHDT" order="60" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="DATE_OF_BIRTH"/>
+      <keyMapping columnObjectName="U_AllMatchFields" columnName="BIRTHDT"/>
+    </attribute>
+    <attribute id="ADDR_ASMT_INFO" order="61" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="ADDR_ASMT_INFO"/>
+      <keyMapping columnObjectName="U_AllMatchFields" columnName="ADDR_ASMT_INFO"/>
+    </attribute>
+    <attribute id="Cleanse_TABLE_ID_TMR" order="62" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="Cleanse_TABLE_ID"/>
-      <keyMapping columnObjectName="U_AllMatchFields" columnName="Cleanse_TABLE_ID_RTA_T"/>
+      <keyMapping columnObjectName="U_AllMatchFields" columnName="Cleanse_TABLE_ID_TMR"/>
     </attribute>
-    <attribute id="Cleanse_ROW_ID_RTA_T" order="61" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="Cleanse_ROW_ID"/>
-      <keyMapping columnObjectName="U_AllMatchFields" columnName="Cleanse_ROW_ID_RTA_T"/>
-    </attribute>
-  
-    <attribute id="STD_ADDR_PRIM_NAME_FULL" order="62" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="STD_ADDR_PRIM_NAME_FULL"/>
-  
-      <keyMapping columnObjectName="U_AllMatchFields" columnName="STD_ADDR_PRIM_NAME_FULL"/>
-  
-    </attribute>
-    <attribute id="MATCH_PHONE2" order="63" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="MATCH_PHONE2"/>
-      <keyMapping columnObjectName="U_AllMatchFields" columnName="MATCH_PHONE2"/>
+    <attribute id="SYSTEM_ID" order="63" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="SYSTEM_ID"/>
+      <keyMapping columnObjectName="U_AllMatchFields" columnName="SYSTEM_ID"/>
     </attribute>
   </attributes>
   <calculatedAttributes/>
@@ -2659,33 +2399,33 @@
 <layout>
   <shapes>
     <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
-      <upperLeftCorner x="816" y="112"/>
+      <upperLeftCorner x="533" y="112"/>
     
       <rectangleSize width="140"/>
     </shape>
   
     <shape expanded="false" modelObjectName="P_BusinessPartners" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="92" y="811"/>
+      <upperLeftCorner x="92" y="756"/>
       <rectangleSize height="30" width="223"/>
     </shape>
     <shape expanded="true" modelObjectName="P_TimedependendAddressUsage" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="365" y="811"/>
+      <upperLeftCorner x="365" y="756"/>
       <rectangleSize height="30" width="268"/>
     </shape>
     <shape expanded="true" modelObjectName="J_BPsWithTimeDependendAddresses" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="98" y="671"/>
+      <upperLeftCorner x="98" y="616"/>
       <rectangleSize height="30" width="316"/>
     </shape>
     <shape modelObjectName="P_BusinessPartners" modelObjectNameSpace="J_BPsWithTimeDependendAddresses" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="20" y="30"/>
-      <rectangleSize width="263"/>
+      <rectangleSize width="263.4501953125"/>
     </shape>
     <shape modelObjectName="P_TimedependendAddressUsage" modelObjectNameSpace="J_BPsWithTimeDependendAddresses" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="320" y="30"/>
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="J_RMS_BPsWithAddresses" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="171" y="531"/>
+      <upperLeftCorner x="248" y="476"/>
       <rectangleSize height="30" width="253"/>
     </shape>
     <shape modelObjectName="J_BPsWithTimeDependendAddresses" modelObjectNameSpace="J_RMS_BPsWithAddresses" modelObjectType="JoinNodeInput">
@@ -2697,41 +2437,24 @@
       <rectangleSize width="264"/>
     </shape>
     <shape expanded="true" modelObjectName="P_Addresses" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="526" y="671"/>
+      <upperLeftCorner x="528" y="616"/>
       <rectangleSize height="30" width="140"/>
     </shape>
     <shape expanded="true" modelObjectName="U_AllMatchFields" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="756" y="217"/>
+      <upperLeftCorner x="473" y="217"/>
       <rectangleSize height="30" width="260"/>
     </shape>
     <shape expanded="true" modelObjectName="A_AddressNumber" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="228" y="399"/>
+      <upperLeftCorner x="305" y="371"/>
       <rectangleSize height="30" width="140"/>
-    </shape>
-    <shape expanded="true" modelObjectName="J_TMR_CustomersWithSMSNumbers" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="732" y="419"/>
-      <rectangleSize height="30" width="140"/>
-    </shape>
-    <shape modelObjectName="P_TMR_CustMain" modelObjectNameSpace="J_TMR_CustomersWithSMSNumbers" modelObjectType="JoinNodeInput">
-      <upperLeftCorner x="20" y="30"/>
-      <rectangleSize width="269"/>
-    </shape>
-    <shape modelObjectName="P_TMR_CustContact_Phone" modelObjectNameSpace="J_TMR_CustomersWithSMSNumbers" modelObjectType="JoinNodeInput">
-      <upperLeftCorner x="320" y="30"/>
-      <rectangleSize width="250"/>
     </shape>
   
     <shape expanded="true" modelObjectName="P_RTA_Tenant" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="915" y="391"/>
+      <upperLeftCorner x="685" y="371"/>
       <rectangleSize height="30" width="234"/>
     </shape>
-  
-    <shape expanded="true" modelObjectName="P_TMR_CustMain" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="625" y="531"/>
-      <rectangleSize height="30" width="226"/>
-    </shape>
-    <shape expanded="true" modelObjectName="P_TMR_CustContact_Phone" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="901" y="531"/>
+    <shape expanded="true" modelObjectName="P_TMRCustomers" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="495" y="371"/>
       <rectangleSize height="30" width="140"/>
     </shape>
   </shapes>
