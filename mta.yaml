@@ -15,6 +15,16 @@ modules:
         properties:
           key: logical-OSR-EDW-FOUNDATION-grantor
           service: '~{OSR-EDW-FOUNDATION-grantor-service}'
+      - name: OSR-EDW-SOURCE-RMS-grantor
+        group: SERVICE_REPLACEMENTS
+        properties:
+          key: logical-OSR-EDW-SOURCE-RMS-grantor
+          service: '~{OSR-EDW-SOURCE-RMS-grantor-service}'
+      - name: OSR-EDW-SOURCE-TMR-grantor
+        group: SERVICE_REPLACEMENTS
+        properties:
+          key: logical-OSR-EDW-SOURCE-TMR-grantor
+          service: '~{OSR-EDW-SOURCE-TMR-grantor-service}'      
       - name: scv-ext-access-grantor
   - name: OSR_SCV_FOUNDATION-Services
     type: nodejs
@@ -45,6 +55,7 @@ modules:
     type: dwf
     path: DWF
     requires:
+<<<<<<< HEAD
      - name: OSR_SCV_FOUNDATION_DWF-uaa
      - name: OSR_SCV_FOUNDATION-dws
   - name: OSR_SCV_FOUNDATION-Backend
@@ -55,9 +66,12 @@ modules:
        properties:
           url: ${default-url}
     requires:
+<<<<<<< HEAD
       - name: OSR_SCV_FOUNDATION_DWF-uaa
+=======
       - name: OsrScvFoundationContainer
       - name: OSR_SCV_FOUNDATION-dws
+<<<<<<< HEAD
     properties:
      API_END_POINT: "${xs-api-url}"
      SAP_JWT_TRUST_ACL: "[{\"clientid\":\"*\",\"identityzone\":\"*\"}]"
@@ -73,6 +87,21 @@ resources:
     parameters:
       service-name: OSR-EDW-FOUNDATION-deploy
     type: org.cloudfoundry.existing-service
+
+  - name: OSR-EDW-SOURCE-RMS-grantor
+    properties:
+      OSR-EDW-SOURCE-RMS-grantor-service: '${service-name}'
+    parameters:
+      service-name: OSR_EDW_SOURCE_RMS-deploy
+    type: org.cloudfoundry.existing-service
+  - name: OSR-EDW-SOURCE-TMR-grantor
+    properties:
+      OSR-EDW-SOURCE-TMR-grantor-service: '${service-name}'
+    parameters:
+      service-name: OSR_EDW_SOURCE_TMR-deploy
+    type: org.cloudfoundry.existing-service
+
+
   - name: scv-ext-access-grantor
     type: org.cloudfoundry.existing-service
     description: scv-ext-access-grantor

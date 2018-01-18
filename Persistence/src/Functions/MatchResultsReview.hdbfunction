@@ -67,10 +67,10 @@ BEGIN
                 ON m."Cleanse_ROW_ID_BUT" = r."Cleanse_ROW_ID" AND m."Cleanse_TABLE_ID_BUT" = r."Cleanse_TABLE_ID" AND m."SYSTEM_ID" = r."PARTNER"
                 -- Master data TMR
                 LEFT OUTER JOIN (
-                                 SELECT MATCH_PERSON_FN, FIRST_NAME AS FNAME_ORIG_TMR, MIDDLE_NAME AS MNAME_ORIG_TMR, FAMILY_ORG_NAME AS LNAME_ORIG_TMR, "Cleanse_TABLE_ID", "RUN_NUMBER", "CUSTOMER_REF" 
-                                 FROM "osr.scv.foundation.db.synonyms::TMR_Customers"
+                                 SELECT MATCH_PERSON_FN, FIRST_NAME AS FNAME_ORIG_TMR, MIDDLE_NAME AS MNAME_ORIG_TMR, FAMILY_ORG_NAME AS LNAME_ORIG_TMR, "Cleanse_TABLE_ID", "Z_RUN_SEQ_ID", "CUSTOMER_REF" 
+                                 FROM "osr.scv.foundation.db.synonyms::TMR_CustMain"
                                 ) as t
-                ON m."Cleanse_ROW_ID_TMR" = t."RUN_NUMBER"
+                ON m."Cleanse_ROW_ID_TMR" = t."Z_RUN_SEQ_ID"
                                 AND m."Cleanse_TABLE_ID_TMR" = t."Cleanse_TABLE_ID"
                                 AND m."SYSTEM_ID" = t."CUSTOMER_REF"         
                 -- Match tracing
