@@ -1,0 +1,14 @@
+{
+	"logical-OSR-EDW-SOURCE-RMS-grantor": {
+		"object_owner": { 
+			"container_roles": [
+				"osr.sec.edw.source.rms.dac::read_g#"
+			]
+		},
+		"application_user": {
+			"container_roles": [
+				"osr.sec.edw.source.rms.dac::read"
+			]
+		}
+	}
+}
