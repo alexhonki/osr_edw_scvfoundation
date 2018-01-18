@@ -1,0 +1,117 @@
+/*
+	Move entities from match results shadow table to SCV foundation
+	
+		This code will move all promoted match result entities from the match results shadow table to the SCV foundation. The entities will be split into the following tables:
+			- SCV Master
+			- SCV Person
+			- SCV Address
+			- SCV Contact
+						
+		SAP Australia, September 2017	
+*/
+PROCEDURE "osr.scv.foundation.db.Procedures::SP_MoveEntityToScvFoundation" (
+	
+	--IN i_entities		TABLE (ENTITY_ID NVARCHAR(10)),
+	IN i_user			NVARCHAR(20),
+	IN i_timestamp		TIMESTAMP,
+	OUT o_return_code	NVARCHAR(10),
+	OUT o_message		NVARCHAR(200)
+)
+   LANGUAGE SQLSCRIPT
+   SQL SECURITY INVOKER
+   AS
+BEGIN
+
+	DECLARE l_number_entities int default 0;
+	
+	-- Declare exception hander for all SQL exceptions. 
+	DECLARE EXIT HANDLER FOR SQLEXCEPTION
+	BEGIN
+		
+		DROP TABLE #lt_entity_mapping;
+		
+		o_return_code :=  'ERROR';
+		o_message:=  'ERROR: ' || ::SQL_ERROR_CODE || ' ' || ::SQL_ERROR_MESSAGE;
+	END;
+	
+	-- Temporary table to hold the SCV ID to Entity ID mapping
+	CREATE LOCAL TEMPORARY TABLE #lt_entity_mapping (
+            SCV_ID INTEGER, 
+            ENTITY_ID NVARCHAR(20)
+    );
+	
+	
+	-- For delta, determine fingerprint for each match group and check if already present in SCV foundation
+	--SELECT   to_varchar( hash_sha256(to_binary( string_agg("@HASH" order BY "CUSTOMER_REF") )) ) AS "checksum"
+	--FROM     ( 
+    --              SELECT   hash_sha256(to_binary(to_varchar("CUSTOMER_REF")),to_binary(to_varchar("PATH")),to_binary(to_varchar("NAME")),to_binary(to_varchar("ROWNUMBER")),to_binary(to_varchar("ERROR")),to_binary(to_varchar("PARTITION")),to_binary(to_varchar("TITLE")),to_binary(to_varchar("FIRST_NAME")),to_binary(to_varchar("MIDDLE_NAME")),to_binary(to_varchar("FAMILY_ORG_NAME")),to_binary(to_varchar("FLOOR")),to_binary(to_varchar("UNIT")),to_binary(to_varchar("BUILDING_NAME")),to_binary(to_varchar("STREET_NO")),to_binary(to_varchar("STREET_NAME")),to_binary(to_varchar("STREET_TYPE")),to_binary(to_varchar("STREET_SUFFIX")),to_binary(to_varchar("SUBURB")),to_binary(to_varchar("POSTCODE")),to_binary(to_varchar("STATE")),to_binary(to_varchar("COUNTRY")),to_binary(to_varchar("DEALER_REF")),to_binary(to_varchar("ACN")),to_binary(to_varchar("CUSTOMER_TYPE")),to_binary(to_varchar("DATE_OF_BIRTH")),to_binary(to_varchar("CURRENT_POSTAL_ADDR_EFf_DT")),to_binary(to_varchar("CONTACT_PHONE_EFFECT_DT")),to_binary(to_varchar("CONTACT_PHONE_NO")),to_binary(to_varchar("CURRENT_LICENCE")),to_binary(to_varchar("CURRENT_REGISTRATION")),to_binary(to_varchar("LAST_CONTACT_UPDATE_DT")),to_binary(to_varchar("FIELD1")),to_binary(to_varchar("Z_CURR_FLAG")),to_binary(to_varchar("Z_VALID_FROM")),to_binary(to_varchar("Z_VALID_TO")),to_binary(to_varchar("Z_CHANGE_TYPE")),to_binary(to_varchar("Z_CHANGE_TIME")),to_binary(to_varchar("Z_SOURCE_SYS")),to_binary(to_varchar("Z_RUN_ROW_NO")),to_binary(to_varchar("Z_RUN_SEQ_ID"))) AS "@HASH",
+     --                      "CUSTOMER_REF" 
+      --            FROM     "EDW_TMR"."osr.edw.staging.md.tmr::CDS_CUST.DSO.CUSTMAIN.active_data" 
+        --          ORDER BY "CUSTOMER_REF" )
+	
+	-- Get list of unique entity IDs
+	lt_unique_entities = SELECT DISTINCT ENTITY_ID FROM "osr.scv.foundation.db.data::MatchResults.MatchResultsShadow";
+	
+	-- Truncate for test purposes
+	TRUNCATE TABLE "osr.scv.foundation.db.data::SCVFoundation.Master";
+	TRUNCATE TABLE "osr.scv.foundation.db.data::SCVFoundation.Person";
+	TRUNCATE TABLE "osr.scv.foundation.db.data::SCVFoundation.Address";
+	TRUNCATE TABLE "osr.scv.foundation.db.data::SCVFoundation.Contact";
+	
+	-- ### SCV master ##############################################################################################################
+	BEGIN
+		DECLARE CURSOR c_unique_entities FOR
+			SELECT * FROM :lt_unique_entities;
+		
+		FOR r_unique_entity as c_unique_entities DO
+			
+			-- TODO: Check if already present in SCV foundation to enable delta update capability	
+			INSERT INTO "osr.scv.foundation.db.data::SCVFoundation.Master" VALUES ("osr.scv.foundation.db.data::SEQ_ScvMaster".NEXTVAL, null, null, 'D043051', null);
+			INSERT INTO #lt_entity_mapping VALUES ("osr.scv.foundation.db.data::SEQ_ScvMaster".CURRVAL, r_unique_entity.ENTITY_ID);
+		
+		END FOR;											
+	END;
+	
+	
+	-- ### SCV person ##############################################################################################################
+	
+	-- Aggregate match results for person domain
+	/*
+	lt_person_entities = 
+						SELECT * FROM 
+						 (
+							SELECT DISTINCT ENTITY_ID, SOURCE_SYSTEM, SYSTEM_ID, "Cleanse_ROW_ID_BUT" AS MD_ROW_ID 
+								FROM "osr.scv.foundation.db.data::MatchResults.MatchResultsShadow" 
+								WHERE SOURCE_SYSTEM = 'RMS'
+							UNION ALL
+							SELECT DISTINCT ENTITY_ID, SOURCE_SYSTEM, SYSTEM_ID, "Cleanse_ROW_ID_TMR" AS MD_ROW_ID 
+								FROM "osr.scv.foundation.db.data::MatchResults.MatchResultsShadow" 
+								WHERE SOURCE_SYSTEM = 'TMR'
+						 ) mr
+						 LEFT OUTER JOIN (SELECT SCV_ID, ENTITY_ID AS ENTITY_ID1 FROM #lt_entity_mapping) ma
+							ON mr.ENTITY_ID = ma.ENTITY_ID1
+						 ;
+	*/
+	-- TODO: Add master data, most importantly add VALID_FROM and VALID_TO for records with same SCV_ID, SOURCE_SYSTEM and SYSTEM_ID
+	-- Question: Do we need to aggregate on first name, middle namd and last name instead? Would we lose any information, we don't know what exactly triggered the duplication
+    --           of records?
+	
+    -- Use mapping table to populate person domain
+	--INSERT INTO "osr.scv.foundation.db.data::SCVFoundation.Person" (SELECT SCV_ID, SOURCE_SYSTEM, SYSTEM_ID, CURRENT_DATE, CURRENT_DATE, '', '', '', '', '' FROM :lt_person_entities);
+	
+	
+	
+	
+	
+	
+	-- ### SCV address ##############################################################################################################
+	-- ### SCV contact ##############################################################################################################
+	
+	-- ### Clean-up ##############################################################################################################
+	DROP TABLE #lt_entity_mapping;
+	
+    o_return_code := 'SUCCESS';
+    o_message := 'Entitites moved successfully';
+
+
+END
