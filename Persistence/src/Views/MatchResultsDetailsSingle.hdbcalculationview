@@ -90,11 +90,22 @@
   
     <attribute id="POLICY_NAME" order="19" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="POLICY_NAME"/>
+  
       <keyMapping columnObjectName="MatchResultsDetailsSingle" columnName="POLICY_NAME"/>
+  
     </attribute>
     <attribute id="SCORE" order="20" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="SCORE"/>
       <keyMapping columnObjectName="MatchResultsDetailsSingle" columnName="SCORE"/>
+    </attribute>
+  
+    <attribute id="ADDRESS_LOCALITY" order="21" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="ADDRESS_LOCALITY"/>
+      <keyMapping columnObjectName="MatchResultsDetailsSingle" columnName="ADDRESS_LOCALITY"/>
+    </attribute>
+    <attribute id="SOURCE_SYSTEM" order="22" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="SOURCE_SYSTEM"/>
+      <keyMapping columnObjectName="MatchResultsDetailsSingle" columnName="SOURCE_SYSTEM"/>
     </attribute>
   </attributes>
   <calculatedAttributes>
