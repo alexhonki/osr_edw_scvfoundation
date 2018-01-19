@@ -1,0 +1,64 @@
+namespace osr.scv.foundation.db.data;
+
+context SCVFoundation {
+
+    /*@@layout{"layoutInfo":{"x":-271,"y":5.5}}*/
+    entity Master {
+        key SCV_ID     : Integer not null;
+            CREATED_AT : LocalDate;
+            UPDATED_AT : LocalDate;
+            CREATED_BY : String(20);
+            CHANGED_BY : String(20);
+    };
+
+    /*@@layout{"layoutInfo":{"x":-54,"y":5.5}}*/
+    entity Person {
+        key SCV_ID      : String(20);
+        key SOURCE      : String(10);
+        key SOURCE_ID   : String(10);
+        key VALID_FROM  : String(10);
+        key VALID_TO    : String(10);
+            LAST_NAME   : String(10);
+            MIDDLE_NAME : String(10);
+            FIRST_NAME  : String(10);
+            BIRTH_DATE  : LocalDate;
+            DEATH_DATE  : LocalDate;
+    };
+
+    /*@@layout{"layoutInfo":{"x":164,"y":5.5}}*/
+    entity Address {
+        key SCV_ID       : String(10);
+        key SOURCE       : String(10);
+        key SOURCE_ID    : String(10);
+        key SOURCE_ID2   : String(10);
+        key VALID_FROM   : String(10);
+        key VALID_TO     : String(10);
+            STREET       : String(10);
+            STREET_NO    : String(10);
+            POSTCODE     : String(10);
+            CITY         : String(10);
+            REGION       : String(10);
+            COUNTRY      : String(10);
+            STD_STREET   : String(10);
+            STD_STREE_NO : String(10);
+            STD_POSTODE  : String(10);
+            STD_CITY     : String(10);
+            STD_REGION   : String(10);
+            STD_COUNTRY  : String(10);
+    };
+
+    /*@@layout{"layoutInfo":{"x":376,"y":5.5}}*/
+    entity Contact {
+        key SCV_ID         : String(10);
+        key SOURCE         : String(10);
+        key SOURCE_ID      : String(10);
+        key VALID_FROM     : String(10);
+        key VALID_TO       : String(10);
+            PHONE_NO       : String(10);
+            MOBILE_NO      : String(10);
+            EMAIL          : String(10);
+            PHONE_NO_DESC  : String(10);
+            MOBILE_NO_DESC : String(10);
+            EMAIL_DESC     : String(10);
+    };
+};
