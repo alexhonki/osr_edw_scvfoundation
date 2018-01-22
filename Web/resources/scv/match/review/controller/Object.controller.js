@@ -326,19 +326,19 @@ sap.ui.define([
 								items: [
 									new sap.ui.core.ListItem("a01", {
 										key: "a01",
-										text: "Accept - Name Pattern/Nickname Match"
+										text: "Name Pattern/Nickname Match"
 									}),
 									new sap.ui.core.ListItem("a02", {
 										key: "a02",
-										text: "Accept- Internal Address Match"
+										text: "Internal Address Match"
 									}),
 									new sap.ui.core.ListItem("a03", {
 										key: "a03",
-										text: "Accept - External Address Match"
+										text: "External Address Match"
 									}),
 									new sap.ui.core.ListItem("a04", {
 										key: "a04",
-										text: "Accept - External Other Contact Details Match"
+										text: "External Other Contact Details Match"
 									})
 								]
 							}),
@@ -466,19 +466,19 @@ sap.ui.define([
 								items: [
 									new sap.ui.core.ListItem("r01", {
 										key: "r01",
-										text: "Reject - Joint Business Partners"
+										text: "Joint Business Partners"
 									}),
 									new sap.ui.core.ListItem("r02", {
 										key: "r02",
-										text: "Reject - Same Address, Different Person"
+										text: "Same Address, Different Person"
 									}),
 									new sap.ui.core.ListItem("r03", {
 										key: "r03",
-										text: "Reject - Name Pattern Incorrect"
+										text: "Name Pattern Incorrect"
 									}),
 									new sap.ui.core.ListItem("r04", {
 										key: "r04",
-										text: "Reject - Known Data Quality Issues"
+										text: "Known Data Quality Issues"
 									})
 								]
 							}),
