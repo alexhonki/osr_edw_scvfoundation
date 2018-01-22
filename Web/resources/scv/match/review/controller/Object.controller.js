@@ -326,19 +326,19 @@ sap.ui.define([
 								items: [
 									new sap.ui.core.ListItem("a01", {
 										key: "a01",
-										text: "Accept: Name Matches Nicknames"
+										text: "Accept - Name Pattern/Nickname Match"
 									}),
 									new sap.ui.core.ListItem("a02", {
 										key: "a02",
-										text: "Accept: External Address Details Used to Confirm"
+										text: "Accept- Internal Address Match"
 									}),
 									new sap.ui.core.ListItem("a03", {
 										key: "a03",
-										text: "Accept: External Contact Details Used to Confirm"
+										text: "Accept - External Address Match"
 									}),
 									new sap.ui.core.ListItem("a04", {
 										key: "a04",
-										text: "Accept: Name Pattern Correct"
+										text: "Accept - External Other Contact Details Match"
 									})
 								]
 							}),
@@ -466,27 +466,19 @@ sap.ui.define([
 								items: [
 									new sap.ui.core.ListItem("r01", {
 										key: "r01",
-										text: "Reject: Same Address - Different Person"
+										text: "Reject - Joint Business Partners"
 									}),
 									new sap.ui.core.ListItem("r02", {
 										key: "r02",
-										text: "Reject: Same Address - Related Person"
+										text: "Reject - Same Address, Different Person"
 									}),
 									new sap.ui.core.ListItem("r03", {
 										key: "r03",
-										text: "Reject: Incorrect Address History"
+										text: "Reject - Name Pattern Incorrect"
 									}),
 									new sap.ui.core.ListItem("r04", {
 										key: "r04",
-										text: "Reject: Incorrect Contact History"
-									}),
-									new sap.ui.core.ListItem("r05", {
-										key: "r05",
-										text: "Reject: Known Data Quality Issues"
-									}),
-									new sap.ui.core.ListItem("r06", {
-										key: "r06",
-										text: "Reject: Name Pattern Incorrectly Matched"
+										text: "Reject - Known Data Quality Issues"
 									})
 								]
 							}),
