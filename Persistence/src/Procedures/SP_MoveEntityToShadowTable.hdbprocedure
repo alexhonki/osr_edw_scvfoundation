@@ -71,7 +71,7 @@ BEGIN
 		-- Promote all entities with status 'Promote' or 'Promote*'
 		
 		-- Move into shadow table, use same CV as in SCV Review UI to get latest strategy per entity
-		lt_entities = SELECT ENTITY_ID 
+		lt_entities = SELECT ENTITY_ID, ACTION_RESOLVED 
 					  FROM "osr.scv.foundation.db.data::MatchResultsReview.Review"
 					  WHERE STRATEGY_RESOLVED LIKE 'Promote%';
 		
@@ -84,10 +84,10 @@ BEGIN
 		);
 		
 		-- Delete from match results table
-		DELETE FROM "osr.scv.foundation.db.data::MatchResults.MatchResults" WHERE ENTITY_ID IN (SELECT * FROM :lt_entities);
+		DELETE FROM "osr.scv.foundation.db.data::MatchResults.MatchResults" WHERE ENTITY_ID IN (SELECT ENTITY_ID FROM :lt_entities);
 	   
 	   -- Delete from main UI review table
-	   DELETE FROM "osr.scv.foundation.db.data::MatchResultsReview.Review" WHERE ENTITY_ID IN (SELECT * FROM :lt_entities);
+	   DELETE FROM "osr.scv.foundation.db.data::MatchResultsReview.Review" WHERE ENTITY_ID IN (SELECT ENTITY_ID FROM :lt_entities);
 	   
 	   -- Update shadow table with SCV promotions
 	   --UPDATE "osr.scv.foundation.db.data::MatchResultsReview.ReviewShadow" c SET c.PROMOTED_TO_SCV = 'X', c.PROMOTION_TIMESTAMP = :i_timestamp, c.PROMOTED_BY = :i_user
@@ -96,7 +96,7 @@ BEGIN
 		
 		-- Update statistics
 		INSERT INTO  "osr.scv.foundation.db.data::MatchResultsReview.Promotions" (
-																				  SELECT *, :i_timestamp, :i_user  FROM :lt_entities
+																				  SELECT ENTITY_ID, :i_timestamp, :i_user, ACTION_RESOLVED as ACTION  FROM :lt_entities
 																				 );
         o_return_code := 'SUCCESS';
         o_message := 'Entitites moved successfully';

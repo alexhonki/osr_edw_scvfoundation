@@ -6,7 +6,17 @@
 				"name": "osr.scv.foundation.db.data::MatchResults.MatchResults",
 				"type": "TABLE",
 				"privileges": ["SELECT"]
-			}
+			},
+		{		
+				"name": "osr.scv.foundation.db.data::MatchResultsReview.Assessments",
+				"type": "TABLE",
+				"privileges": ["SELECT"]
+			},
+		{		
+				"name": "osr.scv.foundation.db.data::MatchResultsReview.AssessmentTexts",
+				"type": "TABLE",
+				"privileges": ["SELECT"]
+			}	
 		]
      }
 }
