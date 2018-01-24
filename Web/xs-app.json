@@ -1,11 +1,6 @@
 {
-	"welcomeFile": "scv/match/review/index.html",
 	"authenticationMethod": "route",
 	"routes": [{
-		"source": "/match/srv/rest/.*",
-		"destination": "Services_url",
-		"scope": "$XSAPPNAME.REVIEW"
-	}, {
 		"source": "/scv/match/srv/xs/review/(.*)(.xsjs)",
 		"destination": "Services_url",
 		"csrfProtection": false,
