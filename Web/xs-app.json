@@ -30,10 +30,10 @@
 	}, {
 		"source": "^/(.*)$",
 		"localDir": "resources",
-		"scope": "$XSAPPNAME.REVIEW",
+		"scope": ["$XSAPPNAME.REVIEW","$XSAPPNAME.SUPERVISOR"],
 		"replace": {
 			"pathSuffixes": ["index.html", "odataTest.html"],
 			"vars": ["ui5liburl"]
-		}
+	}
 	}]
 }
