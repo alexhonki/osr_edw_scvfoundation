@@ -8,15 +8,16 @@ context MatchResultsReview {
         key TIMESTAMP : UTCTimestamp;
             STRATEGY  : String(10);
             ACTION    : String(20);
-            CODE      : String(60);
+            CODE      : String(3);
             COMMENT   : String(512);
             USER      : String(10);
     };
 
     entity Promotions {
         key ENTITY_ID : String(10);
-        key TIMESTAMP : UTCTimestamp;
+            TIMESTAMP : UTCTimestamp;
             USER      : String(10);
+            ACTION    : String(20);
     };
 
     entity Review {
@@ -85,5 +86,11 @@ context MatchResultsReview {
 
     type StringValues {
         STRING_VALUE : String(50);
+    };
+
+    /*@@layout{"layoutInfo":{"x":-566,"y":-20.5}}*/
+    entity AssessmentTexts {
+        key CODE        : String(3);
+            DESCRIPTION : String(256);
     };
 };
