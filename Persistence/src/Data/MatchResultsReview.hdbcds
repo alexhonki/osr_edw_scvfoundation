@@ -8,7 +8,7 @@ context MatchResultsReview {
         key TIMESTAMP : UTCTimestamp;
             STRATEGY  : String(10);
             ACTION    : String(20);
-            CODE      : String(3);
+            CODE      : String(60);
             COMMENT   : String(512);
             USER      : String(10);
     };
@@ -90,7 +90,7 @@ context MatchResultsReview {
 
     /*@@layout{"layoutInfo":{"x":-566,"y":-20.5}}*/
     entity AssessmentTexts {
-        key CODE        : String(3);
+        key CODE        : String(60);
             DESCRIPTION : String(256);
     };
 };
