@@ -18,7 +18,7 @@ sap.ui.define([
 	Button, ComboBox, MessageToast) {
 	"use strict";
 
-	return BaseController.extend("osr.scv.match.review.controller.Object", {
+	return BaseController.extend("osr.scv.match.review.controller.Object", { 
 
 		formatter: formatter,
 

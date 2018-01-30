@@ -107,7 +107,7 @@
 </calculationViews>
 <logicalModel id="J_Text">
   <attributes>
-    <attribute id="ENTITY_ID" order="1" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="ENTITY_ID" order="1" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty">
       <descriptions defaultDescription="ENTITY_ID"/>
       <keyMapping columnObjectName="J_Text" columnName="ENTITY_ID"/>
     </attribute>
