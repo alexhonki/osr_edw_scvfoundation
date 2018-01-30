@@ -1,52 +1,170 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Calculation:scenario xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="osr.scv.foundation.db.views::MatchResultsAssessments" applyPrivilegeType="NONE" dataCategory="DEFAULT" schemaVersion="3.0" outputViewType="Projection" cacheInvalidationPeriod="NONE" enforceSqlExecution="false">
-<descriptions defaultDescription="OSR SCV - Match Results Details View"/>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="osr.scv.foundation.db.views::MatchResultsAssessments" applyPrivilegeType="NONE" dataCategory="DEFAULT" schemaVersion="3.0" outputViewType="Projection" cacheInvalidationPeriod="NONE" enforceSqlExecution="false">
+<descriptions defaultDescription="Test"/>
 <localVariables/>
 <variableMappings/>
 <dataSources>
   <DataSource id="osr.scv.foundation.db.data::MatchResultsReview.Assessments">
     <resourceUri>osr.scv.foundation.db.data::MatchResultsReview.Assessments</resourceUri>
   </DataSource>
+  <DataSource id="osr.scv.foundation.db.data::MatchResultsReview.AssessmentTexts">
+    <resourceUri>osr.scv.foundation.db.data::MatchResultsReview.AssessmentTexts</resourceUri>
+  </DataSource>
 </dataSources>
-<calculationViews/>
-<logicalModel id="osr.scv.foundation.db.data::MatchResultsReview.Assessments">
+<calculationViews>
+  <calculationView xsi:type="Calculation:JoinView" id="J_Text" cardinality="CN_1" joinType="leftOuter" optimizeJoinColumns="false">
+    <viewAttributes>
+      <viewAttribute id="ENTITY_ID">
+        <descriptions defaultDescription="ENTITY_ID"/>
+      </viewAttribute>
+      <viewAttribute id="TIMESTAMP" aggregationType="min">
+        <descriptions defaultDescription="TIMESTAMP"/>
+      </viewAttribute>
+      <viewAttribute id="STRATEGY">
+        <descriptions defaultDescription="STRATEGY"/>
+      </viewAttribute>
+      <viewAttribute id="COMMENT">
+        <descriptions defaultDescription="COMMENT"/>
+      </viewAttribute>
+      <viewAttribute id="USER">
+        <descriptions defaultDescription="USER"/>
+      </viewAttribute>
+      <viewAttribute id="DESCRIPTION">
+        <descriptions defaultDescription="DESCRIPTION"/>
+      </viewAttribute>
+      <viewAttribute id="CODE_ORIGINAL">
+        <descriptions defaultDescription="CODE"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="CODE_New" datatype="NVARCHAR" length="60" expressionLanguage="SQL">
+        <formula>&quot;DESCRIPTION&quot; || ' (' || &quot;CODE_ORIGINAL&quot; || ')'</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
+    <restrictedViewAttributes/>
+    <input node="P_Assessments">
+      <mapping xsi:type="Calculation:AttributeMapping" target="ENTITY_ID" source="ENTITY_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TIMESTAMP" source="TIMESTAMP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STRATEGY" source="STRATEGY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="COMMENT" source="COMMENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="USER" source="USER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CODE_ORIGINAL" source="CODE"/>
+    </input>
+    <input node="P_AssessmentsText">
+      <mapping xsi:type="Calculation:AttributeMapping" target="DESCRIPTION" source="DESCRIPTION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CODE_ORIGINAL" source="CODE"/>
+    </input>
+    <joinAttribute name="CODE_ORIGINAL"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_Assessments">
+    <viewAttributes>
+      <viewAttribute id="ENTITY_ID">
+        <descriptions defaultDescription="ENTITY_ID"/>
+      </viewAttribute>
+      <viewAttribute id="TIMESTAMP" aggregationType="min">
+        <descriptions defaultDescription="TIMESTAMP"/>
+      </viewAttribute>
+      <viewAttribute id="STRATEGY">
+        <descriptions defaultDescription="STRATEGY"/>
+      </viewAttribute>
+      <viewAttribute id="COMMENT">
+        <descriptions defaultDescription="COMMENT"/>
+      </viewAttribute>
+      <viewAttribute id="USER">
+        <descriptions defaultDescription="USER"/>
+      </viewAttribute>
+    
+      <viewAttribute id="CODE">
+        <descriptions defaultDescription="CODE"/>
+      </viewAttribute></viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="osr.scv.foundation.db.data::MatchResultsReview.Assessments">
+      <mapping xsi:type="Calculation:AttributeMapping" target="ENTITY_ID" source="ENTITY_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TIMESTAMP" source="TIMESTAMP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STRATEGY" source="STRATEGY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CODE" source="CODE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="COMMENT" source="COMMENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="USER" source="USER"/>
+    </input>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_AssessmentsText">
+    <viewAttributes>
+      <viewAttribute id="DESCRIPTION">
+        <descriptions defaultDescription="DESCRIPTION"/>
+      </viewAttribute>
+    
+      <viewAttribute id="CODE">
+        <descriptions defaultDescription="CODE"/>
+      </viewAttribute></viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="osr.scv.foundation.db.data::MatchResultsReview.AssessmentTexts">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CODE" source="CODE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DESCRIPTION" source="DESCRIPTION"/>
+    </input>
+  </calculationView>
+</calculationViews>
+<logicalModel id="J_Text">
   <attributes>
-    <attribute id="TIMESTAMP" key="true" order="1" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="TIMESTAMP"/>
-      <keyMapping columnObjectName="MatchResultsReview.Assessments" columnName="TIMESTAMP"/>
-    </attribute>
-    <attribute id="ENTITY_ID" key="true" order="2" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="ENTITY_ID" order="1" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="ENTITY_ID"/>
-      <keyMapping columnObjectName="MatchResultsReview.Assessments" columnName="ENTITY_ID"/>
+      <keyMapping columnObjectName="J_Text" columnName="ENTITY_ID"/>
+    </attribute>
+    <attribute id="TIMESTAMP" order="2" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="TIMESTAMP"/>
+      <keyMapping columnObjectName="J_Text" columnName="TIMESTAMP"/>
     </attribute>
     <attribute id="STRATEGY" order="3" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="STRATEGY"/>
-      <keyMapping columnObjectName="MatchResultsReview.Assessments" columnName="STRATEGY"/>
+      <keyMapping columnObjectName="J_Text" columnName="STRATEGY"/>
     </attribute>
-    <attribute id="CODE" order="4" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="CODE"/>
-      <keyMapping columnObjectName="MatchResultsReview.Assessments" columnName="CODE"/>
+    <attribute id="COMMENT" order="4" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="COMMENT"/>
+      <keyMapping columnObjectName="J_Text" columnName="COMMENT"/>
     </attribute>
     <attribute id="USER" order="5" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="USER"/>
-      <keyMapping columnObjectName="MatchResultsReview.Assessments" columnName="USER"/>
+      <keyMapping columnObjectName="J_Text" columnName="USER"/>
     </attribute>
-    <attribute id="COMMENT" order="6" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="COMMENT"/>
-      <keyMapping columnObjectName="MatchResultsReview.Assessments" columnName="COMMENT"/>
+    <attribute id="CODE" order="6" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CODE_New"/>
+      <keyMapping columnObjectName="J_Text" columnName="CODE_New"/>
     </attribute>
   </attributes>
   <calculatedAttributes/>
   <baseMeasures/>
   <calculatedMeasures/>
-  <restrictedMeasures/></logicalModel>
+  <restrictedMeasures/>
+</logicalModel>
 <layout>
   <shapes>
     <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
-      <upperLeftCorner x="82" y="105"/>
+      <upperLeftCorner x="208" y="112"/>
     
       <rectangleSize width="140"/>
     </shape>
-  </shapes>
+  
+    <shape expanded="true" modelObjectName="J_Text" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="208" y="217"/>
+      <rectangleSize height="30" width="140"/>
+    </shape>
+    <shape modelObjectName="P_Assessments" modelObjectNameSpace="J_Text" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="P_AssessmentsText" modelObjectNameSpace="J_Text" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="P_Assessments" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="91" y="356"/>
+      <rectangleSize height="30" width="140"/>
+    </shape>
+    <shape expanded="true" modelObjectName="P_AssessmentsText" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="282" y="356"/>
+      <rectangleSize height="30" width="140"/>
+    </shape></shapes>
 </layout>
 </Calculation:scenario>

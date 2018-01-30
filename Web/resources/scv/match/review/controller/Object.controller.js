@@ -364,7 +364,8 @@ sap.ui.define([
 					press: function() {
 
 						//var code = sap.ui.getCore().byId('acceptReasonComboBox').getSelectedKey();
-						var code = sap.ui.getCore().byId('acceptReasonComboBox').getValue()+ " ("+sap.ui.getCore().byId('acceptReasonComboBox').getSelectedKey()+") ";
+						//var code = sap.ui.getCore().byId('acceptReasonComboBox').getValue()+ " ("+sap.ui.getCore().byId('acceptReasonComboBox').getSelectedKey()+") ";
+						var code = sap.ui.getCore().byId('acceptReasonComboBox').getSelectedKey();
 						var comment = sap.ui.getCore().byId('submitDialogTextarea').getValue();
 						var payload = {};
 						payload.ENTITY_ID = sap.ui.getCore().byId('lblEntityId').getText();
@@ -504,7 +505,8 @@ sap.ui.define([
 					press: function() {
 
 						//var code = sap.ui.getCore().byId('rejectReasonComboBox').getSelectedKey();
-						var code = sap.ui.getCore().byId('rejectReasonComboBox').getValue()+ " ("+sap.ui.getCore().byId('rejectReasonComboBox').getSelectedKey()+") ";
+						//var code = sap.ui.getCore().byId('rejectReasonComboBox').getValue()+ " ("+sap.ui.getCore().byId('rejectReasonComboBox').getSelectedKey()+") ";
+						var code = sap.ui.getCore().byId('rejectReasonComboBox').getSelectedKey();
 						var comment = sap.ui.getCore().byId('submitDialogTextarea').getValue();
 						var payload = {};
 						payload.ENTITY_ID = sap.ui.getCore().byId('lblEntityId').getText();
