@@ -272,7 +272,7 @@ sap.ui.define([
 		},
 
 		/**
-		 *  Accepts a matching group to be promotes into the SCV layer
+		 *  Accepts a matching group to be promoted into the SCV layer
 		 */
 		onAccept: function(oEvent) {
 
@@ -385,7 +385,7 @@ sap.ui.define([
 							crossDomain: true,
 
 							success: function(data) {
-								dialog.close();
+								//dialog.close();
 								// Refresh model
 								refresh();
 								MessageToast.show('Data saved...');
@@ -526,7 +526,7 @@ sap.ui.define([
 							crossDomain: true,
 
 							success: function(data) {
-								dialog.close();
+								//dialog.close();
 								// Refresh model
 								refresh();
 								MessageToast.show('Data saved...');
