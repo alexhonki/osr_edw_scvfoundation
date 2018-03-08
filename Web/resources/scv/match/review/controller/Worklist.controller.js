@@ -186,7 +186,9 @@ sap.ui.define([
 				outOfStock: 0,
 				countAll: 0,
 				countAllStr: "",
-				globalFilter: "rmsDuplicates"
+				globalFilter: "rmsDuplicates",
+				worklistLetterFilter: "",
+				worklistCategoryFilter: ""
 
 			});
 			this.setModel(oViewModel, "worklistView");
@@ -677,6 +679,7 @@ sap.ui.define([
 
 			if (oEvent.oSource.sId.indexOf("subIconTabBar") > 0) {
 				// Letter filter tab
+				oViewModel.setProperty("/worklistLetterFilter", oEvent.getParameter("selectedItem").getText());
 				if (sKey === 'all') {
 
 					if (this.getView().byId("iconTabBar").getSelectedKey() === 'all') {
@@ -690,7 +693,6 @@ sap.ui.define([
 
 				} else {
 
-				
 					// Filter for a specific letter is set, now check if category filter
 					if (this.getView().byId("iconTabBar").getSelectedKey() === 'all') {
 						//oBinding.filter(this._mFiltersNames[sKey], sap.ui.model.FilterType.Application);
@@ -712,21 +714,21 @@ sap.ui.define([
 			} else {
 				// Category filter tab
 				if (sKey === 'all') {
-
+					oViewModel.setProperty("/worklistCategoryFilter", "");
 					// All categories, set filter for letter selection only
 					//oBinding.filter(this._mFiltersNames[this.getView().byId("subIconTabBar").getSelectedKey()], sap.ui.model.FilterType.Application
 					if (this.getView().byId("subIconTabBar").getSelectedKey() === 'all') {
 						oBinding.filter(new sap.ui.model.Filter([this._mGlobalFilters[oViewModel.getProperty("/globalFilter")]], true), sap.ui.model.FilterType
 							.Application);
 					} else {
-						oBinding.filter(new sap.ui.model.Filter([this._mGlobalFilters[oViewModel.getProperty("/globalFilter")], 
-						oFilter
-						//this._mFiltersNames[this.getView().byId("subIconTabBar").getSelectedKey()]
+						oBinding.filter(new sap.ui.model.Filter([this._mGlobalFilters[oViewModel.getProperty("/globalFilter")],
+							oFilter
+							//this._mFiltersNames[this.getView().byId("subIconTabBar").getSelectedKey()]
 						], true), sap.ui.model.FilterType.Application);
 					}
 
 				} else {
-
+					oViewModel.setProperty("/worklistCategoryFilter", oEvent.getParameter("selectedItem").getText());
 					// Specific category, check filter for letter selection
 					if (this.getView().byId("subIconTabBar").getSelectedKey() === 'all') {
 						// Letter selection is all, only one filter for category required
@@ -1052,8 +1054,19 @@ sap.ui.define([
 		},
 
 		_updateTableTitle: function(oCount, that) {
-			var sTitle = "Entities (" + formatter.localePresentation(parseInt(oCount)) + ")",
-				oViewModel = that.getView().getModel("worklistView");
+			var oViewModel = that.getView().getModel("worklistView"),
+				oProperty = oViewModel.getData();
+			var sTitle = "";
+			if (oProperty.worklistCategoryFilter) {
+				sTitle = oProperty.worklistCategoryFilter + " ";
+			}
+
+			if (oProperty.worklistLetterFilter) {
+				sTitle = sTitle + "Entities - " + oProperty.worklistLetterFilter + " (" + formatter.localePresentation(parseInt(oCount)) + ")";
+			} else {
+				sTitle = sTitle + "Entities (" + formatter.localePresentation(parseInt(oCount)) + ")";
+			}
+
 			oViewModel.setProperty("/worklistTableTitle", sTitle);
 		},
 
