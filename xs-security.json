@@ -10,19 +10,10 @@
 	"role-templates": [{
 		"name": "OSR_SCV_FOUNDATION_REVIEW",
 		"description": "Role for reviewing OSR SCV match records",
-		"scope-references": ["$XSAPPNAME.REVIEW"],
-        "attribute-references" : ["siteGroupRoles"]
+		"scope-references": ["$XSAPPNAME.REVIEW"]
 	}, {
 		"name": "OSR_SCV_FOUNDATION_SUPERVISOR",
 		"description": "Role for promotion of match records into OSR SCV Foundation",
-		"scope-references": ["$XSAPPNAME.SUPERVISOR"],
-		"attribute-references" : ["siteGroupRoles"]
-	}],
-    "attributes": [
-        {
-            "name": "siteGroupRoles",
-            "description": "SCV Foundation Access Roles",
-            "valueType": "s"
-        }
-    ]
+		"scope-references": ["$XSAPPNAME.SUPERVISOR"]
+	}]
 }
