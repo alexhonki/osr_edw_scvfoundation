@@ -30,7 +30,7 @@ sap.ui.define([
 		 */
 		onInit: function() {
 
-			var oIconTabBar = this.getView().byId("subIconTabBar");
+			/*var oIconTabBar = this.getView().byId("subIconTabBar");
 			oIconTabBar.addItem(new IconTabFilter({
 				key: 'all',
 				text: 'All'
@@ -143,7 +143,7 @@ sap.ui.define([
 			oIconTabBar.addItem(new IconTabFilter({
 				key: 'other',
 				text: 'Other'
-			}));
+			}));*/
 
 			var oViewModel,
 				iOriginalBusyDelay,
@@ -196,36 +196,37 @@ sap.ui.define([
 			var identicalMatchEntitiesFilters = new sap.ui.model.Filter("GROUP_CATEGORY", sap.ui.model.FilterOperator.EQ, "1");
 			var nearIdenticalMatchEntitiesFilters = new sap.ui.model.Filter("GROUP_CATEGORY", sap.ui.model.FilterOperator.EQ, "2");
 			var similarMatchEntitiesFilters = new sap.ui.model.Filter("GROUP_CATEGORY", sap.ui.model.FilterOperator.EQ, "3");
-			var aSurnameFilter = new sap.ui.model.Filter("LAST_NAME", sap.ui.model.FilterOperator.StartsWith, "A");
-			var bSurnameFilter = new sap.ui.model.Filter("LAST_NAME", sap.ui.model.FilterOperator.StartsWith, "B");
-			var cSurnameFilter = new sap.ui.model.Filter("LAST_NAME", sap.ui.model.FilterOperator.StartsWith, "C");
-			var dSurnameFilter = new sap.ui.model.Filter("LAST_NAME", sap.ui.model.FilterOperator.StartsWith, "D");
-			var eSurnameFilter = new sap.ui.model.Filter("LAST_NAME", sap.ui.model.FilterOperator.StartsWith, "E");
-			var fSurnameFilter = new sap.ui.model.Filter("LAST_NAME", sap.ui.model.FilterOperator.StartsWith, "F");
-			var gSurnameFilter = new sap.ui.model.Filter("LAST_NAME", sap.ui.model.FilterOperator.StartsWith, "G");
-			var hSurnameFilter = new sap.ui.model.Filter("LAST_NAME", sap.ui.model.FilterOperator.StartsWith, "H");
-			var iSurnameFilter = new sap.ui.model.Filter("LAST_NAME", sap.ui.model.FilterOperator.StartsWith, "I");
-			var jSurnameFilter = new sap.ui.model.Filter("LAST_NAME", sap.ui.model.FilterOperator.StartsWith, "J");
-			var kSurnameFilter = new sap.ui.model.Filter("LAST_NAME", sap.ui.model.FilterOperator.StartsWith, "K");
-			var lSurnameFilter = new sap.ui.model.Filter("LAST_NAME", sap.ui.model.FilterOperator.StartsWith, "L");
-			var mSurnameFilter = new sap.ui.model.Filter("LAST_NAME", sap.ui.model.FilterOperator.StartsWith, "M");
-			var nSurnameFilter = new sap.ui.model.Filter("LAST_NAME", sap.ui.model.FilterOperator.StartsWith, "N");
-			var oSurnameFilter = new sap.ui.model.Filter("LAST_NAME", sap.ui.model.FilterOperator.StartsWith, "O");
-			var pSurnameFilter = new sap.ui.model.Filter("LAST_NAME", sap.ui.model.FilterOperator.StartsWith, "P");
-			var qSurnameFilter = new sap.ui.model.Filter("LAST_NAME", sap.ui.model.FilterOperator.StartsWith, "Q");
-			var rSurnameFilter = new sap.ui.model.Filter("LAST_NAME", sap.ui.model.FilterOperator.StartsWith, "R");
-			var sSurnameFilter = new sap.ui.model.Filter("LAST_NAME", sap.ui.model.FilterOperator.StartsWith, "S");
-			var tSurnameFilter = new sap.ui.model.Filter("LAST_NAME", sap.ui.model.FilterOperator.StartsWith, "T");
-			var uSurnameFilter = new sap.ui.model.Filter("LAST_NAME", sap.ui.model.FilterOperator.StartsWith, "U");
-			var vSurnameFilter = new sap.ui.model.Filter("LAST_NAME", sap.ui.model.FilterOperator.StartsWith, "V");
-			var wSurnameFilter = new sap.ui.model.Filter("LAST_NAME", sap.ui.model.FilterOperator.StartsWith, "W");
-			var xSurnameFilter = new sap.ui.model.Filter("LAST_NAME", sap.ui.model.FilterOperator.StartsWith, "X");
-			var ySurnameFilter = new sap.ui.model.Filter("LAST_NAME", sap.ui.model.FilterOperator.StartsWith, "Y");
-			var zSurnameFilter = new sap.ui.model.Filter("LAST_NAME", sap.ui.model.FilterOperator.StartsWith, "Z");
-			var otherSurnameFilter = new sap.ui.model.Filter([
-									new sap.ui.model.Filter("LAST_NAME", sap.ui.model.FilterOperator.BT,"","@"),
-									new sap.ui.model.Filter("LAST_NAME", sap.ui.model.FilterOperator.BT,"[","~")
+			/*	var aSurnameFilter = new sap.ui.model.Filter("LAST_NAME", sap.ui.model.FilterOperator.StartsWith, "A");
+				var bSurnameFilter = new sap.ui.model.Filter("LAST_NAME", sap.ui.model.FilterOperator.StartsWith, "B");
+				var cSurnameFilter = new sap.ui.model.Filter("LAST_NAME", sap.ui.model.FilterOperator.StartsWith, "C");
+				var dSurnameFilter = new sap.ui.model.Filter("LAST_NAME", sap.ui.model.FilterOperator.StartsWith, "D");
+				var eSurnameFilter = new sap.ui.model.Filter("LAST_NAME", sap.ui.model.FilterOperator.StartsWith, "E");
+				var fSurnameFilter = new sap.ui.model.Filter("LAST_NAME", sap.ui.model.FilterOperator.StartsWith, "F");
+				var gSurnameFilter = new sap.ui.model.Filter("LAST_NAME", sap.ui.model.FilterOperator.StartsWith, "G");
+				var hSurnameFilter = new sap.ui.model.Filter("LAST_NAME", sap.ui.model.FilterOperator.StartsWith, "H");
+				var iSurnameFilter = new sap.ui.model.Filter("LAST_NAME", sap.ui.model.FilterOperator.StartsWith, "I");
+				var jSurnameFilter = new sap.ui.model.Filter("LAST_NAME", sap.ui.model.FilterOperator.StartsWith, "J");
+				var kSurnameFilter = new sap.ui.model.Filter("LAST_NAME", sap.ui.model.FilterOperator.StartsWith, "K");
+				var lSurnameFilter = new sap.ui.model.Filter("LAST_NAME", sap.ui.model.FilterOperator.StartsWith, "L");
+				var mSurnameFilter = new sap.ui.model.Filter("LAST_NAME", sap.ui.model.FilterOperator.StartsWith, "M");
+				var nSurnameFilter = new sap.ui.model.Filter("LAST_NAME", sap.ui.model.FilterOperator.StartsWith, "N");
+				var oSurnameFilter = new sap.ui.model.Filter("LAST_NAME", sap.ui.model.FilterOperator.StartsWith, "O");
+				var pSurnameFilter = new sap.ui.model.Filter("LAST_NAME", sap.ui.model.FilterOperator.StartsWith, "P");
+				var qSurnameFilter = new sap.ui.model.Filter("LAST_NAME", sap.ui.model.FilterOperator.StartsWith, "Q");
+				var rSurnameFilter = new sap.ui.model.Filter("LAST_NAME", sap.ui.model.FilterOperator.StartsWith, "R");
+				var sSurnameFilter = new sap.ui.model.Filter("LAST_NAME", sap.ui.model.FilterOperator.StartsWith, "S");
+				var tSurnameFilter = new sap.ui.model.Filter("LAST_NAME", sap.ui.model.FilterOperator.StartsWith, "T");
+				var uSurnameFilter = new sap.ui.model.Filter("LAST_NAME", sap.ui.model.FilterOperator.StartsWith, "U");
+				var vSurnameFilter = new sap.ui.model.Filter("LAST_NAME", sap.ui.model.FilterOperator.StartsWith, "V");
+				var wSurnameFilter = new sap.ui.model.Filter("LAST_NAME", sap.ui.model.FilterOperator.StartsWith, "W");
+				var xSurnameFilter = new sap.ui.model.Filter("LAST_NAME", sap.ui.model.FilterOperator.StartsWith, "X");
+				var ySurnameFilter = new sap.ui.model.Filter("LAST_NAME", sap.ui.model.FilterOperator.StartsWith, "Y");
+				var zSurnameFilter = new sap.ui.model.Filter("LAST_NAME", sap.ui.model.FilterOperator.StartsWith, "Z");
+				var otherSurnameFilter = new sap.ui.model.Filter([
+					new sap.ui.model.Filter("LAST_NAME", sap.ui.model.FilterOperator.BT, "", "@"),
+					new sap.ui.model.Filter("LAST_NAME", sap.ui.model.FilterOperator.BT, "[", "~")
 				], false);
+				*/
 
 			// Create an object of filters
 			this._mFilters = {
@@ -235,8 +236,8 @@ sap.ui.define([
 				"similarMatchEntities": similarMatchEntitiesFilters,
 				"all": []
 			};
-			
-			this._mFiltersNames = {
+
+			/*this._mFiltersNames = {
 				"a": aSurnameFilter,
 				"b": bSurnameFilter,
 				"c": cSurnameFilter,
@@ -265,12 +266,12 @@ sap.ui.define([
 				"z": zSurnameFilter,
 				"other": otherSurnameFilter,
 				"all": []
-			};
-			
+			};*/
+
 			// Global filters
 			var rmsDuplicatesFilter = new sap.ui.model.Filter("RMS_DUPLICATES", sap.ui.model.FilterOperator.EQ, 1);
-			var rmsAllDuplicatesFilter = new sap.ui.model.Filter("RMS_DUPLICATES", sap.ui.model.FilterOperator.NE,  -1);
-			
+			var rmsAllDuplicatesFilter = new sap.ui.model.Filter("RMS_DUPLICATES", sap.ui.model.FilterOperator.NE, -1);
+
 			this._mGlobalFilters = {
 				"rmsDuplicates": rmsDuplicatesFilter,
 				"allDuplicates": rmsAllDuplicatesFilter
@@ -283,6 +284,25 @@ sap.ui.define([
 				// Restore original busy indicator delay for worklist's table
 				oViewModel.setProperty("/tableBusyDelay", iOriginalBusyDelay);
 			});
+
+		},
+
+		onBeforeRendering: function() {
+			this.getView().byId("subIconTabBar").setSelectedKey("all");
+			this.onRefreshCounts();
+			var that = this;
+			this.fOnDataReceived = function(oData) {
+				that._updateTableTitle(oData.getSource().iLength, that);
+				that.onRefreshCounts();
+			};
+			var oBinding = this._oTable.getBinding("rows");
+			oBinding.attachDataReceived(this.fOnDataReceived);
+		},
+
+		onExit: function() {
+			var oBinding = this._oTable.getBinding("rows");
+
+			oBinding.detachDataReceived(this.fOnDataReceived);
 		},
 
 		/* =========================================================== */
@@ -344,7 +364,6 @@ sap.ui.define([
 						//filters: []
 				});
 
-				
 				// read the count for the high confidence matches
 				this.getModel().read("/matchResultsReview/$count", {
 					success: function(oData) {
@@ -397,7 +416,6 @@ sap.ui.define([
 						//filters: [this._mFilters.similarMatchEntities]
 						//this._mFiltersNames[sKey]
 				});
-				
 
 			} else {
 				sTitle = this.getResourceBundle().getText("worklistTableTitle");
@@ -455,7 +473,7 @@ sap.ui.define([
 		 * @public
 		 */
 		onRefresh: function() {
-			this._oTable.getBinding("items").refresh();
+			this._oTable.getBinding("rows").refresh();
 		},
 
 		/* =========================================================== */
@@ -485,12 +503,14 @@ sap.ui.define([
 			var catFilter = this.getView().byId("iconTabBar").getSelectedKey();
 			var letterFilter = this.getView().byId("subIconTabBar").getSelectedKey();
 			var filter;
+			var oFilter = this.getLetterFilter(letterFilter);
 
 			if (catFilter === "all" && letterFilter === "all") {
 				filter = oTableSearchState;
 			} else if (catFilter === "all" && letterFilter !== "all") {
 				filter = new sap.ui.model.Filter([
-					this._mFiltersNames[this.getView().byId("subIconTabBar").getSelectedKey()],
+					oFilter,
+					//this._mFiltersNames[this.getView().byId("subIconTabBar").getSelectedKey()],
 					oTableSearchState[0]
 				], true);
 			} else if (catFilter !== "all" && letterFilter === "all") {
@@ -499,14 +519,23 @@ sap.ui.define([
 					oTableSearchState[0]
 				], true);
 			} else {
-				filter = new sap.ui.model.Filter([
-					this._mFiltersNames[this.getView().byId("subIconTabBar").getSelectedKey()],
-					this._mFilters[this.getView().byId("iconTabBar").getSelectedKey()],
-					oTableSearchState[0]
-				], true);
+				if (oTableSearchState.length !== 0) {
+					filter = new sap.ui.model.Filter([
+						oFilter,
+						//this._mFiltersNames[this.getView().byId("subIconTabBar").getSelectedKey()],
+						this._mFilters[this.getView().byId("iconTabBar").getSelectedKey()],
+						oTableSearchState[0]
+					], true);
+				} else {
+					filter = new sap.ui.model.Filter([
+						oFilter,
+						//this._mFiltersNames[this.getView().byId("subIconTabBar").getSelectedKey()],
+						this._mFilters[this.getView().byId("iconTabBar").getSelectedKey()]
+					], true);
+				}
 			}
 
-			this._oTable.getBinding("items").filter(filter, "Application");
+			this._oTable.getBinding("rows").filter(filter, "Application");
 			//this._oTable.getBinding("items").filter(oTableSearchState, "Application");
 			// changes the noDataText of the list in case there are no filter results
 			if (oTableSearchState.length !== 0) {
@@ -534,23 +563,24 @@ sap.ui.define([
 
 			var oViewModel = this.getModel("worklistView");
 			var sKey = oEvent.getSource().getKey();
-			
+
 			if (sKey === 'rmsDuplicates') {
 				// Show RMS duplicates only
 				oViewModel.setProperty("/globalFilter", "rmsDuplicates");
 			} else {
 				oViewModel.setProperty("/globalFilter", "allDuplicates");
 			}
-			
+
 			// Get selected category and trigger click event
 			//this.getView().byId(this.getView().byId("iconTabBar").getSelectedKey()).click();
-			
+
 			var oIconTabBar = this.getView().byId("iconTabBar");
-    		var oEvent = new sap.ui.base.Event("customSelect",oIconTabBar,{"selectedKey": oIconTabBar.getSelectedKey() ,"item":this.getView().byId(this.getView().byId("iconTabBar").getSelectedKey())});
+			var oEvent = new sap.ui.base.Event("customSelect", oIconTabBar, {
+				"selectedKey": oIconTabBar.getSelectedKey(),
+				"item": this.getView().byId(this.getView().byId("iconTabBar").getSelectedKey())
+			});
 			this.onQuickFilter(oEvent);
-			
-			
-			
+
 			// Trigger refresh
 			//var oBinding = this._oTable.getBinding("items");
 			//oBinding.filter(new sap.ui.model.Filter([this._mGlobalFilters.rmsDuplicates], true), sap.ui.model.FilterType.Application);
@@ -563,13 +593,17 @@ sap.ui.define([
 		 */
 		getCategoryFilters: function(sCategory) {
 
-			var oViewModel = this.getModel("worklistView");
-			
+			var oViewModel = this.getModel("worklistView"),
+				sKey = this.getView().byId("subIconTabBar").getSelectedKey();
+
+			var oFilter = this.getLetterFilter(sKey);
+
 			if (sCategory === 'all') {
 				if (this.getView().byId("subIconTabBar").getSelectedKey() !== 'all') {
 					return new sap.ui.model.Filter([
 						this._mGlobalFilters[oViewModel.getProperty("/globalFilter")],
-						this._mFiltersNames[this.getView().byId("subIconTabBar").getSelectedKey()]
+						oFilter
+						//this._mFiltersNames[this.getView().byId("subIconTabBar").getSelectedKey()]
 					], true);
 				} else {
 					// Return empty array
@@ -581,7 +615,8 @@ sap.ui.define([
 				if (this.getView().byId("subIconTabBar").getSelectedKey() !== 'all') {
 					return new sap.ui.model.Filter([
 						this._mGlobalFilters[oViewModel.getProperty("/globalFilter")],
-						this._mFiltersNames[this.getView().byId("subIconTabBar").getSelectedKey()],
+						oFilter,
+						//this._mFiltersNames[this.getView().byId("subIconTabBar").getSelectedKey()],
 						this._mFilters[sCategory]
 					], true);
 				} else {
@@ -596,6 +631,7 @@ sap.ui.define([
 		getCurrentFilters: function() {
 			var catFilter = this.getView().byId("iconTabBar").getSelectedKey();
 			var letterFilter = this.getView().byId("subIconTabBar").getSelectedKey();
+			var oFilter = this.getLetterFilter(letterFilter);
 			var sQuery = this.getView().byId("searchField").getValue();
 			var oTableSearchState = [];
 
@@ -609,7 +645,7 @@ sap.ui.define([
 				filter.push(this._mFilters[this.getView().byId("iconTabBar").getSelectedKey()]);
 			}
 			if (letterFilter !== "all") {
-				filter.push(this._mFiltersNames[this.getView().byId("subIconTabBar").getSelectedKey()]);
+				filter.push(oFilter);
 			}
 			if (sQuery && sQuery.length > 0) {
 				filter.push(oTableSearchState[0]);
@@ -635,33 +671,39 @@ sap.ui.define([
 				icon.click();
 			}
 
-			var oBinding = this._oTable.getBinding("items"),
-				sKey = oEvent.getParameter("selectedKey");
+			var oBinding = this._oTable.getBinding("rows"),
+				sKey = oEvent.getParameter("selectedKey"),
+				oFilter = this.getLetterFilter(this.getView().byId("subIconTabBar").getSelectedKey());
 
 			if (oEvent.oSource.sId.indexOf("subIconTabBar") > 0) {
 				// Letter filter tab
 				if (sKey === 'all') {
-					
+
 					if (this.getView().byId("iconTabBar").getSelectedKey() === 'all') {
-						oBinding.filter(new sap.ui.model.Filter([this._mGlobalFilters[oViewModel.getProperty("/globalFilter")]], true), sap.ui.model.FilterType.Application);
+						oBinding.filter(new sap.ui.model.Filter([this._mGlobalFilters[oViewModel.getProperty("/globalFilter")]], true), sap.ui.model.FilterType
+							.Application);
 					} else {
 						//oBinding.filter(this._mFilters[this.getView().byId("iconTabBar").getSelectedKey()], sap.ui.model.FilterType.Application);
-						oBinding.filter(new sap.ui.model.Filter([this._mGlobalFilters[oViewModel.getProperty("/globalFilter")], this._mFilters[this.getView().byId("iconTabBar").getSelectedKey()]], true), sap.ui.model.FilterType.Application);	
-					}	
-					
+						oBinding.filter(new sap.ui.model.Filter([this._mGlobalFilters[oViewModel.getProperty("/globalFilter")], this._mFilters[this.getView()
+							.byId("iconTabBar").getSelectedKey()]], true), sap.ui.model.FilterType.Application);
+					}
+
 				} else {
 
+				
 					// Filter for a specific letter is set, now check if category filter
 					if (this.getView().byId("iconTabBar").getSelectedKey() === 'all') {
 						//oBinding.filter(this._mFiltersNames[sKey], sap.ui.model.FilterType.Application);
-						oBinding.filter(new sap.ui.model.Filter([this._mGlobalFilters[oViewModel.getProperty("/globalFilter")], this._mFiltersNames[sKey]], true), sap.ui.model.FilterType.Application);
+						oBinding.filter(new sap.ui.model.Filter([this._mGlobalFilters[oViewModel.getProperty("/globalFilter")], oFilter],
+							true), sap.ui.model.FilterType.Application);
 					} else {
 						// Set new filter for letter and combine with current filter selection for group category
 						oBinding.filter(
 							new sap.ui.model.Filter([
 								this._mGlobalFilters[oViewModel.getProperty("/globalFilter")],
 								this._mFilters[this.getView().byId("iconTabBar").getSelectedKey()],
-								this._mFiltersNames[sKey]
+								oFilter
+								//this._mFiltersNames[sKey]
 							], true), sap.ui.model.FilterType.Application);
 					}
 
@@ -670,29 +712,35 @@ sap.ui.define([
 			} else {
 				// Category filter tab
 				if (sKey === 'all') {
-					
+
 					// All categories, set filter for letter selection only
 					//oBinding.filter(this._mFiltersNames[this.getView().byId("subIconTabBar").getSelectedKey()], sap.ui.model.FilterType.Application
 					if (this.getView().byId("subIconTabBar").getSelectedKey() === 'all') {
-						oBinding.filter(new sap.ui.model.Filter([this._mGlobalFilters[oViewModel.getProperty("/globalFilter")]], true), sap.ui.model.FilterType.Application);	
+						oBinding.filter(new sap.ui.model.Filter([this._mGlobalFilters[oViewModel.getProperty("/globalFilter")]], true), sap.ui.model.FilterType
+							.Application);
 					} else {
-						oBinding.filter(new sap.ui.model.Filter([this._mGlobalFilters[oViewModel.getProperty("/globalFilter")], this._mFiltersNames[this.getView().byId("subIconTabBar").getSelectedKey()]], true), sap.ui.model.FilterType.Application);
-					} 
-					
+						oBinding.filter(new sap.ui.model.Filter([this._mGlobalFilters[oViewModel.getProperty("/globalFilter")], 
+						oFilter
+						//this._mFiltersNames[this.getView().byId("subIconTabBar").getSelectedKey()]
+						], true), sap.ui.model.FilterType.Application);
+					}
+
 				} else {
 
 					// Specific category, check filter for letter selection
 					if (this.getView().byId("subIconTabBar").getSelectedKey() === 'all') {
 						// Letter selection is all, only one filter for category required
 						//oBinding.filter(this._mFilters[this.getView().byId("iconTabBar").getSelectedKey()], sap.ui.model.FilterType.Application);
-						oBinding.filter(new sap.ui.model.Filter([this._mGlobalFilters[oViewModel.getProperty("/globalFilter")], this._mFilters[this.getView().byId("iconTabBar").getSelectedKey()]], true), sap.ui.model.FilterType.Application);
+						oBinding.filter(new sap.ui.model.Filter([this._mGlobalFilters[oViewModel.getProperty("/globalFilter")], this._mFilters[this.getView()
+							.byId("iconTabBar").getSelectedKey()]], true), sap.ui.model.FilterType.Application);
 					} else {
-						
+
 						// Set new filter for group category and combine with current filter selection for letter
 						oBinding.filter(
 							new sap.ui.model.Filter([
 								this._mGlobalFilters[oViewModel.getProperty("/globalFilter")],
-								this._mFiltersNames[this.getView().byId("subIconTabBar").getSelectedKey()],
+								oFilter,
+								//this._mFiltersNames[this.getView().byId("subIconTabBar").getSelectedKey()],
 								this._mFilters[sKey]
 							], true), sap.ui.model.FilterType.Application);
 					}
@@ -966,7 +1014,7 @@ sap.ui.define([
 			var oTable = oView.byId("table");
 
 			var mParams = oEvent.getParameters();
-			var oBinding = oTable.getBinding("items");
+			var oBinding = oTable.getBinding("rows");
 
 			// apply sorter to binding
 			// (grouping comes before sorting)
@@ -1001,6 +1049,97 @@ sap.ui.define([
 			// update filter bar
 			//oView.byId("vsdFilterBar").setVisible(aFilters.length > 0);
 			//oView.byId("vsdFilterLabel").setText(mParams.filterString);
+		},
+
+		_updateTableTitle: function(oCount, that) {
+			var sTitle = "Entities (" + formatter.localePresentation(parseInt(oCount)) + ")",
+				oViewModel = that.getView().getModel("worklistView");
+			oViewModel.setProperty("/worklistTableTitle", sTitle);
+		},
+
+		onRefreshCounts: function() {
+
+			var oViewModel = this.getModel("worklistView"),
+				oModel = this.getOwnerComponent().getModel();
+			// Get the count for all the products and set the value to 'countAll' property
+			oModel.read("/matchResultsReview/$count", {
+				success: function(oData) {
+					oViewModel.setProperty("/countAll", oData);
+					oViewModel.setProperty("/countAllStr", formatter.localePresentation(parseInt(oData)));
+				},
+				filters: [this.getCategoryFilters('all')]
+					//filters: []
+			});
+
+			// read the count for the high confidence matches
+			oModel.read("/matchResultsReview/$count", {
+				success: function(oData) {
+					oViewModel.setProperty("/uniqueMatchEntitiesCount", oData);
+					oViewModel.setProperty("/uniqueMatchEntitiesCountStr", formatter.localePresentation(parseInt(oData)));
+					oViewModel.setProperty("/uniqueMatchEntitiesCountPercent", ((oData / oViewModel.getProperty("/countAll")) * 100).toFixed(1) +
+						'%');
+				},
+				filters: [this.getCategoryFilters('uniqueMatchEntities')]
+					//filters: [this._mFilters.uniqueMatchEntities]
+					//filters: [currentFilters]
+
+			});
+
+			// read the count for the high confidence matches
+			oModel.read("/matchResultsReview/$count", {
+				success: function(oData) {
+					oViewModel.setProperty("/identicalMatchEntitiesCount", oData);
+					oViewModel.setProperty("/identicalMatchEntitiesCountStr", formatter.localePresentation(parseInt(oData)));
+					oViewModel.setProperty("/identicalMatchEntitiesCountPercent", ((oData / oViewModel.getProperty("/countAll")) * 100).toFixed(1) +
+						'%');
+				},
+				filters: [this.getCategoryFilters('identicalMatchEntities')]
+					//filters: [this._mFilters.identicalMatchEntities]
+			});
+
+			// read the count for the medium confidence matches
+			oModel.read("/matchResultsReview/$count", {
+				success: function(oData) {
+					oViewModel.setProperty("/recommendedMatchEntitiesCount", oData);
+					oViewModel.setProperty("/recommendedMatchEntitiesCountStr", formatter.localePresentation(parseInt(oData)));
+					oViewModel.setProperty("/recommendedMatchEntitiesCountPercent", ((oData / oViewModel.getProperty("/countAll")) * 100).toFixed(
+						1) + '%');
+				},
+				filters: [this.getCategoryFilters('recommendedMatchEntities')]
+					//filters: [this._mFilters.recommendedMatchEntities]
+					//this._mFiltersNames[sKey]
+
+			});
+
+			// read the count for the low confidence matches
+			oModel.read("/matchResultsReview/$count", {
+				success: function(oData) {
+					oViewModel.setProperty("/similarMatchEntitiesCount", oData);
+					oViewModel.setProperty("/similarMatchEntitiesCountStr", formatter.localePresentation(parseInt(oData)));
+					oViewModel.setProperty("/similarMatchEntitiesCountPercent", ((oData / oViewModel.getProperty("/countAll")) * 100).toFixed(1) +
+						'%');
+				},
+				filters: [this.getCategoryFilters('similarMatchEntities')]
+					//filters: [this._mFilters.similarMatchEntities]
+					//this._mFiltersNames[sKey]
+			});
+		},
+
+		getLetterFilter: function(sKey) {
+			var oFilter;
+
+			if (sKey === "Other") {
+				oFilter = new Filter([
+					new sap.ui.model.Filter("LAST_NAME", FilterOperator.BT, "", "@"),
+					new sap.ui.model.Filter("LAST_NAME", FilterOperator.BT, "[", "~")
+				], false);
+			} else if (sKey === "All") {
+				oFilter = new Filter("LAST_NAME", FilterOperator.StartsWith, []);
+			} else {
+				oFilter = new Filter("LAST_NAME", FilterOperator.StartsWith, sKey);
+			}
+
+			return oFilter;
 		}
 
 	});

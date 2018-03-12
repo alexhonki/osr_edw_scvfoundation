@@ -1,7 +1,8 @@
-<mvc:View controllerName="osr.scv.match.review.controller.Worklist" xmlns:mvc="sap.ui.core.mvc" xmlns:semantic="sap.m.semantic" xmlns="sap.m">
+<mvc:View controllerName="osr.scv.match.review.controller.Worklist" xmlns:mvc="sap.ui.core.mvc" xmlns:semantic="sap.m.semantic"
+	xmlns="sap.m" xmlns:t="sap.ui.table">
 	<semantic:FullscreenPage id="page" navButtonPress="onNavBack" showNavButton="true" title="{i18n>worklistViewTitle}">
 		<semantic:subHeader>
-				<Toolbar>
+			<Toolbar>
 				<ToolbarSpacer/>
 				<SegmentedButton id="segmentedButton" selectedKey="rmsDuplicates">
 					<items>
@@ -15,24 +16,125 @@
 		<semantic:content>
 			<IconTabBar id="iconTabBar" select="onQuickFilter" expandable="false" applyContentPadding="false">
 				<items>
-					<IconTabFilter id="all" design="Horizontal" key="all" showAll="true" count="{worklistView>/countAllStr}" text="{i18n>WorklistFilterAllEntities}" formatter=".formatter.numberUnit"/>
+					<IconTabFilter id="all" design="Horizontal" key="all" showAll="true" count="{worklistView>/countAllStr}"
+						text="{i18n>WorklistFilterAllEntities}" formatter=".formatter.numberUnit"/>
 					<IconTabSeparator/>
-					<IconTabFilter id="uniqueMatchEntities" design="Horizontal" key="uniqueMatchEntities" icon="sap-icon://message-information" count="{worklistView>/uniqueMatchEntitiesCountStr} ({worklistView>/uniqueMatchEntitiesCountPercent})"
-						text="Unique"/>
-					<IconTabSeparator icon="sap-icon://media-pause" />
-					<IconTabFilter id="identicalMatchEntities" design="Horizontal" key="identicalMatchEntities" icon="sap-icon://message-success" iconColor="Positive" count="{worklistView>/identicalMatchEntitiesCountStr} ({worklistView>/identicalMatchEntitiesCountPercent})"
-						 text="Identical"/>
-					<IconTabSeparator icon="sap-icon://media-pause" />
-					<IconTabFilter id="recommendedMatchEntities" design="Horizontal" key="recommendedMatchEntities" icon="sap-icon://message-warning" iconColor="Critical" count="{worklistView>/recommendedMatchEntitiesCountStr} ({worklistView>/recommendedMatchEntitiesCountPercent})"
-						 text="Recommended" />
-					<IconTabSeparator icon="sap-icon://media-pause" />
-					<IconTabFilter id="similarMatchEntities" design="Horizontal" key="similarMatchEntities" icon="sap-icon://message-error" iconColor="Negative" count="{worklistView>/similarMatchEntitiesCountStr} ({worklistView>/similarMatchEntitiesCountPercent})"
-						text="Similar"/>
+					<IconTabFilter id="uniqueMatchEntities" design="Horizontal" key="uniqueMatchEntities" icon="sap-icon://message-information"
+						count="{worklistView>/uniqueMatchEntitiesCountStr} ({worklistView>/uniqueMatchEntitiesCountPercent})" text="Unique"/>
+					<IconTabSeparator icon="sap-icon://media-pause"/>
+					<IconTabFilter id="identicalMatchEntities" design="Horizontal" key="identicalMatchEntities" icon="sap-icon://message-success"
+						iconColor="Positive" count="{worklistView>/identicalMatchEntitiesCountStr} ({worklistView>/identicalMatchEntitiesCountPercent})"
+						text="Identical"/>
+					<IconTabSeparator icon="sap-icon://media-pause"/>
+					<IconTabFilter id="recommendedMatchEntities" design="Horizontal" key="recommendedMatchEntities" icon="sap-icon://message-warning"
+						iconColor="Critical" count="{worklistView>/recommendedMatchEntitiesCountStr} ({worklistView>/recommendedMatchEntitiesCountPercent})"
+						text="Recommended"/>
+					<IconTabSeparator icon="sap-icon://media-pause"/>
+					<IconTabFilter id="similarMatchEntities" design="Horizontal" key="similarMatchEntities" icon="sap-icon://message-error" iconColor="Negative"
+						count="{worklistView>/similarMatchEntitiesCountStr} ({worklistView>/similarMatchEntitiesCountPercent})" text="Similar"/>
 				</items>
 				<content>
 					<IconTabBar id="subIconTabBar" select="onQuickFilter" showOverflowSelectList="true" class="sapUiResponsiveContentPadding" expandable="false">
+						<items>
+							<IconTabFilter key="All" text="All"/>
+							<IconTabSeparator />
+							<IconTabFilter key="A" text="A"/>
+							<IconTabFilter key="B" text="B"/>
+							<IconTabFilter key="C" text="C"/>
+							<IconTabFilter key="D" text="D"/>
+							<IconTabFilter key="E" text="E"/>
+							<IconTabFilter key="F" text="F"/>
+							<IconTabFilter key="G" text="G"/>
+							<IconTabFilter key="H" text="H"/>
+							<IconTabFilter key="I" text="I"/>
+							<IconTabFilter key="J" text="J"/>
+							<IconTabFilter key="K" text="K"/>
+							<IconTabFilter key="L" text="L"/>
+							<IconTabFilter key="M" text="M"/>
+							<IconTabFilter key="N" text="N"/>
+							<IconTabFilter key="O" text="O"/>
+							<IconTabFilter key="P" text="P"/>
+							<IconTabFilter key="Q" text="Q"/>
+							<IconTabFilter key="R" text="R"/>
+							<IconTabFilter key="S" text="S"/>
+							<IconTabFilter key="T" text="T"/>
+							<IconTabFilter key="U" text="U"/>
+							<IconTabFilter key="V" text="V"/>
+							<IconTabFilter key="W" text="W"/>
+							<IconTabFilter key="X" text="X"/>
+							<IconTabFilter key="Y" text="Y"/>
+							<IconTabFilter key="Z" text="Z"/>
+							<IconTabFilter key="Other" text="Other"/>
+						</items>
 						<content>
-							<Table id="table" fixedLayout="false" busyIndicatorDelay="{worklistView>/tableBusyDelay}" class="sapUiResponsiveMargin sapUiNoMarginTop" growing="true"
+							<t:Table id="table"
+								rows="{ path: '/matchResultsReview', sorter: { path: 'GROUP_ID', descending: false }, filters : [{ path : 'RMS_DUPLICATES', operator : 'EQ', value1 : 1 }]}"
+								ariaLabelledBy="title" visibleRowCount='18' selectionMode="None">
+								<t:toolbar>
+									<Toolbar>
+										<Title id="tableHeader" text="{worklistView>/worklistTableTitle}"/>
+										<ToolbarSpacer/>
+										<SearchField id="searchField" search="onSearch" tooltip="{i18n>worklistSearchTooltip}" width="auto"/>
+										<!--<SearchField
+											id="searchField"
+											placeholder="Filter"
+											value="{ui>/globalFilter}"
+											search="filterGlobally"
+											width="auto"/>-->
+									</Toolbar>
+								</t:toolbar>
+								<t:columns>
+									<t:Column id="groupName" width="8rem" filterProperty="GROUP_ID">
+										<Label text="Group"/>
+										<t:template>
+											<Text text="{GROUP_ID}" wrapping="false"/>
+										</t:template>
+									</t:Column>
+									<t:Column id="groupCount" width="8rem" filterProperty="GROUP_COUNT" sortProperty="GROUP_COUNT">
+										<Label text="Group Count"/>
+										<t:template>
+											<Text text="{GROUP_COUNT}" wrapping="false"/>
+										</t:template>
+									</t:Column>
+									<t:Column id="name" width="auto" filterProperty="NAME">
+										<Label text="Name"/>
+										<t:template>
+											<Text text="{NAME}" wrapping="false"/>
+										</t:template>
+									</t:Column>
+									<t:Column id="source" width="8rem" filterProperty="SOURCE_SYSTEM">
+										<Label text="Source"/>
+										<t:template>
+											<Text text="{SOURCE_SYSTEM}" wrapping="false"/>
+										</t:template>
+									</t:Column>
+									<t:Column id="averageScore" width="8rem" filterProperty="AVG_SCORE">
+										<Label text="Average Score"/>
+										<t:template>
+											<ObjectNumber number="{AVG_SCORE}"/>
+										</t:template>
+									</t:Column>
+									<t:Column id="strategyResolved" width="8rem" filterProperty="STRATEGY_RESOLVED">
+										<Label text="Strategy Resolved"/>
+										<t:template>
+											<ObjectStatus text="{STRATEGY_RESOLVED}" state="{ path: 'STRATEGY_RESOLVED', formatter: '.formatter.strategyState' }" wrapping="false"/>
+										</t:template>
+									</t:Column>
+									<t:Column id="actionResolved" width="8rem" filterProperty="ACTION_RESOLVED">
+										<Label text="Action Resolved"/>
+										<t:template>
+											<ObjectStatus text="{ACTION_RESOLVED}" state="{ path: 'ACTION_RESOLVED', formatter: '.formatter.actionState' }"/>
+										</t:template>
+									</t:Column>
+									<t:Column id="navigation" width="3rem">
+										<Label text=""/>
+										<t:template>
+											<Button icon="sap-icon://feeder-arrow" press="onPress"/>
+										</t:template>
+									</t:Column>
+								</t:columns>
+							</t:Table>
+							<!--	<Table id="table" fixedLayout="false" busyIndicatorDelay="{worklistView>/tableBusyDelay}" class="sapUiResponsiveMargin sapUiNoMarginTop" growing="true"
 							growingScrollToLoad="true" noDataText="{worklistView>/tableNoDataText}" updateFinished="onUpdateFinished" width="auto" mode="None"
 							items="{ path: '/matchResultsReview', sorter: { path: 'GROUP_ID', descending: false }, filters : [{ path : 'RMS_DUPLICATES', operator : 'EQ', value1 : 1 }]}">
 							<headerToolbar>
@@ -51,9 +153,6 @@
 								<Column hAlign="End">
 									<Text text="Group Count" wrapping="false"/>
 								</Column>
-								<!--<Column hAlign="Center">
-									<Text text="Review Flag" wrapping="false"/>
-								</Column>-->
 								<Column>
 									<Text text="Name"/>
 								</Column>
@@ -76,21 +175,15 @@
 									<cells>
 										<Text text="{GROUP_ID}"/>
 										<Text text="{GROUP_COUNT}"/>
-										<!--<Text text="{REVIEW_GROUP}"/>-->
-										<!--<ObjectNumber number="{GROUP_CATEGORY}"/>-->
 										<Text text="{NAME}" wrapping="false"/>
 										<Text text="{SOURCE_SYSTEM}" />
-										<!--<ObjectNumber number="{AVG_SCORE}"  state="{ path: 'AVG_SCORE', formatter: '.formatter.matchState' }" />-->
 										<ObjectNumber number="{AVG_SCORE}" />
 										<ObjectStatus text="{STRATEGY_RESOLVED}" state="{ path: 'STRATEGY_RESOLVED', formatter: '.formatter.strategyState' }"/>
 										<ObjectStatus  text="{ACTION_RESOLVED}" state="{ path: 'ACTION_RESOLVED', formatter: '.formatter.actionState' }" />
-										<!--<ObjectNumber unit="EUR" number="{ path: 'UnitPrice', formatter: '.formatter.numberUnit' }"/>
-										<ObjectNumber number="{UnitsOnOrder}" unit="PC"/>
-										<ObjectNumber number="{UnitsInStock}" unit="PC" state="{ path: 'UnitsInStock', formatter: '.formatter.quantityState' }"/>-->
 									</cells>
 								</ColumnListItem>
 							</items>
-						</Table>	
+						</Table>	-->
 						</content>
 					</IconTabBar>
 				</content>
