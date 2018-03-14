@@ -39,7 +39,6 @@ sap.ui.define([
 					busy: true,
 					delay: 0
 				});
-
 			this.getRouter().getRoute("object").attachPatternMatched(this._onObjectMatched, this);
 			// Store original busy indicator delay, so it can be restored later on
 			iOriginalBusyDelay = this.getView().getBusyIndicatorDelay();
@@ -315,6 +314,20 @@ sap.ui.define([
 			var entityId = this.getView().getBindingContext().getObject().ENTITY_ID;
 			var context = "";
 			var that = this;
+			var payload = [];
+			var oRowIndices = this.byId("table").getSelectedIndices();
+			var oRows = that.byId("table").getRows();
+			var j = 0;
+			oRowIndices.map(function(sRowIndex) {
+				for (var i = 0; i < oRows.length; i++) {
+
+					//if (sRowIndex === oRows[i].sIndex) {
+					if (sRowIndex === i) {
+						payload[j] = that.getModel().getProperty(oRows[i].getBindingContext().getPath() + "/MATCH_ROW_STR");
+						j++;
+					}
+				}
+			});
 
 			// Delay for refresh
 			function wait(ms) {
@@ -338,6 +351,7 @@ sap.ui.define([
 			}
 
 			var dialog = new Dialog({
+				context: that,
 				title: 'Accept Match Group',
 				type: 'Message',
 				content: [
@@ -392,10 +406,11 @@ sap.ui.define([
 					})
 
 				],
+
 				beginButton: new Button("beginButton", {
 					text: 'Submit',
 					enabled: false,
-					press: function() {
+					press: function(oEvent) {
 
 						//var code = sap.ui.getCore().byId('acceptReasonComboBox').getSelectedKey();
 						//var code = sap.ui.getCore().byId('acceptReasonComboBox').getValue()+ " ("+sap.ui.getCore().byId('acceptReasonComboBox').getSelectedKey()+") ";
@@ -408,6 +423,7 @@ sap.ui.define([
 						payload.ACTION_RESOLVED_STATUS = 'Success';
 						payload.CODE = code;
 						payload.COMMENT = comment;
+						//payload.MATCH_ROW = this.getView().byId("table").getSelectedIndices();
 						//var data = JSON.stringify(payload);
 
 						$.ajax({
@@ -429,7 +445,6 @@ sap.ui.define([
 								alert(message);
 							}
 						});
-
 						dialog.close();
 					}
 				}),
@@ -635,8 +650,27 @@ sap.ui.define([
 				});
 			});
 
+		},
+		_getDialog: function() {
+			if (!this._oDialog) {
+				this._oDialog = sap.ui.xmlfragment("osr.scv.match.review.view.HelloDialog", this );
+				this.getView().addDependent(this._oDialog);
+				
+			}
+			return this._oDialog;
+		},
+		onOpenDialog: function() {
+			//var model = new sap.ui.model.odata.v2.ODataModel("https://vlosrhd4db.osr.qld.gov.au:51058/scv/match/srv/xs/review/matchResults.xsodata", false);
+			var model = this.getOwnerComponent().getModel();
+			this.getView().setModel(model);
+			this._getDialog().open();
+		},
+		onCloseDialog : function () {
+			this._getDialog().close();
+		},
+		handleLoadItems: function(oControlEvent) {
+			oControlEvent.getSource().getBinding("items").resume();
 		}
-
 	});
 
 });

@@ -28,7 +28,7 @@
 												<Title id="tableDetailsHeader" text="Match Group Details"/>
 												<ToolbarSpacer/>
 												<Button id="acceptButton" type="Accept" text="Accept" press="onAccept"/>
-												<Button id="rejectButton" type="Reject" text="Reject" press="onReject"/>
+												<Button id="rejectButton" type="Reject" text="Reject" press="onOpenDialog"/>
 												<!--<Button id="promoteButton" type="Accept" text="Promote" enabled="{= ${STRATEGY_RESOLVED}.match('Review') ? true : false}" pressed="true"
 													press="onPromote" visible="{= ${STRATEGY_RESOLVED}.match('Review') ? true : false}"/>
 												<Button id="rejectButton" type="Reject" text="Reject" enabled="{= ${STRATEGY_RESOLVED}.match('Promote') ? true : false}" pressed="true"

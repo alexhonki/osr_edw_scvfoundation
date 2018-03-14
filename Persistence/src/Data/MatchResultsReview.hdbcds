@@ -11,6 +11,7 @@ context MatchResultsReview {
             CODE      : String(60);
             COMMENT   : String(512);
             USER      : String(10);
+            MATCH_ROW : String(15);
     };
 
     entity Promotions {

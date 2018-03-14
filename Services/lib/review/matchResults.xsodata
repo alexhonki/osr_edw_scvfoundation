@@ -7,6 +7,9 @@ service {
     
     // ### Services
     
+    "osr.scv.foundation.db.data::MatchResultsReview.AssessmentTexts" as "assessmentText" with ("CODE", "DESCRIPTION")
+    key generate local "GenID";
+    
     // Service for reviewing match results (master view)
     "osr.scv.foundation.db.views::MatchResultsReview" as "matchResultsReview"
     keys ("ENTITY_ID")

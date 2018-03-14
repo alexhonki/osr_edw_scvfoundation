@@ -9,11 +9,12 @@ var strategy = $.request.parameters.get("STRATEGY");
 var action = $.request.parameters.get("ACTION");
 var code = $.request.parameters.get("CODE");
 var comment = $.request.parameters.get("COMMENT");
+var matchrow = $.request.parameters.get("MATCH_ROW");
 
 var conn = $.db.getConnection();
 var pstmt = conn.prepareStatement(
 	//"UPSERT \"osr.scv.foundation.db.data::MatchResultsReview.Assessments\" VALUES (?, ?, ?, ?, ?, ?) WHERE ENTITY_ID = ?"
-	"INSERT INTO \"osr.scv.foundation.db.data::MatchResultsReview.Assessments\" (\"ENTITY_ID\", \"TIMESTAMP\", \"STRATEGY\", \"CODE\", \"COMMENT\", \"USER\", \"ACTION\") VALUES (?,?,?,?,?,?,?)"
+	"INSERT INTO \"osr.scv.foundation.db.data::MatchResultsReview.Assessments\" (\"ENTITY_ID\", \"TIMESTAMP\", \"STRATEGY\", \"CODE\", \"COMMENT\", \"USER\", \"ACTION\", \"MATCH_ROW\") VALUES (?,?,?,?,?,?,?)"
 );
 
 function getTimestamp() {
@@ -91,6 +92,7 @@ try {
 		pstmt.setString(5, comment);
 		pstmt.setString(6, $.session.getUsername());
 		pstmt.setString(7, action);
+		pstmt.setString(8, matchrow);
 		
 		//pstmt.setString(7, taskName);
 		//pstmt.setInteger(8, parseInt(taskId));
