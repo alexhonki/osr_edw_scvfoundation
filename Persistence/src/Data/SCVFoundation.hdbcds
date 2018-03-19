@@ -2,63 +2,159 @@ namespace osr.scv.foundation.db.data;
 
 context SCVFoundation {
 
-    /*@@layout{"layoutInfo":{"x":-271,"y":5.5}}*/
+    /*@@layout{"layoutInfo":{}}*/
     entity Master {
         key SCV_ID     : Integer not null;
             CREATED_AT : LocalDate;
             UPDATED_AT : LocalDate;
-            CREATED_BY : String(20);
-            CHANGED_BY : String(20);
+            CREATED_BY : String(200);
+            CHANGED_BY : String(200);
+            LINKED_ID  : Integer;
+            IS_MASTER  : String(1);
     };
 
-    /*@@layout{"layoutInfo":{"x":-54,"y":5.5}}*/
-    entity Person {
-        key SCV_ID      : String(20);
-        key SOURCE      : String(10);
-        key SOURCE_ID   : String(10);
-        key VALID_FROM  : String(10);
-        key VALID_TO    : String(10);
-            LAST_NAME   : String(10);
-            MIDDLE_NAME : String(10);
-            FIRST_NAME  : String(10);
-            BIRTH_DATE  : LocalDate;
-            DEATH_DATE  : LocalDate;
+    /*@@layout{"layoutInfo":{}}*/
+    entity PersonRms {
+        key SCV_ID         : String(20);
+        key SOURCE         : String(10);
+        key SOURCE_ID      : String(10);
+        key VALID_FROM     : String(10);
+        key VALID_TO       : String(10);
+            LAST_NAME      : String(40);
+            MIDDLE_NAME    : String(40);
+            FIRST_NAME     : String(40);
+            BIRTH_DATE     : LocalDate;
+            DEATH_DATE     : LocalDate;
+            CHECKSUM       : Binary(32);
+            STD_PERSON_GN  : String(50);
+            STD_PERSON_GN2 : String(50);
+            STD_PERSON_FN  : String(50);
+            STD_CHECKSUM   : Binary(32);
     };
 
-    /*@@layout{"layoutInfo":{"x":164,"y":5.5}}*/
-    entity Address {
-        key SCV_ID       : String(10);
-        key SOURCE       : String(10);
-        key SOURCE_ID    : String(10);
-        key SOURCE_ID2   : String(10);
-        key VALID_FROM   : String(10);
-        key VALID_TO     : String(10);
-            STREET       : String(10);
-            STREET_NO    : String(10);
-            POSTCODE     : String(10);
-            CITY         : String(10);
-            REGION       : String(10);
-            COUNTRY      : String(10);
-            STD_STREET   : String(10);
-            STD_STREE_NO : String(10);
-            STD_POSTODE  : String(10);
-            STD_CITY     : String(10);
-            STD_REGION   : String(10);
-            STD_COUNTRY  : String(10);
+    /*@@layout{"layoutInfo":{}}*/
+    entity PersonTmr {
+        key SCV_ID         : String(20);
+        key SOURCE         : String(10);
+        key SOURCE_ID      : String(10);
+        key UPDATED_AT     : String(10);
+        key LAST_NAME      : String(80);
+        key MIDDLE_NAME    : String(40);
+        key FIRST_NAME     : String(40);
+        key BIRTH_DATE     : LocalDate;
+        key DEATH_DATE     : LocalDate;
+            CHECKSUM       : Binary(32);
+            STD_PERSON_GN  : String(50);
+            STD_PERSON_GN2 : String(50);
+            STD_PERSON_FN  : String(50);
+            STD_CHECKSUM   : Binary(32);
     };
 
-    /*@@layout{"layoutInfo":{"x":376,"y":5.5}}*/
-    entity Contact {
+    /*@@layout{"layoutInfo":{}}*/
+    entity AddressRms {
+        key SCV_ID                    : String(10);
+        key SOURCE                    : String(10);
+        key SOURCE_ID                 : String(10);
+        key ADDRNUMBER                : String(10);
+        key ADR_KIND                  : String(10);
+        key VALID_FROM                : LocalDate;
+        key VALID_TO                  : LocalDate;
+            CITY1                     : String(40);
+            POST_CODE1                : String(10);
+            STREET                    : String(60);
+            HOUSE_NUM1                : String(10);
+            COUNTRY                   : String(3);
+            REGION                    : String(3);
+            PERS_ADDR                 : String(1);
+            MC_CITY1                  : String(25);
+            MC_STREET                 : String(25);
+            TIME_ZONE                 : String(6);
+            ADRC_UUID                 : String(200);
+            CHECKSUM                  : Binary(32);
+            STD_ADDR_COUNTRY_2CHAR    : String(2);
+            STD_ADDR_COUNTRY_NAME     : String(100);
+            STD_ADDR_BUILDING_NAME    : String(100);
+            STD_ADDR_ADDRESS_DELIVERY : String(100);
+            STD_ADDR_PRIM_ADDRESS     : String(100);
+            STD_ADDR_PRIM_NAME_FULL   : String(100);
+            STD_ADDR_PRIM_NAME        : String(100);
+            STD_ADDR_PRIM_TYPE        : String(40);
+            STD_ADDR_PRIM_NUMBER      : String(20);
+            STD_ADDR_LOCALITY         : String(64);
+            STD_ADDR_REGION           : String(64);
+            STD_ADDR_POSTCODE1        : String(10);
+            ADDR_LATITUDE             : BinaryFloat default 0.00;
+            ADDR_LONGITUDE            : BinaryFloat default 0.00;
+            STD_CHECKSUM              : Binary(32);
+    };
+
+    /*@@layout{"layoutInfo":{}}*/
+    entity AddressTmr {
+        key SCV_ID                     : String(10);
+        key SOURCE                     : String(10);
+        key SOURCE_ID                  : String(10);
+        key ADDRESS_ID                 : String(10);
+        key VALID_FROM                 : String(10);
+        key VALID_TO                   : String(10);
+        key FLOOR                      : String(8);
+        key UNIT                       : String(12);
+        key BUILDING_NAME              : String(40);
+        key STREET_NO                  : String(12);
+        key STREET_NAME                : String(40);
+        key STREET_TYPE                : String(10);
+        key STREET_SUFFIX              : String(10);
+        key SUBURB                     : String(46);
+        key POSTCODE                   : String(10);
+        key STATE                      : String(3);
+        key COUNTRY                    : String(3);
+            DEALER_REF                 : String(16);
+            ACN                        : String(10);
+            CUSTOMER_TYPE              : String(1);
+            CURRENT_POSTAL_ADDR_EFf_DT : String(10);
+            CHECKSUM                   : Binary(32);
+            STD_ADDR_COUNTRY_2CHAR     : String(2);
+            STD_ADDR_COUNTRY_NAME      : String(100);
+            STD_ADDR_BUILDING_NAME     : String(100);
+            STD_ADDR_ADDRESS_DELIVERY  : String(100);
+            STD_ADDR_PRIM_ADDRESS      : String(100);
+            STD_ADDR_PRIM_NAME_FULL    : String(100);
+            STD_ADDR_PRIM_NAME         : String(100);
+            STD_ADDR_PRIM_TYPE         : String(40);
+            STD_ADDR_PRIM_NUMBER       : String(20);
+            STD_ADDR_LOCALITY          : String(64);
+            STD_ADDR_REGION            : String(64);
+            STD_ADDR_POSTCODE1         : String(10);
+            ADDR_LATITUDE              : BinaryFloat default 0.00;
+            ADDR_LONGITUDE             : BinaryFloat default 0.00;
+            STD_CHECKSUM               : Binary(32);
+    };
+
+    /*@@layout{"layoutInfo":{}}*/
+    entity ContactNumber {
         key SCV_ID         : String(10);
         key SOURCE         : String(10);
         key SOURCE_ID      : String(10);
         key VALID_FROM     : String(10);
         key VALID_TO       : String(10);
-            PHONE_NO       : String(10);
-            MOBILE_NO      : String(10);
-            EMAIL          : String(10);
-            PHONE_NO_DESC  : String(10);
-            MOBILE_NO_DESC : String(10);
-            EMAIL_DESC     : String(10);
+        key CONTACT_NUMBER : String(20);
+        key NUMBER_EXT     : String(20);
+        key NUMBER_TYPE    : String(10);
+        key NUMBER_DESC    : String(256);
+        key CHECKSUM       : Binary(32);
+    };
+
+    /*@@layout{"layoutInfo":{}}*/
+    entity ContactEmail {
+        key SCV_ID        : String(10);
+        key SOURCE        : String(10);
+        key SOURCE_ID     : String(10);
+        key VALID_FROM    : String(10);
+        key VALID_TO      : String(10);
+        key CONTACT_EMAIL : String(200);
+        key EMAIL_TYPE    : String(10);
+        key EMAIL_DESC    : String(256);
+        key CHECKSUM      : Binary(32);
+        key STD_EMAIL     : String(100);
+        key STD_CHECKSUM  : Binary(32);
     };
 };

@@ -1,0 +1,25 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core" xmlns:l="sap.ui.layout">
+	<Dialog title="Reject Entity" type='Message'>
+		<l:VerticalLayout class="sapUiContentPadding" width="100%">
+			<l:content>
+				<Label text="You are about to reject match group group 422. Please select a reason code and provide a comment."/>
+				<ComboBox 
+				placeholder="Add code (required)" 
+				maxWidth="100%"
+				items="{
+								path: '/assessmentText',
+								suspended: true
+							}"
+				loadItems="handleLoadItems"
+				>
+				<core:Item key="{CODE}" text="{DESCRIPTION}"/>	
+				</ComboBox>
+				<TextArea placeholder="Add comment (required)" width='100%'/>
+			</l:content>
+		</l:VerticalLayout>
+		<l:HorizontalLayout>
+			<Button type="Transparent" text="Submit" press="onCloseDialog"/>
+			<Button type="Transparent" text="Cancel" press="onCloseDialog"/>
+		</l:HorizontalLayout>
+	</Dialog>
+</core:FragmentDefinition>

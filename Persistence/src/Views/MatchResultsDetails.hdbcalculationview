@@ -130,7 +130,7 @@
       <keyCalculation datatype="NVARCHAR" expressionLanguage="SQL" length="256">
         <formula>CONCAT(CONCAT(&quot;LAST_NAME&quot;, ', '), CONCAT(&quot;FIRST_NAME&quot;, CONCAT(' ',CASE WHEN &quot;MIDDLE_NAME&quot; IS NULL THEN '' ELSE &quot;MIDDLE_NAME&quot; END)))</formula>
       </keyCalculation>
-    </calculatedAttribute>
+      </calculatedAttribute>
   
     <calculatedAttribute id="ADDRESS" order="20" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="ADDRESS"/>
@@ -140,8 +140,7 @@
         <formula>CONCAT(&quot;ADDRESS_PRIM_NUMBER&quot;, CONCAT(' ', &quot;ADDRESS_PRIM_NAME&quot;))</formula>
   
       </keyCalculation>
-  
-    </calculatedAttribute>
+      </calculatedAttribute>
   
     <calculatedAttribute id="FIRST_MIDDLE_NAME" order="21" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="FIRST_MIDDLE_NAME"/>
@@ -151,8 +150,7 @@
         <formula>CONCAT(&quot;FIRST_NAME&quot;, CONCAT(' ' , &quot;MIDDLE_NAME&quot;))</formula>
   
       </keyCalculation>
-  
-    </calculatedAttribute>
+      </calculatedAttribute>
   </calculatedAttributes>
   <baseMeasures/>
   <calculatedMeasures/>
