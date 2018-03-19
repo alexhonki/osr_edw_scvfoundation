@@ -18,7 +18,7 @@ sap.ui.define([
 	Button, ComboBox, MessageToast) {
 	"use strict";
 
-	return BaseController.extend("osr.scv.match.review.controller.Object", { 
+	return BaseController.extend("osr.scv.match.review.controller.Object", {
 
 		formatter: formatter,
 
@@ -39,7 +39,6 @@ sap.ui.define([
 					busy: true,
 					delay: 0
 				});
-
 			this.getRouter().getRoute("object").attachPatternMatched(this._onObjectMatched, this);
 			// Store original busy indicator delay, so it can be restored later on
 			iOriginalBusyDelay = this.getView().getBusyIndicatorDelay();
@@ -50,19 +49,19 @@ sap.ui.define([
 			});
 
 		},
-		
+
 		/**
 		 * Called when the table is rendered.
 		 * @public
 		 */
 		onAfterDetailsTableRendering: function() {
-			
+
 			var oTable = this.byId("detailsTable");
 			var oItems = oTable.getItems();
 			if (oItems && oItems.length > 0) {
 				oItems[0].setSelected(true);
 			}
-			
+
 			/*
 			var oTable = this.getView().byId("detailsTable");
 			var aItems = oTable.getItems();
@@ -136,17 +135,20 @@ sap.ui.define([
 			//var sObjectPath = "/matchResultsReview('" + oEvent.getParameter("arguments").objectId + "')/matchResults";
 			var sObjectPath = "/matchResultsReview('" + oEvent.getParameter("arguments").objectId.split("|")[0] + "')";
 			this._bindView(sObjectPath);
-			
-			var matchRow =  oEvent.getParameter("arguments").objectId.split("|")[1];
-			
+
+			var matchRow = oEvent.getParameter("arguments").objectId.split("|")[1];
+
 			// Related match rows
 			var sObjectPathRelated = "/matchResultsDetailsRelatedParameters(I_MATCH_ROW='" + matchRow + "')/Results";
-			this.byId("detailsTable1").bindItems({path: sObjectPathRelated, template:this.byId("detailsTable1").getBindingInfo("items").template});
+			this.byId("detailsTable1").bindRows({
+				path: sObjectPathRelated,
+				template: this.byId("detailsTable1").getBindingInfo("rows").template
+			});
 			//zTable.bindItems({path: "/itemstit", template:this.byId("detailsTable").getBindingInfo("items").template});
-			
+
 			// Pre-select first line
 			//this.byId("detailsTable").getItems()[0].setSelected(true);
-			
+
 			// Disable change log tab?
 			// Read the change log count for current entity
 			var that = this;
@@ -226,21 +228,52 @@ sap.ui.define([
 			var domRef = oEvent.getParameter("domRef");
 			this._getPopover().openBy(domRef);
 		},
-		
+
+		onPress2: function(oEvent) {
+			// The source is the list item that got pressed
+			var newMatchRow = oEvent.getSource().getBindingContext().getProperty("MATCH_ROW_STR");
+			var sObjectPathRelated = "/matchResultsDetailsRelatedParameters(I_MATCH_ROW='" + newMatchRow + "')/Results";
+			this.byId("detailsTable1").bindRows({
+				path: sObjectPathRelated,
+				template: this.byId("detailsTable1").getBindingInfo("rows").template
+			});
+		},
+
+		_showObject: function(oItem) {
+			var newMatchRow = oItem.getBindingContext().getProperty("MATCH_ROW_STR");
+			var sObjectPathRelated = "/matchResultsDetailsRelatedParameters(I_MATCH_ROW='" + newMatchRow + "')/Results";
+			this.byId("detailsTable1").bindRows({
+				path: sObjectPathRelated,
+				template: this.byId("detailsTable1").getBindingInfo("rows").template
+			});
+		},
+
 		/**
 		 * Event handler when a table item gets pressed
 		 * @param {sap.ui.base.Event} oEvent the table selectionChange event
 		 * @public
 		 */
-		onPress: function(oEvent) {
+		onPress: function(oEvent, oItem) {
 			// The source is the list item that got pressed
 			//var oItem = oEvent.getSource();
-			var newMatchRow = oEvent.getSource().getSelectedItem().getBindingContext().getProperty("MATCH_ROW_STR");
-			
+			var newMatchRow = this.getModel().getProperty(oEvent.getParameter("rowContext").getPath() + "/MATCH_ROW_STR"),
+				oTable = this.byId("table");
+			var doSearch = false;
+			for (var i = 0; i < oTable.getSelectedIndices().length; i++) {
+				if (oTable.getSelectedIndices()[i] === oEvent.getParameter("rowIndex")) {
+					doSearch = true;
+				}
+			}
+
+			if (doSearch === true) {
+				var sObjectPathRelated = "/matchResultsDetailsRelatedParameters(I_MATCH_ROW='" + newMatchRow + "')/Results";
+				this.byId("detailsTable1").bindRows({
+					path: sObjectPathRelated,
+					template: this.byId("detailsTable1").getBindingInfo("rows").template
+				});
+			}
 			// Update the binding
-			var sObjectPathRelated = "/matchResultsDetailsRelatedParameters(I_MATCH_ROW='" + newMatchRow + "')/Results";
-			this.byId("detailsTable1").bindItems({path: sObjectPathRelated, template:this.byId("detailsTable1").getBindingInfo("items").template});
-			
+
 		},
 
 		/**
@@ -281,6 +314,20 @@ sap.ui.define([
 			var entityId = this.getView().getBindingContext().getObject().ENTITY_ID;
 			var context = "";
 			var that = this;
+			var payload = [];
+			var oRowIndices = this.byId("table").getSelectedIndices();
+			var oRows = that.byId("table").getRows();
+			var j = 0;
+			oRowIndices.map(function(sRowIndex) {
+				for (var i = 0; i < oRows.length; i++) {
+
+					//if (sRowIndex === oRows[i].sIndex) {
+					if (sRowIndex === i) {
+						payload[j] = that.getModel().getProperty(oRows[i].getBindingContext().getPath() + "/MATCH_ROW_STR");
+						j++;
+					}
+				}
+			});
 
 			// Delay for refresh
 			function wait(ms) {
@@ -304,6 +351,7 @@ sap.ui.define([
 			}
 
 			var dialog = new Dialog({
+				context: that,
 				title: 'Accept Match Group',
 				type: 'Message',
 				content: [
@@ -358,10 +406,11 @@ sap.ui.define([
 					})
 
 				],
+
 				beginButton: new Button("beginButton", {
 					text: 'Submit',
 					enabled: false,
-					press: function() {
+					press: function(oEvent) {
 
 						//var code = sap.ui.getCore().byId('acceptReasonComboBox').getSelectedKey();
 						//var code = sap.ui.getCore().byId('acceptReasonComboBox').getValue()+ " ("+sap.ui.getCore().byId('acceptReasonComboBox').getSelectedKey()+") ";
@@ -374,6 +423,7 @@ sap.ui.define([
 						payload.ACTION_RESOLVED_STATUS = 'Success';
 						payload.CODE = code;
 						payload.COMMENT = comment;
+						//payload.MATCH_ROW = this.getView().byId("table").getSelectedIndices();
 						//var data = JSON.stringify(payload);
 
 						$.ajax({
@@ -395,7 +445,6 @@ sap.ui.define([
 								alert(message);
 							}
 						});
-
 						dialog.close();
 					}
 				}),
@@ -553,8 +602,75 @@ sap.ui.define([
 
 			dialog.open();
 
-		}
+		},
 
+		processUpdates: function() {
+			var oRowIndices = this.byId("table").getSelectedIndices(),
+				that = this;
+
+			oRowIndices.map(function(sRowIndex) {
+
+				var code = sap.ui.getCore().byId('acceptReasonComboBox').getSelectedKey();
+				var comment = sap.ui.getCore().byId('submitDialogTextarea').getValue();
+				var payload = {};
+				payload.ENTITY_ID = sap.ui.getCore().byId('lblEntityId').getText();
+				payload.STRATEGY = 'Promote';
+				payload.ACTION = 'Accept';
+				payload.ACTION_RESOLVED_STATUS = 'Success';
+				payload.CODE = code;
+				payload.COMMENT = comment;
+				//var data = JSON.stringify(payload);
+				var oRows = that.byId("table").getRows();
+
+				for (var i = 0; i < oRows.length; i++) {
+					//TODO Check the sIndex whether that is correct
+					debugger;
+					if (sRowIndex === oRows[i].sIndex) {
+						payload.matchRow = that.getModel().getProperty(oRows[i].getBindingContext().getPath() + "/MATCH_ROW_STR");
+					}
+				}
+				$.ajax({
+					type: "GET",
+					url: "/scv/match/srv/xs/review/updateMatchAssessments.xsjs",
+					contentType: "application/json",
+					data: payload,
+					dataType: "json",
+					crossDomain: true,
+
+					success: function(data) {
+						//dialog.close();
+						// Refresh model
+						//refresh();
+						MessageToast.show('Data saved...');
+					},
+					error: function(data) {
+						var message = JSON.stringify(data);
+						alert(message);
+					}
+				});
+			});
+
+		},
+		_getDialog: function() {
+			if (!this._oDialog) {
+				this._oDialog = sap.ui.xmlfragment("osr.scv.match.review.view.HelloDialog", this );
+				this.getView().addDependent(this._oDialog);
+				
+			}
+			return this._oDialog;
+		},
+		onOpenDialog: function() {
+			//var model = new sap.ui.model.odata.v2.ODataModel("https://vlosrhd4db.osr.qld.gov.au:51058/scv/match/srv/xs/review/matchResults.xsodata", false);
+			var model = this.getOwnerComponent().getModel();
+			this.getView().setModel(model);
+			this._getDialog().open();
+		},
+		onCloseDialog : function () {
+			this._getDialog().close();
+		},
+		handleLoadItems: function(oControlEvent) {
+			oControlEvent.getSource().getBinding("items").resume();
+		}
 	});
 
 });

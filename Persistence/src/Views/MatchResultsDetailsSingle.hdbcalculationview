@@ -101,7 +101,9 @@
   
     <attribute id="ADDRESS_LOCALITY" order="21" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="ADDRESS_LOCALITY"/>
+  
       <keyMapping columnObjectName="MatchResultsDetailsSingle" columnName="ADDRESS_LOCALITY"/>
+  
     </attribute>
     <attribute id="SOURCE_SYSTEM" order="22" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="SOURCE_SYSTEM"/>
@@ -127,7 +129,7 @@
   
       <keyCalculation datatype="NVARCHAR" expressionLanguage="SQL" length="256">
   
-        <formula>CONCAT(&quot;ADDRESS_PRIM_NUMBER&quot;, CONCAT(' ', &quot;ADDRESS_PRIM_NAME&quot;))</formula>
+        <formula>&quot;ADDRESS_PRIM_NUMBER&quot; || ' ' || &quot;ADDRESS_PRIM_NAME&quot; || ' ' || &quot;ADDRESS_LOCALITY&quot; || ' ' || &quot;ADDRESS_POSTCODE&quot; || ' ' || &quot;ADDRESS_REGION&quot; || ' ' || &quot;ADDRESS_COUNTRY&quot;</formula>
   
       </keyCalculation>
       </calculatedAttribute>

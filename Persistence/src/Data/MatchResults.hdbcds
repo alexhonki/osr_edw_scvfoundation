@@ -86,4 +86,16 @@ context MatchResults {
         key GROUP_ID    : Integer;
             GROUP_COUNT : Integer;
     };
-}; 
+
+    /*@@layout{"layoutInfo":{}}*/
+    entity ScvDelta {
+        key Match_TABLE_ID       : Integer not null;
+        key Match_ROW_ID         : Integer not null;
+            PERSON_CHECKSUM      : Binary(32);
+            PERSON_STD_CHECKSUM  : Binary(32);
+            ADDRESS_CHECKSUM     : Binary(32);
+            ADDRESS_STD_CHECKSUM : Binary(32);
+            CONTACT_CHECKSUM     : Binary(32);
+            CONTACT_STD_CHECKSUM : Binary(32);
+    };
+};
