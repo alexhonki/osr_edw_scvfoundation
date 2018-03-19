@@ -10,13 +10,13 @@ context MatchResultsReview {
             ACTION    : String(20);
             CODE      : String(60);
             COMMENT   : String(512);
-            USER      : String(10);
+            USER      : String(200);
     };
 
     entity Promotions {
         key ENTITY_ID : String(10);
             TIMESTAMP : UTCTimestamp;
-            USER      : String(10);
+            USER      : String(200);
             ACTION    : String(20);
     };
 
