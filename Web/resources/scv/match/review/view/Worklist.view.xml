@@ -84,7 +84,7 @@
 									</Toolbar>
 								</t:toolbar>
 								<t:columns>
-									<t:Column id="groupName" width="8rem" filterProperty="GROUP_ID">
+									<t:Column id="groupName" width="8rem" filterProperty="GROUP_ID" sortProperty= "GROUP_ID">
 										<Label text="Group"/>
 										<t:template>
 											<Text text="{GROUP_ID}" wrapping="false"/>
@@ -96,31 +96,31 @@
 											<Text text="{GROUP_COUNT}" wrapping="false"/>
 										</t:template>
 									</t:Column>
-									<t:Column id="name" width="auto" filterProperty="NAME">
+									<t:Column id="name" width="auto" filterProperty="NAME" sortProperty= "NAME">
 										<Label text="Name"/>
 										<t:template>
 											<Text text="{NAME}" wrapping="false"/>
 										</t:template>
 									</t:Column>
-									<t:Column id="source" width="8rem" filterProperty="SOURCE_SYSTEM">
+									<t:Column id="source" width="8rem" filterProperty="SOURCE_SYSTEM" sortProperty= "SOURCE_SYSTEM">
 										<Label text="Source"/>
 										<t:template>
 											<Text text="{SOURCE_SYSTEM}" wrapping="false"/>
 										</t:template>
 									</t:Column>
-									<t:Column id="averageScore" width="8rem" filterProperty="AVG_SCORE">
+									<t:Column id="averageScore" width="8rem" filterProperty="AVG_SCORE" sortProperty= "AVG_SCORE">
 										<Label text="Average Score"/>
 										<t:template>
 											<ObjectNumber number="{AVG_SCORE}"/>
 										</t:template>
 									</t:Column>
-									<t:Column id="strategyResolved" width="8rem" filterProperty="STRATEGY_RESOLVED">
+									<t:Column id="strategyResolved" width="8rem" filterProperty="STRATEGY_RESOLVED" sortProperty= "STRATEGY_RESOLVED">
 										<Label text="Strategy Resolved"/>
 										<t:template>
 											<ObjectStatus text="{STRATEGY_RESOLVED}" state="{ path: 'STRATEGY_RESOLVED', formatter: '.formatter.strategyState' }" wrapping="false"/>
 										</t:template>
 									</t:Column>
-									<t:Column id="actionResolved" width="8rem" filterProperty="ACTION_RESOLVED">
+									<t:Column id="actionResolved" width="8rem" filterProperty="ACTION_RESOLVED" sortProperty= "ACTION_RESOLVED">
 										<Label text="Action Resolved"/>
 										<t:template>
 											<ObjectStatus text="{ACTION_RESOLVED}" state="{ path: 'ACTION_RESOLVED', formatter: '.formatter.actionState' }"/>

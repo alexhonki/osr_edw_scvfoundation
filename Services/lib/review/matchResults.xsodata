@@ -7,7 +7,10 @@ service {
     
     // ### Services
     
-    "osr.scv.foundation.db.data::MatchResultsReview.AssessmentTexts" as "assessmentText" with ("CODE", "DESCRIPTION")
+    "osr.scv.foundation.db.views::AssessmentText" as "assessmentTextReject"  with ("REJECT_CODE" , "REJECT_DESCRIPTION")
+    key generate local "GenID";
+    
+    "osr.scv.foundation.db.views::AssessmentText" as "assessmentTextAccept"  with ("ACCEPT_CODE" , "ACCEPT_DESCRIPTION")
     key generate local "GenID";
     
     // Service for reviewing match results (master view)
@@ -33,7 +36,7 @@ service {
     parameters via entity;
     
     // Service to list strategy change logs for an entity
-    "osr.scv.foundation.db.views::MatchResultsAssessments" as "matchResultsAssessments"
+    "osr.scv.foundation.db.views::MatchResultsAssessment" as "matchResultsAssessments"
     keys generate local "GenID";
     
     // ### Associations

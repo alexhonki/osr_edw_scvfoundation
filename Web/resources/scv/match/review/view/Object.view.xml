@@ -22,13 +22,13 @@
 							<IconTabFilter text="Entity Info" key="key1">
 								<content>
 									<t:Table id="table" rows="{ path: 'matchResults', sorter: { path: 'GROUP_ROW_COUNT', descending: false}}" ariaLabelledBy="title"
-										selectionMode="MultiToggle" rowSelectionChange="onPress" visibleRowCount="auto">
+										selectionMode="MultiToggle">
 										<t:toolbar>
 											<Toolbar>
 												<Title id="tableDetailsHeader" text="Match Group Details"/>
 												<ToolbarSpacer/>
-												<Button id="acceptButton" type="Accept" text="Accept" press="onAccept"/>
-												<Button id="rejectButton" type="Reject" text="Reject" press="onOpenDialog"/>
+												<Button id="acceptButton" type="Accept" text="Accept" press="onOpenAcceptDialog"/>
+												<Button id="rejectButton" type="Reject" text="Reject" press="onOpenRejectDialog"/>
 												<!--<Button id="promoteButton" type="Accept" text="Promote" enabled="{= ${STRATEGY_RESOLVED}.match('Review') ? true : false}" pressed="true"
 													press="onPromote" visible="{= ${STRATEGY_RESOLVED}.match('Review') ? true : false}"/>
 												<Button id="rejectButton" type="Reject" text="Reject" enabled="{= ${STRATEGY_RESOLVED}.match('Promote') ? true : false}" pressed="true"
@@ -36,37 +36,37 @@
 											</Toolbar>
 										</t:toolbar>
 										<t:columns>
-											<t:Column>
+											<t:Column width="3rem">
 												<Label text="#"/>
 												<t:template>
 													<Text text="{GROUP_ROW_COUNT}" wrapping="false"/>
 												</t:template>
 											</t:Column>
-											<t:Column>
-												<Label text="Source System"/>
+											<t:Column width="8rem">
+												<Label text="System"/>
 												<t:template>
 													<Text text="{SOURCE_SYSTEM}" wrapping="false"/>
 												</t:template>
 											</t:Column>
-											<t:Column>
+											<t:Column width="8rem">
 												<Label text="System ID"/>
 												<t:template>
 													<Text text="{SYSTEM_ID}" wrapping="false"/>
 												</t:template>
 											</t:Column>
-											<t:Column>
+											<t:Column width="8rem">
 												<Label text="Date of Birth"/>
 												<t:template>
 													<Text text="{BIRTHDT}" wrapping="false"/>
 												</t:template>
 											</t:Column>
-											<t:Column>
+											<t:Column width="12rem">
 												<Label text="Last Name"/>
 												<t:template>
 													<Text text="{LAST_NAME}" wrapping="false"/>
 												</t:template>
 											</t:Column>
-											<t:Column>
+											<t:Column width="18rem">
 												<Label text="First Middle Name"/>
 												<t:template>
 													<Text text="{FIRST_MIDDLE_NAME}" wrapping="false"/>
@@ -108,7 +108,7 @@
 													<Text text="{ADDRESS_PRIM_NUMBER}" wrapping="false"/>
 												</t:template>
 											</t:Column>-->
-											<t:Column>
+											<t:Column width="8rem">
 												<Label text="Match Row"/>
 												<t:template>
 													<Text text="{MATCH_ROW}" wrapping="false"/>
@@ -132,46 +132,46 @@
 											</Toolbar>
 										</t:toolbar>
 										<t:columns>
-											<t:Column>
+											<t:Column width="18rem">
 												<Label text="Policy Name"/>
 												<t:template>
 													<Text text="{POLICY_NAME}" wrapping="false"/>
 												</t:template>
 											</t:Column>
-											<t:Column>
+											<t:Column width="4rem">
 												<Label text="Score"/>
 												<t:template>
 													<ObjectNumber number="{SCORE}" state="{ path: 'SCORE', formatter: '.formatter.matchState' }"/>
 												</t:template>
 											</t:Column>
-											<t:Column>
+											<t:Column width="8rem">
 												<Label text="System"/>
 												<t:template>
 													<Text text="{SOURCE_SYSTEM}" wrapping="false"/>
 												</t:template>
 											</t:Column>
-											<t:Column>
+											<t:Column width="8rem">
 												<Label text="System ID"/>
 												<t:template>
 													<Text text="{SYSTEM_ID}" wrapping="false"/>
 												</t:template>
 											</t:Column>
-											<t:Column>
+											<t:Column width="8rem">
 												<Label text="Date of Birth"/>
 												<t:template>
 													<Text text="{BIRTHDT}" wrapping="false"/>
 												</t:template>
 											</t:Column>
-											<t:Column>
+											<t:Column width="12rem">
 												<Label text="Last Name"/>
 												<t:template>
 													<Text text="{LAST_NAME}" wrapping="false"/>
 												</t:template>
 											</t:Column>
-											<t:Column>
+											<t:Column width="18rem">
 												<Label text="First Middle Name"/>
 												<t:template>
-													<Text text="{SOURCE_SYSTEM}" wrapping="false"/>
+													<Text text="{FIRST_MIDDLE_NAME}" wrapping="false"/>
 												</t:template>
 											</t:Column>
 											<t:Column width="auto">
@@ -210,7 +210,7 @@
 													<Text text="{ADDRESS_PRIM_NUMBER}" wrapping="false"/>
 												</t:template>
 											</t:Column>-->
-											<t:Column>
+											<t:Column width="8rem">
 												<Label text="Match Row"/>
 												<t:template>
 													<Text text="{MATCH_ROW}" wrapping="false"/>
@@ -305,49 +305,91 @@
 								<content>
 									<l:VerticalLayout class="sapUiContentPadding" width="100%">
 										<l:content>
-											<Table id="changeLogTable" busyIndicatorDelay="{worklistView>/tableBusyDelay}" class="sapUiResponsiveMargin sapUiNoMarginTop" growing="true"
-												growingScrollToLoad="true" noDataText="{worklistView>/tableNoDataText}" updateFinished="onUpdateFinished" width="auto"
-												items="{ path: 'matchAssessments', sorter: { path: 'TIMESTAMP', descending: true }}">
-												<columns>
-													<Column id="c111s" mergeDuplicates="true">
-														<Text id="t111s" text="Strategy"/>
-													</Column>
-													<Column id="c222" mergeDuplicates="true">
-														<Text id="t222" text="User ID"/>
-													</Column>
-													<Column id="c333">
-														<Text id="t333" text="Timestamp"/>
-													</Column>
-													<Column id="c444">
-														<Text id="t444" text="Code"/>
-													</Column>
-													<Column id="c555">
-														<Text id="t555" text="Comment"/>
-													</Column>
-												</columns>
-												<items>
-													<ColumnListItem>
-														<cells>
-															<Text text="{STRATEGY}"/>
-															<Text text="{USER}"/>
-															<Text text="{path: 'TIMESTAMP', type: 'sap.ui.model.type.DateTime'}"/>
-															<Text text="{CODE}"/>
-															<Text text="{COMMENT}"/>
-														</cells>
-													</ColumnListItem>
-												</items>
-											</Table>
-										</l:content>
-									</l:VerticalLayout>
-								</content>
-							</IconTabFilter>
-						</items>
-					</IconTabBar>
-				</headerContainer>
-			</ObjectHeader>
-		</semantic:content>
-		<!--<semantic:sendEmailAction>
+											<t:Table id="changeLogTable"
+												rows="{ path: 'matchAssessments', sorter: { path: 'TIMESTAMP', descending: true }}"
+												ariaLabelledBy="title" selectionMode="None">
+												<t:columns>
+													<t:Column width="15rem">
+														<Label text="Strategy"/>
+														<t:template>
+															<Text text="{STRATEGY}" wrapping="false"/>
+														</t:template>
+													</t:Column>
+													<t:Column width="15rem">
+														<Label text="User ID"/>
+														<t:template>
+															<Text text="{USER}" wrapping="false"/>
+														</t:template>
+													</t:Column>
+													<t:Column width="15rem">
+														<Label text="Timestamp"/>
+														<t:template>
+															<Text text="{path: 'TIMESTAMP', type: 'sap.ui.model.type.DateTime'}" wrapping="false"/>
+														</t:template>
+													</t:Column>
+													<t:Column width="15rem">
+														<Label text="Match Row"/>
+														<t:template>
+															<Text text="{MATCH_ROW}" wrapping="false"/>
+														</t:template>
+													</t:Column>
+													<t:Column width="18rem">
+														<Label text="Code"/>
+														<t:template>
+															<Text text="{CODE}" wrapping="false"/>
+														</t:template>
+													</t:Column>
+													<t:Column width="auto">
+														<Label text="Comment"/>
+														<t:template>
+															<Text text="{COMMENT}" wrapping="false"/>
+														</t:template>
+													</t:Column>
+													</t:columns>
+													</t:Table>
+													<!--<Table id="changeLogTable" busyIndicatorDelay="{worklistView>/tableBusyDelay}" class="sapUiResponsiveMargin sapUiNoMarginTop" growing="true"
+														growingScrollToLoad="true" noDataText="{worklistView>/tableNoDataText}" updateFinished="onUpdateFinished" width="auto"
+														items="{ path: 'matchAssessments', sorter: { path: 'TIMESTAMP', descending: true }}">
+														<columns>
+															<Column id="c111s" mergeDuplicates="true">
+																<Text id="t111s" text="Strategy"/>
+															</Column>
+															<Column id="c222" mergeDuplicates="true">
+																<Text id="t222" text="User ID"/>
+															</Column>
+															<Column id="c333">
+																<Text id="t333" text="Timestamp"/>
+															</Column>
+															<Column id="c444">
+																<Text id="t444" text="Code"/>
+															</Column>
+															<Column id="c555">
+																<Text id="t555" text="Comment"/>
+															</Column>
+														</columns>
+														<items>
+															<ColumnListItem>
+																<cells>
+																	<Text text="{STRATEGY}"/>
+																	<Text text="{USER}"/>
+																	<Text text="{path: 'TIMESTAMP', type: 'sap.ui.model.type.DateTime'}"/>
+																	<Text text="{CODE}"/>
+																	<Text text="{COMMENT}"/>
+																</cells>
+															</ColumnListItem>
+														</items>
+													</Table>-->
+												</l:content>
+											</l:VerticalLayout>
+										</content>
+									</IconTabFilter>
+								</items>
+							</IconTabBar>
+						</headerContainer>
+					</ObjectHeader>
+				</semantic:content>
+				<!--<semantic:sendEmailAction>
 			<semantic:SendEmailAction id="shareEmail" press="onShareEmailPress"/>
 		</semantic:sendEmailAction>-->
-	</semantic:FullscreenPage>
-</mvc:View>
+			</semantic:FullscreenPage>
+		</mvc:View>

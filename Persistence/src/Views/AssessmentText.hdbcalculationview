@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="osr.scv.foundation.db.views::AssessmentText" applyPrivilegeType="NONE" dataCategory="DEFAULT" schemaVersion="3.0" outputViewType="Projection" cacheInvalidationPeriod="NONE" enforceSqlExecution="false">
+<descriptions defaultDescription="AssessmentText"/>
+<localVariables/>
+<variableMappings/>
+<dataSources>
+  <DataSource id="osr.scv.foundation.db.data::MatchResultsReview.AssessmentTexts">
+    <resourceUri>osr.scv.foundation.db.data::MatchResultsReview.AssessmentTexts</resourceUri>
+  </DataSource>
+  <DataSource id="P_Accept$$$$osr.scv.foundation.db.data::MatchResultsReview.AssessmentTexts$$">
+    <resourceUri>osr.scv.foundation.db.data::MatchResultsReview.AssessmentTexts</resourceUri>
+  </DataSource>
+</dataSources>
+<calculationViews>
+  <calculationView xsi:type="Calculation:UnionView" id="U_Accept_Reject">
+    <viewAttributes>
+      <viewAttribute id="REJECT_CODE">
+        <descriptions defaultDescription="CODE"/>
+      </viewAttribute>
+      <viewAttribute id="REJECT_DESCRIPTION">
+        <descriptions defaultDescription="DESCRIPTION"/>
+      </viewAttribute>
+      <viewAttribute id="ACCEPT_CODE">
+        <descriptions defaultDescription="CODE"/>
+      </viewAttribute>
+      <viewAttribute id="ACCEPT_DESCRIPTION">
+        <descriptions defaultDescription="DESCRIPTION"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="P_Reject">
+      <mapping xsi:type="Calculation:AttributeMapping" target="REJECT_CODE" source="REJECT_CODE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="REJECT_DESCRIPTION" source="REJECT_DESCRIPTION"/>
+      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="ACCEPT_CODE" null="true" value=""/>
+      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="ACCEPT_DESCRIPTION" null="true" value=""/>
+    </input>
+    <input node="P_Accept">
+      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="REJECT_CODE" null="true" value=""/>
+      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="REJECT_DESCRIPTION" null="true" value=""/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ACCEPT_CODE" source="ACCEPT_CODE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ACCEPT_DESCRIPTION" source="ACCEPT_DESCRIPTION"/>
+    </input>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_Reject" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="REJECT_CODE">
+        <descriptions defaultDescription="CODE"/>
+      </viewAttribute>
+      <viewAttribute id="REJECT_DESCRIPTION">
+        <descriptions defaultDescription="DESCRIPTION"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="osr.scv.foundation.db.data::MatchResultsReview.AssessmentTexts">
+      <mapping xsi:type="Calculation:AttributeMapping" target="REJECT_CODE" source="CODE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="REJECT_DESCRIPTION" source="DESCRIPTION"/>
+    </input>
+    <filter>(&quot;REJECT_CODE&quot;) LIKE '%r%' </filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_Accept" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="ACCEPT_CODE">
+        <descriptions defaultDescription="CODE"/>
+      </viewAttribute>
+      <viewAttribute id="ACCEPT_DESCRIPTION">
+        <descriptions defaultDescription="DESCRIPTION"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input emptyUnionBehavior="undefined" node="P_Accept$$$$osr.scv.foundation.db.data::MatchResultsReview.AssessmentTexts$$">
+      <mapping xsi:type="Calculation:AttributeMapping" target="ACCEPT_CODE" source="CODE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ACCEPT_DESCRIPTION" source="DESCRIPTION"/>
+    </input>
+    <filter>(&quot;ACCEPT_CODE&quot;) LIKE '%a%' </filter>
+  </calculationView>
+</calculationViews>
+<logicalModel id="U_Accept_Reject">
+  <attributes>
+    <attribute id="REJECT_CODE" order="1" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CODE"/>
+      <keyMapping columnObjectName="U_Accept_Reject" columnName="REJECT_CODE"/>
+    </attribute>
+    <attribute id="REJECT_DESCRIPTION" order="2" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="DESCRIPTION"/>
+      <keyMapping columnObjectName="U_Accept_Reject" columnName="REJECT_DESCRIPTION"/>
+    </attribute>
+    <attribute id="ACCEPT_CODE" order="3" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CODE"/>
+      <keyMapping columnObjectName="U_Accept_Reject" columnName="ACCEPT_CODE"/>
+    </attribute>
+    <attribute id="ACCEPT_DESCRIPTION" order="4" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="DESCRIPTION"/>
+      <keyMapping columnObjectName="U_Accept_Reject" columnName="ACCEPT_DESCRIPTION"/>
+    </attribute>
+  </attributes>
+  <calculatedAttributes/>
+  <baseMeasures/>
+  <calculatedMeasures/>
+  <restrictedMeasures/>
+</logicalModel>
+<layout>
+  <shapes>
+    <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+      <upperLeftCorner x="208.81654804810353" y="112"/>
+    
+      <rectangleSize width="140"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="U_Accept_Reject" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="208.81654804810353" y="217"/>
+      <rectangleSize height="30" width="140"/>
+    </shape>
+    <shape expanded="true" modelObjectName="P_Reject" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="91.99999999999999" y="356.9999988079071"/>
+      <rectangleSize height="30" width="140"/>
+    </shape>
+    <shape expanded="true" modelObjectName="P_Accept" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="282" y="356.9999988079071"/>
+      <rectangleSize width="140"/>
+    </shape>
+  </shapes>
+</layout>
+</Calculation:scenario>

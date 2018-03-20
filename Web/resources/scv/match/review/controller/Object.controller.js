@@ -47,7 +47,26 @@ sap.ui.define([
 				// Restore original busy indicator delay for the object view
 				oViewModel.setProperty("/delay", iOriginalBusyDelay);
 			});
+			var oTable = this.byId("table");
+			this._oTable = oTable;
 
+			var oDetailTable = this.byId("detailsTable1");
+			this._oDetailTable = oDetailTable;
+
+		},
+
+		/*	onBeforeRendering: function() {
+				
+
+				
+			},*/
+
+		onExit: function() {
+			var oBinding = this._oTable.getBinding("rows");
+			oBinding.detachDataReceived(this.fOnDataReceived);
+
+			var oBinding2 = this._oDetailTable.getBinding("rows");
+			oBinding2.detachDataReceived(this.fOnDataReceived2);
 		},
 
 		/**
@@ -96,6 +115,8 @@ sap.ui.define([
 		 * @public
 		 */
 		onNavBack: function() {
+			this.onExit();
+
 			var oHistory = History.getInstance();
 			var sPreviousHash = oHistory.getPreviousHash();
 
@@ -155,6 +176,7 @@ sap.ui.define([
 			this.getModel().read(sObjectPath + "/matchAssessments/$count", {
 				success: function(oData) {
 					var count = oData;
+					that.getView().byId("changeLogTable").setVisibleRowCount(parseInt(oData));
 					//Hide change log tab?
 					if (parseInt(count) === 0) {
 						that.byId("itb1").getItems()[1].setVisible(false);
@@ -164,8 +186,44 @@ sap.ui.define([
 				}
 			});
 
-		},
+			this.fOnDataReceived = function(oData) {
+				that.getView().byId("table").setVisibleRowCount(oData.getSource().iLength);
+				//that._updateTableTitle(oData.getSource().iLength, that);
+			};
+			var oBinding = this._oTable.getBinding("rows");
+			oBinding.attachDataReceived(this.fOnDataReceived);
+			// For the second table
+			this.fOnDataReceived2 = function(oData) {
+				var tableLength = oData.getSource().iLength;
+				if (tableLength === 0) {
+					that.getView().byId("detailsTable1").setVisibleRowCount(1);
+				} else {
+					that.getView().byId("detailsTable1").setVisibleRowCount(tableLength);
 
+				}
+				//that.getView().byId("detailsTable1").setVisibleRowCount(oData.getSource().iLength);
+				//that._updateTableTitle(oData.getSource().iLength, that);
+			};
+			var oBinding2 = this._oDetailTable.getBinding("rows");
+			oBinding2.attachDataReceived(this.fOnDataReceived2);
+		},
+		
+		updateChangeLog: function(sObjectPath){
+			var that = this;
+			this.getModel().read(sObjectPath + "/matchAssessments/$count", {
+				success: function(oData) {
+					var count = oData;
+					that.getView().byId("changeLogTable").setVisibleRowCount(parseInt(oData));
+					//Hide change log tab?
+					if (parseInt(count) === 0) {
+						that.byId("itb1").getItems()[1].setVisible(false);
+					} else {
+						that.byId("itb1").getItems()[1].setVisible(true);
+					}
+				}
+			});	
+			
+		},
 		/**
 		 * Binds the view to the object path.
 		 * @function
@@ -237,6 +295,19 @@ sap.ui.define([
 				path: sObjectPathRelated,
 				template: this.byId("detailsTable1").getBindingInfo("rows").template
 			});
+			var that = this;
+			this.fOnDataReceived2 = function(oData) {
+				var tableLength = oData.getSource().iLength;
+				if (tableLength === 0) {
+					that.getView().byId("detailsTable1").setVisibleRowCount(1);
+				} else {
+					that.getView().byId("detailsTable1").setVisibleRowCount(tableLength);
+
+				}
+				//that._updateTableTitle(oData.getSource().iLength, that);
+			};
+			var oBinding2 = this._oDetailTable.getBinding("rows");
+			oBinding2.attachDataReceived(this.fOnDataReceived2);
 		},
 
 		_showObject: function(oItem) {
@@ -307,10 +378,53 @@ sap.ui.define([
 		/**
 		 *  Accepts a matching group to be promoted into the SCV layer
 		 */
-		onAccept: function(oEvent) {
+		onAccept: function() {
+			var
+				entityId = this.getView().getBindingContext().getObject().ENTITY_ID,
+				acceptComment = sap.ui.getCore().byId("acceptComment").getValue(),
+				acceptComboBoxKey = sap.ui.getCore().byId("acceptComboBox").getSelectedKey(),
+				rowIndices = this.byId("table").getSelectedIndices(),
+				rowTable = this.byId("table").getRows(),
+				that = this;
+				this.onCloseDialog();
+
+			rowIndices.map(function(sRowIndex) {
+				for (var i = 0; i < rowTable.length; i++) {
+					if (sRowIndex === i) {
+						var payload = {};
+						payload.ENTITY_ID = entityId;
+						payload.STRATEGY = 'Promote';
+						payload.ACTION = 'Accept';
+						payload.ACTION_RESOLVED_STATUS = 'Success';
+						payload.CODE = acceptComboBoxKey;
+						payload.COMMENT = acceptComment;
+						payload.MATCH_ROW = that.getModel().getProperty(rowTable[i].getBindingContext().getPath() + "/MATCH_ROW_STR");
+
+						$.ajax({
+							type: "GET",
+							url: "/scv/match/srv/xs/review/updateMatchAssessments.xsjs",
+							contentType: "application/json",
+							data: payload,
+							dataType: "json",
+							crossDomain: true,
+
+							success: function(data) {
+								//refresh();
+								MessageToast.show('Data saved...');
+							},
+							error: function(data) {
+								var message = JSON.stringify(data);
+								alert(message);
+							}
+						});
+					}
+				}
+			});
+			//payload.MATCH_ROW = this.getView().byId("table").getSelectedIndices();
+			//var data = JSON.stringify(payload);
 
 			// Get current IDs
-			var groupId = this.getView().getBindingContext().getObject().GROUP_ID;
+			/*var groupId = this.getView().getBindingContext().getObject().GROUP_ID;
 			var entityId = this.getView().getBindingContext().getObject().ENTITY_ID;
 			var context = "";
 			var that = this;
@@ -459,16 +573,56 @@ sap.ui.define([
 				}
 			});
 
-			dialog.open();
+			dialog.open();*/
 
 		},
 
 		/**
 		 *  Rejects a matching group to be promoted into the SCV layer
 		 */
-		onReject: function(oEvent) {
+		onReject: function() {
+			var
+				entityId = this.getView().getBindingContext().getObject().ENTITY_ID,
+				rejectComment = sap.ui.getCore().byId("rejectComment").getValue(),
+				rejectComboBoxKey = sap.ui.getCore().byId("rejectComboBox").getSelectedKey(),
+				rowIndices = this.byId("table").getSelectedIndices(),
+				rowTable = this.byId("table").getRows(),
+				that = this;
+				this.onCloseDialog();
 
-			var groupId = this.getView().getBindingContext().getObject().GROUP_ID;
+			rowIndices.map(function(sRowIndex) {
+				for (var i = 0; i < rowTable.length; i++) {
+					if (sRowIndex === i) {
+						var payload = {};
+						payload.ENTITY_ID = entityId;
+						payload.STRATEGY = 'Promote';
+						payload.ACTION = 'Reject';
+						payload.ACTION_RESOLVED_STATUS = 'Error';
+						payload.CODE = rejectComboBoxKey;
+						payload.COMMENT = rejectComment;
+						payload.MATCH_ROW = that.getModel().getProperty(rowTable[i].getBindingContext().getPath() + "/MATCH_ROW_STR");
+
+						$.ajax({
+							type: "GET",
+							url: "/scv/match/srv/xs/review/updateMatchAssessments.xsjs",
+							contentType: "application/json",
+							data: payload,
+							dataType: "json",
+							crossDomain: true,
+
+							success: function(data) {
+								//refresh();
+								MessageToast.show('Data saved...');
+							},
+							error: function(data) {
+								var message = JSON.stringify(data);
+								alert(message);
+							}
+						});
+					}
+				}
+			});
+			/*var groupId = this.getView().getBindingContext().getObject().GROUP_ID;
 			var entityId = this.getView().getBindingContext().getObject().ENTITY_ID;
 			var context = "";
 			var that = this;
@@ -600,7 +754,7 @@ sap.ui.define([
 				}
 			});
 
-			dialog.open();
+			dialog.open();*/
 
 		},
 
@@ -624,7 +778,6 @@ sap.ui.define([
 
 				for (var i = 0; i < oRows.length; i++) {
 					//TODO Check the sIndex whether that is correct
-					debugger;
 					if (sRowIndex === oRows[i].sIndex) {
 						payload.matchRow = that.getModel().getProperty(oRows[i].getBindingContext().getPath() + "/MATCH_ROW_STR");
 					}
@@ -651,23 +804,45 @@ sap.ui.define([
 			});
 
 		},
-		_getDialog: function() {
+		/*_getDialog: function() {
 			if (!this._oDialog) {
-				this._oDialog = sap.ui.xmlfragment("osr.scv.match.review.view.HelloDialog", this );
+				this._oDialog = sap.ui.xmlfragment("osr.scv.match.review.view.RejectDialog", this );
 				this.getView().addDependent(this._oDialog);
 				
 			}
 			return this._oDialog;
-		},
-		onOpenDialog: function() {
+		},*/
+
+		onOpenRejectDialog: function() {
 			//var model = new sap.ui.model.odata.v2.ODataModel("https://vlosrhd4db.osr.qld.gov.au:51058/scv/match/srv/xs/review/matchResults.xsodata", false);
-			var model = this.getOwnerComponent().getModel();
-			this.getView().setModel(model);
-			this._getDialog().open();
+			//	var model = this.getOwnerComponent().getModel();
+			//	this.getView().setModel(model);
+			//	this._getDialog().open();
+			//if (!this._oDialog) {
+			this._oDialog = sap.ui.xmlfragment("osr.scv.match.review.view.RejectDialog", this);
+			this.getView().addDependent(this._oDialog);
+
+			//}
+			var dialog = this._oDialog;
+			dialog.open();
 		},
-		onCloseDialog : function () {
-			this._getDialog().close();
+
+		onOpenAcceptDialog: function() {
+			//if (!this._oDialog) {
+			this._oDialog = sap.ui.xmlfragment("osr.scv.match.review.view.AcceptDialog", this);
+			this.getView().addDependent(this._oDialog);
+
+			//}
+			var dialog = this._oDialog;
+			dialog.open();
 		},
+
+		onCloseDialog: function() {
+			this._oDialog.close();
+			this._oDialog.destroy();
+
+		},
+
 		handleLoadItems: function(oControlEvent) {
 			oControlEvent.getSource().getBinding("items").resume();
 		}
