@@ -6,14 +6,12 @@ context MatchResultsReview {
     entity Assessments {
         key ENTITY_ID : String(10);
         key TIMESTAMP : UTCTimestamp;
-        key MATCH_ROW : Integer;
+        key MATCH_ROW : Integer default 0;
             STRATEGY  : String(10);
             ACTION    : String(20);
             CODE      : String(60);
             COMMENT   : String(512);
             USER      : String(200);
-
-
     };
 
     entity Promotions {
@@ -96,4 +94,4 @@ context MatchResultsReview {
         key CODE        : String(60);
             DESCRIPTION : String(256);
     };
-}; 
+};
