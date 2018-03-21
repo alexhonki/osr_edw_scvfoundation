@@ -1,25 +1,31 @@
 <core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core" xmlns:l="sap.ui.layout">
 	<Dialog title="Reject Entity" type='Message'>
+		<content>
 		<l:VerticalLayout class="sapUiContentPadding" width="100%">
 			<l:content>
-				<Label text="You are about to reject match group group 422. Please select a reason code and provide a comment."/>
-				<ComboBox 
+				<Label text="You are about to reject this match group. Please select a reason code and provide a comment."/>
+				<ComboBox
+				id = "rejectComboBox"
 				placeholder="Add code (required)" 
 				maxWidth="100%"
 				items="{
-								path: '/assessmentText',
+								path: '/assessmentTextReject',
 								suspended: true
 							}"
 				loadItems="handleLoadItems"
 				>
-				<core:Item key="{CODE}" text="{DESCRIPTION}"/>	
+				<items>
+					<core:ListItem key="{REJECT_CODE}" text="{REJECT_DESCRIPTION}"/>
+				</items>	
+					
 				</ComboBox>
-				<TextArea placeholder="Add comment (required)" width='100%'/>
+				<TextArea id = "rejectComment" placeholder="Add comment (required)" width='100%'/>
 			</l:content>
 		</l:VerticalLayout>
-		<l:HorizontalLayout>
-			<Button type="Transparent" text="Submit" press="onCloseDialog"/>
+		</content>
+		<buttons>
+			<Button type="Transparent" text="Submit" press="onReject"/>
 			<Button type="Transparent" text="Cancel" press="onCloseDialog"/>
-		</l:HorizontalLayout>
+		</buttons>
 	</Dialog>
 </core:FragmentDefinition>

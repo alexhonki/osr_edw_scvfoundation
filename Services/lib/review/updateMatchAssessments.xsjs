@@ -14,7 +14,7 @@ var matchrow = $.request.parameters.get("MATCH_ROW");
 var conn = $.db.getConnection();
 var pstmt = conn.prepareStatement(
 	//"UPSERT \"osr.scv.foundation.db.data::MatchResultsReview.Assessments\" VALUES (?, ?, ?, ?, ?, ?) WHERE ENTITY_ID = ?"
-	"INSERT INTO \"osr.scv.foundation.db.data::MatchResultsReview.Assessments\" (\"ENTITY_ID\", \"TIMESTAMP\", \"STRATEGY\", \"CODE\", \"COMMENT\", \"USER\", \"ACTION\", \"MATCH_ROW\") VALUES (?,?,?,?,?,?,?)"
+	"INSERT INTO \"osr.scv.foundation.db.data::MatchResultsReview.Assessments\" (\"ENTITY_ID\", \"TIMESTAMP\", \"STRATEGY\", \"CODE\", \"COMMENT\", \"USER\", \"ACTION\", \"MATCH_ROW\") VALUES (?,?,?,?,?,?,?,?)"
 );
 
 function getTimestamp() {

@@ -1,0 +1,31 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core" xmlns:l="sap.ui.layout">
+	<Dialog title="Accept Entity" type='Message'>
+		<content>
+		<l:VerticalLayout class="sapUiContentPadding" width="100%">
+			<l:content>
+				<Label text="You are about to accept this match group. Please select a reason code and provide a comment."/>
+				<ComboBox 
+				id = "acceptComboBox"
+				placeholder="Add code (required)" 
+				maxWidth="100%"
+				items="{
+								path: '/assessmentTextAccept',
+								suspended: true
+							}"
+				loadItems="handleLoadItems"
+				>
+				<items>
+					<core:ListItem  key="{ACCEPT_CODE}" text="{ACCEPT_DESCRIPTION}"/>
+				</items>	
+					
+				</ComboBox>
+				<TextArea id = "acceptComment" placeholder="Add comment (required)" width='100%'/>
+			</l:content>
+		</l:VerticalLayout>
+		</content>
+		<buttons>
+			<Button type="Transparent" text="Submit" press="onAccept"/>
+			<Button type="Transparent" text="Cancel" press="onCloseDialog"/>
+		</buttons>
+	</Dialog>
+</core:FragmentDefinition>
