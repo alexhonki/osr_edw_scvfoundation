@@ -208,22 +208,6 @@ sap.ui.define([
 			oBinding2.attachDataReceived(this.fOnDataReceived2);
 		},
 		
-		updateChangeLog: function(sObjectPath){
-			var that = this;
-			this.getModel().read(sObjectPath + "/matchAssessments/$count", {
-				success: function(oData) {
-					var count = oData;
-					that.getView().byId("changeLogTable").setVisibleRowCount(parseInt(oData));
-					//Hide change log tab?
-					if (parseInt(count) === 0) {
-						that.byId("itb1").getItems()[1].setVisible(false);
-					} else {
-						that.byId("itb1").getItems()[1].setVisible(true);
-					}
-				}
-			});	
-			
-		},
 		/**
 		 * Binds the view to the object path.
 		 * @function
@@ -379,11 +363,14 @@ sap.ui.define([
 		 *  Accepts a matching group to be promoted into the SCV layer
 		 */
 		onAccept: function() {
+			var rowIndices = this.byId("table").getSelectedIndices();
+			if (rowIndices.length === 0){
+				MessageToast.show('Please Tick a Row...');
+			} else{
 			var
 				entityId = this.getView().getBindingContext().getObject().ENTITY_ID,
 				acceptComment = sap.ui.getCore().byId("acceptComment").getValue(),
 				acceptComboBoxKey = sap.ui.getCore().byId("acceptComboBox").getSelectedKey(),
-				rowIndices = this.byId("table").getSelectedIndices(),
 				rowTable = this.byId("table").getRows(),
 				that = this;
 				this.onCloseDialog();
@@ -410,6 +397,7 @@ sap.ui.define([
 
 							success: function(data) {
 								//refresh();
+								that.getView().getElementBinding().refresh(true);
 								MessageToast.show('Data saved...');
 							},
 							error: function(data) {
@@ -419,7 +407,7 @@ sap.ui.define([
 						});
 					}
 				}
-			});
+			});}
 			//payload.MATCH_ROW = this.getView().byId("table").getSelectedIndices();
 			//var data = JSON.stringify(payload);
 
@@ -612,6 +600,7 @@ sap.ui.define([
 
 							success: function(data) {
 								//refresh();
+								that.getView().getElementBinding().refresh(true);
 								MessageToast.show('Data saved...');
 							},
 							error: function(data) {
@@ -814,27 +803,20 @@ sap.ui.define([
 		},*/
 
 		onOpenRejectDialog: function() {
-			//var model = new sap.ui.model.odata.v2.ODataModel("https://vlosrhd4db.osr.qld.gov.au:51058/scv/match/srv/xs/review/matchResults.xsodata", false);
-			//	var model = this.getOwnerComponent().getModel();
-			//	this.getView().setModel(model);
-			//	this._getDialog().open();
-			//if (!this._oDialog) {
+			if (this.checkTableTick()){
 			this._oDialog = sap.ui.xmlfragment("osr.scv.match.review.view.RejectDialog", this);
 			this.getView().addDependent(this._oDialog);
-
-			//}
 			var dialog = this._oDialog;
 			dialog.open();
-		},
+		}},
 
 		onOpenAcceptDialog: function() {
-			//if (!this._oDialog) {
-			this._oDialog = sap.ui.xmlfragment("osr.scv.match.review.view.AcceptDialog", this);
-			this.getView().addDependent(this._oDialog);
-
-			//}
-			var dialog = this._oDialog;
-			dialog.open();
+			if (this.checkTableTick()){
+				this._oDialog = sap.ui.xmlfragment("osr.scv.match.review.view.AcceptDialog", this);
+				this.getView().addDependent(this._oDialog);
+				var dialog = this._oDialog;
+				dialog.open();
+			} 	
 		},
 
 		onCloseDialog: function() {
@@ -845,6 +827,16 @@ sap.ui.define([
 
 		handleLoadItems: function(oControlEvent) {
 			oControlEvent.getSource().getBinding("items").resume();
+		},
+		
+		checkTableTick: function(){
+			var rowIndices = this.byId("table").getSelectedIndices();
+			if (rowIndices.length === 0){
+				MessageToast.show('Please Tick a Row...');
+				return(false);
+			}else{
+				return(true);
+			}
 		}
 	});
 
