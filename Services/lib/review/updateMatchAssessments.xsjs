@@ -10,6 +10,7 @@ var action = $.request.parameters.get("ACTION");
 var code = $.request.parameters.get("CODE");
 var comment = $.request.parameters.get("COMMENT");
 var matchrow = $.request.parameters.get("MATCH_ROW");
+var actionResolveStatus = $.request.parameters.get("ACTION_RESOLVED_STATUS");			
 
 var conn = $.db.getConnection();
 var pstmt = conn.prepareStatement(
@@ -103,9 +104,10 @@ try {
 
 		// Update match review table
 		var strategyResolveStatus = strategy.indexOf('Promote') >= 0 ? 'Success' : 'Error';
-		var actionResolveStatus = action.indexOf('Accept') >= 0 ? 'Success' : 'Error';
+		/*var actionResolveStatus = action.indexOf('Accept') >= 0 ? 'Success' : 'Error';*/
+		var actionResolved = actionResolveStatus.indexOf('Warning') >= 0 ? 'Split' : action;
 		pstmt = conn.prepareStatement(
-			"UPDATE \"osr.scv.foundation.db.data::MatchResultsReview.Review\" SET \"STRATEGY\" = '" + strategy + "', \"STRATEGY_RESOLVED\" = '" + strategy + "', \"STRATEGY_RESOLVED_STATUS\" = '" + strategyResolveStatus + "', \"ACTION\" = '" + action + "', \"ACTION_RESOLVED\" = '" + action + "', \"ACTION_RESOLVED_STATUS\" = '" + actionResolveStatus +  "' WHERE ENTITY_ID = ?"
+			"UPDATE \"osr.scv.foundation.db.data::MatchResultsReview.Review\" SET \"STRATEGY\" = '" + strategy + "', \"STRATEGY_RESOLVED\" = '" + strategy + "', \"STRATEGY_RESOLVED_STATUS\" = '" + strategyResolveStatus + "', \"ACTION\" = '" + action + "', \"ACTION_RESOLVED\" = '" + actionResolved + "', \"ACTION_RESOLVED_STATUS\" = '" + actionResolveStatus +  "' WHERE ENTITY_ID = ?"
 		);
 		pstmt.setString(1, entityId);
 
