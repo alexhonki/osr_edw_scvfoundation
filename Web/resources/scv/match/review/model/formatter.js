@@ -89,7 +89,11 @@ sap.ui.define([
 				if (iValue === 'Reject' || !iValue) {
 					return ValueState.Error;
 				} else {
+					if (iValue === 'Split' || !iValue) {	
+					return ValueState.Warning;
+					}else {
 					return ValueState.Success;
+					}
 				}
 			},
 			

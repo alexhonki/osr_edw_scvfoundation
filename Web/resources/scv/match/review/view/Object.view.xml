@@ -22,13 +22,13 @@
 							<IconTabFilter text="Entity Info" key="key1">
 								<content>
 									<t:Table id="table" rows="{ path: 'matchResults', sorter: { path: 'GROUP_ROW_COUNT', descending: false}}" ariaLabelledBy="title"
-										selectionMode="MultiToggle">
+										selectionMode="MultiToggle" rowSelectionChange="boxTickedEvent">
 										<t:toolbar>
 											<Toolbar>
 												<Title id="tableDetailsHeader" text="Match Group Details"/>
 												<ToolbarSpacer/>
-												<Button id="acceptButton" type="Accept" text="Accept" press="onOpenAcceptDialog"/>
-												<Button id="rejectButton" type="Reject" text="Reject" press="onOpenRejectDialog"/>
+												<Button id="acceptButton" type="Accept" text="Save Entity" press="onOpenAcceptDialog"/>
+												<!--<Button id="rejectButton" type="Reject" text="Reject" press="onOpenRejectDialog"/>-->
 												<!--<Button id="promoteButton" type="Accept" text="Promote" enabled="{= ${STRATEGY_RESOLVED}.match('Review') ? true : false}" pressed="true"
 													press="onPromote" visible="{= ${STRATEGY_RESOLVED}.match('Review') ? true : false}"/>
 												<Button id="rejectButton" type="Reject" text="Reject" enabled="{= ${STRATEGY_RESOLVED}.match('Promote') ? true : false}" pressed="true"
@@ -307,15 +307,15 @@
 										<l:content>
 											<t:Table id="changeLogTable"
 												rows="{ path: 'matchAssessments', sorter: { path: 'TIMESTAMP', descending: true }}"
-												ariaLabelledBy="title" selectionMode="None">
+												ariaLabelledBy="title" selectionMode="None" enableGrouping="true">
 												<t:columns>
-													<t:Column width="15rem">
+													<t:Column width="10rem">
 														<Label text="Strategy"/>
 														<t:template>
 															<Text text="{STRATEGY}" wrapping="false"/>
 														</t:template>
 													</t:Column>
-													<t:Column width="15rem">
+													<t:Column width="10rem">
 														<Label text="User ID"/>
 														<t:template>
 															<Text text="{USER}" wrapping="false"/>
@@ -327,10 +327,16 @@
 															<Text text="{path: 'TIMESTAMP', type: 'sap.ui.model.type.DateTime'}" wrapping="false"/>
 														</t:template>
 													</t:Column>
-													<t:Column width="15rem">
+													<t:Column width="12rem">
 														<Label text="Match Row"/>
 														<t:template>
 															<Text text="{MATCH_ROW}" wrapping="false"/>
+														</t:template>
+													</t:Column>
+													<t:Column width="10rem">
+														<Label text="Action"/>
+														<t:template>
+															<ObjectStatus text="{ACTION}" state="{ path: 'ACTION', formatter: '.formatter.actionState' }" wrapping="false"/>
 														</t:template>
 													</t:Column>
 													<t:Column width="18rem">

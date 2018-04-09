@@ -38,6 +38,10 @@
       <viewAttribute id="DESCRIPTION">
         <descriptions defaultDescription="DESCRIPTION"/>
       </viewAttribute>
+    
+      <viewAttribute id="ACTION">
+        <descriptions defaultDescription="ACTION"/>
+      </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes>
       <calculatedViewAttribute id="CODE" datatype="NVARCHAR" length="60" expressionLanguage="SQL">
@@ -53,6 +57,8 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="COMMENT" source="COMMENT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="USER" source="USER"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ROW" source="MATCH_ROW"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="ACTION" source="ACTION"/>
     </input>
     <input node="Projection_2">
       <mapping xsi:type="Calculation:AttributeMapping" target="DESCRIPTION" source="DESCRIPTION"/>
@@ -83,6 +89,10 @@
       <viewAttribute id="MATCH_ROW">
         <descriptions defaultDescription="MATCH_ROW"/>
       </viewAttribute>
+    
+      <viewAttribute id="ACTION">
+        <descriptions defaultDescription="ACTION"/>
+      </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
@@ -94,17 +104,19 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="COMMENT" source="COMMENT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="USER" source="USER"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ROW" source="MATCH_ROW"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="ACTION" source="ACTION"/>
     </input>
   </calculationView>
   <calculationView xsi:type="Calculation:ProjectionView" id="Projection_2">
     <viewAttributes>
-      <viewAttribute id="CODE">
-        <descriptions defaultDescription="CODE"/>
-      </viewAttribute>
       <viewAttribute id="DESCRIPTION">
         <descriptions defaultDescription="DESCRIPTION"/>
       </viewAttribute>
-    </viewAttributes>
+    
+      <viewAttribute id="CODE">
+        <descriptions defaultDescription="CODE"/>
+      </viewAttribute></viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
     <input node="osr.scv.foundation.db.data::MatchResultsReview.AssessmentTexts">
@@ -131,19 +143,26 @@
       <descriptions defaultDescription="STRATEGY"/>
       <keyMapping columnObjectName="Join_1" columnName="STRATEGY"/>
     </attribute>
-    <attribute id="COMMENT" order="5" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="COMMENT"/>
-      <keyMapping columnObjectName="Join_1" columnName="COMMENT"/>
-    </attribute>
-    <attribute id="USER" order="6" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="USER" order="5" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="USER"/>
       <keyMapping columnObjectName="Join_1" columnName="USER"/>
     </attribute>
+  
+    <attribute id="ACTION" order="6" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="ACTION"/>
+  
+      <keyMapping columnObjectName="Join_1" columnName="ACTION"/>
+  
+    </attribute>
+  
     <attribute id="CODE" order="7" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="CODE"/>
       <keyMapping columnObjectName="Join_1" columnName="CODE"/>
     </attribute>
-  </attributes>
+    <attribute id="COMMENT" order="8" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="COMMENT"/>
+      <keyMapping columnObjectName="Join_1" columnName="COMMENT"/>
+    </attribute></attributes>
   <calculatedAttributes/>
   <baseMeasures/>
   <calculatedMeasures/>
@@ -152,13 +171,13 @@
 <layout>
   <shapes>
     <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
-      <upperLeftCorner x="208.81654804810353" y="112"/>
+      <upperLeftCorner x="208" y="112"/>
     
       <rectangleSize width="140"/>
     </shape>
   
     <shape expanded="true" modelObjectName="Join_1" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="208.81654804810353" y="217"/>
+      <upperLeftCorner x="208" y="217"/>
       <rectangleSize height="30" width="140"/>
     </shape>
     <shape modelObjectName="Projection_1" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput">
@@ -170,11 +189,11 @@
       <rectangleSize width="250"/>
     </shape>
     <shape expanded="true" modelObjectName="Projection_1" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="91.99999999999999" y="356.9999988079071"/>
+      <upperLeftCorner x="91" y="356"/>
       <rectangleSize height="30" width="140"/>
     </shape>
     <shape expanded="true" modelObjectName="Projection_2" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="282" y="356.9999988079071"/>
+      <upperLeftCorner x="282" y="356"/>
       <rectangleSize height="30" width="140"/>
     </shape>
   </shapes>

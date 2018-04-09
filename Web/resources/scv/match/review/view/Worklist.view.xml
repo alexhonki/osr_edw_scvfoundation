@@ -69,7 +69,7 @@
 						<content>
 							<t:Table id="table"
 								rows="{ path: '/matchResultsReview', sorter: { path: 'GROUP_ID', descending: false }, filters : [{ path : 'RMS_DUPLICATES', operator : 'EQ', value1 : 1 }]}"
-								ariaLabelledBy="title" visibleRowCount='18' selectionMode="None">
+								ariaLabelledBy="title" visibleRowCount='17' selectionMode="None">
 								<t:toolbar>
 									<Toolbar>
 										<Title id="tableHeader" text="{worklistView>/worklistTableTitle}"/>
@@ -114,7 +114,7 @@
 											<ObjectNumber number="{AVG_SCORE}"/>
 										</t:template>
 									</t:Column>
-									<t:Column id="strategyResolved" width="8rem" filterProperty="STRATEGY_RESOLVED" sortProperty= "STRATEGY_RESOLVED">
+									<t:Column id="strategyResolved" width="10rem" filterProperty="STRATEGY_RESOLVED" sortProperty= "STRATEGY_RESOLVED">
 										<Label text="Strategy Resolved"/>
 										<t:template>
 											<ObjectStatus text="{STRATEGY_RESOLVED}" state="{ path: 'STRATEGY_RESOLVED', formatter: '.formatter.strategyState' }" wrapping="false"/>
