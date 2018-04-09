@@ -10,11 +10,6 @@ modules:
       - name: OsrScvFoundationContainer
         properties:
           TARGET_CONTAINER: '~{hdi-container-name}'
-      - name: OSR-EDW-FOUNDATION-grantor
-        group: SERVICE_REPLACEMENTS
-        properties:
-          key: logical-OSR-EDW-FOUNDATION-grantor
-          service: '~{OSR-EDW-FOUNDATION-grantor-service}'
       - name: OSR-EDW-SOURCE-RMS-grantor
         group: SERVICE_REPLACEMENTS
         properties:
@@ -77,13 +72,7 @@ resources:
     properties:
       hdi-container-name: '${service-name}'
     type: com.sap.xs.hdi-container
-  - name: OSR-EDW-FOUNDATION-grantor
-    properties:
-      OSR-EDW-FOUNDATION-grantor-service: '${service-name}'
-    parameters:
-      service-name: OSR-EDW-FOUNDATION-deploy
-    type: org.cloudfoundry.existing-service
-
+    
   - name: OSR-EDW-SOURCE-RMS-grantor
     properties:
       OSR-EDW-SOURCE-RMS-grantor-service: '${service-name}'
