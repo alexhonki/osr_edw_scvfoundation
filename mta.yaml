@@ -24,6 +24,8 @@ modules:
   - name: OSR_SCV_FOUNDATION-Services
     type: nodejs
     path: Services
+    build-parameters:
+      builder: grunt
     provides:
       - name: Services_api
         properties:
