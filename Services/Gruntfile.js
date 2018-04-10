@@ -4,7 +4,7 @@ module.exports = function (grunt) {
         pkg: grunt.file.readJSON("package.json"),
         "eslint": {
             options: {
-                configFile: ".eslintrc.json"
+                configFile: ".eslintrc"
             },
             target: ["*.js", "lib/**.js"]
         },
@@ -14,7 +14,6 @@ module.exports = function (grunt) {
             }
         }
     });
-
     grunt.loadNpmTasks("grunt-eslint");
     grunt.loadNpmTasks("grunt-execute");
     grunt.registerTask("default", []);
