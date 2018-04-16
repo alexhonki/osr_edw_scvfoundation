@@ -3,6 +3,7 @@
 
 var xsjstest = require("@sap/xsjs-test");
 var xsenv = require("@sap/xsenv");
+var request = require("request");
 
 var testResultsDir = "./.testresults";
 var timestamp = Date.now();

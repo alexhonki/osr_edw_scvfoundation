@@ -1,12 +1,28 @@
 {
 	"authenticationMethod": "route",
-	"routes": [{
+	"routes": [ {
+		"source": "/scv/match/srv/xs/test/(.*)(.xsjs)",
+		"destination": "Services_url",
+		"authenticationType": "xsuaa",
+		"scope": "$XSAPPNAME.REVIEW"
+	},{
 		"source": "/scv/match/srv/xs/review/(.*)(.xsjs)",
 		"destination": "Services_url",
 		"csrfProtection": false,
 		"authenticationType": "xsuaa",
 		"scope": "$XSAPPNAME.REVIEW"
 	}, {
+		"source": "/scv/match/srv/xs/test/(.*)(.xsodata)",
+		"destination": "Services_url",
+		"authenticationType": "xsuaa",
+		"scope": "$XSAPPNAME.REVIEW"
+	}, {
+		"source": "/scv/match/srv/xs/test/(.*)(.xsjs)",
+		"destination": "Services_url",
+		"authenticationType": "xsuaa",
+		"scope": "$XSAPPNAME.REVIEW"
+	}
+	, {
 		"source": "/scv/match/srv/xs/review/(.*)(.xsodata)",
 		"destination": "Services_url",
 		"authenticationType": "xsuaa",
