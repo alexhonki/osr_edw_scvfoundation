@@ -13,22 +13,27 @@ describe("Match Review Test Suite", function() {
 	/**
 	 * This is the expected result
 	 */ 
+	
 	function addResult(){
+	/*
 	   var resultData = {
 		    "O_TEST_ID" : "Match results integrity",
 		    "O_RETURN_CODE" : "SUCCESS"
 		};
 		testEnvironment.fillTestTable("results",resultData);
+	*/
 	}
 	
 	/**
 	 * Define the model definition and create instance of mockstar environment
 	 */
+	
 	beforeOnce(function() {
+	/*
 		var definition = {
-				schema : "OSR_SCV_FOUNDATION_OSRSCVFOUNDATIONCONTAINER_1",
+				schema : "",
 				model : {
-					schema : 'OSR_SCV_FOUNDATION_OSRSCVFOUNDATIONCONTAINER_1',
+					schema : '',
 					name : 'osr.scv.foundation.db.Procedures.Test::SP_TestMatchResultsIntegrity'
 				},
 				substituteTables : {
@@ -36,13 +41,15 @@ describe("Match Review Test Suite", function() {
 				}
 		};
 		testEnvironment = mockstarEnvironment.defineAndCreate(definition); 
+	*/
+		
 	});
 	
 	/**
 	 * Delete test results between test executions
 	 */ 
 	beforeEach(function() {
-		testEnvironment.clearAllTestTables();
+		//testEnvironment.clearAllTestTables();
 	});
 
 	/**
@@ -50,7 +57,7 @@ describe("Match Review Test Suite", function() {
 	 */
 	it("test match results integrity", function() {
     	
-		addResult();
+		//addResult();
 		
 		var callStatement = 'CALL ' + '\"osr.scv.foundation.db.Procedures.Test::SP_TestMatchResultsIntegrity\"(?);';
     	var callable = jasmine.dbConnection.prepareCall(callStatement);
@@ -63,6 +70,5 @@ describe("Match Review Test Suite", function() {
     		"O_RETURN_CODE": ["SUCCESS"]
     	};
     	expect(resultSet).toMatchData(expectedData, ["O_TEST_ID"]);
-        expect(200).toBe($.net.http.OK);
     });
 });
