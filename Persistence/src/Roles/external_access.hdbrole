@@ -16,7 +16,42 @@
 				"name": "osr.scv.foundation.db.data::MatchResultsReview.AssessmentTexts",
 				"type": "TABLE",
 				"privileges": ["SELECT"]
-			}	
+			},
+		{		
+				"name": "osr.scv.foundation.db.data::SCVFoundation.Master",
+				"type": "TABLE",
+				"privileges": ["SELECT"]
+			},
+		{		
+				"name": "osr.scv.foundation.db.data::SCVFoundation.PersonRms",
+				"type": "TABLE",
+				"privileges": ["SELECT"]
+			}	,
+		{		
+				"name": "osr.scv.foundation.db.data::SCVFoundation.PersonTmr",
+				"type": "TABLE",
+				"privileges": ["SELECT"]
+			}	,
+		{		
+				"name": "osr.scv.foundation.db.data::SCVFoundation.AddressRms",
+				"type": "TABLE",
+				"privileges": ["SELECT"]
+			}	,
+		{		
+				"name": "osr.scv.foundation.db.data::SCVFoundation.AddressTmr",
+				"type": "TABLE",
+				"privileges": ["SELECT"]
+			}	,
+		{		
+				"name": "osr.scv.foundation.db.data::SCVFoundation.ContactEmail",
+				"type": "TABLE",
+				"privileges": ["SELECT"]
+			}	,
+		{		
+				"name": "osr.scv.foundation.db.data::SCVFoundation.ContactNumber",
+				"type": "TABLE",
+				"privileges": ["SELECT"]
+			}			
 		]
      }
 }
