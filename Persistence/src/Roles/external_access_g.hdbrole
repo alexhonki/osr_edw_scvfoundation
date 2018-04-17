@@ -7,16 +7,51 @@
 				"type": "TABLE",
 				"privileges_with_grant_option": ["SELECT"]
 			},
-			{		
+		{		
 				"name": "osr.scv.foundation.db.data::MatchResultsReview.Assessments",
 				"type": "TABLE",
-				"privileges": ["SELECT"]
+				"privileges_with_grant_option": ["SELECT"]
 			},
 		{		
 				"name": "osr.scv.foundation.db.data::MatchResultsReview.AssessmentTexts",
 				"type": "TABLE",
-				"privileges": ["SELECT"]
-			}	
+				"privileges_with_grant_option": ["SELECT"]
+			},
+		{		
+				"name": "osr.scv.foundation.db.data::SCVFoundation.Master",
+				"type": "TABLE",
+				"privileges_with_grant_option": ["SELECT"]
+			},
+		{		
+				"name": "osr.scv.foundation.db.data::SCVFoundation.PersonRms",
+				"type": "TABLE",
+				"privileges_with_grant_option": ["SELECT"]
+			}	,
+		{		
+				"name": "osr.scv.foundation.db.data::SCVFoundation.PersonTmr",
+				"type": "TABLE",
+				"privileges_with_grant_option": ["SELECT"]
+			}	,
+		{		
+				"name": "osr.scv.foundation.db.data::SCVFoundation.AddressRms",
+				"type": "TABLE",
+				"privileges_with_grant_option": ["SELECT"]
+			}	,
+		{		
+				"name": "osr.scv.foundation.db.data::SCVFoundation.AddressTmr",
+				"type": "TABLE",
+				"privileges_with_grant_option": ["SELECT"]
+			}	,
+		{		
+				"name": "osr.scv.foundation.db.data::SCVFoundation.ContactEmail",
+				"type": "TABLE",
+				"privileges_with_grant_option": ["SELECT"]
+			}	,
+		{		
+				"name": "osr.scv.foundation.db.data::SCVFoundation.ContactNumber",
+				"type": "TABLE",
+				"privileges_with_grant_option": ["SELECT"]
+			}			
 		]
      }
 }
