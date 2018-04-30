@@ -1,0 +1,10 @@
+namespace osr.scv.foundation.db.data;
+
+context TestResults {
+
+    /*@@layout{"layoutInfo":{"x":105,"y":128.5}}*/
+    entity Results {
+        O_TEST_ID     : String(50);
+        O_RETURN_CODE : String(10);
+    };
+};
