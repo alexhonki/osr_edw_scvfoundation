@@ -12,10 +12,10 @@
 PROCEDURE "osr.scv.foundation.db.Procedures::SP_MoveRowsToScvFoundation" (
 	
 	--IN i_entities		TABLE (ENTITY_ID NVARCHAR(10)),
-	IN i_user			NVARCHAR(20),
-	IN i_timestamp		TIMESTAMP,
-	OUT o_return_code	NVARCHAR(10),
-	OUT o_message		NVARCHAR(200)
+--	IN i_user			NVARCHAR(20),
+--	IN i_timestamp		TIMESTAMP,
+--	OUT o_return_code	NVARCHAR(10),
+--	OUT o_message		NVARCHAR(200)
 )
    LANGUAGE SQLSCRIPT
    SQL SECURITY INVOKER
@@ -31,8 +31,8 @@ BEGIN
 		DROP TABLE #lt_entity_mappings;
 		DROP TABLE #lt_scv_counter;
 		
-		o_return_code :=  'ERROR';
-		o_message:=  'ERROR: ' || ::SQL_ERROR_CODE || ' ' || ::SQL_ERROR_MESSAGE;
+--		o_return_code :=  'ERROR';
+--		o_message:=  'ERROR: ' || ::SQL_ERROR_CODE || ' ' || ::SQL_ERROR_MESSAGE;
 	END;
 	
 	-- Temporary table to hold the SCV ID to Entity ID mapping
@@ -715,8 +715,8 @@ BEGIN
 	DROP TABLE #lt_entity_mappings;
 	DROP TABLE #lt_scv_counter;
 	
-    o_return_code := 'SUCCESS';
-    o_message := 'Entites moved successfully';
+--    o_return_code := 'SUCCESS';
+--    o_message := 'Entites moved successfully';
 
 
 END
