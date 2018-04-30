@@ -1,8 +1,8 @@
 PROCEDURE "osr.scv.foundation.db.Procedures::SP_DetectScvStatus" ( 
-	IN i_user			NVARCHAR(20),
-	IN i_timestamp		TIMESTAMP,
-	OUT o_return_code	NVARCHAR(10),
-	OUT o_message		NVARCHAR(500)
+--	IN i_user			NVARCHAR(20),
+--	IN i_timestamp		TIMESTAMP,
+--	OUT o_return_code	NVARCHAR(10),
+--	OUT o_message		NVARCHAR(500)
 	)
    LANGUAGE SQLSCRIPT
    SQL SECURITY INVOKER
@@ -66,8 +66,8 @@ BEGIN
 		DROP TABLE #lt_record_action;
 --		DROP TABLE #lt_entity_list;
 		
-		o_return_code :=  'ERROR';
-		o_message:=  'ERROR: ' || ::SQL_ERROR_CODE || ' ' || ::SQL_ERROR_MESSAGE;
+--		o_return_code :=  'ERROR';
+--		o_message:=  'ERROR: ' || ::SQL_ERROR_CODE || ' ' || ::SQL_ERROR_MESSAGE;
 	END;
 	
 	DECLARE EXIT HANDLER FOR SQL_ERROR_CODE 1299
@@ -402,7 +402,7 @@ BEGIN
 			--SELECT * FROM #lt_record_action;
 			INSERT INTO "osr.scv.foundation.db.data::MatchResults.MatchDelta" (SELECT MATCH_ROW_ID, SCV_ID, ACTION FROM #lt_record_action);
 			DROP TABLE #lt_record_action;
-			o_return_code := 'SUCCESS';
-    		o_message := 'Entites moved successfully';
+--			o_return_code := 'SUCCESS';
+--    		o_message := 'Entites moved successfully';
 END;
 END
