@@ -1517,11 +1517,15 @@
       <viewAttribute id="MATCH_PHONE2">
         <descriptions defaultDescription="MATCH_PHONE2"/>
       </viewAttribute>
-      <viewAttribute id="BIRTHDT">
-        <descriptions defaultDescription="BIRTHDT"/>
+      <viewAttribute id="CC_BIRTHDT">
+        <descriptions defaultDescription="CC_BIRTHDT"/>
       </viewAttribute>
+    
       <viewAttribute id="PARTNER">
         <descriptions defaultDescription="PARTNER"/>
+      </viewAttribute>
+      <viewAttribute id="BIRTHDT">
+        <descriptions defaultDescription="BIRTHDT"/>
       </viewAttribute>
       <viewAttribute id="CLIENT">
         <descriptions defaultDescription="CLIENT"/>
@@ -1576,11 +1580,7 @@
       </viewAttribute>
       <viewAttribute id="ADDRNUMBER_1">
         <descriptions defaultDescription="ADDRNUMBER_1"/>
-      </viewAttribute>
-      <viewAttribute id="CC_BIRTHDT">
-        <descriptions defaultDescription="CC_BIRTHDT"/>
-      </viewAttribute>
-    </viewAttributes>
+      </viewAttribute></viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
     <input node="J_RMS_BPsWithAddresses">
@@ -1884,7 +1884,7 @@
     </input>
     <filter>&quot;PATH&quot; = 'DONOTLOAD'</filter>
   </calculationView>
-  <calculationView xsi:type="Calculation:ProjectionView" id="P_TMRCustomers">
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_TMRCustomers" filterExpressionLanguage="SQL">
     <viewAttributes>
       <viewAttribute id="MATCH_PERSON_GN_STD6">
         <descriptions defaultDescription="MATCH_PERSON_GN_STD6"/>
@@ -2130,8 +2130,7 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_LOCALITY2" source="MATCH_ADDR_LOCALITY2"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_PRIM_NUMBER" source="MATCH_ADDR_PRIM_NUMBER"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_ADDRESS_DELIVERY" source="STD_ADDR_ADDRESS_DELIVERY"/>
-    </input>
-  </calculationView>
+    </input></calculationView>
 </calculationViews>
 <logicalModel id="U_AllMatchFields">
   <attributes>
@@ -2418,7 +2417,7 @@
     </shape>
     <shape modelObjectName="P_BusinessPartners" modelObjectNameSpace="J_BPsWithTimeDependendAddresses" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="20" y="30"/>
-      <rectangleSize width="263.4501953125"/>
+      <rectangleSize width="263"/>
     </shape>
     <shape modelObjectName="P_TimedependendAddressUsage" modelObjectNameSpace="J_BPsWithTimeDependendAddresses" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="320" y="30"/>

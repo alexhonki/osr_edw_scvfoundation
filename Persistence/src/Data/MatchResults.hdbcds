@@ -98,4 +98,11 @@ context MatchResults {
             CONTACT_CHECKSUM     : Binary(32);
             CONTACT_STD_CHECKSUM : Binary(32);
     };
+
+    /*@@layout{"layoutInfo":{"x":499,"y":-225.5}}*/
+    entity MatchDelta {
+        key MATCH_ROW_ID : Integer;
+            SCV_ID       : Integer;
+            ACTION       : String(10);
+    };
 };
