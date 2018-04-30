@@ -36,10 +36,27 @@
 											</Toolbar>
 										</t:toolbar>
 										<t:columns>
+										<!--	<t:Column width="5rem">
+												<t:template>
+													<Switch id="switch" type="AcceptReject" state="true" enabled="true" tooltip="Accept or Reject row" change="onSwitchChange" />
+												</t:template>
+											</t:Column>-->
 											<t:Column width="3rem">
 												<Label text="#"/>
 												<t:template>
 													<Text text="{GROUP_ROW_COUNT}" wrapping="false"/>
+												</t:template>
+											</t:Column>
+											<t:Column width="5rem">
+												<Label text="Status"/>
+												<t:template>
+													<Text text="{ACTION}" wrapping="false"/>
+												</t:template>
+											</t:Column>
+											<t:Column width="5rem">
+												<Label text="SCV ID"/>
+												<t:template>
+													<Text text="{SCV_ID}" wrapping="false"/>
 												</t:template>
 											</t:Column>
 											<t:Column width="8rem">

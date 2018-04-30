@@ -1,6 +1,8 @@
 FUNCTION "osr.scv.foundation.db.functions::MatchResultsDetails" ( IN i_entity_id NVARCHAR(20) )
        RETURNS TABLE (	GROUP_ID Integer,
         				ENTITY_ID VARCHAR(20),
+        				SCV_ID INTEGER,
+						ACTION NVARCHAR(10),
         				GROUP_ROW_COUNT INTEGER,
         				SOURCE_SYSTEM NVARCHAR(10),
         				SYSTEM_ID NVARCHAR(10),
@@ -31,6 +33,8 @@ BEGIN
 				return	SELECT 
 		            	a.GROUP_ID,
 						a.ENTITY_ID,
+						h.SCV_ID,
+						h.ACTION,
 						ROW_NUMBER() OVER (PARTITION BY GROUP_ID ORDER BY SOURCE_SYSTEM DESC, SYSTEM_ID DESC) AS GROUP_ROW_COUNT,
 		            	a.SOURCE_SYSTEM,
 		            	a.SYSTEM_ID,
@@ -76,6 +80,10 @@ BEGIN
 		                                 FROM   "osr.scv.foundation.db.data::MatchResults.MatchTracing" 
 		                                ) AS b
 		                ON a."Match_ROW_ID" = b.ROW_ID
+		                LEFT OUTER JOIN (
+		                				 SELECT "MATCH_ROW_ID", "SCV_ID", "ACTION" FROM "osr.scv.foundation.db.data::MatchResults.MatchDelta"	
+		                				) AS h
+		                ON a."Match_ROW_ID" = h."MATCH_ROW_ID"
 						WHERE ENTITY_ID = :i_entity_id
 		                ORDER  BY SOURCE_SYSTEM ASC, 
 		                          SYSTEM_ID DESC,

@@ -116,12 +116,17 @@
       <descriptions defaultDescription="ADDRNUMBER"/>
       <keyMapping columnObjectName="MatchResultsDetails" columnName="ADDRNUMBER"/>
     </attribute>
-  
     <attribute id="RULE_NAME" order="24" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="RULE_NAME"/>
-  
       <keyMapping columnObjectName="MatchResultsDetails" columnName="RULE_NAME"/>
-  
+    </attribute>
+    <attribute id="SCV_ID" order="25" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="SCV_ID"/>
+      <keyMapping columnObjectName="MatchResultsDetails" columnName="SCV_ID"/>
+    </attribute>
+    <attribute id="ACTION" order="26" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="ACTION"/>
+      <keyMapping columnObjectName="MatchResultsDetails" columnName="ACTION"/>
     </attribute>
   </attributes>
   <calculatedAttributes>

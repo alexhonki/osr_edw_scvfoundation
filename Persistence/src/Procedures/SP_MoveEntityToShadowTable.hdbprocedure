@@ -79,6 +79,9 @@ BEGIN
 		INSERT INTO "osr.scv.foundation.db.data::MatchResults.MatchResultsShadow"
 		(
 			SELECT m.* FROM "osr.scv.foundation.db.data::MatchResults.MatchResults" m
+			INNER JOIN (SELECT MATCH_ROW_ID FROM "osr.scv.foundation.db.data::MatchResults.MatchDelta"
+				WHERE ACTION = 'Add') h
+			ON m."Match_ROW_ID" = h."MATCH_ROW_ID"
 			INNER JOIN :lt_entities r
 			ON m.ENTITY_ID = r.ENTITY_ID
 		);
@@ -99,7 +102,7 @@ BEGIN
 																				  SELECT ENTITY_ID, :i_timestamp, :i_user, ACTION_RESOLVED as ACTION  FROM :lt_entities
 																				 );
         o_return_code := 'SUCCESS';
-        o_message := 'Entitites moved successfully';
+        o_message := 'Entites moved successfully';
 	--END IF;
 
 END
