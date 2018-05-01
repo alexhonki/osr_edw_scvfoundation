@@ -66,8 +66,9 @@ BEGIN
 		DROP TABLE #lt_record_action;
 --		DROP TABLE #lt_entity_list;
 		
---		o_return_code :=  'ERROR';
+		
 --		o_message:=  'ERROR: ' || ::SQL_ERROR_CODE || ' ' || ::SQL_ERROR_MESSAGE;
+--		o_return_code :=  'ERROR';
 	END;
 	
 	DECLARE EXIT HANDLER FOR SQL_ERROR_CODE 1299
@@ -102,7 +103,8 @@ BEGIN
 						a.ENTITY_ID,
 						COALESCE(e.CHECKSUM_PERSON_RMS, f.CHECKSUM_PERSON_TMR) AS CHECKSUM_PERSON,
 						COALESCE(e1.CHECKSUM_ADDR_RMS, f.CHECKSUM_ADDR_TMR) AS CHECKSUM_ADDR,
-						ROW_NUMBER() OVER (PARTITION BY GROUP_ID ORDER BY SOURCE_SYSTEM DESC, SYSTEM_ID DESC) AS GROUP_ROW_COUNT,
+--OLD CODE						ROW_NUMBER() OVER (PARTITION BY GROUP_ID ORDER BY SOURCE_SYSTEM DESC, SYSTEM_ID DESC) AS GROUP_ROW_COUNT,
+						ROW_NUMBER() OVER (PARTITION BY ENTITY_ID ORDER BY SOURCE_SYSTEM DESC, SYSTEM_ID DESC) AS GROUP_ROW_COUNT,
 						CHECKSUM_TEL_RMS,
 						CHECKSUM_FAX_RMS,
 						--CONTACT_PHONE_NO,
@@ -403,6 +405,6 @@ BEGIN
 			INSERT INTO "osr.scv.foundation.db.data::MatchResults.MatchDelta" (SELECT MATCH_ROW_ID, SCV_ID, ACTION FROM #lt_record_action);
 			DROP TABLE #lt_record_action;
 --			o_return_code := 'SUCCESS';
---    		o_message := 'Entites moved successfully';
+ --   		o_message := 'Entites moved successfully';
 END;
 END
