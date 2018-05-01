@@ -10,7 +10,7 @@ PROCEDURE "osr.scv.foundation.db.Procedures::SP_MoveEntityToShadowTable" (
 	
 	--IN i_entities		TABLE (ENTITY_ID NVARCHAR(10)),
 	IN i_user			NVARCHAR(20),
-	IN i_timestamp		TIMESTAMP,
+	OUT i_timestamp		TIMESTAMP,
 	OUT o_return_code	NVARCHAR(10),
 	OUT o_message		NVARCHAR(200)
 )

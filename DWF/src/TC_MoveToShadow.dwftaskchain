@@ -1,0 +1,37 @@
+{
+  "taskList": {
+    "1": {
+      "inline": {
+        "type": "START",
+        "taskGroup": "com.sap.dwf.toe.executionControl"
+      }
+    },
+    "2": {
+      "inline": {
+        "type": "executeProcedure",
+        "taskGroup": "hanaNative",
+        "description": "Move to Shadow",
+        "parameterValues": [
+          {
+            "id": "procName",
+            "value": "osr.scv.foundation.db.Procedures::SP_MoveEntityToShadowTable"
+          },
+          {
+            "id": "procForm.I_USER",
+            "value": ""
+          },
+          {
+            "id": "procForm.I_TIMESTAMP",
+            "value": ""
+          }
+        ]
+      },
+      "preconditions": [
+        {
+          "from": "1",
+          "status": "NEUTRAL"
+        }
+      ]
+    }
+  }
+}
