@@ -88,6 +88,7 @@ BEGIN
     
     CREATE LOCAL TEMPORARY TABLE #lt_record_action2 (
             MATCH_ROW_ID INTEGER,
+            SCV_ID INTEGER,
             ACTION NVARCHAR(10)
     );
     
@@ -210,21 +211,21 @@ BEGIN
 	
 	-- OLD SELECT COUNT(DISTINCT ENTITY_ID) INTO lt_count_entity FROM :lt_entity_information;
 	
---	SELECT MAX (ROW_COUNT) INTO lt_count_entity FROM :lt_entity_information;
+	SELECT MAX (ROW_COUNT) INTO lt_count_entity FROM :lt_entity_information;
 	
 	
---	WHILE :lv_current_entity <= :lt_count_entity DO
+	WHILE :lv_current_entity <= :lt_count_entity DO
 			
 --			SELECT ENTITY_ID			INTO lv_current_row_entity		FROM :lt_entity_information WHERE ROW_COUNT = :lv_current_entity;
 
---			INSERT INTO #lt_record_action2 VALUES ( :lv_current_entity,'Add');
+			INSERT INTO #lt_record_action2 VALUES ( :lv_current_entity, :lv_current_entity, 'Add');
 			
---			lv_current_entity := :lv_current_entity + 1;
---	END WHILE;		
+			lv_current_entity := :lv_current_entity + 1;
+	END WHILE;		
 			--SELECT * FROM #lt_record_action2;
---			INSERT INTO "osr.scv.foundation.db.data::MatchResults.MatchDelta" (SELECT MATCH_ROW_ID, 99, ACTION FROM #lt_record_action2);
+			INSERT INTO "osr.scv.foundation.db.data::MatchResults.MatchDelta" (SELECT MATCH_ROW_ID, SCV_ID, ACTION FROM #lt_record_action2);
 			DROP TABLE #lt_record_action2;
---			o_return_code := 'SUCCESS';
- --   		o_message := 'Entites moved successfully';
+--			o_return_code := :lv_current_entity ;
+--	  		o_message := 'Entites moved successfully';
 END;
 END
