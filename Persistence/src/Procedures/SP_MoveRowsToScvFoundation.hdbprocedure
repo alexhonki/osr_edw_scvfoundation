@@ -602,12 +602,12 @@ BEGIN
 	
 	lt_contact_entities_tmr_custMain_number = 
 							SELECT SCV_ID,
-							       ENTITY_ID, SOURCE_SYSTEM, SYSTEM_ID, UPDATED_AT, CONTACT_PHONE_NO,
+							       ENTITY_ID, SOURCE_SYSTEM, SYSTEM_ID, UPDATED_AT, CONTACT_PHONE_NO, NUMBER_TYPE, 
 							       CHECKSUM
 							FROM (
 							SELECT ma.SCV_ID, mr.* FROM 
 							(
-								SELECT mr.ENTITY_ID, mr.SOURCE_SYSTEM, mr.SYSTEM_ID, CASE WHEN LOCATE(mr.UPDATED_AT,'|') < 1 THEN mr.UPDATED_AT ELSE SUBSTRING(mr.UPDATED_AT,1,LOCATE(mr.UPDATED_AT,'|')-1) END as UPDATED_AT, mr.CONTACT_PHONE_NO,
+								SELECT mr.ENTITY_ID, mr.SOURCE_SYSTEM, mr.SYSTEM_ID, CASE WHEN LOCATE(mr.UPDATED_AT,'|') < 1 THEN mr.UPDATED_AT ELSE SUBSTRING(mr.UPDATED_AT,1,LOCATE(mr.UPDATED_AT,'|')-1) END as UPDATED_AT, mr.CONTACT_PHONE_NO, 'PHO' as NUMBER_TYPE,
 	    							   -- Create checksum for TMR CUSTMAIN contacts
     								   HASH_SHA256(TO_BINARY(TO_VARCHAR(mr.UPDATED_AT)), TO_BINARY(TO_VARCHAR(mr.CONTACT_PHONE_NO))) as CHECKSUM,
     								   mr."Match_ROW_ID"
@@ -637,19 +637,19 @@ BEGIN
 							ON mr.ENTITY_ID = ma.ENTITY_ID1 AND mr."Match_ROW_ID" = ma.MATCH_ROW_ID
 						   )
 						   GROUP BY SCV_ID,
-									ENTITY_ID, SOURCE_SYSTEM, SYSTEM_ID, UPDATED_AT, CONTACT_PHONE_NO,
+									ENTITY_ID, SOURCE_SYSTEM, SYSTEM_ID, UPDATED_AT, CONTACT_PHONE_NO, NUMBER_TYPE,
 							        CHECKSUM
 						 ;
 	
 	
 	lt_contact_entities_tmr_custContact_number = 
 										SELECT SCV_ID,
-										       ENTITY_ID, SOURCE_SYSTEM, SYSTEM_ID, UPDATED_AT, CONTACT_PHONE_NO,
+										       ENTITY_ID, SOURCE_SYSTEM, SYSTEM_ID, UPDATED_AT, CONTACT_PHONE_NO, NUMBER_TYPE,
 										       CHECKSUM
 										FROM (
 											SELECT ma.SCV_ID, mr.* FROM 
 											(			
-												SELECT DISTINCT a.ENTITY_ID, a.SOURCE_SYSTEM, a.SYSTEM_ID, b.LAST_UPDATED AS UPDATED_AT, b.SMS_CONTACT_NUMBER as CONTACT_PHONE_NO,
+												SELECT DISTINCT a.ENTITY_ID, a.SOURCE_SYSTEM, a.SYSTEM_ID, b.LAST_UPDATED AS UPDATED_AT, b.SMS_CONTACT_NUMBER as CONTACT_PHONE_NO, 'SMS' as NUMBER_TYPE,
 			    	            				HASH_SHA256(TO_BINARY(TO_VARCHAR(b.LAST_UPDATED)), TO_BINARY(TO_VARCHAR(SMS_CONTACT_NUMBER))) as CHECKSUM,
 			    	            				a."Match_ROW_ID"
 												FROM "osr.scv.foundation.db.data::MatchResults.MatchResultsShadow" a
@@ -662,21 +662,21 @@ BEGIN
 											ON mr.ENTITY_ID = ma.ENTITY_ID1 AND mr."Match_ROW_ID" = ma.MATCH_ROW_ID
 										) 
 										GROUP BY SCV_ID, 
-										         ENTITY_ID, SOURCE_SYSTEM, SYSTEM_ID, UPDATED_AT, CONTACT_PHONE_NO,
+										         ENTITY_ID, SOURCE_SYSTEM, SYSTEM_ID, UPDATED_AT, CONTACT_PHONE_NO, NUMBER_TYPE,
 										         CHECKSUM
 										;
 	
 	
 	INSERT INTO "osr.scv.foundation.db.data::SCVFoundation.ContactNumber" (
-																			SELECT SCV_ID, SOURCE_SYSTEM, SYSTEM_ID, UPDATED_AT, UPDATED_AT, CONTACT_PHONE_NO, '', DESC, '', CHECKSUM 
+																			SELECT SCV_ID, SOURCE_SYSTEM, SYSTEM_ID, UPDATED_AT, UPDATED_AT, CONTACT_PHONE_NO, '', NUMBER_TYPE, DESC, CHECKSUM 
 																			FROM (
-																				SELECT DISTINCT SCV_ID, SOURCE_SYSTEM, SYSTEM_ID, UPDATED_AT, CONTACT_PHONE_NO, '', '' as DESC, '', CHECKSUM
+																				SELECT DISTINCT SCV_ID, SOURCE_SYSTEM, SYSTEM_ID, UPDATED_AT, CONTACT_PHONE_NO, '',NUMBER_TYPE,  '' as DESC, CHECKSUM
 																				FROM :lt_contact_entities_tmr_custMain_number
 																				UNION ALL
-																				SELECT DISTINCT SCV_ID, SOURCE_SYSTEM, SYSTEM_ID, UPDATED_AT, CONTACT_PHONE_NO, '', '' as DESC, '' , CHECKSUM
+																				SELECT DISTINCT SCV_ID, SOURCE_SYSTEM, SYSTEM_ID, UPDATED_AT, CONTACT_PHONE_NO, '',NUMBER_TYPE,  '' as DESC, CHECKSUM
 																				FROM :lt_contact_entities_tmr_custContact_number
 																			) 
-																			GROUP BY SCV_ID, SOURCE_SYSTEM, SYSTEM_ID, UPDATED_AT, CONTACT_PHONE_NO, '', DESC, '', CHECKSUM
+																			GROUP BY SCV_ID, SOURCE_SYSTEM, SYSTEM_ID, UPDATED_AT, CONTACT_PHONE_NO, '', NUMBER_TYPE, DESC, CHECKSUM
 																		   )
 	;							 
 	
