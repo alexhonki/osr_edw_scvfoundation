@@ -30,7 +30,13 @@ context SCVFoundation {
             STD_PERSON_GN2 : String(50);
             STD_PERSON_FN  : String(50);
             STD_CHECKSUM   : Binary(32);
+    }
+    technical configuration {
+        fuzzy search index on (LAST_NAME);
+        fuzzy search index on (FIRST_NAME);
+        fuzzy search index on (MIDDLE_NAME);
     };
+
 
     /*@@layout{"layoutInfo":{}}*/
     entity PersonTmr {
@@ -48,6 +54,11 @@ context SCVFoundation {
             STD_PERSON_GN2 : String(50);
             STD_PERSON_FN  : String(50);
             STD_CHECKSUM   : Binary(32);
+    }
+    technical configuration {
+        fuzzy search index on (LAST_NAME);
+        fuzzy search index on (FIRST_NAME);
+        fuzzy search index on (MIDDLE_NAME);
     };
 
     /*@@layout{"layoutInfo":{}}*/
@@ -156,5 +167,19 @@ context SCVFoundation {
         key CHECKSUM      : Binary(32);
         key STD_EMAIL     : String(100);
         key STD_CHECKSUM  : Binary(32);
+    };
+
+    /*@@layout{"layoutInfo":{"x":-630,"y":2.5}}*/
+    entity Search {
+        SCV_ID        : Integer;
+        SOURCE        : String(20);
+        SOURCE_ID     : String(20);
+        SEARCH_STRING : String(1024);
+    }
+    technical configuration {
+        fulltext index idx_fulltext on (SEARCH_STRING)
+            token separators '|'
+            text mining off
+            search only on;
     };
 };

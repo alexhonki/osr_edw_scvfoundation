@@ -1,0 +1,42 @@
+PROCEDURE "osr.scv.foundation.db.Procedures::SP_BuildScvSearchTable" ( )
+   LANGUAGE SQLSCRIPT
+   SQL SECURITY INVOKER
+   --DEFAULT SCHEMA <default_schema_name>
+   AS
+BEGIN
+	/*************************************
+	Fill the index table for fuzzy text search
+	*************************************/
+   
+	-- Replace with delta mechanism instead of deleting whole table
+	TRUNCATE TABLE "osr.scv.foundation.db.data::SCVFoundation.Search";
+	
+	-- 1. Add RMS data
+	INSERT INTO "osr.scv.foundation.db.data::SCVFoundation.Search" 
+	(
+		SELECT DISTINCT * FROM (
+			SELECT a.SCV_ID, a.SOURCE, a.SOURCE_ID, (a.FIRST_NAME || '|' || a.LAST_NAME || '|' || a.MIDDLE_NAME || '|' ||  b.CITY1
+			|| '|' || POST_CODE1 || '|' || STREET || '|' || HOUSE_NUM1 || '|' || REGION || '|' || COUNTRY
+			)
+			FROM "osr.scv.foundation.db.data::SCVFoundation.PersonRms" a
+			INNER JOIN
+			"osr.scv.foundation.db.data::SCVFoundation.AddressRms" b
+			ON a.SCV_ID = b.SCV_ID AND a.SOURCE = b.SOURCE and a.SOURCE_ID = b.SOURCE_ID
+		)
+	);
+	
+	-- 2. Add TMR data
+	INSERT INTO "osr.scv.foundation.db.data::SCVFoundation.Search" 
+	(
+		SELECT DISTINCT * FROM (
+			SELECT a.SCV_ID, a.SOURCE, a.SOURCE_ID, (a.FIRST_NAME || '|' || a.LAST_NAME || '|' || a.MIDDLE_NAME || '|' ||  b.SUBURB
+			|| '|' || POSTCODE || '|' || STREET_NAME || '|' || STREET_NO || '|' || STATE || '|' || COUNTRY
+			)
+			FROM "osr.scv.foundation.db.data::SCVFoundation.PersonTmr" a
+			INNER JOIN
+			"osr.scv.foundation.db.data::SCVFoundation.AddressTmr" b
+			ON a.SCV_ID = b.SCV_ID AND a.SOURCE = b.SOURCE and a.SOURCE_ID = b.SOURCE_ID
+		)
+	);
+   
+END
