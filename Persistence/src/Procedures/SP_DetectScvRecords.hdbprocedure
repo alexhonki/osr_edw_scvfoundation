@@ -9,73 +9,15 @@ PROCEDURE "osr.scv.foundation.db.Procedures::SP_DetectScvRecords" (
    --DEFAULT SCHEMA <default_schema_name>
    --READS SQL DATA 
    AS
-BEGIN
-
-	DECLARE lt_count_entity INTEGER;
-	DECLARE lv_max_group_row INTEGER;
-	DECLARE lv_current_entity INT DEFAULT 1;
-	DECLARE lv_current_row INT DEFAULT 1;
-	DECLARE lv_max_row INT;
-	DECLARE l_number_entities int default 0;
-	DECLARE lv_current_row_entity NVARCHAR(20);
-	DECLARE lv_current_row_action NVARCHAR(20);
-	DECLARE lv_current_row_system_id NVARCHAR(10);
-	DECLARE lv_current_row_match_row_id INTEGER;
-	DECLARE lv_current_group_row INTEGER;
-	
-	DECLARE lv_match_row INTEGER;
-	DECLARE lv_source_system NVARCHAR(3);
-	DECLARE lv_addressnum NVARCHAR(10);
-	DECLARE lv_max_scv_id INTEGER;
-	
-	DECLARE lv_scv_id int default 0;
-	DECLARE lv_scv_id_addr INTEGER;
-	DECLARE lv_scv_id_tel_tmr INTEGER;
-	DECLARE lv_scv_id_sms_tmr INTEGER;
-	DECLARE lv_scv_id_email_tmr INTEGER;
-	DECLARE lv_scv_id_tel_rms INTEGER;
-	DECLARE lv_scv_id_fax_rms INTEGER;
-	
-	DECLARE lv_check_scv int default 0;
-	DECLARE lv_check_tel_TMR int default 0;
-	DECLARE lv_check_sms_TMR int default 0;
-	DECLARE lv_check_email_TMR int default 0;
-	DECLARE lv_check_tel_RMS int default 0;
-	DECLARE lv_check_fax_RMS int default 0;
-
-	DECLARE lv_checksum_person NVARCHAR(256);
-	DECLARE lv_checksum_addr NVARCHAR(256);
-	DECLARE lv_checksum_tel_TMR NVARCHAR(256);
-	DECLARE lv_checksum_sms_TMR NVARCHAR(256);
-	DECLARE lv_checksum_email_TMR NVARCHAR(256);
-	DECLARE lv_checksum_tel_RMS NVARCHAR(256);
-	DECLARE lv_checksum_fax_RMS NVARCHAR(256);
-	
-
-
-
-
-
-
 
 BEGIN	
 	-- Declare exception hander for all SQL exceptions. 
 	DECLARE EXIT HANDLER FOR SQLEXCEPTION
-BEGIN
-		
-		DROP TABLE #lt_record_action2;
---		DROP TABLE #lt_entity_list;
-		
+	BEGIN
 		
 --		o_message:=  'ERROR: ' || ::SQL_ERROR_CODE || ' ' || ::SQL_ERROR_MESSAGE;
 --		o_return_code :=  'ERROR';
 	END;
-	
-	DECLARE EXIT HANDLER FOR SQL_ERROR_CODE 1299
-    BEGIN    
-       lv_scv_id := 0;
-        lv_scv_id_addr := 0;
-   END;
 	
 	-- Temporary table to hold the SCV ID to Entity ID mapping
 --	CREATE LOCAL TEMPORARY TABLE #lt_entity_list (
@@ -86,14 +28,7 @@ BEGIN
 --            lv_scv_id NVARCHAR(10)
 --    );
     
-    CREATE LOCAL TEMPORARY TABLE #lt_record_action2 (
-            MATCH_ROW_ID INTEGER,
-            SCV_ID INTEGER,
-            ACTION NVARCHAR(10)
-    );
 
-		
-	
 	lt_matchresults_hash = SELECT 
 		            	--ROW_NUMBER() OVER (ORDER BY a.ENTITY_ID ASC) as ROW_COUNT,
 		            	--a.GROUP_ID,
@@ -120,7 +55,7 @@ BEGIN
 		                --BUT000-RMS
 		                LEFT OUTER JOIN ( 
 		                			      SELECT BIRTHDT , NAME_FIRST, NAMEMIDDLE, NAME_LAST, DEATHDT, "Cleanse_TABLE_ID", "Cleanse_ROW_ID", "PARTNER",
-		                			      (NAME_FIRST || NAMEMIDDLE || NAME_LAST || TO_DATE(BIRTHDT, 'YYYYMMDD')) as PERSON_RMS
+		                			      (NAME_FIRST || NAMEMIDDLE || NAME_LAST || (CASE WHEN BIRTHDT = ' ' THEN TO_DATE('19990101', 'YYYYMMDD') ELSE TO_DATE(BIRTHDT, 'YYYYMMDD') END)) as PERSON_RMS
 		                			      FROM "osr.scv.foundation.db.synonyms::BUT000"
 		                					
 		                				) as prms
@@ -313,8 +248,7 @@ BEGIN
 	
 			--SELECT * FROM #lt_record_action2;
 		--	INSERT INTO "osr.scv.foundation.db.data::MatchResults.MatchDelta" (SELECT MATCH_ROW_ID, SCV_ID, ACTION FROM #lt_record_action2);
-			DROP TABLE #lt_record_action2;
---			o_return_code := :lv_current_entity ;
+
+--			o_return_code := 'Success' ;
 --	  		o_message := 'Entites moved successfully';
 END;
-END

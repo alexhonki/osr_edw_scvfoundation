@@ -10,9 +10,9 @@ PROCEDURE "osr.scv.foundation.db.Procedures::SP_MoveEntityToShadowTable" (
 	
 	--IN i_entities		TABLE (ENTITY_ID NVARCHAR(10)),
 	IN i_user			NVARCHAR(20),
-	OUT i_timestamp		TIMESTAMP,
-	OUT o_return_code	NVARCHAR(10),
-	OUT o_message		NVARCHAR(200)
+	OUT i_timestamp		TIMESTAMP
+--	OUT o_return_code	NVARCHAR(10),
+--	OUT o_message		NVARCHAR(200)
 )
    LANGUAGE SQLSCRIPT
    SQL SECURITY INVOKER
@@ -24,8 +24,8 @@ BEGIN
 	-- Declare exception hander for all SQL exceptions.
 	DECLARE EXIT HANDLER FOR SQLEXCEPTION
 	BEGIN
-		o_return_code :=  'ERROR';
-		o_message:=  'ERROR: ' || ::SQL_ERROR_CODE || ' ' || ::SQL_ERROR_MESSAGE;
+--		o_return_code :=  'ERROR';
+--		o_message:=  'ERROR: ' || ::SQL_ERROR_CODE || ' ' || ::SQL_ERROR_MESSAGE;
 	END;
 	
 	/*
@@ -79,7 +79,7 @@ BEGIN
 		INSERT INTO "osr.scv.foundation.db.data::MatchResults.MatchResultsShadow"
 		(
 			SELECT m.* FROM "osr.scv.foundation.db.data::MatchResults.MatchResults" m
-			INNER JOIN (SELECT MATCH_ROW_ID FROM "osr.scv.foundation.db.data::MatchResults.MatchDelta"
+			INNER JOIN (SELECT DISTINCT MATCH_ROW_ID FROM "osr.scv.foundation.db.data::MatchResults.MatchDelta"
 				WHERE ACTION = 'Add') h
 			ON m."Match_ROW_ID" = h."MATCH_ROW_ID"
 			INNER JOIN :lt_entities r
@@ -101,8 +101,8 @@ BEGIN
 		INSERT INTO  "osr.scv.foundation.db.data::MatchResultsReview.Promotions" (
 																				  SELECT ENTITY_ID, :i_timestamp, :i_user, ACTION_RESOLVED as ACTION  FROM :lt_entities
 																				 );
-        o_return_code := 'SUCCESS';
-        o_message := 'Entites moved successfully';
+--        o_return_code := 'SUCCESS';
+--        o_message := 'Entites moved successfully';
 	--END IF;
 
 END

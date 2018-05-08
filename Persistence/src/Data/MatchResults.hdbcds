@@ -101,8 +101,8 @@ context MatchResults {
 
     /*@@layout{"layoutInfo":{"x":499,"y":-225.5}}*/
     entity MatchDelta {
-        key MATCH_ROW_ID : Integer;
-            SCV_ID       : Integer;
-            ACTION       : String(10);
+        MATCH_ROW_ID : Integer;
+        SCV_ID       : Integer;
+        ACTION       : String(10);
     };
 };

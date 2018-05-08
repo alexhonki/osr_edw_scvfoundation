@@ -2,12 +2,12 @@
 	"scv-ext-access-grantor": {
 		"object_owner": { 
 			"roles": [
-				"osr.security.common::SCV_EXTERNAL_ACCESS_G"
+				"osr_security_common::SCV_EXTERNAL_ACCESS_G"
 			]
 		},
 		"application_user": {
 			"roles": [
-				"osr.security.common::SCV_EXTERNAL_ACCESS"
+				"osr_security_common::SCV_EXTERNAL_ACCESS"
 			]
 		}
 	}

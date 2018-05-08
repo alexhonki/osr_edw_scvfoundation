@@ -33,7 +33,7 @@
         "parameterValues": [
           {
             "id": "taskChainId",
-            "value": "src#TC_DeltaDetection"
+            "value": "src#TC_DetectScvRecords"
           }
         ]
       },
