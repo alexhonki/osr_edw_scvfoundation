@@ -9,7 +9,7 @@
 						
 		SAP Australia, September 2017	
 */
-PROCEDURE "osr.scv.foundation.db.Procedures::SP_MoveRowsToScvFoundation" (
+PROCEDURE "osr.scv.foundation.db.Procedures::SP_MoveRowsToScvFoundation2" (
 	
 	--IN i_entities		TABLE (ENTITY_ID NVARCHAR(10)),
 --	IN i_user			NVARCHAR(20),
@@ -28,22 +28,22 @@ BEGIN
 	DECLARE EXIT HANDLER FOR SQLEXCEPTION
 	BEGIN
 		
-		DROP TABLE #lt_entity_mappingss;
-		DROP TABLE #lt_scv_counters;
+		DROP TABLE #lt_entity_mappings;
+		DROP TABLE #lt_scv_counter;
 		
 --		o_return_code :=  'ERROR';
 --		o_message:=  'ERROR: ' || ::SQL_ERROR_CODE || ' ' || ::SQL_ERROR_MESSAGE;
 	END;
 	
 	-- Temporary table to hold the SCV ID to Entity ID mapping
-	CREATE LOCAL TEMPORARY TABLE #lt_entity_mappingss (
+	CREATE LOCAL TEMPORARY TABLE #lt_entity_mappings (
             SCV_ID_SEQ_CONTROL NVARCHAR(10),
             SCV_ID INTEGER,
             ENTITY_ID NVARCHAR(20),
             MATCH_ROW_ID INTEGER
     );
     
-    CREATE LOCAL TEMPORARY TABLE #lt_scv_counters (
+    CREATE LOCAL TEMPORARY TABLE #lt_scv_counter (
             SCV_ID_SEQ_CONTROL NVARCHAR(10),
             SCV_ID INTEGER
     );
@@ -60,7 +60,30 @@ BEGIN
 	-- ### SCV master ##############################################################################################################
 	BEGIN
 		
-
+		DECLARE lv_current_id NVARCHAR(10) DEFAULT '';
+		DECLARE lv_current_entity NVARCHAR(20) DEFAULT '';
+		DECLARE lv_id NVARCHAR(10) DEFAULT '';
+		DECLARE lv_entity NVARCHAR(20) DEFAULT '';
+		DECLARE lv_action NVARCHAR(20) DEFAULT '';
+		DECLARE lv_scv_id INT DEFAULT 0;
+		DECLARE lv_row_action NVARCHAR(10) DEFAULT '';
+		DECLARE lv_max_scvid INT DEFAULT 0;
+		
+		DECLARE lv_current_row_entity NVARCHAR(20);
+		DECLARE lv_current_row_action NVARCHAR(20);
+		DECLARE lv_current_row_system_id NVARCHAR(10);
+		DECLARE lv_current_row_match_row_id INTEGER;
+		DECLARE lv_current_row_scv_id INTEGER;
+		DECLARE lv_current_row_rowaction NVARCHAR(10);
+		DECLARE lv_current_group_row INTEGER;
+		DECLARE lv_max_group_row INTEGER;
+		DECLARE lv_previous_row_system_id NVARCHAR(10);
+		
+		DECLARE lv_master_table_length INTEGER;
+		
+		DECLARE lv_current_row INT DEFAULT 1;
+		DECLARE lv_max_row INT;
+		--DECLARE lv_last_scv_id_used INT;
 	
 		-- Auto promotions
 		
@@ -69,65 +92,238 @@ BEGIN
 		
 		
 		
-		lt_auto_entity_ids = SELECT ENTITY_ID, "osr.scv.foundation.db.data::SEQ_ScvMaster".NEXTVAL as SCV_ID FROM (
-							SELECT s.ENTITY_ID,  s."Match_ROW_ID" 
-							FROM "osr.scv.foundation.db.data::MatchResults.MatchResultsShadow" s
-							INNER JOIN "osr.scv.foundation.db.data::MatchResultsReview.Promotions" a
-							ON s.ENTITY_ID = a.ENTITY_ID
-							WHERE a.Action = 'Auto-Promotion'
-							ORDER BY s.ENTITY_ID ASC, s.SOURCE_SYSTEM ASC, s.SYSTEM_ID ASC, s."Match_ROW_ID" ASC
-						  ) GROUP BY ENTITY_ID;
+--		lt_auto_entity_ids = SELECT ENTITY_ID, "osr.scv.foundation.db.data::SEQ_ScvMaster".NEXTVAL as SCV_ID FROM (
+--							SELECT s.ENTITY_ID,  s."Match_ROW_ID" 
+--							FROM "osr.scv.foundation.db.data::MatchResults.MatchResultsShadow" s
+--							INNER JOIN "osr.scv.foundation.db.data::MatchResultsReview.Promotions" a
+--							ON s.ENTITY_ID = a.ENTITY_ID
+--							WHERE a.Action = 'Auto-Promotion'
+--							ORDER BY s.ENTITY_ID ASC, s.SOURCE_SYSTEM ASC, s.SYSTEM_ID ASC, s."Match_ROW_ID" ASC
+--						  ) GROUP BY ENTITY_ID;
 						  
-    	lt_auto_entity_ids_detail = SELECT 'AUTO', b.SCV_ID, a.ENTITY_ID, a."Match_ROW_ID" FROM (
-									SELECT s.ENTITY_ID,  s."Match_ROW_ID" 
-									FROM "osr.scv.foundation.db.data::MatchResults.MatchResultsShadow" s
-									INNER JOIN "osr.scv.foundation.db.data::MatchResultsReview.Promotions" a
-									ON s.ENTITY_ID = a.ENTITY_ID
-									WHERE a.Action = 'Auto-Promotion'
-									ORDER BY s.ENTITY_ID ASC, s.SOURCE_SYSTEM ASC, s.SYSTEM_ID ASC, s."Match_ROW_ID" ASC
-								) a
-								LEFT OUTER JOIN :lt_auto_entity_ids b
-								ON a.ENTITY_ID = b.ENTITY_ID;						  
+--    	lt_auto_entity_ids_detail = SELECT 'AUTO', b.SCV_ID, a.ENTITY_ID, a."Match_ROW_ID" FROM (
+--									SELECT s.ENTITY_ID,  s."Match_ROW_ID" 
+--									FROM "osr.scv.foundation.db.data::MatchResults.MatchResultsShadow" s
+--									INNER JOIN "osr.scv.foundation.db.data::MatchResultsReview.Promotions" a
+--									ON s.ENTITY_ID = a.ENTITY_ID
+--									WHERE a.Action = 'Auto-Promotion'
+--									ORDER BY s.ENTITY_ID ASC, s.SOURCE_SYSTEM ASC, s.SYSTEM_ID ASC, s."Match_ROW_ID" ASC
+--								) a
+--								LEFT OUTER JOIN :lt_auto_entity_ids b
+--								ON a.ENTITY_ID = b.ENTITY_ID;						  
 	
-		INSERT INTO #lt_entity_mappingss (SELECT * FROM :lt_auto_entity_ids_detail);
+--		INSERT INTO #lt_entity_mappings (SELECT * FROM :lt_auto_entity_ids_detail);
+	
+		-- Update SCV master
+--		SELECT COUNT(*) INTO lv_master_table_length FROM "osr.scv.foundation.db.data::SCVFoundation.Master";
+		SELECT COUNT(*) INTO lv_master_table_length FROM #lt_entity_mappings;
 		
+--		IF (:lv_master_table_length = 0)
+--		THEN
+--			INSERT INTO "osr.scv.foundation.db.data::SCVFoundation.Master" --VALUES ("osr.scv.foundation.db.data::SEQ_ScvMaster".CURRVAL, CURRENT_DATE, null, CURRENT_USER, null, null, null);
+--				(
+--				SELECT DISTINCT SCV_ID, CURRENT_DATE, null,CURRENT_USER, null, null, null FROM #lt_entity_mappings
+--				);
+--		END IF;
 		
-		lt_reject_scv_ids = SELECT SYSTEM_ID, "osr.scv.foundation.db.data::SEQ_ScvMaster".NEXTVAL as SCV_ID FROM (
-							SELECT s.SYSTEM_ID,  s."Match_ROW_ID" 
-							FROM "osr.scv.foundation.db.data::MatchResults.MatchResultsShadow" s
-							INNER JOIN "osr.scv.foundation.db.data::MatchResultsReview.Assessments" a
-							ON s."Match_ROW_ID" = a.MATCH_ROW
-							WHERE a.Action = 'Reject'
-							ORDER BY s.ENTITY_ID ASC, s.SOURCE_SYSTEM ASC, s.SYSTEM_ID ASC, s."Match_ROW_ID" ASC
-						  ) GROUP BY SYSTEM_ID;
-
-
-    	lt_reject_scv_ids_detail = SELECT 'REJECT', b.SCV_ID, a.ENTITY_ID, a."Match_ROW_ID" FROM (
-									SELECT s.ENTITY_ID, s.SYSTEM_ID,  s."Match_ROW_ID" 
-									FROM "osr.scv.foundation.db.data::MatchResults.MatchResultsShadow" s
-									INNER JOIN "osr.scv.foundation.db.data::MatchResultsReview.Assessments" a
-									ON s."Match_ROW_ID" = a.MATCH_ROW
-									WHERE a.Action = 'Reject'
-									ORDER BY s.ENTITY_ID ASC, s.SOURCE_SYSTEM ASC, s.SYSTEM_ID ASC, s."Match_ROW_ID" ASC
-								) a
-								LEFT OUTER JOIN :lt_reject_scv_ids b
-								ON a.SYSTEM_ID = b.SYSTEM_ID;
+		-- Accept/reject promotions
 		
-		INSERT INTO #lt_entity_mappingss (SELECT * FROM :lt_reject_scv_ids_detail);
-		
-		INSERT INTO "osr.scv.foundation.db.data::SCVFoundation.Master" (
-				SELECT DISTINCT SCV_ID, CURRENT_DATE, null,CURRENT_USER, null, null, null FROM #lt_entity_mappingss
-		);
-		
-		lt_accept_scv_ids_detail = SELECT 'ACCEPT', md.SCV_ID, s.ENTITY_ID, md.MATCH_ROW_ID 
-									FROM "osr.scv.foundation.db.data::MatchResultsReview.Assessments" s
-									INNER JOIN "osr.scv.foundation.db.data::MatchResults.MatchDelta" md
-									ON s.MATCH_ROW = md.MATCH_ROW_ID
-									WHERE md.ACTION = 'Add' and s.ACTION = 'Accept';
-		
-		INSERT INTO #lt_entity_mappingss (SELECT * FROM :lt_accept_scv_ids_detail);
+		lt_scv_generation_control = 	 SELECT ROW_NUMBER() OVER (ORDER BY s.ENTITY_ID ASC, f.ACTION ASC) as ROW_COUNT, s.ENTITY_ID, s.SOURCE_SYSTEM, s.SYSTEM_ID, s."Match_ROW_ID", c.ACTION, SCV_ID, f.ACTION as ROWACTION, ROW_NUMBER() OVER (PARTITION BY GROUP_ID ORDER BY SOURCE_SYSTEM DESC, SYSTEM_ID DESC) AS GROUP_ROW_COUNT 
+								    	 FROM "osr.scv.foundation.db.data::MatchResults.MatchResultsShadow" s
+										 LEFT OUTER JOIN (SELECT b.ENTITY_ID, MAX(b.TIMESTAMP) as MAXTIME,	b."MATCH_ROW", b."ACTION"
+														FROM "osr.scv.foundation.db.data::MatchResultsReview.Assessments" as b
+														INNER JOIN (SELECT ENTITY_ID, MAX(TIMESTAMP) as MaxValue
+																	FROM "osr.scv.foundation.db.data::MatchResultsReview.Assessments"
+														            GROUP BY ENTITY_ID) a 
+														            ON a.ENTITY_ID = b.ENTITY_ID AND b.TIMESTAMP = a.MaxValue
+														GROUP BY b.ENTITY_ID, b."MATCH_ROW", b."STRATEGY", b."ACTION" ) f
+								    	 ON s."Match_ROW_ID" = "MATCH_ROW"
+								    	 INNER JOIN (SELECT "SCV_ID", "MATCH_ROW_ID" FROM "osr.scv.foundation.db.data::MatchResults.MatchDelta") h
+								    	 ON s."Match_ROW_ID" = h."MATCH_ROW_ID"
+								    	 INNER JOIN "osr.scv.foundation.db.data::MatchResultsReview.Promotions" c
+								    	 ON s.ENTITY_ID = c.ENTITY_ID
+							        	 ORDER BY s.ENTITY_ID ASC, ROWACTION ASC;					        	 
+			
+			
+			SELECT MAX(ROW_COUNT) INTO lv_max_row		FROM :lt_scv_generation_control;
+			
+			
+			WHILE :lv_current_row <= :lv_max_row DO
+			
+				SELECT ENTITY_ID			INTO lv_current_row_entity			FROM :lt_scv_generation_control WHERE ROW_COUNT = :lv_current_row;
+				SELECT MAX(GROUP_ROW_COUNT)	INTO lv_max_group_row				FROM :lt_scv_generation_control WHERE ENTITY_ID = :lv_current_row_entity;
+				SELECT SCV_ID				INTO lv_current_row_scv_id			FROM :lt_scv_generation_control WHERE ROW_COUNT = :lv_current_row;
+				lv_scv_id	  = :lv_current_row_scv_id;
+				
+--				SELECT COUNT(*)				INTO lv_max_scvid					FROM "osr.scv.foundation.db.data::SCVFoundation.Master";
+				SELECT COUNT(*)				INTO lv_max_scvid					FROM #lt_entity_mappings;
+				IF (lv_max_scvid = 0)
+				THEN
+					lv_max_scvid = 0;
+				ELSE
+				SELECT MAX(SCV_ID)  		INTO lv_max_scvid					FROM #lt_entity_mappings;
+				END IF;
+				
+				lv_current_group_row = 1;
+				lv_previous_row_system_id = 0;
+				
+--				WHILE :lv_current_group_row <= :lv_max_group_row DO
 					
-		
+					SELECT ACTION			INTO lv_current_row_action			FROM :lt_scv_generation_control WHERE ROW_COUNT = :lv_current_row;
+					SELECT SYSTEM_ID		INTO lv_current_row_system_id		FROM :lt_scv_generation_control WHERE ROW_COUNT = :lv_current_row;
+					SELECT "Match_ROW_ID"	INTO lv_current_row_match_row_id	FROM :lt_scv_generation_control WHERE ROW_COUNT = :lv_current_row;
+					SELECT ROWACTION		INTO lv_current_row_rowaction		FROM :lt_scv_generation_control WHERE ROW_COUNT = :lv_current_row;
+					SELECT COUNT(*)			INTO lv_master_table_length 		FROM #lt_entity_mappings;
+					
+		--			IF (:lv_master_table_length = 0) THEN
+		--				INSERT INTO #lt_scv_counter VALUES ('NEXTVAL', "osr.scv.foundation.db.data::SEQ_ScvMaster".NEXTVAL);
+						--INSERT INTO "osr.scv.foundation.db.data::SCVFoundation.Master" VALUES ("osr.scv.foundation.db.data::SEQ_ScvMaster".CURRVAL, CURRENT_DATE, null, CURRENT_USER, null, null, null);
+		--				SELECT MAX(SCV_ID)  		INTO lv_max_scvid					FROM #lt_scv_counter;
+
+		--			END IF;	
+--					ELSE
+						-- Process action
+						lv_entity	  = :lv_current_row_entity;
+						lv_action	  = :lv_current_row_action;
+						lv_id		  = :lv_current_row_system_id;
+						
+						lv_row_action = :lv_current_row_rowaction;
+						
+						IF ((:lv_action = 'Accept' AND  :lv_scv_id = 0 AND :lv_row_action = 'Accept') OR (:lv_action = 'Split' AND  :lv_scv_id = 0 AND :lv_row_action = 'Accept') OR (:lv_action = 'Auto-Promotion' AND  :lv_scv_id = 0 AND :lv_row_action IS NULL))-- OR (:lv_row_action = 'Reject'))
+						THEN 
+							INSERT INTO #lt_entity_mappings VALUES ('NEXTVAL', "osr.scv.foundation.db.data::SEQ_ScvMaster".NEXTVAL, :lv_entity, :lv_current_row_match_row_id);
+							INSERT INTO #lt_scv_counter VALUES ('CURRVAL', "osr.scv.foundation.db.data::SEQ_ScvMaster".CURRVAL);
+							SELECT MAX(SCV_ID)  		INTO lv_scv_id					FROM #lt_scv_counter;
+							
+						END IF;	
+						--new code here
+						IF  (:lv_row_action = 'Reject' AND :lv_current_row_system_id <> :lv_previous_row_system_id)
+						THEN
+							INSERT INTO #lt_entity_mappings VALUES ('NEXTVAL', "osr.scv.foundation.db.data::SEQ_ScvMaster".NEXTVAL, :lv_entity, :lv_current_row_match_row_id);
+							INSERT INTO #lt_scv_counter VALUES ('CURRVAL', "osr.scv.foundation.db.data::SEQ_ScvMaster".CURRVAL);
+							SELECT MAX(SCV_ID)  		INTO lv_scv_id					FROM #lt_scv_counter;
+							lv_previous_row_system_id := :lv_current_row_system_id;
+						ELSE
+							INSERT INTO #lt_entity_mappings VALUES ('CURRVAL', "osr.scv.foundation.db.data::SEQ_ScvMaster".CURRVAL, :lv_entity, :lv_current_row_match_row_id);
+							lv_previous_row_system_id := :lv_current_row_system_id;
+						END IF;
+						-- end of new code
+						--OLD CODE
+						--IF (( :lv_action = 'Auto-Promotion' AND  :lv_scv_id > 0 AND :lv_row_action IS NULL) OR  ( :lv_action = 'Accept' AND  :lv_scv_id > 0 AND :lv_row_action = 'Accept') OR ( :lv_action = 'Split' AND  :lv_scv_id > 0 AND :lv_row_action = 'Accept'))
+						IF (( :lv_action = 'Accept' AND  :lv_scv_id > 0 AND :lv_row_action = 'Accept') OR ( :lv_action = 'Split' AND  :lv_scv_id > 0 AND :lv_row_action = 'Accept') OR (:lv_action = 'Auto-Promotion' AND  :lv_scv_id > 0 AND :lv_row_action IS NULL))
+						THEN
+							INSERT INTO #lt_entity_mappings VALUES ('CURRVAL', "osr.scv.foundation.db.data::SEQ_ScvMaster".CURRVAL, :lv_entity, :lv_current_row_match_row_id);
+						END IF;
+						
+						
+						
+				--...................OLD CODE		
+				--		IF ((:lv_action = 'Accept' AND  :lv_scv_id = 0 AND :lv_row_action = 'Accept') OR (:lv_action = 'Split' AND  :lv_scv_id = 0 AND :lv_row_action = 'Accept') OR (:lv_action = 'Split' AND  :lv_scv_id = 0 AND :lv_row_action = 'Reject'))
+				--		THEN 
+				--			lv_scv_id = lv_max_scvid +1;
+				--		END IF;	
+						
+				--		IF (( :lv_action = 'Auto-Promotion' AND  :lv_scv_id > 0 AND :lv_row_action IS NULL) OR  ( :lv_action = 'Accept' AND  :lv_scv_id > 0 AND :lv_row_action = 'Accept') OR ( :lv_action = 'Split' AND  :lv_scv_id > 0 AND :lv_row_action = 'Accept'))
+				--		THEN
+				--			INSERT INTO #lt_entity_mappings VALUES ('CURRVAL', :lv_scv_id, :lv_entity, :lv_current_row_match_row_id);
+				--		ELSE
+				--			IF (:lv_action = 'Reject' AND :lv_row_action = 'Reject')
+				--			THEN
+				--				lv_scv_id = lv_max_scvid +1;
+		--						lv_max_scvid = lv_max_scvid + 1;
+				--				INSERT INTO #lt_entity_mappings VALUES ('NEXTVAL', :lv_scv_id, :lv_entity, :lv_current_row_match_row_id);
+				--			ELSE
+								--INSERT INTO #lt_entity_mappings VALUES ('NEXTVAL', "osr.scv.foundation.db.data::SEQ_ScvMaster".NEXTVAL, :lv_entity, :lv_current_row_match_row_id);
+				--				lv_scv_id := :lv_scv_id + 1;
+				--				INSERT INTO #lt_entity_mappings VALUES ('NEXTVAL', :lv_scv_id, :lv_entity, :lv_current_row_match_row_id);
+								--INSERT INTO "osr.scv.foundation.db.data::SCVFoundation.Master" VALUES ("osr.scv.foundation.db.data::SEQ_ScvMaster".CURRVAL, CURRENT_DATE, null, CURRENT_USER, null, null, null);
+				--				lv_scv_id = 0;
+				--			END IF;
+				--		END IF;
+				--...................OLD CODE			
+						
+	--					IF ( :lv_row_action = 'Accept' OR :lv_action = 'Auto-Promotion') AND :lv_current_entity = :lv_entity THEN
+							-- Insert with same SCV ID
+	--						INSERT INTO #lt_entity_mappings VALUES ('CURRVAL', "osr.scv.foundation.db.data::SEQ_ScvMaster".CURRVAL, :lv_entity, :lv_current_row_match_row_id);
+	--					ELSEIF ( :lv_row_action = 'Accept' OR :lv_action = 'Auto-Promotion') AND :lv_current_entity != :lv_entity THEN
+							-- Entity change, new SCV ID
+	--						INSERT INTO #lt_entity_mappings VALUES ('NEXTVAL', "osr.scv.foundation.db.data::SEQ_ScvMaster".NEXTVAL, :lv_entity, :lv_current_row_match_row_id);
+	--						INSERT INTO "osr.scv.foundation.db.data::SCVFoundation.Master" VALUES ("osr.scv.foundation.db.data::SEQ_ScvMaster".CURRVAL, CURRENT_DATE, null, CURRENT_USER, null, null, null);
+	--					ELSEIF :lv_row_action = 'Reject' AND :lv_current_entity = :lv_entity THEN
+							-- Reject, create new SCV ID
+	--						IF :lv_id != :lv_current_id THEN
+	--							INSERT INTO #lt_entity_mappings VALUES ('CURRVAL', "osr.scv.foundation.db.data::SEQ_ScvMaster".NEXTVAL, :lv_entity, :lv_current_row_match_row_id);
+	--							INSERT INTO "osr.scv.foundation.db.data::SCVFoundation.Master" VALUES ("osr.scv.foundation.db.data::SEQ_ScvMaster".CURRVAL, CURRENT_DATE, null, CURRENT_USER, null, null, null);
+	--						END IF;
+	--					ELSEIF :lv_row_action = 'Reject' AND :lv_current_entity != :lv_entity THEN
+							-- Reject, create new SCV ID
+	--						IF :lv_id != :lv_current_id THEN
+	--							INSERT INTO #lt_entity_mappings VALUES ('CURRVAL', "osr.scv.foundation.db.data::SEQ_ScvMaster".NEXTVAL, :lv_entity, :lv_current_row_match_row_id);
+	--							INSERT INTO "osr.scv.foundation.db.data::SCVFoundation.Master" VALUES ("osr.scv.foundation.db.data::SEQ_ScvMaster".CURRVAL, CURRENT_DATE, null, CURRENT_USER, null, null, null);
+	--						END IF;
+	--					END IF;
+--					END IF;
+				
+				lv_current_id := :lv_current_row_system_id;
+				lv_current_entity := :lv_current_row_entity;
+				lv_current_row := :lv_current_row + 1;
+				lv_current_group_row := :lv_current_group_row + 1;
+				
+--				END WHILE;
+
+			END WHILE;
+			
+			INSERT INTO "osr.scv.foundation.db.data::SCVFoundation.Master" (
+				SELECT DISTINCT SCV_ID, CURRENT_DATE, null,CURRENT_USER, null, null, null FROM #lt_entity_mappings
+			);
+			
+			/*
+			DECLARE CURSOR c_scv_generation_control FOR
+				SELECT * FROM :lt_scv_generation_control;
+			
+			FOR r_scv_generation_control as c_scv_generation_control DO
+				
+				-- TODO: Check if already present in SCV foundation to enable delta update capability	
+				--INSERT INTO "osr.scv.foundation.db.data::SCVFoundation.Master" VALUES ("osr.scv.foundation.db.data::SEQ_ScvMaster".NEXTVAL, CURRENT_DATE, null, CURRENT_USER, null, null, null);
+				--INSERT INTO #lt_entity_mapping VALUES ("osr.scv.foundation.db.data::SEQ_ScvMaster".CURRVAL, r_unique_entity.ENTITY_ID);
+	
+				IF :lv_current_id = '' THEN
+					INSERT INTO #lt_entity_mapping VALUES ('NEXTVAL', "osr.scv.foundation.db.data::SEQ_ScvMaster".NEXTVAL, r_scv_generation_control.ENTITY_ID, r_scv_generation_control."Match_ROW_ID");
+					--INSERT INTO "osr.scv.foundation.db.data::SCVFoundation.Master" VALUES ("osr.scv.foundation.db.data::SEQ_ScvMaster".CURRVAL, CURRENT_DATE, null, CURRENT_USER, null, null, null);
+				ELSE
+					-- Process action
+					lv_entity	= r_scv_generation_control.ENTITY_ID;
+					lv_action	= r_scv_generation_control.ACTION;
+					lv_id		= r_scv_generation_control.SYSTEM_ID;
+					
+					IF ( :lv_action = 'Accept' OR :lv_action = 'Auto-Promotion') AND :lv_current_entity = :lv_entity THEN
+						-- Insert with same SCV ID
+						INSERT INTO #lt_entity_mapping VALUES ('CURRVAL', "osr.scv.foundation.db.data::SEQ_ScvMaster".CURRVAL, :lv_entity, r_scv_generation_control."Match_ROW_ID");
+					ELSEIF ( :lv_action = 'Accept' OR :lv_action = 'Auto-Promotion') AND :lv_current_entity != :lv_entity THEN
+						-- Entity change, new SCV ID
+						INSERT INTO #lt_entity_mapping VALUES ('NEXTVAL', "osr.scv.foundation.db.data::SEQ_ScvMaster".NEXTVAL, :lv_entity, r_scv_generation_control."Match_ROW_ID");
+						--INSERT INTO "osr.scv.foundation.db.data::SCVFoundation.Master" VALUES ("osr.scv.foundation.db.data::SEQ_ScvMaster".CURRVAL, CURRENT_DATE, null, CURRENT_USER, null, null, null);
+					ELSEIF :lv_action = 'Reject' AND :lv_current_entity = :lv_entity THEN
+						-- Reject, create new SCV ID
+						IF :lv_id != :lv_current_id THEN
+							INSERT INTO #lt_entity_mapping VALUES ('CURRVAL', "osr.scv.foundation.db.data::SEQ_ScvMaster".NEXTVAL, :lv_entity, r_scv_generation_control."Match_ROW_ID");
+							--INSERT INTO "osr.scv.foundation.db.data::SCVFoundation.Master" VALUES ("osr.scv.foundation.db.data::SEQ_ScvMaster".CURRVAL, CURRENT_DATE, null, CURRENT_USER, null, null, null);
+						END IF;
+					ELSEIF :lv_action = 'Reject' AND :lv_current_entity != :lv_entity THEN
+						-- Reject, create new SCV ID
+						IF :lv_id != :lv_current_id THEN
+							INSERT INTO #lt_entity_mapping VALUES ('CURRVAL', "osr.scv.foundation.db.data::SEQ_ScvMaster".NEXTVAL, :lv_entity, r_scv_generation_control."Match_ROW_ID");
+							--INSERT INTO "osr.scv.foundation.db.data::SCVFoundation.Master" VALUES ("osr.scv.foundation.db.data::SEQ_ScvMaster".CURRVAL, CURRENT_DATE, null, CURRENT_USER, null, null, null);
+						END IF;
+					END IF;
+				END IF;
+				
+				lv_current_id := r_scv_generation_control.SYSTEM_ID;
+				lv_current_entity := r_scv_generation_control.ENTITY_ID;
+			
+			END FOR;
+			
+			*/
 		
 		
 	END;
@@ -156,7 +352,7 @@ BEGIN
 								ORDER BY a.ENTITY_ID
 							) mr
 							-- Add SCV ID
-							INNER JOIN (SELECT SCV_ID, ENTITY_ID AS ENTITY_ID1, MATCH_ROW_ID FROM #lt_entity_mappingss) ma
+							INNER JOIN (SELECT SCV_ID, ENTITY_ID AS ENTITY_ID1, MATCH_ROW_ID FROM #lt_entity_mappings) ma
 							ON mr.ENTITY_ID = ma.ENTITY_ID1 AND mr."Match_ROW_ID" = ma.MATCH_ROW_ID
 							) 
 							GROUP BY
@@ -209,7 +405,7 @@ BEGIN
 								) mr
 								
 								-- Add SCV ID
-								INNER JOIN #lt_entity_mappingss ma
+								INNER JOIN #lt_entity_mappings ma
 								ON mr.ENTITY_ID = ma.ENTITY_ID AND 
 								(CASE WHEN (LOCATE(mr."Match_ROW_ID",'|') < 1) THEN mr."Match_ROW_ID" ELSE SUBSTRING(mr."Match_ROW_ID",1,LOCATE(mr."Match_ROW_ID",'|')-1) END)  = ma.MATCH_ROW_ID
 							)
@@ -262,7 +458,7 @@ BEGIN
 									WHERE a.SOURCE_SYSTEM = 'RMS'
 								) mr
 							-- Add SCV ID
-							INNER JOIN (SELECT SCV_ID, ENTITY_ID AS ENTITY_ID1, MATCH_ROW_ID FROM #lt_entity_mappingss) ma
+							INNER JOIN (SELECT SCV_ID, ENTITY_ID AS ENTITY_ID1, MATCH_ROW_ID FROM #lt_entity_mappings) ma
 							ON mr.ENTITY_ID = ma.ENTITY_ID1 AND mr."Match_ROW_ID" = ma.MATCH_ROW_ID
 							) 
 							GROUP BY SCV_ID,
@@ -336,7 +532,7 @@ BEGIN
 								ON (CASE WHEN (LOCATE(mr."Cleanse_ROW_ID_TMR",'|') < 1) THEN mr."Cleanse_ROW_ID_TMR" ELSE SUBSTRING(mr."Cleanse_ROW_ID_TMR",1,LOCATE(mr."Cleanse_ROW_ID_TMR",'|')-1) END)  = md."Z_RUN_SEQ_ID"
 							) mr
 							-- Add SCV ID
-							INNER JOIN (SELECT SCV_ID, ENTITY_ID AS ENTITY_ID1, MATCH_ROW_ID FROM #lt_entity_mappingss) ma
+							INNER JOIN (SELECT SCV_ID, ENTITY_ID AS ENTITY_ID1, MATCH_ROW_ID FROM #lt_entity_mappings) ma
 							ON mr.ENTITY_ID = ma.ENTITY_ID1 AND
 							(CASE WHEN (LOCATE(mr."Match_ROW_ID",'|') < 1) THEN mr."Match_ROW_ID" ELSE SUBSTRING(mr."Match_ROW_ID",1,LOCATE(mr."Match_ROW_ID",'|')-1) END)  = ma.MATCH_ROW_ID
 						    ) 
@@ -396,7 +592,7 @@ BEGIN
 									) u
 								) mr
 								-- Add SCV ID
-								INNER JOIN (SELECT SCV_ID, ENTITY_ID AS ENTITY_ID1, MATCH_ROW_ID FROM #lt_entity_mappingss) ma
+								INNER JOIN (SELECT SCV_ID, ENTITY_ID AS ENTITY_ID1, MATCH_ROW_ID FROM #lt_entity_mappings) ma
 								ON mr.ENTITY_ID = ma.ENTITY_ID1 AND mr."Match_ROW_ID" = ma.MATCH_ROW_ID
 								) GROUP BY SCV_ID,
 								           ENTITY_ID, SOURCE_SYSTEM, SYSTEM_ID, VALID_FROM, VALID_TO,
@@ -443,7 +639,7 @@ BEGIN
 								ON CASE WHEN (LOCATE(mr."Cleanse_ROW_ID_TMR",'|') < 1) THEN mr."Cleanse_ROW_ID_TMR" ELSE SUBSTRING(mr."Cleanse_ROW_ID_TMR",1,LOCATE(mr."Cleanse_ROW_ID_TMR",'|')-1) END  = md."Z_RUN_SEQ_ID"			
 							) mr
 							-- Add SCV ID
-							INNER JOIN (SELECT SCV_ID, ENTITY_ID AS ENTITY_ID1, MATCH_ROW_ID FROM #lt_entity_mappingss) ma
+							INNER JOIN (SELECT SCV_ID, ENTITY_ID AS ENTITY_ID1, MATCH_ROW_ID FROM #lt_entity_mappings) ma
 							ON mr.ENTITY_ID = ma.ENTITY_ID1 AND mr."Match_ROW_ID" = ma.MATCH_ROW_ID
 						   )
 						   GROUP BY SCV_ID,
@@ -468,7 +664,7 @@ BEGIN
 												WHERE SOURCE_SYSTEM = 'TMR' and b.SMS_CONTACT_NUMBER <> ''
 											) mr	
 											-- Add SCV ID
-											INNER JOIN (SELECT SCV_ID, ENTITY_ID AS ENTITY_ID1, MATCH_ROW_ID FROM #lt_entity_mappingss) ma
+											INNER JOIN (SELECT SCV_ID, ENTITY_ID AS ENTITY_ID1, MATCH_ROW_ID FROM #lt_entity_mappings) ma
 											ON mr.ENTITY_ID = ma.ENTITY_ID1 AND mr."Match_ROW_ID" = ma.MATCH_ROW_ID
 										) 
 										GROUP BY SCV_ID, 
@@ -505,7 +701,7 @@ BEGIN
 												WHERE SOURCE_SYSTEM = 'TMR' and b.EMAIL_ADDRESS <> ''
 											) mr	
 											-- Add SCV ID
-											INNER JOIN (SELECT SCV_ID, ENTITY_ID AS ENTITY_ID1, MATCH_ROW_ID FROM #lt_entity_mappingss) ma
+											INNER JOIN (SELECT SCV_ID, ENTITY_ID AS ENTITY_ID1, MATCH_ROW_ID FROM #lt_entity_mappings) ma
 											ON mr.ENTITY_ID = ma.ENTITY_ID1 AND mr."Match_ROW_ID" = ma.MATCH_ROW_ID
 										)
 										GROUP BY SCV_ID, ENTITY_ID, SOURCE_SYSTEM, SYSTEM_ID, UPDATED_AT, EMAIL_ADDRESS, STD_EMAIL, CHECKSUM, STD_CHECKSUM
@@ -520,8 +716,8 @@ BEGIN
 	
 	
 	-- ### Clean-up ##############################################################################################################
-	DROP TABLE #lt_entity_mappingss;
-	DROP TABLE #lt_scv_counters;
+	DROP TABLE #lt_entity_mappings;
+	DROP TABLE #lt_scv_counter;
 	
 --    o_return_code := 'SUCCESS';
 --    o_message := 'Entites moved successfully';

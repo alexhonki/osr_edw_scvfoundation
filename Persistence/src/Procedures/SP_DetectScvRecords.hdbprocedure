@@ -33,7 +33,7 @@ BEGIN
 		            	--ROW_NUMBER() OVER (ORDER BY a.ENTITY_ID ASC) as ROW_COUNT,
 		            	--a.GROUP_ID,
 					--	a.ENTITY_ID,PERSON_RMS, PERSON_TMR,	ADDR_RMS, ADDR_TMR,	TEL_RMS,FAX_RMS,TEL_TMR, SMS_TMR, EMAIL_TMR,a.SOURCE_SYSTEM,
-		            	a."Match_ROW_ID" as MATCH_ROW ,
+		            	a.ENTITY_ID, a."Match_ROW_ID" as MATCH_ROW ,
 					
 	
 						HASH_SHA256(TO_BINARY(TO_VARCHAR(CASE WHEN PERSON_RMS IS NULL THEN '' ELSE PERSON_RMS END)),
@@ -227,23 +227,37 @@ BEGIN
 						UNION ALL
 					 SELECT * FROM :lt_scvtmr_hash;
 	
-	lt_exisitng_records = SELECT mh.MATCH_ROW, sh.SCV_ID AS SCV_ID, 'Existing' AS ACTION  FROM :lt_matchresults_hash as mh
+	lt_exisitng_records = SELECT mh.ENTITY_ID, mh.MATCH_ROW, sh.SCV_ID AS SCV_ID, 'Existing' AS ACTION  FROM :lt_matchresults_hash as mh
 		INNER JOIN (
 					SELECT SCV_ID, HASH_SCV  FROM :lt_scvall_hash
 					) as sh
 		ON mh.HASH_MATCH = sh.HASH_SCV;
 
 
-	lt_add_new_records = SELECT mh.MATCH_ROW, 0 AS SCV_ID , 'Add' AS ACTION 
+	lt_add_new_records = SELECT mh.ENTITY_ID, mh.MATCH_ROW, 0 AS SCV_ID , 'Add' AS ACTION 
 						FROM   :lt_matchresults_hash as mh
 						WHERE NOT EXISTS (SELECT SCV_ID, HASH_SCV  FROM :lt_scvall_hash as sh
                 						WHERE mh.HASH_MATCH = sh.HASH_SCV); 
 
-	INSERT INTO "osr.scv.foundation.db.data::MatchResults.MatchDelta" ( SELECT MATCH_ROW, SCV_ID, ACTION  FROM :lt_exisitng_records
-																			UNION ALL
-																		 SELECT MATCH_ROW, SCV_ID, ACTION  FROM :lt_add_new_records);
+	lt_total_records = ( SELECT MATCH_ROW, SCV_ID, ACTION  FROM :lt_exisitng_records
+							UNION ALL
+						SELECT MATCH_ROW, SCV_ID, ACTION  FROM :lt_add_new_records);
+						
+						
+	INSERT INTO "osr.scv.foundation.db.data::MatchResults.MatchDelta" ( SELECT f.MATCH_ROW, g.SCV_ID, f.ACTION FROM (
+																		SELECT b.ENTITY_ID, MATCH_ROW, SCV_ID, a.ACTION FROM :lt_total_records as a
+																		INNER JOIN "osr.scv.foundation.db.data::MatchResults.MatchResults" as b
+																		ON a.MATCH_ROW = b."Match_ROW_ID"
+																		)f
+																		LEFT OUTER JOIN (
+																						SELECT e.ENTITY_ID, MAX (c.SCV_ID) AS SCV_ID FROM :lt_total_records as c
+																						INNER JOIN "osr.scv.foundation.db.data::MatchResults.MatchResults" as e
+																						ON c.MATCH_ROW = e."Match_ROW_ID"
+																						GROUP BY e.ENTITY_ID
+																		)g
+																		ON f.ENTITY_ID = g.ENTITY_ID);
 	
-	
+
 	--	SELECT * FROM :lt_scvall_hash;	
 	
 			--SELECT * FROM #lt_record_action2;
