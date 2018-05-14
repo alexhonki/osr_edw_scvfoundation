@@ -171,15 +171,19 @@ context SCVFoundation {
 
     /*@@layout{"layoutInfo":{"x":-630,"y":2.5}}*/
     entity Search {
-        SCV_ID        : Integer;
-        SOURCE        : String(20);
-        SOURCE_ID     : String(20);
-        SEARCH_STRING : String(1024);
+        SCV_ID                 : Integer;
+        SOURCE                 : String(20);
+        SOURCE_ID              : String(20);
+        SEARCH_STRING          : String(1024);
+        SEARCH_STRING_CLEANSED : String(1024);
     }
     technical configuration {
-        fulltext index idx_fulltext on (SEARCH_STRING)
+        fulltext index idx_fulltext          on (SEARCH_STRING)
             token separators '|'
             text mining off
             search only on;
+        fulltext index idx_fulltext_cleansed on (SEARCH_STRING_CLEANSED)
+            token separators '|';
+
     };
 };
