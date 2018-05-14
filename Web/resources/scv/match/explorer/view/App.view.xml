@@ -1,0 +1,10 @@
+<mvc:View controllerName="osr.scv.match.explorer.controller.App"
+          xmlns:core="sap.ui.core"
+          xmlns:mvc="sap.ui.core.mvc"
+          xmlns="sap.m"
+          displayBlock="true"
+          xmlns:app="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1">
+
+  <App id="appRootControl"></App>
+
+</mvc:View>
