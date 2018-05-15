@@ -1,0 +1,78 @@
+<mvc:View controllerName="osr.scv.match.explorer.controller.MainMenu"
+          xmlns:html="http://www.w3.org/1999/xhtml"
+          xmlns:mvc="sap.ui.core.mvc"
+          xmlns:app="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1"
+          xmlns:core="sap.ui.core"
+          xmlns:l="sap.ui.layout"
+          displayBlock="true"
+          xmlns="sap.m"
+          class="">
+
+  <Page title="{i18n>title}"
+        showNavButton="false"
+        navButtonPress="onNavBack">
+    <headerContent>
+      <core:Fragment fragmentName="osr.scv.match.explorer.view.fragment.HeaderContent"
+                     type="XML" />
+    </headerContent>
+    <content>
+      <core:Fragment fragmentName="osr.scv.match.explorer.view.fragment.SearchField"
+                     type="XML" />
+
+
+      <Table id="idProductsTable"
+             inset="false"
+             items="{
+                			path: '/ProductCollection',
+                			sorter: {
+                				path: 'Name'
+                			}
+                		}"
+             noDataText="{i18n>nosearchresultdata}">
+        <columns>
+
+          <Column>
+            <Text text="{i18n>mainmenu.firstname}" />
+          </Column>
+
+          <Column>
+            <Text text="{i18n>mainmenu.lastname}" />
+          </Column>
+
+          <Column>
+            <Text text="{i18n>mainmenu.city}" />
+          </Column>
+
+          <Column>
+            <Text text="{i18n>mainmenu.dateofbirth}" />
+          </Column>
+
+          <Column>
+            <Text text="{i18n>mainmenu.validfrom}" />
+          </Column>
+
+          <Column>
+            <Text text="{i18n>mainmenu.validto}" />
+          </Column>
+
+        </columns>
+        <items>
+          <ColumnListItem type="Navigation"
+                          press="onItemPressed"
+                          app:scvId="{itemSetModel>Material}">
+            <cells>
+              <Text text="INPUT1" />
+              <Text text="INPUT1" />
+              <Text text="INPUT1" />
+              <Text text="INPUT1" />
+              <Text text="INPUT1" />
+              <Text text="INPUT1" />
+
+            </cells>
+          </ColumnListItem>
+        </items>
+      </Table>
+    </content>
+  </Page>
+
+</mvc:View>

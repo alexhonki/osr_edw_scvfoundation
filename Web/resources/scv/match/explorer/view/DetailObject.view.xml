@@ -1,0 +1,99 @@
+<mvc:View controllerName="osr.scv.match.explorer.controller.DetailObject"
+          xmlns:html="http://www.w3.org/1999/xhtml"
+          xmlns:mvc="sap.ui.core.mvc"
+          xmlns:app="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1"
+          xmlns:core="sap.ui.core"
+          xmlns:l="sap.ui.layout"
+          xmlns:f="sap.ui.layout.form"
+          xmlns:smartTable="sap.ui.comp.smarttable"
+          displayBlock="true"
+          xmlns="sap.m"
+          class="sapUiSizeCompact">
+
+  <Page title="{i18n>title}"
+        showNavButton="true"
+        navButtonPress="onNavBack">
+    <headerContent>
+      <core:Fragment fragmentName="osr.scv.match.explorer.view.fragment.HeaderContent"
+                     type="XML" />
+    </headerContent>
+    <content>
+      <IconTabBar id="scv-tabbar"
+                  expanded="true"
+                  class="sapUiResponsiveContentPadding"
+                  select="onSelectTab"
+                  expand="onExpandTab"
+                  expandable="false">
+
+        <items>
+          <IconTabFilter id="scv-current"
+                         iconDensityAware="false"
+                         icon="sap-icon://employee"
+                         text="{i18n>detailobject.tab.current}">
+            <content>
+
+              <core:Fragment fragmentName="osr.scv.match.explorer.view.fragment.objectdetail.Current"
+                             type="XML" />
+
+            </content>
+
+          </IconTabFilter>
+
+          <IconTabFilter id="scv-history"
+                         iconDensityAware="false"
+                         icon="sap-icon://customer-history"
+                         text="{i18n>detailobject.tab.historic}">
+
+            <content>
+              <core:Fragment fragmentName="osr.scv.match.explorer.view.fragment.objectdetail.History"
+                             type="XML" />
+            </content>
+
+
+          </IconTabFilter>
+
+          <IconTabFilter id="scv-postal"
+                         iconDensityAware="false"
+                         icon="sap-icon://map"
+                         text="{i18n>detailobject.tab.postal}">
+
+            <content>
+              <core:Fragment fragmentName="osr.scv.match.explorer.view.fragment.objectdetail.Postal"
+                             type="XML" />
+            </content>
+
+
+          </IconTabFilter>
+
+          <IconTabFilter id="scv-person"
+                         iconDensityAware="false"
+                         icon="sap-icon://group"
+                         text="{i18n>detailobject.tab.person}">
+
+            <content>
+              <core:Fragment fragmentName="osr.scv.match.explorer.view.fragment.objectdetail.Person"
+                             type="XML" />
+            </content>
+
+
+          </IconTabFilter>
+
+          <IconTabFilter id="scv-contact"
+                         iconDensityAware="false"
+                         icon="sap-icon://address-book"
+                         text="{i18n>detailobject.tab.contact}">
+
+            <content>
+              <core:Fragment fragmentName="osr.scv.match.explorer.view.fragment.objectdetail.Contact"
+                             type="XML" />
+            </content>
+
+
+          </IconTabFilter>
+
+        </items>
+      </IconTabBar>
+    </content>
+  </Page>
+
+</mvc:View>

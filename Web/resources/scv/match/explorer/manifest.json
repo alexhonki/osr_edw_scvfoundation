@@ -116,7 +116,7 @@
 					"target": "home"
 				},
 				{
-					"pattern": "objectdetail",
+					"pattern": "objectdetail/:scvId:",
 					"name": "objectdetail",
 					"target": "objectdetail"
 				}

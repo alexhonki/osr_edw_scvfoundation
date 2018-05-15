@@ -1,0 +1,95 @@
+<core:FragmentDefinition xmlns:app="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1"
+                         xmlns:core="sap.ui.core"
+                         xmlns:f="sap.ui.layout.form"
+                         xmlns:l="sap.ui.layout"
+                         xmlns:mvc="sap.ui.core.mvc"
+                         xmlns:smartTable="sap.ui.comp.smarttable"
+                         xmlns="sap.m">
+
+  <Toolbar design="Transparent"
+           ariaLabelledBy="headerToolbar"
+           class="osrSCVToolBar">
+    <Title level="H3"
+           text="{i18n>headercontent.current}" />
+    <ToolbarSpacer/>
+    <Title level="H3"
+           text="{i18n>headercontent.scvid}" />
+  </Toolbar>
+
+  <f:SimpleForm id="form-display-contact"
+                editable="false"
+                layout="ResponsiveGridLayout"
+                labelSpanXL="4"
+                labelSpanL="4"
+                labelSpanM="4"
+                labelSpanS="12"
+                adjustLabelSpan="false"
+                emptySpanXL="0"
+                emptySpanL="0"
+                emptySpanM="0"
+                emptySpanS="0"
+                columnsXL="3"
+                columnsL="3"
+                columnsM="3"
+                singleContainerFullSize="true"
+                backgroundDesign="Solid">
+    <f:content>
+      <core:Title text="Name" />
+      <Label text="First Name" />
+      <Text text="{SupplierName}" />
+      <Label text="Middle Name" />
+      <Text text="{Street} {HouseNumber}" />
+      <Label text="Last Name" />
+      <Text text="{ZIPCode} {City}" />
+
+
+      <core:Title text="Identification" />
+      <Label text="Date of Birth" />
+      <Text text="{Url}" />
+
+      <Label text="Driver License" />
+      <Text text="{Twitter}" />
+
+      <Label text="RMS BP Number" />
+      <Text text="{Tel}" />
+
+
+      <core:Title text="Contact" />
+      <Label text="Mobile Number" />
+      <Text text="{Url}" />
+
+      <Label text="Home Number" />
+      <Text text="{Url}" />
+
+      <Label text="Email" />
+      <Text text="{Url}" />
+
+    </f:content>
+  </f:SimpleForm>
+
+  <Title level="H3"
+         text="Addresses"
+         class="sapUiSmallMargin" />
+  <smartTable:SmartTable id="LineItemsSmartTable"
+                         entitySet=""
+                         smartFilterId="smartFilterBar"
+                         tableType="ResponsiveTable"
+                         useExportToExcel="true"
+                         beforeExport="onBeforeExport"
+                         useVariantManagement="false"
+                         useTablePersonalisation="true"
+                         header="Line Items"
+                         showRowCount="true"
+                         persistencyKey="SmartTableAnalytical_Explored"
+                         enableAutoBinding="true"
+                         app:useSmartField="true"
+                         class="sapUiResponsiveContentPadding">
+    <!-- layout data used to make the table growing but the filter bar fixed -->
+    <smartTable:layoutData>
+      <FlexItemData growFactor="1"
+                    baseSize="0%" />
+    </smartTable:layoutData>
+  </smartTable:SmartTable>
+
+
+</core:FragmentDefinition>

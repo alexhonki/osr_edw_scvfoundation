@@ -1,0 +1,58 @@
+<core:FragmentDefinition xmlns:app="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1"
+                         xmlns:core="sap.ui.core"
+                         xmlns:f="sap.ui.layout.form"
+                         xmlns:l="sap.ui.layout"
+                         xmlns:mvc="sap.ui.core.mvc"
+                         xmlns:smartTable="sap.ui.comp.smarttable"
+                         xmlns="sap.m">
+
+  <Toolbar design="Transparent"
+           ariaLabelledBy="headerToolbar"
+           class="osrSCVToolBar">
+    <Title level="H3"
+           text="{i18n>headercontent.postal}" />
+    <ToolbarSpacer/>
+    <Title level="H3"
+           text="{i18n>headercontent.scvid}" />
+  </Toolbar>
+
+
+  <f:SimpleForm id="form-display-postal"
+                editable="false"
+                layout="ResponsiveGridLayout"
+                labelSpanXL="1"
+                labelSpanL="1"
+                labelSpanM="1"
+                labelSpanS="12"
+                adjustLabelSpan="false"
+                emptySpanXL="0"
+                emptySpanL="0"
+                emptySpanM="0"
+                emptySpanS="0"
+                columnsXL="1"
+                columnsL="1"
+                columnsM="1"
+                singleContainerFullSize="true"
+                backgroundDesign="Solid">
+    <f:content>
+
+      <Label text="Address" />
+      <Text text="{SupplierName}" />
+
+      <Label text="City" />
+      <Text text="{Street} {HouseNumber}" />
+
+      <Label text="State" />
+      <Text text="{ZIPCode} {City}" />
+
+      <Label text="Post Code" />
+      <Text text="{Url}" />
+
+      <Label text="Country" />
+      <Text text="{Twitter}" />
+
+
+    </f:content>
+  </f:SimpleForm>
+
+</core:FragmentDefinition>
