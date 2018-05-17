@@ -183,7 +183,8 @@ context SCVFoundation {
             text mining off
             search only on;
         fulltext index idx_fulltext_cleansed on (SEARCH_STRING_CLEANSED)
-            token separators '|';
-
+            token separators '|'
+            text mining off
+            search only on;
     };
 };
