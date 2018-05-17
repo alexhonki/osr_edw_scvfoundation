@@ -19,8 +19,8 @@
 		"description": "Role for promotion of match records into OSR SCV Foundation",
 		"scope-references": ["$XSAPPNAME.SUPERVISOR"]
 	}, {
-		"name": "OSR_SCV_FOUNDATION_EXPLORER",
-		"description": "Role for SCV Master Data Explorer application",
+		"name": "OSR_SCV_EXPLORER",
+		"description": "Role SCV Master Data Explorer",
 		"scope-references": ["$XSAPPNAME.EXPLORER"]
 	}]
 }

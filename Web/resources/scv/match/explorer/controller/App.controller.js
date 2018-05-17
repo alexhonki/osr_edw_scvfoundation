@@ -23,18 +23,21 @@ sap.ui.define([
       this.getRouter().attachRoutePatternMatched(this._onRouteMatched, this);
 
     },
-
+	
+	/**
+	 * Lifecycle hook of UI5.
+	 */
     onAfterRendering: function () {
 
     },
 
     /**
-     * Everytime route is matched, will trigger below.
+     * Every page, this onroute will get triggered.
      * @param  {[type]} oEvent [description]
      * @return {[type]}        [description]
      */
     _onRouteMatched: function (oEvent) {
-
+		
     }
 
   });

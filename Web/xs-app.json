@@ -39,9 +39,14 @@
 		"authenticationType": "xsuaa",
 		"scope": "$XSAPPNAME.SUPERVISOR"
 	}, {
+		"source": "/scv/match/srv/xs/explorer/(.*)(.xsodata)",
+		"destination": "Services_url",
+		"authenticationType": "xsuaa",
+		"scope": "$XSAPPNAME.EXPLORER"
+	}, {
 		"source": "^/(.*)$",
 		"localDir": "resources",
-		"scope": ["$XSAPPNAME.REVIEW","$XSAPPNAME.SUPERVISOR"],
+		"scope": ["$XSAPPNAME.REVIEW","$XSAPPNAME.SUPERVISOR", "$XSAPPNAME.EXPLORER"],
 		"replace": {
 			"pathSuffixes": ["index.html", "odataTest.html"],
 			"vars": ["ui5liburl"]
