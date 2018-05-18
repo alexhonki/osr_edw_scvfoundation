@@ -14,8 +14,8 @@
 			"version": "0.0.0"
 		},
 		"dataSources": {
-			"PLACEHOLDER": {
-				"uri": "/",
+			"SCVExplorerRemote": {
+				"uri": "/scv/match/srv/xs/explorer/scvExplorer.xsodata",
 				"type": "OData",
 				"settings": {
 					"odataVersion": "2.0"
@@ -68,8 +68,8 @@
 					"bundleName": "osr.scv.match.explorer.i18n.i18n"
 				}
 			},
-			"visitSetModel": {
-				"dataSource": "PLACEHOLDER",
+			"scvExplorerModel": {
+				"dataSource": "SCVExplorerRemote",
 				"settings": {
 					"disableHeadRequestForToken": "false",
 					"defaultCountMode": "None"
@@ -116,7 +116,7 @@
 					"target": "home"
 				},
 				{
-					"pattern": "objectdetail/:scvId:",
+					"pattern": "objectdetail/{scvId}",
 					"name": "objectdetail",
 					"target": "objectdetail"
 				}

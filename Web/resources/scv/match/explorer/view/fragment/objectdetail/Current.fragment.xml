@@ -10,10 +10,10 @@
            ariaLabelledBy="headerToolbar"
            class="osrSCVToolBar">
     <Title level="H3"
-           text="{i18n>headercontent.current}" />
+           text="{i18n>headercontent.current} {viewModel>/STD_PERSON_FN} {viewModel>/STD_PERSON_GN} {viewModel>/STD_PERSON_GN2}" />
     <ToolbarSpacer/>
     <Title level="H3"
-           text="{i18n>headercontent.scvid}" />
+           text="{i18n>headercontent.scvid} {viewModel>/SCV_ID}" />
   </Toolbar>
 
   <f:SimpleForm id="form-display-contact"
@@ -36,22 +36,22 @@
     <f:content>
       <core:Title text="Name" />
       <Label text="First Name" />
-      <Text text="{SupplierName}" />
+      <Text text="{personModel>/STD_PERSON_FN}" />
       <Label text="Middle Name" />
-      <Text text="{Street} {HouseNumber}" />
+      <Text text="{personModel>/STD_PERSON_GN}" />
       <Label text="Last Name" />
-      <Text text="{ZIPCode} {City}" />
+      <Text text="{personModel>/STD_PERSON_GN2}" />
 
 
       <core:Title text="Identification" />
       <Label text="Date of Birth" />
-      <Text text="{Url}" />
+      <Text text="{personModel>/BIRTH_DATE}" />
 
       <Label text="Driver License" />
-      <Text text="{Twitter}" />
+      <Text text="{personModel>/DRIVER_LICENSE}" />
 
       <Label text="RMS BP Number" />
-      <Text text="{Tel}" />
+      <Text text="{personModel>/BP_NUMBER}" />
 
 
       <core:Title text="Contact" />
