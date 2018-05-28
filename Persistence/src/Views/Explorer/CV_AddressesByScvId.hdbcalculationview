@@ -1,0 +1,342 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="osr.scv.foundation.db.views.Explorer::CV_AddressesByScvId" applyPrivilegeType="NONE" dataCategory="DIMENSION" dimensionType="STANDARD" schemaVersion="3.0" outputViewType="Projection" cacheInvalidationPeriod="NONE" enforceSqlExecution="false">
+<descriptions defaultDescription="Addresses for an SCV ID "/>
+<localVariables>
+  <variable id="IP_SCV_ID" parameter="true">
+    <descriptions defaultDescription="IP_SCV_ID"/>
+    <variableProperties datatype="NVARCHAR" length="10" mandatory="true">
+      <valueDomain type="empty"/>
+      <selection multiLine="false" type="Single"/>
+    </variableProperties>
+  </variable>
+</localVariables>
+<variableMappings/>
+<dataSources>
+  <DataSource id="osr.scv.foundation.db.data::SCVFoundation.AddressRms">
+    <resourceUri>osr.scv.foundation.db.data::SCVFoundation.AddressRms</resourceUri>
+  </DataSource>
+  <DataSource id="osr.scv.foundation.db.data::SCVFoundation.AddressTmr">
+    <resourceUri>osr.scv.foundation.db.data::SCVFoundation.AddressTmr</resourceUri>
+  </DataSource>
+</dataSources>
+<calculationViews>
+  <calculationView xsi:type="Calculation:ProjectionView" id="AddressRMS" filterExpressionLanguage="COLUMN_ENGINE">
+    <viewAttributes>
+      <viewAttribute id="SCV_ID">
+        <descriptions defaultDescription="SCV_ID"/>
+      </viewAttribute>
+      <viewAttribute id="SOURCE">
+        <descriptions defaultDescription="SOURCE"/>
+      </viewAttribute>
+      <viewAttribute id="SOURCE_ID">
+        <descriptions defaultDescription="SOURCE_ID"/>
+      </viewAttribute>
+      <viewAttribute id="ADR_KIND">
+        <descriptions defaultDescription="ADR_KIND"/>
+      </viewAttribute>
+      <viewAttribute id="VALID_FROM">
+        <descriptions defaultDescription="VALID_FROM"/>
+      </viewAttribute>
+      <viewAttribute id="VALID_TO">
+        <descriptions defaultDescription="VALID_TO"/>
+      </viewAttribute>
+      <viewAttribute id="REGION">
+        <descriptions defaultDescription="REGION"/>
+      </viewAttribute>
+      <viewAttribute id="STD_ADDR_COUNTRY_2CHAR">
+        <descriptions defaultDescription="STD_ADDR_COUNTRY_2CHAR"/>
+      </viewAttribute>
+      <viewAttribute id="STD_ADDR_LOCALITY">
+        <descriptions defaultDescription="STD_ADDR_LOCALITY"/>
+      </viewAttribute>
+      <viewAttribute id="STD_ADDR_POSTCODE1">
+        <descriptions defaultDescription="STD_ADDR_POSTCODE1"/>
+      </viewAttribute>
+    
+      <viewAttribute id="STD_ADDR_ADDRESS_DELIVERY">
+        <descriptions defaultDescription="STD_ADDR_ADDRESS_DELIVERY"/>
+      </viewAttribute>
+      <viewAttribute id="STD_ADDR_PRIM_ADDRESS">
+        <descriptions defaultDescription="STD_ADDR_PRIM_ADDRESS"/>
+      </viewAttribute>
+      <viewAttribute id="STD_ADDR_PRIM_NAME_FULL">
+        <descriptions defaultDescription="STD_ADDR_PRIM_NAME_FULL"/>
+      </viewAttribute>
+      <viewAttribute id="STD_ADDR_PRIM_NAME">
+        <descriptions defaultDescription="STD_ADDR_PRIM_NAME"/>
+      </viewAttribute>
+      <viewAttribute id="STD_ADDR_PRIM_TYPE">
+        <descriptions defaultDescription="STD_ADDR_PRIM_TYPE"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="osr.scv.foundation.db.data::SCVFoundation.AddressRms">
+      <mapping xsi:type="Calculation:AttributeMapping" target="SCV_ID" source="SCV_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SOURCE" source="SOURCE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SOURCE_ID" source="SOURCE_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ADR_KIND" source="ADR_KIND"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VALID_FROM" source="VALID_FROM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VALID_TO" source="VALID_TO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="REGION" source="REGION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_COUNTRY_2CHAR" source="STD_ADDR_COUNTRY_2CHAR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_LOCALITY" source="STD_ADDR_LOCALITY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_POSTCODE1" source="STD_ADDR_POSTCODE1"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_ADDRESS_DELIVERY" source="STD_ADDR_ADDRESS_DELIVERY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_PRIM_ADDRESS" source="STD_ADDR_PRIM_ADDRESS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_PRIM_NAME_FULL" source="STD_ADDR_PRIM_NAME_FULL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_PRIM_NAME" source="STD_ADDR_PRIM_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_PRIM_TYPE" source="STD_ADDR_PRIM_TYPE"/>
+    </input>
+    <filter>(&quot;SCV_ID&quot; = '$$IP_SCV_ID$$')</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="AddressTMR" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="SCV_ID">
+        <descriptions defaultDescription="SCV_ID"/>
+      </viewAttribute>
+      <viewAttribute id="SOURCE">
+        <descriptions defaultDescription="SOURCE"/>
+      </viewAttribute>
+      <viewAttribute id="SOURCE_ID">
+        <descriptions defaultDescription="SOURCE_ID"/>
+      </viewAttribute>
+      <viewAttribute id="VALID_FROM">
+        <descriptions defaultDescription="VALID_FROM"/>
+      </viewAttribute>
+      <viewAttribute id="VALID_TO">
+        <descriptions defaultDescription="VALID_TO"/>
+      </viewAttribute>
+      <viewAttribute id="STD_ADDR_COUNTRY_2CHAR">
+        <descriptions defaultDescription="STD_ADDR_COUNTRY_2CHAR"/>
+      </viewAttribute>
+      <viewAttribute id="STD_ADDR_LOCALITY">
+        <descriptions defaultDescription="STD_ADDR_LOCALITY"/>
+      </viewAttribute>
+      <viewAttribute id="STD_ADDR_REGION">
+        <descriptions defaultDescription="STD_ADDR_REGION"/>
+      </viewAttribute>
+      <viewAttribute id="STD_ADDR_POSTCODE1">
+        <descriptions defaultDescription="STD_ADDR_POSTCODE1"/>
+      </viewAttribute>
+    
+      <viewAttribute id="STD_ADDR_ADDRESS_DELIVERY">
+        <descriptions defaultDescription="STD_ADDR_ADDRESS_DELIVERY"/>
+      </viewAttribute>
+      <viewAttribute id="STD_ADDR_PRIM_ADDRESS">
+        <descriptions defaultDescription="STD_ADDR_PRIM_ADDRESS"/>
+      </viewAttribute>
+      <viewAttribute id="STD_ADDR_PRIM_NAME_FULL">
+        <descriptions defaultDescription="STD_ADDR_PRIM_NAME_FULL"/>
+      </viewAttribute>
+      <viewAttribute id="STD_ADDR_PRIM_NAME">
+        <descriptions defaultDescription="STD_ADDR_PRIM_NAME"/>
+      </viewAttribute>
+      <viewAttribute id="STD_ADDR_PRIM_TYPE">
+        <descriptions defaultDescription="STD_ADDR_PRIM_TYPE"/>
+      </viewAttribute>
+      <viewAttribute id="STD_ADDR_PRIM_NUMBER">
+        <descriptions defaultDescription="STD_ADDR_PRIM_NUMBER"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="osr.scv.foundation.db.data::SCVFoundation.AddressTmr">
+      <mapping xsi:type="Calculation:AttributeMapping" target="SCV_ID" source="SCV_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SOURCE" source="SOURCE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SOURCE_ID" source="SOURCE_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VALID_FROM" source="VALID_FROM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VALID_TO" source="VALID_TO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_COUNTRY_2CHAR" source="STD_ADDR_COUNTRY_2CHAR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_LOCALITY" source="STD_ADDR_LOCALITY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_REGION" source="STD_ADDR_REGION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_POSTCODE1" source="STD_ADDR_POSTCODE1"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_ADDRESS_DELIVERY" source="STD_ADDR_ADDRESS_DELIVERY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_PRIM_ADDRESS" source="STD_ADDR_PRIM_ADDRESS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_PRIM_NAME_FULL" source="STD_ADDR_PRIM_NAME_FULL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_PRIM_NAME" source="STD_ADDR_PRIM_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_PRIM_TYPE" source="STD_ADDR_PRIM_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_PRIM_NUMBER" source="STD_ADDR_PRIM_NUMBER"/>
+    </input>
+    <filter>(&quot;SCV_ID&quot; = '$$IP_SCV_ID$$')</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:UnionView" id="AddressUnion">
+    <viewAttributes>
+      <viewAttribute id="SCV_ID">
+        <descriptions defaultDescription="SCV_ID"/>
+      </viewAttribute>
+      <viewAttribute id="SOURCE">
+        <descriptions defaultDescription="SOURCE"/>
+      </viewAttribute>
+      <viewAttribute id="SOURCE_ID">
+        <descriptions defaultDescription="SOURCE_ID"/>
+      </viewAttribute>
+      <viewAttribute datatype="NVARCHAR" length="10" id="VALID_FROM">
+        <descriptions defaultDescription="VALID_FROM"/>
+      </viewAttribute>
+      <viewAttribute datatype="NVARCHAR" length="10" id="VALID_TO">
+        <descriptions defaultDescription="VALID_TO"/>
+      </viewAttribute>
+      <viewAttribute id="STD_ADDR_COUNTRY_2CHAR">
+        <descriptions defaultDescription="STD_ADDR_COUNTRY_2CHAR"/>
+      </viewAttribute>
+      <viewAttribute id="STD_ADDR_LOCALITY">
+        <descriptions defaultDescription="STD_ADDR_LOCALITY"/>
+      </viewAttribute>
+      <viewAttribute id="STD_ADDR_REGION">
+        <descriptions defaultDescription="STD_ADDR_REGION"/>
+      </viewAttribute>
+      <viewAttribute id="STD_ADDR_POSTCODE1">
+        <descriptions defaultDescription="STD_ADDR_POSTCODE1"/>
+      </viewAttribute>
+      <viewAttribute id="STD_ADDR_ADDRESS_DELIVERY">
+        <descriptions defaultDescription="STD_ADDR_ADDRESS_DELIVERY"/>
+      </viewAttribute>
+      <viewAttribute id="STD_ADDR_PRIM_ADDRESS">
+        <descriptions defaultDescription="STD_ADDR_PRIM_ADDRESS"/>
+      </viewAttribute>
+      <viewAttribute id="STD_ADDR_PRIM_NAME_FULL">
+        <descriptions defaultDescription="STD_ADDR_PRIM_NAME_FULL"/>
+      </viewAttribute>
+      <viewAttribute id="STD_ADDR_PRIM_NAME">
+        <descriptions defaultDescription="STD_ADDR_PRIM_NAME"/>
+      </viewAttribute>
+      <viewAttribute id="STD_ADDR_PRIM_TYPE">
+        <descriptions defaultDescription="STD_ADDR_PRIM_TYPE"/>
+      </viewAttribute>
+      <viewAttribute id="STD_ADDR_PRIM_NUMBER">
+        <descriptions defaultDescription="STD_ADDR_PRIM_NUMBER"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="AddressTMR" emptyUnionBehavior="NO_ROW">
+      <mapping xsi:type="Calculation:AttributeMapping" target="SCV_ID" source="SCV_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SOURCE" source="SOURCE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SOURCE_ID" source="SOURCE_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VALID_FROM" source="VALID_FROM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VALID_TO" source="VALID_TO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_COUNTRY_2CHAR" source="STD_ADDR_COUNTRY_2CHAR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_LOCALITY" source="STD_ADDR_LOCALITY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_REGION" source="STD_ADDR_REGION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_POSTCODE1" source="STD_ADDR_POSTCODE1"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_ADDRESS_DELIVERY" source="STD_ADDR_ADDRESS_DELIVERY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_PRIM_ADDRESS" source="STD_ADDR_PRIM_ADDRESS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_PRIM_NAME_FULL" source="STD_ADDR_PRIM_NAME_FULL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_PRIM_NAME" source="STD_ADDR_PRIM_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_PRIM_TYPE" source="STD_ADDR_PRIM_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_PRIM_NUMBER" source="STD_ADDR_PRIM_NUMBER"/>
+    </input>
+    <input node="AddressRMS" emptyUnionBehavior="NO_ROW">
+      <mapping xsi:type="Calculation:AttributeMapping" target="SCV_ID" source="SCV_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SOURCE" source="SOURCE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SOURCE_ID" source="SOURCE_ID"/>
+      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="VALID_FROM" null="true"/>
+      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="VALID_TO" null="true"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_COUNTRY_2CHAR" source="STD_ADDR_COUNTRY_2CHAR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_LOCALITY" source="STD_ADDR_LOCALITY"/>
+      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="STD_ADDR_REGION" null="true" value=""/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_POSTCODE1" source="STD_ADDR_POSTCODE1"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_ADDRESS_DELIVERY" source="STD_ADDR_ADDRESS_DELIVERY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_PRIM_ADDRESS" source="STD_ADDR_PRIM_ADDRESS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_PRIM_NAME_FULL" source="STD_ADDR_PRIM_NAME_FULL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_PRIM_NAME" source="STD_ADDR_PRIM_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_PRIM_TYPE" source="STD_ADDR_PRIM_TYPE"/>
+      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="STD_ADDR_PRIM_NUMBER" null="true" value=""/>
+    </input>
+  </calculationView>
+</calculationViews>
+<logicalModel id="AddressUnion">
+  <attributes>
+    <attribute id="SCV_ID" order="1" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="SCV_ID"/>
+      <keyMapping columnObjectName="AddressUnion" columnName="SCV_ID"/>
+    </attribute>
+    <attribute id="SOURCE" order="2" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="SOURCE"/>
+      <keyMapping columnObjectName="AddressUnion" columnName="SOURCE"/>
+    </attribute>
+    <attribute id="SOURCE_ID" order="3" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="SOURCE_ID"/>
+      <keyMapping columnObjectName="AddressUnion" columnName="SOURCE_ID"/>
+    </attribute>
+    <attribute id="VALID_FROM" order="4" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="VALID_FROM"/>
+      <keyMapping columnObjectName="AddressUnion" columnName="VALID_FROM"/>
+    </attribute>
+    <attribute id="VALID_TO" order="5" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="VALID_TO"/>
+      <keyMapping columnObjectName="AddressUnion" columnName="VALID_TO"/>
+    </attribute>
+    <attribute id="STD_ADDR_COUNTRY_2CHAR" order="6" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="STD_ADDR_COUNTRY_2CHAR"/>
+      <keyMapping columnObjectName="AddressUnion" columnName="STD_ADDR_COUNTRY_2CHAR"/>
+    </attribute>
+    <attribute id="STD_ADDR_LOCALITY" order="7" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="STD_ADDR_LOCALITY"/>
+      <keyMapping columnObjectName="AddressUnion" columnName="STD_ADDR_LOCALITY"/>
+    </attribute>
+    <attribute id="STD_ADDR_REGION" order="8" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="STD_ADDR_REGION"/>
+      <keyMapping columnObjectName="AddressUnion" columnName="STD_ADDR_REGION"/>
+    </attribute>
+    <attribute id="STD_ADDR_POSTCODE1" order="9" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="STD_ADDR_POSTCODE1"/>
+      <keyMapping columnObjectName="AddressUnion" columnName="STD_ADDR_POSTCODE1"/>
+    </attribute>
+    <attribute id="STD_ADDR_ADDRESS_DELIVERY" order="10" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="STD_ADDR_ADDRESS_DELIVERY"/>
+      <keyMapping columnObjectName="AddressUnion" columnName="STD_ADDR_ADDRESS_DELIVERY"/>
+    </attribute>
+    <attribute id="STD_ADDR_PRIM_ADDRESS" order="11" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="STD_ADDR_PRIM_ADDRESS"/>
+      <keyMapping columnObjectName="AddressUnion" columnName="STD_ADDR_PRIM_ADDRESS"/>
+    </attribute>
+    <attribute id="STD_ADDR_PRIM_NAME_FULL" order="12" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="STD_ADDR_PRIM_NAME_FULL"/>
+      <keyMapping columnObjectName="AddressUnion" columnName="STD_ADDR_PRIM_NAME_FULL"/>
+    </attribute>
+    <attribute id="STD_ADDR_PRIM_NAME" order="13" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="STD_ADDR_PRIM_NAME"/>
+      <keyMapping columnObjectName="AddressUnion" columnName="STD_ADDR_PRIM_NAME"/>
+    </attribute>
+    <attribute id="STD_ADDR_PRIM_TYPE" order="14" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="STD_ADDR_PRIM_TYPE"/>
+      <keyMapping columnObjectName="AddressUnion" columnName="STD_ADDR_PRIM_TYPE"/>
+    </attribute>
+    <attribute id="STD_ADDR_PRIM_NUMBER" order="15" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="STD_ADDR_PRIM_NUMBER"/>
+      <keyMapping columnObjectName="AddressUnion" columnName="STD_ADDR_PRIM_NUMBER"/>
+    </attribute>
+  </attributes>
+  <calculatedAttributes/>
+  <baseMeasures/>
+  <calculatedMeasures/>
+  <restrictedMeasures/>
+</logicalModel>
+<layout>
+  <shapes>
+    <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+      <upperLeftCorner x="309" y="112"/>
+    
+      <rectangleSize width="140"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="AddressRMS" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="92" y="356"/>
+      <rectangleSize height="30" width="227"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="AddressTMR" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="369" y="356"/>
+      <rectangleSize height="30" width="207"/>
+    </shape>
+    <shape expanded="true" modelObjectName="AddressUnion" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="268" y="217"/>
+      <rectangleSize height="30" width="222"/>
+    </shape>
+  </shapes>
+</layout>
+</Calculation:scenario>

@@ -1,0 +1,308 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="osr.scv.foundation.db.views.Explorer::CV_PersonByScvId" applyPrivilegeType="NONE" dataCategory="DIMENSION" dimensionType="STANDARD" schemaVersion="3.0" outputViewType="Projection" cacheInvalidationPeriod="NONE" enforceSqlExecution="false">
+<descriptions defaultDescription="PersonByScvId"/>
+<localVariables>
+  <variable id="IP_SCV_ID" parameter="true">
+    <descriptions defaultDescription="IP_SCV_ID"/>
+    <variableProperties datatype="NVARCHAR" length="10" mandatory="true">
+      <valueDomain type="empty"/>
+      <selection multiLine="false" type="Single"/>
+    </variableProperties>
+  </variable>
+</localVariables>
+<variableMappings/>
+<dataSources>
+  <DataSource id="osr.scv.foundation.db.data::SCVFoundation.PersonRms">
+    <resourceUri>osr.scv.foundation.db.data::SCVFoundation.PersonRms</resourceUri>
+  </DataSource>
+  <DataSource id="osr.scv.foundation.db.data::SCVFoundation.PersonTmr">
+    <resourceUri>osr.scv.foundation.db.data::SCVFoundation.PersonTmr</resourceUri>
+  </DataSource>
+</dataSources>
+<calculationViews>
+  <calculationView xsi:type="Calculation:ProjectionView" id="PersonRMS" filterExpressionLanguage="COLUMN_ENGINE">
+    <viewAttributes>
+      <viewAttribute id="SCV_ID">
+        <descriptions defaultDescription="SCV_ID"/>
+      </viewAttribute>
+      <viewAttribute id="SOURCE">
+        <descriptions defaultDescription="SOURCE"/>
+      </viewAttribute>
+      <viewAttribute id="SOURCE_ID">
+        <descriptions defaultDescription="SOURCE_ID"/>
+      </viewAttribute>
+      <viewAttribute id="VALID_FROM">
+        <descriptions defaultDescription="VALID_FROM"/>
+      </viewAttribute>
+      <viewAttribute id="VALID_TO">
+        <descriptions defaultDescription="VALID_TO"/>
+      </viewAttribute>
+      <viewAttribute id="LAST_NAME">
+        <descriptions defaultDescription="LAST_NAME"/>
+      </viewAttribute>
+      <viewAttribute id="MIDDLE_NAME">
+        <descriptions defaultDescription="MIDDLE_NAME"/>
+      </viewAttribute>
+      <viewAttribute id="FIRST_NAME">
+        <descriptions defaultDescription="FIRST_NAME"/>
+      </viewAttribute>
+      <viewAttribute id="BIRTH_DATE">
+        <descriptions defaultDescription="BIRTH_DATE"/>
+      </viewAttribute>
+      <viewAttribute id="DEATH_DATE">
+        <descriptions defaultDescription="DEATH_DATE"/>
+      </viewAttribute>
+      <viewAttribute id="STD_PERSON_GN">
+        <descriptions defaultDescription="STD_PERSON_GN"/>
+      </viewAttribute>
+      <viewAttribute id="STD_PERSON_GN2">
+        <descriptions defaultDescription="STD_PERSON_GN2"/>
+      </viewAttribute>
+      <viewAttribute id="STD_PERSON_FN">
+        <descriptions defaultDescription="STD_PERSON_FN"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="osr.scv.foundation.db.data::SCVFoundation.PersonRms">
+      <mapping xsi:type="Calculation:AttributeMapping" target="SCV_ID" source="SCV_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SOURCE" source="SOURCE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SOURCE_ID" source="SOURCE_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VALID_FROM" source="VALID_FROM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VALID_TO" source="VALID_TO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="LAST_NAME" source="LAST_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MIDDLE_NAME" source="MIDDLE_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FIRST_NAME" source="FIRST_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BIRTH_DATE" source="BIRTH_DATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DEATH_DATE" source="DEATH_DATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_PERSON_GN" source="STD_PERSON_GN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_PERSON_GN2" source="STD_PERSON_GN2"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_PERSON_FN" source="STD_PERSON_FN"/>
+    </input>
+    <filter>(&quot;SCV_ID&quot; = '$$IP_SCV_ID$$')</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="PersonTMR" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="SCV_ID">
+        <descriptions defaultDescription="SCV_ID"/>
+      </viewAttribute>
+      <viewAttribute id="SOURCE">
+        <descriptions defaultDescription="SOURCE"/>
+      </viewAttribute>
+      <viewAttribute id="SOURCE_ID">
+        <descriptions defaultDescription="SOURCE_ID"/>
+      </viewAttribute>
+      <viewAttribute id="UPDATED_AT">
+        <descriptions defaultDescription="UPDATED_AT"/>
+      </viewAttribute>
+      <viewAttribute id="LAST_NAME">
+        <descriptions defaultDescription="LAST_NAME"/>
+      </viewAttribute>
+      <viewAttribute id="MIDDLE_NAME">
+        <descriptions defaultDescription="MIDDLE_NAME"/>
+      </viewAttribute>
+      <viewAttribute id="FIRST_NAME">
+        <descriptions defaultDescription="FIRST_NAME"/>
+      </viewAttribute>
+      <viewAttribute id="BIRTH_DATE">
+        <descriptions defaultDescription="BIRTH_DATE"/>
+      </viewAttribute>
+      <viewAttribute id="DEATH_DATE">
+        <descriptions defaultDescription="DEATH_DATE"/>
+      </viewAttribute>
+      <viewAttribute id="STD_PERSON_GN">
+        <descriptions defaultDescription="STD_PERSON_GN"/>
+      </viewAttribute>
+      <viewAttribute id="STD_PERSON_GN2">
+        <descriptions defaultDescription="STD_PERSON_GN2"/>
+      </viewAttribute>
+      <viewAttribute id="STD_PERSON_FN">
+        <descriptions defaultDescription="STD_PERSON_FN"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="osr.scv.foundation.db.data::SCVFoundation.PersonTmr">
+      <mapping xsi:type="Calculation:AttributeMapping" target="SCV_ID" source="SCV_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SOURCE" source="SOURCE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SOURCE_ID" source="SOURCE_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="UPDATED_AT" source="UPDATED_AT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="LAST_NAME" source="LAST_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MIDDLE_NAME" source="MIDDLE_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FIRST_NAME" source="FIRST_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BIRTH_DATE" source="BIRTH_DATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DEATH_DATE" source="DEATH_DATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_PERSON_GN" source="STD_PERSON_GN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_PERSON_GN2" source="STD_PERSON_GN2"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_PERSON_FN" source="STD_PERSON_FN"/>
+    </input>
+    <filter>(&quot;SCV_ID&quot; = '$$IP_SCV_ID$$')</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:UnionView" id="PersonUnion" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="SCV_ID">
+        <descriptions defaultDescription="SCV_ID"/>
+      </viewAttribute>
+      <viewAttribute id="SOURCE">
+        <descriptions defaultDescription="SOURCE"/>
+      </viewAttribute>
+      <viewAttribute id="SOURCE_ID">
+        <descriptions defaultDescription="SOURCE_ID"/>
+      </viewAttribute>
+      <viewAttribute id="UPDATED_AT">
+        <descriptions defaultDescription="UPDATED_AT"/>
+      </viewAttribute>
+      <viewAttribute id="LAST_NAME">
+        <descriptions defaultDescription="LAST_NAME"/>
+      </viewAttribute>
+      <viewAttribute id="MIDDLE_NAME">
+        <descriptions defaultDescription="MIDDLE_NAME"/>
+      </viewAttribute>
+      <viewAttribute id="FIRST_NAME">
+        <descriptions defaultDescription="FIRST_NAME"/>
+      </viewAttribute>
+      <viewAttribute id="BIRTH_DATE">
+        <descriptions defaultDescription="BIRTH_DATE"/>
+      </viewAttribute>
+      <viewAttribute id="DEATH_DATE">
+        <descriptions defaultDescription="DEATH_DATE"/>
+      </viewAttribute>
+      <viewAttribute id="STD_PERSON_GN">
+        <descriptions defaultDescription="STD_PERSON_GN"/>
+      </viewAttribute>
+      <viewAttribute id="STD_PERSON_GN2">
+        <descriptions defaultDescription="STD_PERSON_GN2"/>
+      </viewAttribute>
+      <viewAttribute id="STD_PERSON_FN">
+        <descriptions defaultDescription="STD_PERSON_FN"/>
+      </viewAttribute>
+      <viewAttribute id="VALID_FROM">
+        <descriptions defaultDescription="VALID_FROM"/>
+      </viewAttribute>
+      <viewAttribute id="VALID_TO">
+        <descriptions defaultDescription="VALID_TO"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="PersonTMR" emptyUnionBehavior="NO_ROW">
+      <mapping xsi:type="Calculation:AttributeMapping" target="SCV_ID" source="SCV_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SOURCE" source="SOURCE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SOURCE_ID" source="SOURCE_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="UPDATED_AT" source="UPDATED_AT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="LAST_NAME" source="LAST_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MIDDLE_NAME" source="MIDDLE_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FIRST_NAME" source="FIRST_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BIRTH_DATE" source="BIRTH_DATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DEATH_DATE" source="DEATH_DATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_PERSON_GN" source="STD_PERSON_GN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_PERSON_GN2" source="STD_PERSON_GN2"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_PERSON_FN" source="STD_PERSON_FN"/>
+      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="VALID_FROM" null="true" value=""/>
+      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="VALID_TO" null="true" value=""/>
+    </input>
+    <input node="PersonRMS" emptyUnionBehavior="NO_ROW">
+      <mapping xsi:type="Calculation:AttributeMapping" target="SCV_ID" source="SCV_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SOURCE" source="SOURCE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SOURCE_ID" source="SOURCE_ID"/>
+      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="UPDATED_AT" null="true" value=""/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="LAST_NAME" source="LAST_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MIDDLE_NAME" source="MIDDLE_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FIRST_NAME" source="FIRST_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="BIRTH_DATE" source="BIRTH_DATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DEATH_DATE" source="DEATH_DATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_PERSON_GN" source="STD_PERSON_GN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_PERSON_GN2" source="STD_PERSON_GN2"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_PERSON_FN" source="STD_PERSON_FN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VALID_FROM" source="VALID_FROM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VALID_TO" source="VALID_TO"/>
+    </input>
+  </calculationView>
+</calculationViews>
+<logicalModel id="PersonUnion">
+  <attributes>
+    <attribute id="SCV_ID" order="1" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="SCV_ID"/>
+      <keyMapping columnObjectName="PersonUnion" columnName="SCV_ID"/>
+    </attribute>
+    <attribute id="SOURCE" order="2" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="SOURCE"/>
+      <keyMapping columnObjectName="PersonUnion" columnName="SOURCE"/>
+    </attribute>
+    <attribute id="SOURCE_ID" order="3" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="SOURCE_ID"/>
+      <keyMapping columnObjectName="PersonUnion" columnName="SOURCE_ID"/>
+    </attribute>
+    <attribute id="UPDATED_AT" order="4" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="UPDATED_AT"/>
+      <keyMapping columnObjectName="PersonUnion" columnName="UPDATED_AT"/>
+    </attribute>
+    <attribute id="LAST_NAME" order="5" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="LAST_NAME"/>
+      <keyMapping columnObjectName="PersonUnion" columnName="LAST_NAME"/>
+    </attribute>
+    <attribute id="MIDDLE_NAME" order="6" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="MIDDLE_NAME"/>
+      <keyMapping columnObjectName="PersonUnion" columnName="MIDDLE_NAME"/>
+    </attribute>
+    <attribute id="FIRST_NAME" order="7" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="FIRST_NAME"/>
+      <keyMapping columnObjectName="PersonUnion" columnName="FIRST_NAME"/>
+    </attribute>
+    <attribute id="BIRTH_DATE" order="8" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="BIRTH_DATE"/>
+      <keyMapping columnObjectName="PersonUnion" columnName="BIRTH_DATE"/>
+    </attribute>
+    <attribute id="DEATH_DATE" order="9" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="DEATH_DATE"/>
+      <keyMapping columnObjectName="PersonUnion" columnName="DEATH_DATE"/>
+    </attribute>
+    <attribute id="STD_PERSON_GN" order="10" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="STD_PERSON_GN"/>
+      <keyMapping columnObjectName="PersonUnion" columnName="STD_PERSON_GN"/>
+    </attribute>
+    <attribute id="STD_PERSON_GN2" order="11" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="STD_PERSON_GN2"/>
+      <keyMapping columnObjectName="PersonUnion" columnName="STD_PERSON_GN2"/>
+    </attribute>
+    <attribute id="STD_PERSON_FN" order="12" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="STD_PERSON_FN"/>
+      <keyMapping columnObjectName="PersonUnion" columnName="STD_PERSON_FN"/>
+    </attribute>
+    <attribute id="VALID_FROM" order="13" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="VALID_FROM"/>
+      <keyMapping columnObjectName="PersonUnion" columnName="VALID_FROM"/>
+    </attribute>
+    <attribute id="VALID_TO" order="14" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="VALID_TO"/>
+      <keyMapping columnObjectName="PersonUnion" columnName="VALID_TO"/>
+    </attribute>
+  </attributes>
+  <calculatedAttributes/>
+  <baseMeasures/>
+  <calculatedMeasures/>
+  <restrictedMeasures/>
+</logicalModel>
+<layout>
+  <shapes>
+    <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+      <upperLeftCorner x="309.3736771970397" y="112"/>
+    
+      <rectangleSize width="140"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="PersonRMS" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="92.00000000000004" y="356.9999988079071"/>
+      <rectangleSize height="30" width="218"/>
+    </shape>
+    <shape expanded="true" modelObjectName="PersonTMR" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="360.00000000000006" y="356.9999988079071"/>
+      <rectangleSize height="30" width="229"/>
+    </shape>
+    <shape expanded="true" modelObjectName="PersonUnion" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="309.3736771970397" y="217"/>
+      <rectangleSize height="30" width="140"/>
+    </shape>
+  </shapes>
+</layout>
+</Calculation:scenario>

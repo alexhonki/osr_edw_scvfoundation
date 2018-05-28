@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="osr.scv.foundation.db.views.Explorer::CV_ContactByScvId" applyPrivilegeType="NONE" dataCategory="DIMENSION" dimensionType="STANDARD" schemaVersion="3.0" outputViewType="Projection" cacheInvalidationPeriod="NONE" enforceSqlExecution="false">
+<descriptions defaultDescription="ContactByScvId"/>
+<localVariables>
+  <variable id="IP_SCV_ID" parameter="true">
+    <descriptions defaultDescription="IP_SCV_ID"/>
+    <variableProperties datatype="NVARCHAR" length="10" mandatory="true">
+      <valueDomain type="empty"/>
+      <selection multiLine="false" type="Single"/>
+    </variableProperties>
+  </variable>
+</localVariables>
+<variableMappings/>
+<dataSources>
+  <DataSource id="osr.scv.foundation.db.data::SCVFoundation.ContactEmail">
+    <resourceUri>osr.scv.foundation.db.data::SCVFoundation.ContactEmail</resourceUri>
+  </DataSource>
+  <DataSource id="osr.scv.foundation.db.data::SCVFoundation.ContactNumber">
+    <resourceUri>osr.scv.foundation.db.data::SCVFoundation.ContactNumber</resourceUri>
+  </DataSource>
+</dataSources>
+<calculationViews>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Email" filterExpressionLanguage="COLUMN_ENGINE">
+    <viewAttributes>
+      <viewAttribute id="SCV_ID">
+        <descriptions defaultDescription="SCV_ID"/>
+      </viewAttribute>
+      <viewAttribute id="SOURCE">
+        <descriptions defaultDescription="SOURCE"/>
+      </viewAttribute>
+      <viewAttribute id="SOURCE_ID">
+        <descriptions defaultDescription="SOURCE_ID"/>
+      </viewAttribute>
+      <viewAttribute id="VALID_FROM">
+        <descriptions defaultDescription="VALID_FROM"/>
+      </viewAttribute>
+      <viewAttribute id="VALID_TO">
+        <descriptions defaultDescription="VALID_TO"/>
+      </viewAttribute>
+      <viewAttribute id="CONTACT_EMAIL">
+        <descriptions defaultDescription="CONTACT_EMAIL"/>
+      </viewAttribute>
+      <viewAttribute id="EMAIL_TYPE">
+        <descriptions defaultDescription="EMAIL_TYPE"/>
+      </viewAttribute>
+      <viewAttribute id="EMAIL_DESC">
+        <descriptions defaultDescription="EMAIL_DESC"/>
+      </viewAttribute>
+      <viewAttribute id="CHECKSUM">
+        <descriptions defaultDescription="CHECKSUM"/>
+      </viewAttribute>
+      <viewAttribute id="STD_EMAIL">
+        <descriptions defaultDescription="STD_EMAIL"/>
+      </viewAttribute>
+      <viewAttribute id="STD_CHECKSUM">
+        <descriptions defaultDescription="STD_CHECKSUM"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="osr.scv.foundation.db.data::SCVFoundation.ContactEmail">
+      <mapping xsi:type="Calculation:AttributeMapping" target="SCV_ID" source="SCV_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SOURCE" source="SOURCE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SOURCE_ID" source="SOURCE_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VALID_FROM" source="VALID_FROM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VALID_TO" source="VALID_TO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CONTACT_EMAIL" source="CONTACT_EMAIL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="EMAIL_TYPE" source="EMAIL_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="EMAIL_DESC" source="EMAIL_DESC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CHECKSUM" source="CHECKSUM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_EMAIL" source="STD_EMAIL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_CHECKSUM" source="STD_CHECKSUM"/>
+    </input>
+    <filter>(&quot;SCV_ID&quot; = '$$IP_SCV_ID$$')</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Number" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="SCV_ID">
+        <descriptions defaultDescription="SCV_ID"/>
+      </viewAttribute>
+      <viewAttribute id="SOURCE">
+        <descriptions defaultDescription="SOURCE"/>
+      </viewAttribute>
+      <viewAttribute id="SOURCE_ID">
+        <descriptions defaultDescription="SOURCE_ID"/>
+      </viewAttribute>
+      <viewAttribute id="VALID_FROM">
+        <descriptions defaultDescription="VALID_FROM"/>
+      </viewAttribute>
+      <viewAttribute id="VALID_TO">
+        <descriptions defaultDescription="VALID_TO"/>
+      </viewAttribute>
+      <viewAttribute id="CONTACT_NUMBER">
+        <descriptions defaultDescription="CONTACT_NUMBER"/>
+      </viewAttribute>
+      <viewAttribute id="NUMBER_EXT">
+        <descriptions defaultDescription="NUMBER_EXT"/>
+      </viewAttribute>
+      <viewAttribute id="NUMBER_TYPE">
+        <descriptions defaultDescription="NUMBER_TYPE"/>
+      </viewAttribute>
+      <viewAttribute id="NUMBER_DESC">
+        <descriptions defaultDescription="NUMBER_DESC"/>
+      </viewAttribute>
+      <viewAttribute id="CHECKSUM">
+        <descriptions defaultDescription="CHECKSUM"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="osr.scv.foundation.db.data::SCVFoundation.ContactNumber">
+      <mapping xsi:type="Calculation:AttributeMapping" target="SCV_ID" source="SCV_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SOURCE" source="SOURCE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SOURCE_ID" source="SOURCE_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VALID_FROM" source="VALID_FROM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VALID_TO" source="VALID_TO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CONTACT_NUMBER" source="CONTACT_NUMBER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="NUMBER_EXT" source="NUMBER_EXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="NUMBER_TYPE" source="NUMBER_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="NUMBER_DESC" source="NUMBER_DESC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CHECKSUM" source="CHECKSUM"/>
+    </input>
+    <filter>(&quot;SCV_ID&quot; = '$$IP_SCV_ID$$')</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:UnionView" id="SCVContact">
+    <viewAttributes>
+      <viewAttribute id="SCV_ID">
+        <descriptions defaultDescription="SCV_ID"/>
+      </viewAttribute>
+      <viewAttribute id="SOURCE">
+        <descriptions defaultDescription="SOURCE"/>
+      </viewAttribute>
+      <viewAttribute id="SOURCE_ID">
+        <descriptions defaultDescription="SOURCE_ID"/>
+      </viewAttribute>
+      <viewAttribute id="VALID_FROM">
+        <descriptions defaultDescription="VALID_FROM"/>
+      </viewAttribute>
+      <viewAttribute id="VALID_TO">
+        <descriptions defaultDescription="VALID_TO"/>
+      </viewAttribute>
+      <viewAttribute id="CONTACT_NUMBER">
+        <descriptions defaultDescription="CONTACT_NUMBER"/>
+      </viewAttribute>
+      <viewAttribute id="NUMBER_EXT">
+        <descriptions defaultDescription="NUMBER_EXT"/>
+      </viewAttribute>
+      <viewAttribute id="NUMBER_TYPE">
+        <descriptions defaultDescription="NUMBER_TYPE"/>
+      </viewAttribute>
+      <viewAttribute id="NUMBER_DESC">
+        <descriptions defaultDescription="NUMBER_DESC"/>
+      </viewAttribute>
+      <viewAttribute id="EMAIL_TYPE">
+        <descriptions defaultDescription="EMAIL_TYPE"/>
+      </viewAttribute>
+      <viewAttribute id="EMAIL_DESC">
+        <descriptions defaultDescription="EMAIL_DESC"/>
+      </viewAttribute>
+      <viewAttribute id="STD_EMAIL">
+        <descriptions defaultDescription="STD_EMAIL"/>
+      </viewAttribute>
+      <viewAttribute id="CONTACT_EMAIL">
+        <descriptions defaultDescription="CONTACT_EMAIL"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="Number">
+      <mapping xsi:type="Calculation:AttributeMapping" target="SCV_ID" source="SCV_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SOURCE" source="SOURCE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SOURCE_ID" source="SOURCE_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VALID_FROM" source="VALID_FROM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VALID_TO" source="VALID_TO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CONTACT_NUMBER" source="CONTACT_NUMBER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="NUMBER_EXT" source="NUMBER_EXT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="NUMBER_TYPE" source="NUMBER_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="NUMBER_DESC" source="NUMBER_DESC"/>
+      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="EMAIL_TYPE" null="true" value=""/>
+      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="EMAIL_DESC" null="true" value=""/>
+      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="STD_EMAIL" null="true" value=""/>
+      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CONTACT_EMAIL" null="true" value=""/>
+    </input>
+    <input node="Email">
+      <mapping xsi:type="Calculation:AttributeMapping" target="SCV_ID" source="SCV_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SOURCE" source="SOURCE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SOURCE_ID" source="SOURCE_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VALID_FROM" source="VALID_FROM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VALID_TO" source="VALID_TO"/>
+      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CONTACT_NUMBER" null="true" value=""/>
+      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="NUMBER_EXT" null="true" value=""/>
+      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="NUMBER_TYPE" null="true" value=""/>
+      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="NUMBER_DESC" null="true" value=""/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="EMAIL_TYPE" source="EMAIL_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="EMAIL_DESC" source="EMAIL_DESC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STD_EMAIL" source="STD_EMAIL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CONTACT_EMAIL" source="CONTACT_EMAIL"/>
+    </input>
+  </calculationView>
+</calculationViews>
+<logicalModel id="SCVContact">
+  <attributes>
+    <attribute id="SCV_ID" order="1" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="SCV_ID"/>
+      <keyMapping columnObjectName="SCVContact" columnName="SCV_ID"/>
+    </attribute>
+    <attribute id="SOURCE" order="2" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="SOURCE"/>
+      <keyMapping columnObjectName="SCVContact" columnName="SOURCE"/>
+    </attribute>
+    <attribute id="SOURCE_ID" order="3" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="SOURCE_ID"/>
+      <keyMapping columnObjectName="SCVContact" columnName="SOURCE_ID"/>
+    </attribute>
+    <attribute id="VALID_FROM" order="4" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="VALID_FROM"/>
+      <keyMapping columnObjectName="SCVContact" columnName="VALID_FROM"/>
+    </attribute>
+    <attribute id="VALID_TO" order="5" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="VALID_TO"/>
+      <keyMapping columnObjectName="SCVContact" columnName="VALID_TO"/>
+    </attribute>
+    <attribute id="CONTACT_NUMBER" order="6" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CONTACT_NUMBER"/>
+      <keyMapping columnObjectName="SCVContact" columnName="CONTACT_NUMBER"/>
+    </attribute>
+    <attribute id="NUMBER_EXT" order="7" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="NUMBER_EXT"/>
+      <keyMapping columnObjectName="SCVContact" columnName="NUMBER_EXT"/>
+    </attribute>
+    <attribute id="NUMBER_TYPE" order="8" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="NUMBER_TYPE"/>
+      <keyMapping columnObjectName="SCVContact" columnName="NUMBER_TYPE"/>
+    </attribute>
+    <attribute id="NUMBER_DESC" order="9" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="NUMBER_DESC"/>
+      <keyMapping columnObjectName="SCVContact" columnName="NUMBER_DESC"/>
+    </attribute>
+    <attribute id="EMAIL_TYPE" order="10" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="EMAIL_TYPE"/>
+      <keyMapping columnObjectName="SCVContact" columnName="EMAIL_TYPE"/>
+    </attribute>
+    <attribute id="EMAIL_DESC" order="11" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="EMAIL_DESC"/>
+      <keyMapping columnObjectName="SCVContact" columnName="EMAIL_DESC"/>
+    </attribute>
+    <attribute id="STD_EMAIL" order="12" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="STD_EMAIL"/>
+      <keyMapping columnObjectName="SCVContact" columnName="STD_EMAIL"/>
+    </attribute>
+    <attribute id="CONTACT_EMAIL" order="13" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CONTACT_EMAIL"/>
+      <keyMapping columnObjectName="SCVContact" columnName="CONTACT_EMAIL"/>
+    </attribute>
+  </attributes>
+  <calculatedAttributes/>
+  <baseMeasures/>
+  <calculatedMeasures/>
+  <restrictedMeasures/>
+</logicalModel>
+<layout>
+  <shapes>
+    <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+      <upperLeftCorner x="318.8256841276593" y="112"/>
+    
+      <rectangleSize width="140"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="Email" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="366.99999999999994" y="356.9999988079071"/>
+      <rectangleSize height="30" width="238"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Number" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="92" y="356.9999988079071"/>
+      <rectangleSize height="30" width="225"/>
+    </shape>
+    <shape expanded="true" modelObjectName="SCVContact" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="318.8256841276593" y="217"/>
+      <rectangleSize height="30" width="140"/>
+    </shape>
+  </shapes>
+</layout>
+</Calculation:scenario>
