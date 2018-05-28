@@ -23,6 +23,7 @@ sap.ui.define([
 			this.setModel(new JSONModel(), "addressesModel");
 			this.setModel(new JSONModel(), "contactsModel");
 			this.setModel(new JSONModel(), "currentModel");
+			this.setModel(new JSONModel(), "postalModel");
 
 			this.getRouter().getRoute("objectdetail").attachPatternMatched(this._onRouteMatched, this);
 
@@ -40,10 +41,72 @@ sap.ui.define([
 			oController.sViewName = "objectdetail";
 
 			//do data read. 
-			oController._readData("scvExplorerModel", "personParameters", oController.oPageParam.scvId);
+			oController._readCurrentPersonData("scvExplorerModel", "personParameters", oController.oPageParam.scvId);
 		},
 
-		_readData: function(sModelName, sEndPointPath, sScvId) {
+		/**
+		 * Everytime route is matched, will trigger below.
+		 * @param  {[type]} oEvent [description]
+		 * @return {[type]}        [description]
+		 */
+		_readPostalData: function(sModelName, sEndPointPath, sScvId) {
+			let oController = this;
+			oController.getModel("scvExplorerModel").read("/xxthe parameters for postal" + "(IP_SCV_ID='" + sScvId + "')/Results", {
+				urlParameters: {
+					"$orderby": "SOURCE desc,VALID_TO"
+				},
+				success: function(data) {
+
+					// if there is a PO Box coming in through for this particular SCV ID
+					if (data.results.length > 0) {
+
+						oController.getModel("postalModel").setData(data.results[0], false);
+
+					}
+
+				},
+				error: function(oMessage) {
+					console.log(oMessage);
+				}
+			});
+		},
+
+		/**
+		 * Everytime route is matched, will trigger below.
+		 * @param  {[type]} oEvent [description]
+		 * @return {[type]}        [description]
+		 */
+		_readAddressesData: function(sModelName, sEndPointPath, sScvId) {
+
+			// depending on how this looks + the smart tables, we might just need to 
+			// bind the element straight away, since the column sorting is from the oData.
+			let oController = this;
+			oController.getModel("scvExplorerModel").read("/xxthe parameters for address" + "(IP_SCV_ID='" + sScvId + "')/Results", {
+				urlParameters: {
+					"$orderby": "SOURCE desc,VALID_TO"
+				},
+				success: function(data) {
+
+					// if there is a PO Box coming in through for this particular SCV ID
+					if (data.results.length > 0) {
+
+						oController.getModel("addressesModel").setData(data.results[0], false);
+
+					}
+
+				},
+				error: function(oMessage) {
+					console.log(oMessage);
+				}
+			});
+		},
+
+		/**
+		 * Everytime route is matched, will trigger below.
+		 * @param  {[type]} oEvent [description]
+		 * @return {[type]}        [description]
+		 */
+		_readCurrentPersonData: function(sModelName, sEndPointPath, sScvId) {
 			let oController = this;
 			oController.getModel(sModelName).read("/" + sEndPointPath + "(IP_SCV_ID='" + sScvId + "')/Results", {
 				urlParameters: {
@@ -53,6 +116,7 @@ sap.ui.define([
 
 					// grab the very top one for the current person. 
 					if (data.results.length > 0) {
+						//set the data for for the entire view information. 
 						oController.getModel("viewModel").setData(data.results[0], false);
 
 						//transform the person data to reflect for current.
@@ -66,6 +130,14 @@ sap.ui.define([
 			});
 		},
 
+		/**
+		 * Helper method to transform the payload received for the current information. 
+		 * (1st Tab - Current)
+		 * Also set the data to the JSON model for the Person
+		 * @param  {[Object]} oData [data received from the CV]
+		 * @param  {[STring]} sPath [e.g person, contact]
+		 * @return {[type]}        [description]
+		 */
 		_transformPersonData: function(oData, sPath) {
 
 			let oController = this;
@@ -93,10 +165,6 @@ sap.ui.define([
 			} else {
 				//transform for contact number
 			}
-
-		},
-
-		onTabSelect: function(oEvent) {
 
 		}
 
