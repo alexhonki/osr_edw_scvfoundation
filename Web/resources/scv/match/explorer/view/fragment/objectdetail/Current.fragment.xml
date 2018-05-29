@@ -36,11 +36,11 @@
     <f:content>
       <core:Title text="Name" />
       <Label text="First Name" />
-      <Text text="{personModel>/STD_PERSON_FN}" />
-      <Label text="Middle Name" />
       <Text text="{personModel>/STD_PERSON_GN}" />
-      <Label text="Last Name" />
+      <Label text="Middle Name" />
       <Text text="{personModel>/STD_PERSON_GN2}" />
+      <Label text="Last Name" />
+      <Text text="{personModel>/STD_PERSON_FN}" />
 
 
       <core:Title text="Identification" />
@@ -56,13 +56,13 @@
 
       <core:Title text="Contact" />
       <Label text="Mobile Number" />
-      <Text text="{Url}" />
+      <Text text="{personModel>/MOBILE_NUMBER}" />
 
       <Label text="Home Number" />
-      <Text text="{Url}" />
+      <Text text="{personModel>/HOME_NUMBER}" />
 
       <Label text="Email" />
-      <Text text="{Url}" />
+      <Text text="{personModel>/CONTACT_EMAIL}" />
 
     </f:content>
   </f:SimpleForm>

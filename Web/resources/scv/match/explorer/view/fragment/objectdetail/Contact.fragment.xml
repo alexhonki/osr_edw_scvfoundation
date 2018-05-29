@@ -3,7 +3,7 @@
                          xmlns:f="sap.ui.layout.form"
                          xmlns:l="sap.ui.layout"
                          xmlns:mvc="sap.ui.core.mvc"
-                         xmlns:smartTable="sap.ui.comp.smarttable"
+                         xmlns:t="sap.ui.table"
                          xmlns="sap.m">
 
   <Toolbar design="Transparent"
@@ -20,24 +20,85 @@
   <Title level="H3"
          text="Other Known Contact Details:"
          class="sapUiSmallMargin" />
-  <smartTable:SmartTable id="history-contact"
-                         entitySet=""
-                         smartFilterId="smartFilterBar"
-                         tableType="ResponsiveTable"
-                         useExportToExcel="true"
-                         beforeExport="onBeforeExport"
-                         useVariantManagement="false"
-                         useTablePersonalisation="true"
-                         header="Line Items"
-                         showRowCount="true"
-                         persistencyKey="SmartTableAnalytical_Explored"
-                         enableAutoBinding="true"
-                         app:useSmartField="true">
-    <!-- layout data used to make the table growing but the filter bar fixed -->
-    <smartTable:layoutData>
-      <FlexItemData growFactor="1"
-                    baseSize="0%" />
-    </smartTable:layoutData>
-  </smartTable:SmartTable>
+
+			<t:Table
+				id="contact-history-table"
+				selectionMode="None"
+				rows="{scvExplorerModel}"
+				visibleRowCount="10"
+				sort=""
+				enableCellFilter="true"
+				enableSelectAll="false"
+				enableBusyIndicator="true"
+				ariaLabelledBy="title">
+				<!--<toolbar>-->
+				<!--	<Toolbar>-->
+				<!--		<ToolbarSpacer/>-->
+				<!--		<Button-->
+				<!--			icon="sap-icon://decline"-->
+				<!--			tooltip="Clear all filters"-->
+				<!--			press="clearAllFilters"/>-->
+				<!--		<ToolbarSeparator/>-->
+				<!--		<SearchField-->
+				<!--			placeholder="Filter"-->
+				<!--			value="{ui>/globalFilter}"-->
+				<!--			search="filterGlobally"-->
+				<!--			width="15rem"/>-->
+				<!--	</Toolbar>-->
+				<!--</toolbar>-->
+				<t:columns>
+					<t:Column
+						sortProperty="SOURCE"
+						autoResizable="true"
+						filterProperty="SOURCE">
+						<Label text="Source" />
+						<t:template>
+							<Text text="{scvExplorerModel>SOURCE}" wrapping="false" />
+						</t:template>
+					</t:Column>
+					
+					<t:Column
+						sortProperty="CONTACT_NUMBER"
+						autoResizable="true"
+						filterProperty="CONTACT_NUMBER" >
+						<Label text="Contact Number" />
+						<t:template>
+							<Text text="{scvExplorerModel>CONTACT_NUMBER}" wrapping="false" />
+						</t:template>
+					</t:Column>
+					
+					<t:Column
+						sortProperty="CONTACT_EMAIL"
+						autoResizable="true"
+						filterProperty="CONTACT_EMAIL">
+						<Label text="Email" />
+						<t:template>
+							<Text text="{scvExplorerModel>CONTACT_EMAIL}" wrapping="false" />
+						</t:template>
+					</t:Column>
+					
+					<t:Column
+						sortProperty="VALID_FROM"
+						autoResizable="true"
+						filterProperty="VALID_FROM">
+						<Label text="Valid From" />
+						<t:template>
+							<Text text="{scvExplorerModel>VALID_FROM}" wrapping="false" />
+						</t:template>
+					</t:Column>
+					
+					<t:Column
+						sortProperty="VALID_TO"
+						autoResizable="true"
+						filterProperty="VALID_TO">
+						<Label text="Valid To" />
+						<t:template>
+							<Text text="{scvExplorerModel>VALID_TO}" wrapping="false" />
+						</t:template>
+					</t:Column>
+					
+				</t:columns>
+				
+			</t:Table>
 
 </core:FragmentDefinition>

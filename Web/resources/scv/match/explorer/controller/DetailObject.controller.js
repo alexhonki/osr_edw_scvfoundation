@@ -41,7 +41,11 @@ sap.ui.define([
 			oController.sViewName = "objectdetail";
 
 			//do data read. 
-			oController._readCurrentPersonData("scvExplorerModel", "personParameters", oController.oPageParam.scvId);
+			oController._readCurrentPersonData(oController.oPageParam.scvId);
+			oController._readScvContactData(oController.oPageParam.scvId);
+			oController._readPersonData(oController.oPageParam.scvId);
+			oController._readAddressesData(oController.oPageParam.scvId);
+
 		},
 
 		/**
@@ -71,34 +75,9 @@ sap.ui.define([
 			});
 		},
 
-		/**
-		 * Everytime route is matched, will trigger below.
-		 * @param  {[type]} oEvent [description]
-		 * @return {[type]}        [description]
-		 */
-		_readAddressesData: function(sModelName, sEndPointPath, sScvId) {
-
-			// depending on how this looks + the smart tables, we might just need to 
-			// bind the element straight away, since the column sorting is from the oData.
+		_readPersonData: function(sScvId) {
 			let oController = this;
-			oController.getModel("scvExplorerModel").read("/xxthe parameters for address" + "(IP_SCV_ID='" + sScvId + "')/Results", {
-				urlParameters: {
-					"$orderby": "SOURCE desc,VALID_TO"
-				},
-				success: function(data) {
-
-					// if there is a PO Box coming in through for this particular SCV ID
-					if (data.results.length > 0) {
-
-						oController.getModel("addressesModel").setData(data.results[0], false);
-
-					}
-
-				},
-				error: function(oMessage) {
-					console.log(oMessage);
-				}
-			});
+			oController.getView().byId("person-table").bindRows("scvExplorerModel>/personParameters(IP_SCV_ID='" + sScvId + "')/Results");
 		},
 
 		/**
@@ -106,11 +85,75 @@ sap.ui.define([
 		 * @param  {[type]} oEvent [description]
 		 * @return {[type]}        [description]
 		 */
-		_readCurrentPersonData: function(sModelName, sEndPointPath, sScvId) {
+		_readAddressesData: function(sScvId) {
+			
 			let oController = this;
-			oController.getModel(sModelName).read("/" + sEndPointPath + "(IP_SCV_ID='" + sScvId + "')/Results", {
+			oController.getView().byId("history-address-table").bindRows("scvExplorerModel>/addressParameters(IP_SCV_ID='" + sScvId + "')/Results");
+
+			// depending on how this looks + the smart tables, we might just need to 
+			// bind the element straight away, since the column sorting is from the oData.
+			// oController.getModel("scvExplorerModel").read("/xxthe parameters for address" + "(IP_SCV_ID='" + sScvId + "')/Results", {
+			// 	urlParameters: {
+			// 		"$orderby": "SOURCE desc,VALID_TO"
+			// 	},
+			// 	success: function(data) {
+
+			// 		// if there is a PO Box coming in through for this particular SCV ID
+			// 		if (data.results.length > 0) {
+
+			// 			oController.getModel("addressesModel").setData(data.results[0], false);
+
+			// 		}
+
+			// 	},
+			// 	error: function(oMessage) {
+			// 		console.log(oMessage);
+			// 	}
+			// });
+		},
+
+		/**
+		 * Helper to read contact data of a particular entity base on their SCVID
+		 * @param  {[type]} sScvId [String for the SCV ID that being passed in the URL]
+		 * @return {[type]}        [description]
+		 */
+		_readScvContactData: function(sScvId) {
+
+			let oController = this;
+			oController.getModel("scvExplorerModel").read("/contactParameters" + "(IP_SCV_ID='" + sScvId + "')/Results", {
 				urlParameters: {
-					"$orderby": "SOURCE desc,VALID_TO"
+					"$orderby": "SOURCE desc,VALID_TO desc"
+				},
+				success: function(data) {
+
+					// grab the very top one for the current person. 
+					if (data.results.length > 0) {
+						//transform the person data to reflect for current.
+						oController._transformPersonData(data.results, "contact");
+					}
+
+				},
+				error: function(oMessage) {
+					console.log(oMessage);
+				}
+			});
+
+			//bind the contact tab for all of the contacts.
+			oController.getView().byId("contact-history-table").bindRows("scvExplorerModel>/contactParameters(IP_SCV_ID='" + sScvId +
+				"')/Results");
+
+		},
+
+		/**
+		 * Everytime route is matched, will trigger below.
+		 * @param  {[type]} oEvent [description]
+		 * @return {[type]}        [description]
+		 */
+		_readCurrentPersonData: function(sScvId) {
+			let oController = this;
+			oController.getModel("scvExplorerModel").read("/personParameters(IP_SCV_ID='" + sScvId + "')/Results", {
+				urlParameters: {
+					"$orderby": "SOURCE desc,VALID_TO desc"
 				},
 				success: function(data) {
 
@@ -142,6 +185,7 @@ sap.ui.define([
 
 			let oController = this;
 			let oResult = {};
+			let i = 0;
 
 			if (sPath === "person") {
 				//grab the very first result for the person name. 
@@ -154,16 +198,54 @@ sap.ui.define([
 				oResult.BP_NUMBER = "";
 
 				//loop through all the results set. 
-				for (let i = 0; i < oData.length; i++) {
+				for (i = 0; i < oData.length; i++) {
 					if (oData[i].SOURCE === "RMS") {
 						oResult.BP_NUMBER += oData[i].SOURCE_ID + "\n";
 					}
 
 				}
 
+				//set the data and set merge to true, so we dont wipe existing data.
 				oController.getModel("personModel").setData(oResult, true);
-			} else {
-				//transform for contact number
+
+			} else if (sPath === "contact") {
+				//transform for contact number, taking the very first hit for each type. 
+
+				for (i = 0; i < oData.length; i++) {
+
+					if (typeof oResult.MOBILE_NUMBER === "undefined") {
+						if (oData[i].NUMBER_TYPE === "SMS") {
+							oResult.MOBILE_NUMBER = oData[i].CONTACT_NUMBER;
+						}
+					}
+
+					if (typeof oResult.HOME_NUMBER === "undefined") {
+						if (oData[i].NUMBER_TYPE === "PHO") {
+							oResult.HOME_NUMBER = oData[i].CONTACT_NUMBER;
+						}
+					}
+
+					if (typeof oResult.CONTACT_EMAIL === "undefined") {
+
+						if (oData[i].CONTACT_EMAIL !== null) {
+							oResult.CONTACT_EMAIL = oData[i].CONTACT_EMAIL;
+						}
+
+					}
+
+					//check that all items are in there, if yes break from the loop. 
+					if (typeof oResult.MOBILE_NUMBER !== "undefined" &&
+						typeof oResult.HOME_NUMBER !== "undefined" &&
+						typeof oResult.CONTACT_EMAIL !== "undefined") {
+
+						//break from the loop once all the needed info is there. 
+						break;
+					}
+
+				}
+
+				//set the data and set merge to true, so we dont wipe existing data.
+				oController.getModel("personModel").setData(oResult, true);
 			}
 
 		}

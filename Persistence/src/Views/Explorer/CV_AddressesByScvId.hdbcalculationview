@@ -139,6 +139,10 @@
       <viewAttribute id="STD_ADDR_PRIM_NUMBER">
         <descriptions defaultDescription="STD_ADDR_PRIM_NUMBER"/>
       </viewAttribute>
+    
+      <viewAttribute id="STATE">
+        <descriptions defaultDescription="STATE"/>
+      </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
@@ -159,6 +163,8 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_PRIM_NAME" source="STD_ADDR_PRIM_NAME"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_PRIM_TYPE" source="STD_ADDR_PRIM_TYPE"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_PRIM_NUMBER" source="STD_ADDR_PRIM_NUMBER"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="STATE" source="STATE"/>
     </input>
     <filter>(&quot;SCV_ID&quot; = '$$IP_SCV_ID$$')</filter>
   </calculationView>
@@ -209,6 +215,14 @@
       <viewAttribute id="STD_ADDR_PRIM_NUMBER">
         <descriptions defaultDescription="STD_ADDR_PRIM_NUMBER"/>
       </viewAttribute>
+    
+      <viewAttribute id="ADR_KIND">
+        <descriptions defaultDescription="ADR_KIND"/>
+      </viewAttribute>
+    
+      <viewAttribute id="REGION">
+        <descriptions defaultDescription="REGION"/>
+      </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
@@ -228,6 +242,10 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_PRIM_NAME" source="STD_ADDR_PRIM_NAME"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_PRIM_TYPE" source="STD_ADDR_PRIM_TYPE"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_PRIM_NUMBER" source="STD_ADDR_PRIM_NUMBER"/>
+    
+      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="ADR_KIND" null="true" value=""/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="REGION" source="STATE"/>
     </input>
     <input node="AddressRMS" emptyUnionBehavior="NO_ROW">
       <mapping xsi:type="Calculation:AttributeMapping" target="SCV_ID" source="SCV_ID"/>
@@ -245,6 +263,10 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_PRIM_NAME" source="STD_ADDR_PRIM_NAME"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_PRIM_TYPE" source="STD_ADDR_PRIM_TYPE"/>
       <mapping xsi:type="Calculation:ConstantAttributeMapping" target="STD_ADDR_PRIM_NUMBER" null="true" value=""/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="ADR_KIND" source="ADR_KIND"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="REGION" source="REGION"/>
     </input>
   </calculationView>
 </calculationViews>
@@ -309,6 +331,15 @@
     <attribute id="STD_ADDR_PRIM_NUMBER" order="15" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="STD_ADDR_PRIM_NUMBER"/>
       <keyMapping columnObjectName="AddressUnion" columnName="STD_ADDR_PRIM_NUMBER"/>
+    </attribute>
+  
+    <attribute id="ADR_KIND" order="16" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="ADR_KIND"/>
+      <keyMapping columnObjectName="AddressUnion" columnName="ADR_KIND"/>
+    </attribute>
+    <attribute id="REGION" order="17" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="REGION"/>
+      <keyMapping columnObjectName="AddressUnion" columnName="REGION"/>
     </attribute>
   </attributes>
   <calculatedAttributes/>

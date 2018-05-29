@@ -8,8 +8,8 @@ service {
 	"osr.scv.foundation.db.views.Explorer::CV_PersonByScvId" as "person"
 	with("SCV_ID", "SOURCE", "SOURCE_ID", "UPDATED_AT", "BIRTH_DATE", "DEATH_DATE", "STD_PERSON_GN", 
 	"STD_PERSON_GN2", "STD_PERSON_FN", "VALID_FROM", "VALID_TO")
-	keys("SCV_ID")
-	parameters via key and entity
+	keys generate local "UNIQUE_ID"
+	parameters via entity
 	create forbidden 
 	update forbidden 
 	delete forbidden;
@@ -17,11 +17,20 @@ service {
 	"osr.scv.foundation.db.views.Explorer::CV_ContactByScvId" as "contact"
 	with("SCV_ID", "SOURCE", "SOURCE_ID", "VALID_FROM", "VALID_TO", "CONTACT_NUMBER", "NUMBER_EXT", 
 	"NUMBER_TYPE", "NUMBER_DESC", "EMAIL_TYPE", "EMAIL_DESC", "STD_EMAIL", "CONTACT_EMAIL")
-	keys("SCV_ID")
-	parameters via key and entity
+	keys generate local "UNIQUE_ID"
+	parameters via entity
 	create forbidden 
 	update forbidden 
 	delete forbidden;
 	
+	"osr.scv.foundation.db.views.Explorer::CV_AddressesByScvId" as "address"
+	with("SCV_ID", "SOURCE", "SOURCE_ID", "ADR_KIND", "VALID_FROM", "VALID_TO", "STD_ADDR_COUNTRY_2CHAR", "STD_ADDR_LOCALITY", 
+	"STD_ADDR_REGION", "REGION", "STD_ADDR_POSTCODE1", "STD_ADDR_ADDRESS_DELIVERY", "STD_ADDR_PRIM_ADDRESS", 
+	"STD_ADDR_PRIM_NAME_FULL", "STD_ADDR_PRIM_NAME","STD_ADDR_PRIM_TYPE", "STD_ADDR_PRIM_NUMBER")
+	keys generate local "UNIQUE_ID"
+	parameters via entity
+	create forbidden 
+	update forbidden 
+	delete forbidden;
    
 }    

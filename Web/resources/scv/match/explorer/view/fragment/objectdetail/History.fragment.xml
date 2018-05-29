@@ -3,42 +3,120 @@
                          xmlns:f="sap.ui.layout.form"
                          xmlns:l="sap.ui.layout"
                          xmlns:mvc="sap.ui.core.mvc"
-                         xmlns:smartTable="sap.ui.comp.smarttable"
+                         xmlns:t="sap.ui.table"
                          xmlns="sap.m">
 
-  <Toolbar design="Transparent"
-           ariaLabelledBy="headerToolbar"
-           class="osrSCVToolBar">
-    <Title level="H3"
-           text="{i18n>headercontent.history} {viewModel>/STD_PERSON_FN} {viewModel>/STD_PERSON_GN} {viewModel>/STD_PERSON_GN2}" />
-    <ToolbarSpacer/>
-    <Title level="H3"
-           text="{i18n>headercontent.scvid} {viewModel>/SCV_ID}"  />
-  </Toolbar>
-  <Link
+		  <Toolbar design="Transparent"
+		           ariaLabelledBy="headerToolbar"
+		           class="osrSCVToolBar">
+		    <Title level="H3"
+		           text="{i18n>headercontent.history} {viewModel>/STD_PERSON_FN} {viewModel>/STD_PERSON_GN} {viewModel>/STD_PERSON_GN2}" />
+		    <ToolbarSpacer/>
+		    <Title level="H3"
+		           text="{i18n>headercontent.scvid} {viewModel>/SCV_ID}"  />
+		  </Toolbar>
+		  
+			<Link
 				text="View As Timeline"
 				target="_blank"
 				href="#"
         class="sapUiSmallMargin" />
-  <smartTable:SmartTable id="history-addresses"
-                         entitySet=""
-                         smartFilterId="smartFilterBar"
-                         tableType="ResponsiveTable"
-                         useExportToExcel="true"
-                         beforeExport="onBeforeExport"
-                         useVariantManagement="false"
-                         useTablePersonalisation="true"
-                         header="Line Items"
-                         showRowCount="true"
-                         persistencyKey="SmartTableAnalytical_Explored"
-                         enableAutoBinding="true"
-                         app:useSmartField="true">
-    <!-- layout data used to make the table growing but the filter bar fixed -->
-    <smartTable:layoutData>
-      <FlexItemData growFactor="1"
-                    baseSize="0%" />
-    </smartTable:layoutData>
-  </smartTable:SmartTable>
+        
+			<t:Table
+				id="history-address-table"
+				selectionMode="None"
+				rows="{scvExplorerModel}"
+				visibleRowCount="10"
+				sort=""
+				enableCellFilter="true"
+				enableSelectAll="false"
+				enableBusyIndicator="true"
+				ariaLabelledBy="title">
+
+				<t:columns>
+					<t:Column
+						sortProperty="SOURCE"
+						autoResizable="true"
+						filterProperty="SOURCE">
+						<Label text="Type" />
+						<t:template>
+							<Text text="{scvExplorerModel>SOURCE}" wrapping="false" />
+						</t:template>
+					</t:Column>
+					
+					<t:Column
+						sortProperty="STD_ADDR_ADDRESS_DELIVERY"
+						autoResizable="true"
+						filterProperty="STD_ADDR_ADDRESS_DELIVERY" >
+						<Label text="Address" />
+						<t:template>
+							<Text text="{scvExplorerModel>STD_ADDR_ADDRESS_DELIVERY}" wrapping="false" />
+						</t:template>
+					</t:Column>
+					
+					<t:Column
+						sortProperty="STD_ADDR_LOCALITY"
+						autoResizable="true"
+						filterProperty="STD_ADDR_LOCALITY">
+						<Label text="City" />
+						<t:template>
+							<Text text="{scvExplorerModel>STD_ADDR_LOCALITY}" wrapping="false" />
+						</t:template>
+					</t:Column>
+					
+					<t:Column
+						sortProperty="STD_ADDR_POSTCODE1"
+						autoResizable="true"
+						filterProperty="STD_ADDR_POSTCODE1">
+						<Label text="Postcode" />
+						<t:template>
+							<Text text="{scvExplorerModel>STD_ADDR_POSTCODE1}" wrapping="false" />
+						</t:template>
+					</t:Column>
+					
+					<t:Column
+						sortProperty="REGION"
+						autoResizable="true"
+						filterProperty="REGION">
+						<Label text="Region" />
+						<t:template>
+							<Text text="{scvExplorerModel>REGION}" wrapping="false" />
+						</t:template>
+					</t:Column>
+					
+					<t:Column
+						sortProperty="STD_ADDR_COUNTRY_2CHAR"
+						autoResizable="true"
+						filterProperty="STD_ADDR_COUNTRY_2CHAR">
+						<Label text="Country" />
+						<t:template>
+							<Text text="{scvExplorerModel>STD_ADDR_COUNTRY_2CHAR}" wrapping="false" />
+						</t:template>
+					</t:Column>
+					
+					<t:Column
+						sortProperty="VALID_FROM"
+						autoResizable="true"
+						filterProperty="VALID_FROM">
+						<Label text="Valid From" />
+						<t:template>
+							<Text text="{scvExplorerModel>VALID_FROM}" wrapping="false" />
+						</t:template>
+					</t:Column>
+					
+					<t:Column
+						sortProperty="VALID_TO"
+						autoResizable="true"
+						filterProperty="VALID_TO">
+						<Label text="Valid To" />
+						<t:template>
+							<Text text="{scvExplorerModel>VALID_TO}" wrapping="false" />
+						</t:template>
+					</t:Column>
+					
+				</t:columns>
+				
+			</t:Table>
 
 
 </core:FragmentDefinition>
