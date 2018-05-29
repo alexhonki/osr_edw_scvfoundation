@@ -114,6 +114,29 @@ BEGIN
 								ON a.SYSTEM_ID = b.SYSTEM_ID;
 		
 		INSERT INTO #lt_entity_mappingss (SELECT * FROM :lt_reject_scv_ids_detail);
+
+		lt_accept_scv_ids = SELECT ENTITY_ID, "osr.scv.foundation.db.data::SEQ_ScvMaster".NEXTVAL as SCV_ID FROM (
+							SELECT s.ENTITY_ID,  s."Match_ROW_ID" 
+							FROM "osr.scv.foundation.db.data::MatchResults.MatchResultsShadow" s
+							INNER JOIN "osr.scv.foundation.db.data::MatchResultsReview.Assessments" a
+							ON s."Match_ROW_ID" = a.MATCH_ROW
+							WHERE a.Action = 'Accept'
+							ORDER BY s.ENTITY_ID ASC, s.SOURCE_SYSTEM ASC, s.SYSTEM_ID ASC, s."Match_ROW_ID" ASC
+						  ) GROUP BY ENTITY_ID;
+
+
+		lt_accept_scv_ids_detail_zero = SELECT 'ACCEPT', b.SCV_ID, a.ENTITY_ID, a.MATCH_ROW_ID FROM (
+									--SELECT 'ACCEPT', md.SCV_ID, s.ENTITY_ID, md.MATCH_ROW_ID 
+									SELECT md.SCV_ID, ENTITY_ID, MATCH_ROW_ID
+									FROM "osr.scv.foundation.db.data::MatchResultsReview.Assessments" s
+									INNER JOIN "osr.scv.foundation.db.data::MatchResults.MatchDelta" md
+									ON s.MATCH_ROW = md.MATCH_ROW_ID
+									WHERE md.ACTION = 'Add' and s.ACTION = 'Accept' and md.SCV_ID = 0
+									) a
+									LEFT OUTER JOIN :lt_accept_scv_ids b
+									ON a.ENTITY_ID = b.ENTITY_ID;
+									
+		INSERT INTO #lt_entity_mappingss (SELECT * FROM :lt_accept_scv_ids_detail_zero);
 		
 		INSERT INTO "osr.scv.foundation.db.data::SCVFoundation.Master" (
 				SELECT DISTINCT SCV_ID, CURRENT_DATE, null,CURRENT_USER, null, null, null FROM #lt_entity_mappingss
@@ -123,7 +146,7 @@ BEGIN
 									FROM "osr.scv.foundation.db.data::MatchResultsReview.Assessments" s
 									INNER JOIN "osr.scv.foundation.db.data::MatchResults.MatchDelta" md
 									ON s.MATCH_ROW = md.MATCH_ROW_ID
-									WHERE md.ACTION = 'Add' and s.ACTION = 'Accept';
+									WHERE md.ACTION = 'Add' and s.ACTION = 'Accept' and md.SCV_ID > 0;
 		
 		INSERT INTO #lt_entity_mappingss (SELECT * FROM :lt_accept_scv_ids_detail);
 					
@@ -151,7 +174,7 @@ BEGIN
 								                "Match_ROW_ID"
 									FROM "osr.scv.foundation.db.data::MatchResults.MatchResultsShadow" a
 									LEFT OUTER JOIN "osr.scv.foundation.db.synonyms::BUT000" b
-									ON a."Cleanse_ROW_ID_BUT" = b."Cleanse_ROW_ID" 
+									ON a."Cleanse_ROW_ID_BUT" = b."Z_RUN_SEQ_ID" 
 									WHERE a.SOURCE_SYSTEM = 'RMS'--AND a.SYSTEM_ID = '107249237'
 								ORDER BY a.ENTITY_ID
 							) mr
@@ -377,7 +400,7 @@ BEGIN
 									                a."Match_ROW_ID"
 									    FROM "osr.scv.foundation.db.data::MatchResults.MatchResultsShadow" a
 										LEFT OUTER JOIN "osr.scv.foundation.db.synonyms::ADRC" b
-										ON a."Cleanse_ROW_ID_ADRC" = b."Cleanse_ROW_ID" 
+										ON a."Cleanse_ROW_ID_ADRC" = b."Z_RUN_SEQ_ID" 
 										WHERE SOURCE_SYSTEM = 'RMS' AND ( LENGTH(TEL_NUMBER) > 0)
 									ORDER BY a.ENTITY_ID
 	                            	)
@@ -390,7 +413,7 @@ BEGIN
 									                a."Match_ROW_ID"
 										FROM "osr.scv.foundation.db.data::MatchResults.MatchResultsShadow" a
 										LEFT OUTER JOIN "osr.scv.foundation.db.synonyms::ADRC" b
-										ON a."Cleanse_ROW_ID_ADRC" = b."Cleanse_ROW_ID" 
+										ON a."Cleanse_ROW_ID_ADRC" = b."Z_RUN_SEQ_ID" 
 										WHERE SOURCE_SYSTEM = 'RMS' AND ( LENGTH(FAX_NUMBER) > 0)
 									ORDER BY a.ENTITY_ID
 									) u
