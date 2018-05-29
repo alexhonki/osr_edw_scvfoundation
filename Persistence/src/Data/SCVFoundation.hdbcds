@@ -18,8 +18,8 @@ context SCVFoundation {
         key SCV_ID         : String(20);
         key SOURCE         : String(10);
         key SOURCE_ID      : String(10);
-        key VALID_FROM     : String(10);
-        key VALID_TO       : String(10);
+        key VALID_FROM     : LocalDate;
+        key VALID_TO       : LocalDate;
             LAST_NAME      : String(40);
             MIDDLE_NAME    : String(40);
             FIRST_NAME     : String(40);
@@ -43,7 +43,7 @@ context SCVFoundation {
         key SCV_ID         : String(20);
         key SOURCE         : String(10);
         key SOURCE_ID      : String(10);
-        key UPDATED_AT     : String(10);
+        key UPDATED_AT     : LocalDate;
         key LAST_NAME      : String(80);
         key MIDDLE_NAME    : String(40);
         key FIRST_NAME     : String(40);
@@ -105,8 +105,8 @@ context SCVFoundation {
         key SOURCE                     : String(10);
         key SOURCE_ID                  : String(10);
         key ADDRESS_ID                 : String(10);
-        key VALID_FROM                 : String(10);
-        key VALID_TO                   : String(10);
+        key VALID_FROM                 : LocalDate;
+        key VALID_TO                   : LocalDate;
         key FLOOR                      : String(8);
         key UNIT                       : String(12);
         key BUILDING_NAME              : String(40);
@@ -145,8 +145,8 @@ context SCVFoundation {
         key SCV_ID         : String(10);
         key SOURCE         : String(10);
         key SOURCE_ID      : String(10);
-        key VALID_FROM     : String(10);
-        key VALID_TO       : String(10);
+        key VALID_FROM     : LocalDate;
+        key VALID_TO       : LocalDate;
         key CONTACT_NUMBER : String(20);
         key NUMBER_EXT     : String(20);
         key NUMBER_TYPE    : String(10);
@@ -159,8 +159,8 @@ context SCVFoundation {
         key SCV_ID        : String(10);
         key SOURCE        : String(10);
         key SOURCE_ID     : String(10);
-        key VALID_FROM    : String(10);
-        key VALID_TO      : String(10);
+        key VALID_FROM    : LocalDate;
+        key VALID_TO      : LocalDate;
         key CONTACT_EMAIL : String(200);
         key EMAIL_TYPE    : String(10);
         key EMAIL_DESC    : String(256);
