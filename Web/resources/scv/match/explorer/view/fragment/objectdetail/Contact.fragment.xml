@@ -53,7 +53,7 @@
 						filterProperty="SOURCE">
 						<Label text="Source" />
 						<t:template>
-							<Text text="{scvExplorerModel>SOURCE}" wrapping="false" />
+							<Text textAlign="Center" text="{scvExplorerModel>SOURCE}" wrapping="false" />
 						</t:template>
 					</t:Column>
 					
@@ -63,7 +63,7 @@
 						filterProperty="CONTACT_NUMBER" >
 						<Label text="Contact Number" />
 						<t:template>
-							<Text text="{scvExplorerModel>CONTACT_NUMBER}" wrapping="false" />
+							<Text textAlign="Center" text="{scvExplorerModel>CONTACT_NUMBER}" wrapping="false" />
 						</t:template>
 					</t:Column>
 					

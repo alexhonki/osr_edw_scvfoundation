@@ -3,7 +3,7 @@
                          xmlns:f="sap.ui.layout.form"
                          xmlns:l="sap.ui.layout"
                          xmlns:mvc="sap.ui.core.mvc"
-                         xmlns:smartTable="sap.ui.comp.smarttable"
+                         xmlns:t="sap.ui.table"
                          xmlns="sap.m">
 
   <Toolbar design="Transparent"
@@ -34,34 +34,37 @@
                 singleContainerFullSize="true"
                 backgroundDesign="Solid">
     <f:content>
+    	
       <core:Title text="Name" />
-      <Label text="First Name" />
+      <Label text="{i18n>current.first_name}" />
       <Text text="{personModel>/STD_PERSON_GN}" />
-      <Label text="Middle Name" />
+      
+      <Label text="{i18n>current.middle_name}" />
       <Text text="{personModel>/STD_PERSON_GN2}" />
-      <Label text="Last Name" />
+      
+      <Label text="{i18n>current.last_name}" />
       <Text text="{personModel>/STD_PERSON_FN}" />
 
 
       <core:Title text="Identification" />
-      <Label text="Date of Birth" />
+      <Label text="{i18n>current.dob}" />
       <Text text="{personModel>/BIRTH_DATE}" />
 
-      <Label text="Driver License" />
+      <Label text="{i18n>current.driver_license}" />
       <Text text="{personModel>/DRIVER_LICENSE}" />
 
-      <Label text="RMS BP Number" />
+      <Label text="{i18n>current.rms_bp_number}" />
       <Text text="{personModel>/BP_NUMBER}" />
 
 
       <core:Title text="Contact" />
-      <Label text="Mobile Number" />
+      <Label text="{i18n>current.mobile_number}" />
       <Text text="{personModel>/MOBILE_NUMBER}" />
 
-      <Label text="Home Number" />
+      <Label text="{i18n>current.home_number}" />
       <Text text="{personModel>/HOME_NUMBER}" />
 
-      <Label text="Email" />
+      <Label text="{i18n>current.email}" />
       <Text text="{personModel>/CONTACT_EMAIL}" />
 
     </f:content>
@@ -70,26 +73,101 @@
   <Title level="H3"
          text="Addresses"
          class="sapUiSmallMargin" />
-  <smartTable:SmartTable id="LineItemsSmartTable"
-                         entitySet=""
-                         smartFilterId="smartFilterBar"
-                         tableType="ResponsiveTable"
-                         useExportToExcel="true"
-                         beforeExport="onBeforeExport"
-                         useVariantManagement="false"
-                         useTablePersonalisation="true"
-                         header="Line Items"
-                         showRowCount="true"
-                         persistencyKey="SmartTableAnalytical_Explored"
-                         enableAutoBinding="true"
-                         app:useSmartField="true"
-                         class="sapUiResponsiveContentPadding">
-    <!-- layout data used to make the table growing but the filter bar fixed -->
-    <smartTable:layoutData>
-      <FlexItemData growFactor="1"
-                    baseSize="0%" />
-    </smartTable:layoutData>
-  </smartTable:SmartTable>
+			<t:Table
+				id="current-address-table"
+				selectionMode="None"
+				rows="{scvExplorerModel}"
+				visibleRowCount="5"
+				sort=""
+				enableCellFilter="true"
+				enableSelectAll="false"
+				enableBusyIndicator="true"
+				ariaLabelledBy="title">
+
+				<t:columns>
+					<t:Column
+						sortProperty="SOURCE"
+						autoResizable="true"
+						filterProperty="SOURCE">
+						<Label text="Type" />
+						<t:template>
+							<Text text="{scvExplorerModel>SOURCE}" wrapping="false" />
+						</t:template>
+					</t:Column>
+					
+					<t:Column
+						sortProperty="STD_ADDR_ADDRESS_DELIVERY"
+						autoResizable="true"
+						filterProperty="STD_ADDR_ADDRESS_DELIVERY" >
+						<Label text="Address" />
+						<t:template>
+							<Text text="{scvExplorerModel>STD_ADDR_ADDRESS_DELIVERY}" wrapping="false" />
+						</t:template>
+					</t:Column>
+					
+					<t:Column
+						sortProperty="STD_ADDR_LOCALITY"
+						autoResizable="true"
+						filterProperty="STD_ADDR_LOCALITY">
+						<Label text="City" />
+						<t:template>
+							<Text text="{scvExplorerModel>STD_ADDR_LOCALITY}" wrapping="false" />
+						</t:template>
+					</t:Column>
+					
+					<t:Column
+						sortProperty="STD_ADDR_POSTCODE1"
+						autoResizable="true"
+						filterProperty="STD_ADDR_POSTCODE1">
+						<Label text="Postcode" />
+						<t:template>
+							<Text text="{scvExplorerModel>STD_ADDR_POSTCODE1}" wrapping="false" />
+						</t:template>
+					</t:Column>
+					
+					<t:Column
+						sortProperty="REGION"
+						autoResizable="true"
+						filterProperty="REGION">
+						<Label text="Region" />
+						<t:template>
+							<Text text="{scvExplorerModel>REGION}" wrapping="false" />
+						</t:template>
+					</t:Column>
+					
+					<t:Column
+						sortProperty="STD_ADDR_COUNTRY_2CHAR"
+						autoResizable="true"
+						filterProperty="STD_ADDR_COUNTRY_2CHAR">
+						<Label text="Country" />
+						<t:template>
+							<Text text="{scvExplorerModel>STD_ADDR_COUNTRY_2CHAR}" wrapping="false" />
+						</t:template>
+					</t:Column>
+					
+					<t:Column
+						sortProperty="VALID_FROM"
+						autoResizable="true"
+						filterProperty="VALID_FROM">
+						<Label text="Valid From" />
+						<t:template>
+							<Text text="{scvExplorerModel>VALID_FROM}" wrapping="false" />
+						</t:template>
+					</t:Column>
+					
+					<t:Column
+						sortProperty="VALID_TO"
+						autoResizable="true"
+						filterProperty="VALID_TO">
+						<Label text="Valid To" />
+						<t:template>
+							<Text text="{scvExplorerModel>VALID_TO}" wrapping="false" />
+						</t:template>
+					</t:Column>
+					
+				</t:columns>
+				
+			</t:Table>
 
 
 </core:FragmentDefinition>

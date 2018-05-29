@@ -9,12 +9,12 @@
           afterClose="onDestroyDialog"
           draggable="true"
           resizable="true"
-          contentWidth="60%">
+          contentWidth="40%">
 
     <content>
       <l:Grid class="sapUiSmallMarginTop"
               hSpacing="0.5"
-              defaultSpan="L6 M6 S12">
+              defaultSpan="L12 M12 S12">
         <l:content>
 
           <!-- <VBox> -->
@@ -45,6 +45,51 @@
                            placeholder="{i18n>searchfield}" />
 
               <Label vAlign="Middle"
+                     text="Source ID" />
+              <Select forceSelection="false"
+                      selectedKey="{}"
+                      items="{
+                  path: '/',
+                  sorter: { path: '' }
+                }">
+                <core:Item key="{ProductId}" text="{Name}" />
+              </Select>
+
+              <Label vAlign="Middle"
+                     text="Postcode" />
+              <Select forceSelection="false"
+                      selectedKey="{}"
+                      items="{
+                  path: '/',
+                  sorter: { path: '' }
+                }">
+                <core:Item key="{ProductId}" text="{Name}" />
+              </Select>
+
+
+              <Label vAlign="Middle"
+                     text="City" />
+              <Select forceSelection="false"
+                      selectedKey="{}"
+                      items="{
+                  path: '/',
+                  sorter: { path: '' }
+                }">
+                <core:Item key="{ProductId}" text="{Name}" />
+              </Select>
+              
+              <Label vAlign="Middle"
+                     text="SCV ID" />
+              <Select forceSelection="false"
+                      selectedKey="{}"
+                      items="{
+                  path: '/',
+                  sorter: { path: '' }
+                }">
+                <core:Item key="{ProductId}" text="{Name}" />
+              </Select>
+              
+              <Label vAlign="Middle"
                      text="Source" />
               <Select forceSelection="false"
                       selectedKey="{}"
@@ -55,85 +100,9 @@
                 <core:Item key="{ProductId}" text="{Name}" />
               </Select>
 
-              <Label vAlign="Middle"
-                     text="Last Name" />
-              <Select forceSelection="false"
-                      selectedKey="{}"
-                      items="{
-                  path: '/',
-                  sorter: { path: '' }
-                }">
-                <core:Item key="{ProductId}" text="{Name}" />
-              </Select>
-
-
-              <Label vAlign="Middle"
-                     text="Last Name" />
-              <Select forceSelection="false"
-                      selectedKey="{}"
-                      items="{
-                  path: '/',
-                  sorter: { path: '' }
-                }">
-                <core:Item key="{ProductId}" text="{Name}" />
-              </Select>
-
             </f:content>
           </f:SimpleForm>
 
-          <f:SimpleForm id="form-display-contact2"
-                        editable="true"
-                        layout="ResponsiveGridLayout"
-                        labelSpanXL="3"
-                        labelSpanL="3"
-                        labelSpanM="3"
-                        labelSpanS="3"
-                        adjustLabelSpan="false"
-                        emptySpanXL="0"
-                        emptySpanL="0"
-                        emptySpanM="0"
-                        emptySpanS="0"
-                        columnsXL="1"
-                        columnsL="1"
-                        columnsM="1"
-                        singleContainerFullSize="false"
-                        class="">
-            <f:content>
-
-
-              <Label text="Source" />
-              <Select forceSelection="false"
-                      selectedKey="{}"
-                      items="{
-                  path: '/',
-                  sorter: { path: '' }
-                }">
-                <core:Item key="{ProductId}" text="{Name}" />
-              </Select>
-
-              <Label text="Last Name" />
-              <Select forceSelection="false"
-                      selectedKey="{}"
-                      items="{
-                  path: '/',
-                  sorter: { path: '' }
-                }">
-                <core:Item key="{ProductId}" text="{Name}" />
-              </Select>
-
-
-              <Label text="Last Name" />
-              <Select forceSelection="false"
-                      selectedKey="{}"
-                      items="{
-                  path: '/',
-                  sorter: { path: '' }
-                }">
-                <core:Item key="{ProductId}" text="{Name}" />
-              </Select>
-
-            </f:content>
-          </f:SimpleForm>
           <!-- </VBox> -->
         </l:content>
       </l:Grid>

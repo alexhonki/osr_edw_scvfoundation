@@ -9,6 +9,14 @@
       <selection multiLine="false" type="Single"/>
     </variableProperties>
   </variable>
+
+  <variable id="IP_YEAR" parameter="true">
+    <descriptions defaultDescription="IP_YEAR"/>
+    <variableProperties datatype="NVARCHAR" length="4" mandatory="false">
+      <valueDomain type="empty"/>
+      <selection multiLine="false" type="Single"/>
+    </variableProperties>
+  </variable>
 </localVariables>
 <variableMappings/>
 <dataSources>
@@ -91,7 +99,7 @@
     </input>
     <filter>(&quot;SCV_ID&quot; = '$$IP_SCV_ID$$')</filter>
   </calculationView>
-  <calculationView xsi:type="Calculation:ProjectionView" id="AddressTMR" filterExpressionLanguage="SQL">
+  <calculationView xsi:type="Calculation:ProjectionView" id="AddressTMR" filterExpressionLanguage="COLUMN_ENGINE">
     <viewAttributes>
       <viewAttribute id="SCV_ID">
         <descriptions defaultDescription="SCV_ID"/>
@@ -166,7 +174,8 @@
     
       <mapping xsi:type="Calculation:AttributeMapping" target="STATE" source="STATE"/>
     </input>
-    <filter>(&quot;SCV_ID&quot; = '$$IP_SCV_ID$$')</filter>
+    <filter>(&quot;SCV_ID&quot; = '$$IP_SCV_ID$$') and
+if(isnull('$$IP_YEAR$$') or '$$IP_YEAR$$' = '', match(&quot;VALID_TO&quot;,'*'), match(&quot;VALID_TO&quot;,'*$$IP_YEAR$$*') )</filter>
   </calculationView>
   <calculationView xsi:type="Calculation:UnionView" id="AddressUnion">
     <viewAttributes>
@@ -335,7 +344,9 @@
   
     <attribute id="ADR_KIND" order="16" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="ADR_KIND"/>
+  
       <keyMapping columnObjectName="AddressUnion" columnName="ADR_KIND"/>
+  
     </attribute>
     <attribute id="REGION" order="17" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="REGION"/>

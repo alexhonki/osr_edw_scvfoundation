@@ -90,26 +90,6 @@ sap.ui.define([
 			let oController = this;
 			oController.getView().byId("history-address-table").bindRows("scvExplorerModel>/addressParameters(IP_SCV_ID='" + sScvId + "')/Results");
 
-			// depending on how this looks + the smart tables, we might just need to 
-			// bind the element straight away, since the column sorting is from the oData.
-			// oController.getModel("scvExplorerModel").read("/xxthe parameters for address" + "(IP_SCV_ID='" + sScvId + "')/Results", {
-			// 	urlParameters: {
-			// 		"$orderby": "SOURCE desc,VALID_TO"
-			// 	},
-			// 	success: function(data) {
-
-			// 		// if there is a PO Box coming in through for this particular SCV ID
-			// 		if (data.results.length > 0) {
-
-			// 			oController.getModel("addressesModel").setData(data.results[0], false);
-
-			// 		}
-
-			// 	},
-			// 	error: function(oMessage) {
-			// 		console.log(oMessage);
-			// 	}
-			// });
 		},
 
 		/**
@@ -171,6 +151,10 @@ sap.ui.define([
 					console.log(oMessage);
 				}
 			});
+			
+			oController.getView().byId("current-address-table").bindRows("scvExplorerModel>/addressParameters(IP_SCV_ID='" + sScvId +
+				"',IP_YEAR='9999')/Results");
+			
 		},
 
 		/**
