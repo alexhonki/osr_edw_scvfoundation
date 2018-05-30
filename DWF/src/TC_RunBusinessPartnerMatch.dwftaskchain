@@ -8,13 +8,13 @@
     },
     "2": {
       "inline": {
-        "type": "executeFlowGraph",
-        "taskGroup": "hanaNative",
+        "type": "SUB",
+        "taskGroup": "com.sap.dwf.toe.executionControl",
         "description": "Run BP Match",
         "parameterValues": [
           {
-            "id": "flowGraphName",
-            "value": "osr.scv.foundation.db.flowgraphs::MatchBusinessPartners"
+            "id": "taskChainId",
+            "value": "src#TestingChain"
           }
         ]
       },
@@ -27,13 +27,13 @@
     },
     "3": {
       "inline": {
-        "type": "executeProcedure",
-        "taskGroup": "hanaNative",
+        "type": "SUB",
+        "taskGroup": "com.sap.dwf.toe.executionControl",
         "description": "Prepare Review UI",
         "parameterValues": [
           {
-            "id": "procName",
-            "value": "osr.scv.foundation.db.Procedures::SP_PrepareMatchResultsReview"
+            "id": "taskChainId",
+            "value": "src#TestingChain"
           }
         ]
       },
