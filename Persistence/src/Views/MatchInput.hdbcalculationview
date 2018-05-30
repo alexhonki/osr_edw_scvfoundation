@@ -189,7 +189,7 @@
 (lower(&quot;NAME_FIRST&quot;) NOT LIKE '%duplicat%' AND &quot;NAME_FIRST&quot; NOT LIKE '%&amp;%' AND lower(&quot;NAME_FIRST&quot;) NOT LIKE '%trust%' AND lower(&quot;NAME_FIRST&quot;) NOT LIKE '%executor%' AND lower(&quot;NAME_FIRST&quot;) NOT LIKE '%copy%' AND (&quot;NAME_FIRST&quot; NOT LIKE  '%0%') AND (&quot;NAME_FIRST&quot; NOT LIKE  '%1%')AND (&quot;NAME_FIRST&quot; NOT LIKE  '%2%')AND (&quot;NAME_FIRST&quot; NOT LIKE  '%3%')AND (&quot;NAME_FIRST&quot; NOT LIKE  '%4%')AND (&quot;NAME_FIRST&quot; NOT LIKE  '%5%')AND (&quot;NAME_FIRST&quot; NOT LIKE  '%6%')AND (&quot;NAME_FIRST&quot; NOT LIKE  '%7%')AND (&quot;NAME_FIRST&quot; NOT LIKE  '%8%')AND (&quot;NAME_FIRST&quot; NOT LIKE  '%9%') AND (&quot;NAME_FIRST&quot; NOT LIKE '% and %'))
     AND
 (lower(&quot;NAMEMIDDLE&quot;) NOT LIKE '%duplicat%' AND &quot;NAMEMIDDLE&quot; NOT LIKE '%&amp;%' AND lower(&quot;NAMEMIDDLE&quot;) NOT LIKE '%trust%' AND lower(&quot;NAMEMIDDLE&quot;) NOT LIKE '%executor%' AND lower(&quot;NAMEMIDDLE&quot;) NOT LIKE '%copy%' AND (&quot;NAMEMIDDLE&quot; NOT LIKE  '%0%') AND (&quot;NAMEMIDDLE&quot; NOT LIKE  '%1%')AND (&quot;NAMEMIDDLE&quot; NOT LIKE  '%2%')AND (&quot;NAMEMIDDLE&quot; NOT LIKE  '%3%')AND (&quot;NAMEMIDDLE&quot; NOT LIKE  '%4%')AND (&quot;NAMEMIDDLE&quot; NOT LIKE  '%5%')AND (&quot;NAMEMIDDLE&quot; NOT LIKE  '%6%')AND (&quot;NAMEMIDDLE&quot; NOT LIKE  '%7%')AND (&quot;NAMEMIDDLE&quot; NOT LIKE  '%8%')AND (&quot;NAMEMIDDLE&quot; NOT LIKE  '%9%') AND (&quot;NAMEMIDDLE&quot; NOT LIKE '% and %'))
-AND ( PARTNER = '0001834268' OR &quot;PARTNER&quot; = '0003051747' )
+
 
 </filter>
   </calculationView>
@@ -805,9 +805,10 @@ AND ( PARTNER = '0001834268' OR &quot;PARTNER&quot; = '0003051747' )
       <viewAttribute id="Cleanse_TABLE_ID" aggregationType="sum">
         <descriptions defaultDescription="Cleanse_TABLE_ID"/>
       </viewAttribute>
-      <viewAttribute id="Cleanse_ROW_ID" aggregationType="sum">
-        <descriptions defaultDescription="Cleanse_ROW_ID"/>
+      <viewAttribute id="Z_RUN_SEQ_ID" aggregationType="sum">
+        <descriptions defaultDescription="Z_RUN_SEQ_ID"/>
       </viewAttribute>
+    
       <viewAttribute id="MATCH_ADDR_WING">
         <descriptions defaultDescription="MATCH_ADDR_WING"/>
       </viewAttribute>
@@ -853,6 +854,9 @@ AND ( PARTNER = '0001834268' OR &quot;PARTNER&quot; = '0003051747' )
       <viewAttribute id="ADDR_ASMT_TYPE">
         <descriptions defaultDescription="ADDR_ASMT_TYPE"/>
       </viewAttribute>
+      <viewAttribute id="Cleanse_ROW_ID" aggregationType="sum">
+        <descriptions defaultDescription="Cleanse_ROW_ID"/>
+      </viewAttribute>
     
     
     
@@ -860,11 +864,7 @@ AND ( PARTNER = '0001834268' OR &quot;PARTNER&quot; = '0003051747' )
     
       <viewAttribute id="CLIENT">
         <descriptions defaultDescription="CLIENT"/>
-      </viewAttribute>
-      <viewAttribute id="Z_RUN_SEQ_ID" aggregationType="sum">
-        <descriptions defaultDescription="Z_RUN_SEQ_ID"/>
-      </viewAttribute>
-    </viewAttributes>
+      </viewAttribute></viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
     <input node="osr.scv.foundation.db.synonyms::ADRC">
@@ -2147,9 +2147,7 @@ AND ( PARTNER = '0001834268' OR &quot;PARTNER&quot; = '0003051747' )
       <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_LOCALITY2" source="MATCH_ADDR_LOCALITY2"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_PRIM_NUMBER" source="MATCH_ADDR_PRIM_NUMBER"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_ADDRESS_DELIVERY" source="STD_ADDR_ADDRESS_DELIVERY"/>
-    </input>
-    <filter>CUSTOMER_REF = '77914595' OR &quot;CUSTOMER_REF&quot; = '18701305'</filter>
-  </calculationView>
+    </input></calculationView>
 </calculationViews>
 <logicalModel id="U_AllMatchFields">
   <attributes>
@@ -2436,7 +2434,7 @@ AND ( PARTNER = '0001834268' OR &quot;PARTNER&quot; = '0003051747' )
     </shape>
     <shape modelObjectName="P_BusinessPartners" modelObjectNameSpace="J_BPsWithTimeDependendAddresses" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="20" y="30"/>
-      <rectangleSize width="263.4501953125"/>
+      <rectangleSize width="263"/>
     </shape>
     <shape modelObjectName="P_TimedependendAddressUsage" modelObjectNameSpace="J_BPsWithTimeDependendAddresses" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="320" y="30"/>
