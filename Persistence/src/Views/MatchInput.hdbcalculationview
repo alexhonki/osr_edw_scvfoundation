@@ -131,6 +131,10 @@
       <viewAttribute id="NAMEMIDDLE">
         <descriptions defaultDescription="NAMEMIDDLE"/>
       </viewAttribute>
+    
+      <viewAttribute id="Z_RUN_SEQ_ID" aggregationType="sum">
+        <descriptions defaultDescription="Z_RUN_SEQ_ID"/>
+      </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes>
       <calculatedViewAttribute id="CC_BIRTHDT" datatype="DATE" expressionLanguage="SQL">
@@ -177,14 +181,15 @@
     
       <mapping xsi:type="Calculation:AttributeMapping" target="NAME_FIRST" source="NAME_FIRST"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="NAMEMIDDLE" source="NAMEMIDDLE"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="Z_RUN_SEQ_ID" source="Z_RUN_SEQ_ID"/>
     </input>
-    <filter>(lower(&quot;NAME_LAST&quot;) NOT LIKE '%duplicat%' AND &quot;NAME_LAST&quot; NOT LIKE '%&amp;%' AND lower(&quot;NAME_LAST&quot;) NOT LIKE '%trust%' AND lower(&quot;NAME_LAST&quot;) NOT LIKE '%executor%' AND lower(&quot;NAME_LAST&quot;) NOT LIKE '%copy%' AND (&quot;NAME_LAST&quot; NOT LIKE  '%0%') AND (&quot;NAME_LAST&quot; NOT LIKE  '%1%')AND (&quot;NAME_LAST&quot; NOT LIKE  '%2%')AND (&quot;NAME_LAST&quot; NOT LIKE  '%3%')AND (&quot;NAME_LAST&quot; NOT LIKE  '%4%')AND (&quot;NAME_LAST&quot; NOT LIKE  '%5%')AND (&quot;NAME_LAST&quot; NOT LIKE  '%6%')AND (&quot;NAME_LAST&quot; NOT LIKE  '%7%')AND (&quot;NAME_LAST&quot; NOT LIKE  '%8%')AND (&quot;NAME_LAST&quot; NOT LIKE  '%9%') AND (&quot;NAME_LAST&quot; NOT LIKE  '% and %'))
+    <filter>(lower(&quot;NAME_LAST&quot;) NOT LIKE '%duplicat%' AND &quot;NAME_LAST&quot; NOT LIKE '%&amp;%' AND lower(&quot;NAME_LAST&quot;) NOT LIKE '%trust%' AND lower(&quot;NAME_LAST&quot;) NOT LIKE '%executor%' AND lower(&quot;NAME_LAST&quot;) NOT LIKE '%copy%' AND (&quot;NAME_LAST&quot; NOT LIKE  '%0%') AND (&quot;NAME_LAST&quot; NOT LIKE  '%1%')AND (&quot;NAME_LAST&quot; NOT LIKE  '%2%')AND (&quot;NAME_LAST&quot; NOT LIKE  '%3%')AND (&quot;NAME_LAST&quot; NOT LIKE  '%4%')AND (&quot;NAME_LAST&quot; NOT LIKE  '%5%')AND (&quot;NAME_LAST&quot; NOT LIKE  '%6%')AND (&quot;NAME_LAST&quot; NOT LIKE  '%7%')AND (&quot;NAME_LAST&quot; NOT LIKE  '%8%')AND (&quot;NAME_LAST&quot; NOT LIKE  '%9%') AND (&quot;NAME_LAST&quot; NOT LIKE '% and %'))
     AND
-(lower(&quot;NAME_FIRST&quot;) NOT LIKE '%duplicat%' AND &quot;NAME_FIRST&quot; NOT LIKE '%&amp;%' AND lower(&quot;NAME_FIRST&quot;) NOT LIKE '%trust%' AND lower(&quot;NAME_FIRST&quot;) NOT LIKE '%executor%' AND lower(&quot;NAME_FIRST&quot;) NOT LIKE '%copy%' AND (&quot;NAME_FIRST&quot; NOT LIKE  '%0%') AND (&quot;NAME_FIRST&quot; NOT LIKE  '%1%')AND (&quot;NAME_FIRST&quot; NOT LIKE  '%2%')AND (&quot;NAME_FIRST&quot; NOT LIKE  '%3%')AND (&quot;NAME_FIRST&quot; NOT LIKE  '%4%')AND (&quot;NAME_FIRST&quot; NOT LIKE  '%5%')AND (&quot;NAME_FIRST&quot; NOT LIKE  '%6%')AND (&quot;NAME_FIRST&quot; NOT LIKE  '%7%')AND (&quot;NAME_FIRST&quot; NOT LIKE  '%8%')AND (&quot;NAME_FIRST&quot; NOT LIKE  '%9%') AND (&quot;NAME_FIRST&quot; NOT LIKE  '% and %'))
+(lower(&quot;NAME_FIRST&quot;) NOT LIKE '%duplicat%' AND &quot;NAME_FIRST&quot; NOT LIKE '%&amp;%' AND lower(&quot;NAME_FIRST&quot;) NOT LIKE '%trust%' AND lower(&quot;NAME_FIRST&quot;) NOT LIKE '%executor%' AND lower(&quot;NAME_FIRST&quot;) NOT LIKE '%copy%' AND (&quot;NAME_FIRST&quot; NOT LIKE  '%0%') AND (&quot;NAME_FIRST&quot; NOT LIKE  '%1%')AND (&quot;NAME_FIRST&quot; NOT LIKE  '%2%')AND (&quot;NAME_FIRST&quot; NOT LIKE  '%3%')AND (&quot;NAME_FIRST&quot; NOT LIKE  '%4%')AND (&quot;NAME_FIRST&quot; NOT LIKE  '%5%')AND (&quot;NAME_FIRST&quot; NOT LIKE  '%6%')AND (&quot;NAME_FIRST&quot; NOT LIKE  '%7%')AND (&quot;NAME_FIRST&quot; NOT LIKE  '%8%')AND (&quot;NAME_FIRST&quot; NOT LIKE  '%9%') AND (&quot;NAME_FIRST&quot; NOT LIKE '% and %'))
     AND
-(lower(&quot;NAMEMIDDLE&quot;) NOT LIKE '%duplicat%' AND &quot;NAMEMIDDLE&quot; NOT LIKE '%&amp;%' AND lower(&quot;NAMEMIDDLE&quot;) NOT LIKE '%trust%' AND lower(&quot;NAMEMIDDLE&quot;) NOT LIKE '%executor%' AND lower(&quot;NAMEMIDDLE&quot;) NOT LIKE '%copy%' AND (&quot;NAMEMIDDLE&quot; NOT LIKE  '%0%') AND (&quot;NAMEMIDDLE&quot; NOT LIKE  '%1%')AND (&quot;NAMEMIDDLE&quot; NOT LIKE  '%2%')AND (&quot;NAMEMIDDLE&quot; NOT LIKE  '%3%')AND (&quot;NAMEMIDDLE&quot; NOT LIKE  '%4%')AND (&quot;NAMEMIDDLE&quot; NOT LIKE  '%5%')AND (&quot;NAMEMIDDLE&quot; NOT LIKE  '%6%')AND (&quot;NAMEMIDDLE&quot; NOT LIKE  '%7%')AND (&quot;NAMEMIDDLE&quot; NOT LIKE  '%8%')AND (&quot;NAMEMIDDLE&quot; NOT LIKE  '%9%') AND (&quot;NAMEMIDDLE&quot; NOT LIKE  '% and %'))
-
-
+(lower(&quot;NAMEMIDDLE&quot;) NOT LIKE '%duplicat%' AND &quot;NAMEMIDDLE&quot; NOT LIKE '%&amp;%' AND lower(&quot;NAMEMIDDLE&quot;) NOT LIKE '%trust%' AND lower(&quot;NAMEMIDDLE&quot;) NOT LIKE '%executor%' AND lower(&quot;NAMEMIDDLE&quot;) NOT LIKE '%copy%' AND (&quot;NAMEMIDDLE&quot; NOT LIKE  '%0%') AND (&quot;NAMEMIDDLE&quot; NOT LIKE  '%1%')AND (&quot;NAMEMIDDLE&quot; NOT LIKE  '%2%')AND (&quot;NAMEMIDDLE&quot; NOT LIKE  '%3%')AND (&quot;NAMEMIDDLE&quot; NOT LIKE  '%4%')AND (&quot;NAMEMIDDLE&quot; NOT LIKE  '%5%')AND (&quot;NAMEMIDDLE&quot; NOT LIKE  '%6%')AND (&quot;NAMEMIDDLE&quot; NOT LIKE  '%7%')AND (&quot;NAMEMIDDLE&quot; NOT LIKE  '%8%')AND (&quot;NAMEMIDDLE&quot; NOT LIKE  '%9%') AND (&quot;NAMEMIDDLE&quot; NOT LIKE '% and %'))
+AND ( PARTNER = '0001834268' OR &quot;PARTNER&quot; = '0003051747' )
 
 </filter>
   </calculationView>
@@ -348,6 +353,10 @@
       <viewAttribute id="CC_BIRTHDT">
         <descriptions defaultDescription="CC_BIRTHDT"/>
       </viewAttribute>
+    
+      <viewAttribute id="Z_RUN_SEQ_ID" aggregationType="sum">
+        <descriptions defaultDescription="Z_RUN_SEQ_ID"/>
+      </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
@@ -387,6 +396,8 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="BIRTHDT" source="BIRTHDT"/>
     
       <mapping xsi:type="Calculation:AttributeMapping" target="CC_BIRTHDT" source="CC_BIRTHDT"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="Z_RUN_SEQ_ID" source="Z_RUN_SEQ_ID"/>
     </input>
     <input node="P_TimedependendAddressUsage">
       <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT_1" source="CLIENT"/>
@@ -674,7 +685,7 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_MATPOST_STD" source="MATCH_PERSON_MATPOST_STD"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON" source="MATCH_PERSON"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="Cleanse_TABLE_ID_BUT" source="Cleanse_TABLE_ID_BUT"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="Cleanse_ROW_ID_BUT" source="Cleanse_ROW_ID_BUT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="Cleanse_ROW_ID_BUT" source="Z_RUN_SEQ_ID"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT_1" source="CLIENT_1"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER_1" source="PARTNER_1"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="VALID_TO" source="VALID_TO"/>
@@ -709,7 +720,7 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PHONE" source="MATCH_PHONE"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PHONE2" source="MATCH_PHONE2"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="Cleanse_TABLE_ID_ADRC" source="Cleanse_TABLE_ID"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="Cleanse_ROW_ID_ADRC" source="Cleanse_ROW_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="Cleanse_ROW_ID_ADRC" source="Z_RUN_SEQ_ID"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_WING" source="MATCH_ADDR_WING"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_FLOOR" source="MATCH_ADDR_FLOOR"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_COUNTRY_NAME" source="STD_ADDR_COUNTRY_NAME"/>
@@ -849,7 +860,11 @@
     
       <viewAttribute id="CLIENT">
         <descriptions defaultDescription="CLIENT"/>
-      </viewAttribute></viewAttributes>
+      </viewAttribute>
+      <viewAttribute id="Z_RUN_SEQ_ID" aggregationType="sum">
+        <descriptions defaultDescription="Z_RUN_SEQ_ID"/>
+      </viewAttribute>
+    </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
     <input node="osr.scv.foundation.db.synonyms::ADRC">
@@ -895,6 +910,8 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="ADDR_INFO_CODE" source="ADDR_INFO_CODE"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="ADDR_ASMT_LEVEL" source="ADDR_ASMT_LEVEL"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="ADDR_ASMT_TYPE" source="ADDR_ASMT_TYPE"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="Z_RUN_SEQ_ID" source="Z_RUN_SEQ_ID"/>
     </input>
   </calculationView>
   <calculationView xsi:type="Calculation:UnionView" id="U_AllMatchFields">
@@ -2130,7 +2147,9 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_LOCALITY2" source="MATCH_ADDR_LOCALITY2"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_PRIM_NUMBER" source="MATCH_ADDR_PRIM_NUMBER"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_ADDRESS_DELIVERY" source="STD_ADDR_ADDRESS_DELIVERY"/>
-    </input></calculationView>
+    </input>
+    <filter>CUSTOMER_REF = '77914595' OR &quot;CUSTOMER_REF&quot; = '18701305'</filter>
+  </calculationView>
 </calculationViews>
 <logicalModel id="U_AllMatchFields">
   <attributes>
@@ -2417,7 +2436,7 @@
     </shape>
     <shape modelObjectName="P_BusinessPartners" modelObjectNameSpace="J_BPsWithTimeDependendAddresses" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="20" y="30"/>
-      <rectangleSize width="263"/>
+      <rectangleSize width="263.4501953125"/>
     </shape>
     <shape modelObjectName="P_TimedependendAddressUsage" modelObjectNameSpace="J_BPsWithTimeDependendAddresses" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="320" y="30"/>

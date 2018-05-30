@@ -61,10 +61,10 @@ BEGIN
                
                 -- Master data BUT000
                 LEFT OUTER JOIN (
-                                 SELECT MATCH_PERSON_FN, NAME_FIRST AS FNAME_ORIG_BUT, NAMEMIDDLE AS MNAME_ORIG_BUT, NAME_LAST AS LNAME_ORIG_BUT, "Cleanse_TABLE_ID", "Cleanse_ROW_ID", "PARTNER" 
+                                 SELECT MATCH_PERSON_FN, NAME_FIRST AS FNAME_ORIG_BUT, NAMEMIDDLE AS MNAME_ORIG_BUT, NAME_LAST AS LNAME_ORIG_BUT, "Cleanse_TABLE_ID", "Cleanse_ROW_ID", "Z_RUN_SEQ_ID", "PARTNER" 
                                  FROM "osr.scv.foundation.db.synonyms::BUT000"
                                 ) as r
-                ON m."Cleanse_ROW_ID_BUT" = r."Cleanse_ROW_ID" AND m."Cleanse_TABLE_ID_BUT" = r."Cleanse_TABLE_ID" AND m."SYSTEM_ID" = r."PARTNER"
+                ON m."Cleanse_ROW_ID_BUT" = r."Z_RUN_SEQ_ID" AND m."Cleanse_TABLE_ID_BUT" = r."Cleanse_TABLE_ID" AND m."SYSTEM_ID" = r."PARTNER"
                 -- Master data TMR
                 LEFT OUTER JOIN (
                                  SELECT MATCH_PERSON_FN, FIRST_NAME AS FNAME_ORIG_TMR, MIDDLE_NAME AS MNAME_ORIG_TMR, FAMILY_ORG_NAME AS LNAME_ORIG_TMR, "Cleanse_TABLE_ID", "Z_RUN_SEQ_ID", "CUSTOMER_REF" 

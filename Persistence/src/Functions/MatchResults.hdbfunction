@@ -50,16 +50,16 @@ BEGIN
 		                -- Add original fields
 		                --- BUT000
 		                LEFT OUTER JOIN ( 
-		                			      SELECT BIRTHDT AS BIRTHDT_ORIG_BUT, NAME_FIRST AS FNAME_ORIG_BUT, NAMEMIDDLE AS MNAME_ORIG_BUT, NAME_LAST AS LNAME_ORIG_BUT, "Cleanse_TABLE_ID", "Cleanse_ROW_ID", "PARTNER" FROM "osr.scv.foundation.db.synonyms::BUT000"
+		                			      SELECT BIRTHDT AS BIRTHDT_ORIG_BUT, NAME_FIRST AS FNAME_ORIG_BUT, NAMEMIDDLE AS MNAME_ORIG_BUT, NAME_LAST AS LNAME_ORIG_BUT, "Cleanse_TABLE_ID", "Z_RUN_SEQ_ID", "PARTNER" FROM "osr.scv.foundation.db.synonyms::BUT000"
 		                					
 		                				) as e
-		                ON a."Cleanse_ROW_ID_BUT" = e."Cleanse_ROW_ID" AND a."Cleanse_TABLE_ID_BUT" = e."Cleanse_TABLE_ID" AND a."SYSTEM_ID" = e."PARTNER" and a."SOURCE_SYSTEM" = 'RMS'
+		                ON a."Cleanse_ROW_ID_BUT" = e."Z_RUN_SEQ_ID" AND a."Cleanse_TABLE_ID_BUT" = e."Cleanse_TABLE_ID" AND a."SYSTEM_ID" = e."PARTNER" and a."SOURCE_SYSTEM" = 'RMS'
 		                -- ADRC
 		                LEFT OUTER JOIN (
-		                				 SELECT ADDRNUMBER, COUNTRY as COUNTRY_ORIG_ADRC, REGION AS REGION_ORIG_ADRC, CITY1 AS CITY_ORIG_ADRC, STREET AS STREET_ORIG_ADRC, HOUSE_NUM1 AS STREET_NUMBER_ORIG_ADRC, POST_CODE1 as POSTCODE_ORIG_ADRC, "Cleanse_TABLE_ID", "Cleanse_ROW_ID"
+		                				 SELECT ADDRNUMBER, COUNTRY as COUNTRY_ORIG_ADRC, REGION AS REGION_ORIG_ADRC, CITY1 AS CITY_ORIG_ADRC, STREET AS STREET_ORIG_ADRC, HOUSE_NUM1 AS STREET_NUMBER_ORIG_ADRC, POST_CODE1 as POSTCODE_ORIG_ADRC, "Cleanse_TABLE_ID", "Z_RUN_SEQ_ID"
 		                				 FROM "osr.scv.foundation.db.synonyms::ADRC"
 		                				) as e1
-		                ON a."Cleanse_TABLE_ID_ADRC" = e1."Cleanse_TABLE_ID" AND a."Cleanse_ROW_ID_ADRC" = e1."Cleanse_ROW_ID" AND a."SOURCE_SYSTEM" = 'RMS'
+		                ON a."Cleanse_TABLE_ID_ADRC" = e1."Cleanse_TABLE_ID" AND a."Cleanse_ROW_ID_ADRC" = e1."Z_RUN_SEQ_ID" AND a."SOURCE_SYSTEM" = 'RMS'
 		                -- TMR
 		                LEFT OUTER JOIN ( 
 		                			      SELECT DATE_OF_BIRTH AS BIRTHDT_ORIG_TMR, FIRST_NAME AS FNAME_ORIG_TMR, MIDDLE_NAME AS MNAME_ORIG_TMR, FAMILY_ORG_NAME AS LNAME_ORIG_TMR, COUNTRY as COUNTRY_ORIG_TMR, STATE AS REGION_ORIG_TMR, SUBURB AS CITY_ORIG_TMR, STREET_NAME AS STREET_ORIG_TMR, STREET_NO AS STREET_NUMBER_ORIG_TMR, POSTCODE as POSTCODE_ORIG_TMR, "Cleanse_TABLE_ID", "Z_RUN_SEQ_ID", "CUSTOMER_REF" FROM "osr.scv.foundation.db.synonyms::TMR_CustMain"

@@ -87,10 +87,10 @@ BEGIN
 		);
 		
 		-- Delete from match results table
-		DELETE FROM "osr.scv.foundation.db.data::MatchResults.MatchResults" WHERE ENTITY_ID IN (SELECT ENTITY_ID FROM :lt_entities);
+--		DELETE FROM "osr.scv.foundation.db.data::MatchResults.MatchResults" WHERE ENTITY_ID IN (SELECT ENTITY_ID FROM :lt_entities);
 	   
 	   -- Delete from main UI review table
-	   DELETE FROM "osr.scv.foundation.db.data::MatchResultsReview.Review" WHERE ENTITY_ID IN (SELECT ENTITY_ID FROM :lt_entities);
+--	   DELETE FROM "osr.scv.foundation.db.data::MatchResultsReview.Review" WHERE ENTITY_ID IN (SELECT ENTITY_ID FROM :lt_entities);
 	   
 	   -- Update shadow table with SCV promotions
 	   --UPDATE "osr.scv.foundation.db.data::MatchResultsReview.ReviewShadow" c SET c.PROMOTED_TO_SCV = 'X', c.PROMOTION_TIMESTAMP = :i_timestamp, c.PROMOTED_BY = :i_user
