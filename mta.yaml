@@ -52,7 +52,7 @@ modules:
     type: dwf
     path: DWF
     requires:
-    - name: OSR_SCV_FOUNDATION_DWF-uaa
+    #- name: OSR_SCV_FOUNDATION_DWF-uaa
     - name: OSR_SCV_FOUNDATION-dws
   - name: OSR_SCV_FOUNDATION-Backend
     type: nodejs
@@ -62,7 +62,7 @@ modules:
        properties:
           url: ${default-url}
     requires:
-      - name: OSR_SCV_FOUNDATION_DWF-uaa
+     # - name: OSR_SCV_FOUNDATION_DWF-uaa
       - name: OsrScvFoundationContainer
       - name: OSR_SCV_FOUNDATION-dws
     #properties:
