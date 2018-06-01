@@ -23,15 +23,15 @@ const TaskChain = dwsClient.taskChain.createTaskChainClient(
 const app = express();
 module.exports = app; // for testing
 
-const passport = require('passport');
+// const passport = require('passport');
 
-if (process.env.PORT) {
-    passport.use('JWT', new dwsClient.helpers.JWTHybridStrategy(
-        xsenv.getServices({ uaa: { tag: 'xsuaa' } }).uaa
-    ));
-    app.use(passport.initialize());
-    app.use(passport.authenticate('JWT', { session: false }));
-}
+// if (process.env.PORT) {
+//     passport.use('JWT', new dwsClient.helpers.JWTHybridStrategy(
+//         xsenv.getServices({ uaa: { tag: 'xsuaa' } }).uaa
+//     ));
+//     app.use(passport.initialize());
+//     app.use(passport.authenticate('JWT', { session: false }));
+// }
 
 app.use(bodyParser.json());
 app.use((err1, req, resp, next) => {

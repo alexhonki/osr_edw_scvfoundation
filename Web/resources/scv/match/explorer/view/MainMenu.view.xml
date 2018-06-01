@@ -20,14 +20,9 @@
                      type="XML" />
 
 
-      <Table id="idProductsTable"
+      <Table id="searchapi-table"
              inset="false"
-             items="{
-                			path: '/ProductCollection',
-                			sorter: {
-                				path: 'Name'
-                			}
-                		}"
+             items="{searchResult>/}"
              noDataText="{i18n>nosearchresultdata}">
         <columns>
 
@@ -59,9 +54,9 @@
         <items>
           <ColumnListItem type="Navigation"
                           press="onItemPressed"
-                          app:scvId="{itemSetModel>Material}">
+                          app:scvId="{searchResult>SCV_ID}">
             <cells>
-              <Text text="INPUT1" />
+              <Text text="{searchResult>SCV_ID}" />
               <Text text="INPUT1" />
               <Text text="INPUT1" />
               <Text text="INPUT1" />

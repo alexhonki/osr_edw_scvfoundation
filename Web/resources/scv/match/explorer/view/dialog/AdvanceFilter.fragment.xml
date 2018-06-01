@@ -93,11 +93,8 @@
                      text="Source" />
               <Select forceSelection="false"
                       selectedKey="{}"
-                      items="{
-                  path: '/',
-                  sorter: { path: '' }
-                }">
-                <core:Item key="{ProductId}" text="{Name}" />
+                      items="{advanceFilterModel>Source}">
+                <core:Item key="{advanceFilterModel>/code}" text="{advanceFilterModel>/name}" />
               </Select>
 
             </f:content>

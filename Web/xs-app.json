@@ -39,6 +39,11 @@
 		"authenticationType": "xsuaa",
 		"scope": "$XSAPPNAME.SUPERVISOR"
 	}, {
+		"source": "/scv/match/srv/xs/explorer/(.*)(.xsjs)",
+		"destination": "Services_url",
+		"authenticationType": "xsuaa",
+		"scope": "$XSAPPNAME.EXPLORER"
+	}, {
 		"source": "/scv/match/srv/xs/explorer/(.*)(.xsodata)",
 		"destination": "Services_url",
 		"authenticationType": "xsuaa",
