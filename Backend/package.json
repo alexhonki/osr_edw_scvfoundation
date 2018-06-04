@@ -11,7 +11,7 @@
 		"body-parser": "1.17.2",
 		"express": "4.15.3",
 		"passport": "0.3.2",
-		"@sap/xsenv": "^1.2.6",
+		"@sap/xsenv": "1.2.7",
 		"@sap/dwf-dws-client": "2.3.3"
 	},
 	"scripts": {

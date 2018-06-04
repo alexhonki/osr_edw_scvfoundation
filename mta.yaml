@@ -26,6 +26,7 @@ modules:
     path: Services
     build-parameters:
       builder: grunt
+      timeout: 10m
     provides:
       - name: Services_api
         properties:
