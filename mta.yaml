@@ -106,7 +106,7 @@ resources:
       version: =1.44.30
   - name: OSR_SCV_FOUNDATION-dws
     properties:
-       dwf-edw-client-name: ${service-name}
+       dwf-edw-client-name: '${service-name}'
     type: com.sap.xs.dwf-edw-client
   - name: OSR_SCV_FOUNDATION_DWF-uaa
     type: com.sap.xs.uaa
@@ -119,18 +119,18 @@ resources:
           - name: $XSAPPNAME.TOE
             description: access for TOE
             grant-as-authority-to-apps:
-             - dwf-toe
-             - dwf-runtime
+              - dwf-toe
+              - dwf-runtime
             granted-apps:
-             - dwf-toe
-             - dwf-runtime
+              - dwf-toe
+              - dwf-runtime
          authorities:
-          - $ACCEPT_GRANTED_AUTHORITIES
+           - $ACCEPT_GRANTED_AUTHORITIES
          role-templates:
            - name: User
              description: Access API
              scope-references:
-              - $XSAPPNAME.TOE
-              - cloud_controller.read
+               - $XSAPPNAME.TOE
+               - cloud_controller.read
 
 
