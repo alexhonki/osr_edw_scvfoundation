@@ -10,7 +10,7 @@
       "inline": {
         "type": "executeProcedure",
         "taskGroup": "hanaNative",
-        "description": "Prepare SCV Review UI",
+        "description": "Prepare Match Review table",
         "parameterValues": [
           {
             "id": "procName",
