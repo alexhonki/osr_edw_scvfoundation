@@ -19,7 +19,7 @@ sap.ui.define([
 
 			//to cater for timeout usage throughout the page
 			this.oTimeout = null;
-			
+
 			this.setModel(new JSONModel(), "searchResult");
 			this.setModel(new JSONModel(), "searchParameters");
 
@@ -36,10 +36,9 @@ sap.ui.define([
 		_onRouteMatched: function(oEvent) {
 
 		},
-		
-		
-		_querySearch: function(sQueryString){
-			
+
+		_querySearch: function(sQueryString) {
+
 			let oController = this;
 			//for api call search
 			let sApiUrl = this.getOwnerComponent().getMetadata().getConfig("unstructuredSearch");
@@ -55,10 +54,30 @@ sap.ui.define([
 					//loading effect end
 				},
 				success: function(data) {
-					oController.getModel("searchResult").setData(data, false);
+
+					let oFinalData = data;
+					//transform the data according to the results. 
+					for (let i = 0; i < data.length; i++) {
+						let aSplitResult = data[i].SEARCH_STRING_CLEANSED.split("|");
+
+						if (aSplitResult.length === 10) {
+							oFinalData[i].FIRST_NAME = aSplitResult[0];
+							oFinalData[i].LAST_NAME = aSplitResult[1];
+							oFinalData[i].CITY = aSplitResult[3];
+							oFinalData[i].DOB = moment(aSplitResult[2]).format("DD/MM/YYYY");
+							oFinalData[i].POSTAL_CODE = aSplitResult[4];
+						} else if (aSplitResult.length === 11) {
+							oFinalData[i].FIRST_NAME = aSplitResult[0];
+							oFinalData[i].LAST_NAME = aSplitResult[1] + " " + aSplitResult[2];
+							oFinalData[i].CITY = aSplitResult[4];
+							oFinalData[i].DOB = moment(aSplitResult[3]).format("DD/MM/YYYY");
+							oFinalData[i].POSTAL_CODE = aSplitResult[5];
+						}
+					}
+					oController.getModel("searchResult").setData(oFinalData, false);
 				},
 				failure: function(error) {
-					
+
 					console.log(error);
 				}
 			});
@@ -79,8 +98,6 @@ sap.ui.define([
 				oController._querySearch(sQueryString);
 
 			}, 400); //400ms before the search get trigger, so we dont bombard the query on every letter. gotta play with magic number.
-			
-			
 
 		},
 
@@ -92,13 +109,13 @@ sap.ui.define([
 			//oWarningDialog.getEndButton().setText("Yes");
 
 			oWarningDialog.open();
-		}, 
-		
-		onItemPressed: function(oEvent){
+		},
+
+		onItemPressed: function(oEvent) {
 			let oCustomData = {
-				scvId : oEvent.getSource().data().scvId
+				scvId: oEvent.getSource().data().scvId
 			};
-			
+
 			this.getRouter().navTo("objectdetail", oCustomData);
 		}
 

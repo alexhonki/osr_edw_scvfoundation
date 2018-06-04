@@ -12,8 +12,8 @@
 
   <variable id="IP_YEAR" parameter="true">
     <descriptions defaultDescription="IP_YEAR"/>
-    <variableProperties datatype="NVARCHAR" length="4" mandatory="false">
-      <valueDomain type="empty"/>
+    <variableProperties datatype="VARCHAR" length="10" mandatory="false" scale="NaN">
+      <valueDomain type=""/>
       <selection multiLine="false" type="Single"/>
     </variableProperties>
   </variable>
@@ -41,12 +41,6 @@
       </viewAttribute>
       <viewAttribute id="ADR_KIND">
         <descriptions defaultDescription="ADR_KIND"/>
-      </viewAttribute>
-      <viewAttribute id="VALID_FROM">
-        <descriptions defaultDescription="VALID_FROM"/>
-      </viewAttribute>
-      <viewAttribute id="VALID_TO">
-        <descriptions defaultDescription="VALID_TO"/>
       </viewAttribute>
       <viewAttribute id="REGION">
         <descriptions defaultDescription="REGION"/>
@@ -76,16 +70,28 @@
       <viewAttribute id="STD_ADDR_PRIM_TYPE">
         <descriptions defaultDescription="STD_ADDR_PRIM_TYPE"/>
       </viewAttribute>
+    
+      <viewAttribute id="VALID_FROM">
+        <descriptions defaultDescription="VALID_FROM"/>
+      </viewAttribute>
+      <viewAttribute id="VALID_TO">
+        <descriptions defaultDescription="VALID_TO"/>
+      </viewAttribute>
     </viewAttributes>
-    <calculatedViewAttributes/>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="S_VALID_FROM" datatype="NVARCHAR" length="10" expressionLanguage="SQL">
+        <formula>TO_VARCHAR(&quot;VALID_FROM&quot;)</formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="S_VALID_TO" datatype="NVARCHAR" length="10" expressionLanguage="SQL">
+        <formula>TO_VARCHAR(&quot;VALID_TO&quot;)</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
     <restrictedViewAttributes/>
     <input node="osr.scv.foundation.db.data::SCVFoundation.AddressRms">
       <mapping xsi:type="Calculation:AttributeMapping" target="SCV_ID" source="SCV_ID"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="SOURCE" source="SOURCE"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="SOURCE_ID" source="SOURCE_ID"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="ADR_KIND" source="ADR_KIND"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="VALID_FROM" source="VALID_FROM"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="VALID_TO" source="VALID_TO"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="REGION" source="REGION"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_COUNTRY_2CHAR" source="STD_ADDR_COUNTRY_2CHAR"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_LOCALITY" source="STD_ADDR_LOCALITY"/>
@@ -96,8 +102,12 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_PRIM_NAME_FULL" source="STD_ADDR_PRIM_NAME_FULL"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_PRIM_NAME" source="STD_ADDR_PRIM_NAME"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_PRIM_TYPE" source="STD_ADDR_PRIM_TYPE"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="VALID_FROM" source="VALID_FROM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VALID_TO" source="VALID_TO"/>
     </input>
-    <filter>(&quot;SCV_ID&quot; = '$$IP_SCV_ID$$')</filter>
+    <filter>(&quot;SCV_ID&quot; = '$$IP_SCV_ID$$') and
+if(isnull('$$IP_YEAR$$') or '$$IP_YEAR$$' = '', match(&quot;S_VALID_FROM&quot;,'*'), match(&quot;S_VALID_TO&quot;,'*$$IP_YEAR$$*') ) </filter>
   </calculationView>
   <calculationView xsi:type="Calculation:ProjectionView" id="AddressTMR" filterExpressionLanguage="COLUMN_ENGINE">
     <viewAttributes>
@@ -109,12 +119,6 @@
       </viewAttribute>
       <viewAttribute id="SOURCE_ID">
         <descriptions defaultDescription="SOURCE_ID"/>
-      </viewAttribute>
-      <viewAttribute id="VALID_FROM">
-        <descriptions defaultDescription="VALID_FROM"/>
-      </viewAttribute>
-      <viewAttribute id="VALID_TO">
-        <descriptions defaultDescription="VALID_TO"/>
       </viewAttribute>
       <viewAttribute id="STD_ADDR_COUNTRY_2CHAR">
         <descriptions defaultDescription="STD_ADDR_COUNTRY_2CHAR"/>
@@ -151,15 +155,27 @@
       <viewAttribute id="STATE">
         <descriptions defaultDescription="STATE"/>
       </viewAttribute>
+    
+      <viewAttribute id="VALID_FROM">
+        <descriptions defaultDescription="VALID_FROM"/>
+      </viewAttribute>
+      <viewAttribute id="VALID_TO">
+        <descriptions defaultDescription="VALID_TO"/>
+      </viewAttribute>
     </viewAttributes>
-    <calculatedViewAttributes/>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="S_VALID_FROM" datatype="NVARCHAR" length="10" expressionLanguage="SQL">
+        <formula>TO_VARCHAR(&quot;VALID_FROM&quot;)</formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="S_VALID_TO" datatype="NVARCHAR" length="10" expressionLanguage="SQL">
+        <formula>TO_VARCHAR(&quot;VALID_TO&quot;)</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
     <restrictedViewAttributes/>
     <input node="osr.scv.foundation.db.data::SCVFoundation.AddressTmr">
       <mapping xsi:type="Calculation:AttributeMapping" target="SCV_ID" source="SCV_ID"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="SOURCE" source="SOURCE"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="SOURCE_ID" source="SOURCE_ID"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="VALID_FROM" source="VALID_FROM"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="VALID_TO" source="VALID_TO"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_COUNTRY_2CHAR" source="STD_ADDR_COUNTRY_2CHAR"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_LOCALITY" source="STD_ADDR_LOCALITY"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_REGION" source="STD_ADDR_REGION"/>
@@ -173,9 +189,12 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_PRIM_NUMBER" source="STD_ADDR_PRIM_NUMBER"/>
     
       <mapping xsi:type="Calculation:AttributeMapping" target="STATE" source="STATE"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="VALID_FROM" source="VALID_FROM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VALID_TO" source="VALID_TO"/>
     </input>
     <filter>(&quot;SCV_ID&quot; = '$$IP_SCV_ID$$') and
-if(isnull('$$IP_YEAR$$') or '$$IP_YEAR$$' = '', match(&quot;VALID_TO&quot;,'*'), match(&quot;VALID_TO&quot;,'*$$IP_YEAR$$*') )</filter>
+if(isnull('$$IP_YEAR$$') or '$$IP_YEAR$$' = '', match(&quot;S_VALID_FROM&quot;,'*'), match(&quot;S_VALID_TO&quot;,'*$$IP_YEAR$$*') ) </filter>
   </calculationView>
   <calculationView xsi:type="Calculation:UnionView" id="AddressUnion">
     <viewAttributes>
@@ -187,12 +206,6 @@ if(isnull('$$IP_YEAR$$') or '$$IP_YEAR$$' = '', match(&quot;VALID_TO&quot;,'*'),
       </viewAttribute>
       <viewAttribute id="SOURCE_ID">
         <descriptions defaultDescription="SOURCE_ID"/>
-      </viewAttribute>
-      <viewAttribute datatype="NVARCHAR" length="10" id="VALID_FROM">
-        <descriptions defaultDescription="VALID_FROM"/>
-      </viewAttribute>
-      <viewAttribute datatype="NVARCHAR" length="10" id="VALID_TO">
-        <descriptions defaultDescription="VALID_TO"/>
       </viewAttribute>
       <viewAttribute id="STD_ADDR_COUNTRY_2CHAR">
         <descriptions defaultDescription="STD_ADDR_COUNTRY_2CHAR"/>
@@ -224,9 +237,21 @@ if(isnull('$$IP_YEAR$$') or '$$IP_YEAR$$' = '', match(&quot;VALID_TO&quot;,'*'),
       <viewAttribute id="STD_ADDR_PRIM_NUMBER">
         <descriptions defaultDescription="STD_ADDR_PRIM_NUMBER"/>
       </viewAttribute>
-    
+      <viewAttribute id="S_VALID_FROM">
+        <descriptions defaultDescription="S_VALID_FROM"/>
+      </viewAttribute>
+      <viewAttribute id="S_VALID_TO">
+        <descriptions defaultDescription="S_VALID_TO"/>
+      </viewAttribute>
       <viewAttribute id="ADR_KIND">
         <descriptions defaultDescription="ADR_KIND"/>
+      </viewAttribute>
+    
+      <viewAttribute id="VALID_FROM">
+        <descriptions defaultDescription="VALID_FROM"/>
+      </viewAttribute>
+      <viewAttribute id="VALID_TO">
+        <descriptions defaultDescription="VALID_TO"/>
       </viewAttribute>
     
       <viewAttribute id="REGION">
@@ -239,8 +264,6 @@ if(isnull('$$IP_YEAR$$') or '$$IP_YEAR$$' = '', match(&quot;VALID_TO&quot;,'*'),
       <mapping xsi:type="Calculation:AttributeMapping" target="SCV_ID" source="SCV_ID"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="SOURCE" source="SOURCE"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="SOURCE_ID" source="SOURCE_ID"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="VALID_FROM" source="VALID_FROM"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="VALID_TO" source="VALID_TO"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_COUNTRY_2CHAR" source="STD_ADDR_COUNTRY_2CHAR"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_LOCALITY" source="STD_ADDR_LOCALITY"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_REGION" source="STD_ADDR_REGION"/>
@@ -251,8 +274,12 @@ if(isnull('$$IP_YEAR$$') or '$$IP_YEAR$$' = '', match(&quot;VALID_TO&quot;,'*'),
       <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_PRIM_NAME" source="STD_ADDR_PRIM_NAME"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_PRIM_TYPE" source="STD_ADDR_PRIM_TYPE"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_PRIM_NUMBER" source="STD_ADDR_PRIM_NUMBER"/>
-    
+      <mapping xsi:type="Calculation:AttributeMapping" target="S_VALID_FROM" source="S_VALID_FROM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="S_VALID_TO" source="S_VALID_TO"/>
       <mapping xsi:type="Calculation:ConstantAttributeMapping" target="ADR_KIND" null="true" value=""/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="VALID_FROM" source="VALID_FROM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VALID_TO" source="VALID_TO"/>
     
       <mapping xsi:type="Calculation:AttributeMapping" target="REGION" source="STATE"/>
     </input>
@@ -260,8 +287,6 @@ if(isnull('$$IP_YEAR$$') or '$$IP_YEAR$$' = '', match(&quot;VALID_TO&quot;,'*'),
       <mapping xsi:type="Calculation:AttributeMapping" target="SCV_ID" source="SCV_ID"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="SOURCE" source="SOURCE"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="SOURCE_ID" source="SOURCE_ID"/>
-      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="VALID_FROM" null="true"/>
-      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="VALID_TO" null="true"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_COUNTRY_2CHAR" source="STD_ADDR_COUNTRY_2CHAR"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_LOCALITY" source="STD_ADDR_LOCALITY"/>
       <mapping xsi:type="Calculation:ConstantAttributeMapping" target="STD_ADDR_REGION" null="true" value=""/>
@@ -272,12 +297,15 @@ if(isnull('$$IP_YEAR$$') or '$$IP_YEAR$$' = '', match(&quot;VALID_TO&quot;,'*'),
       <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_PRIM_NAME" source="STD_ADDR_PRIM_NAME"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_PRIM_TYPE" source="STD_ADDR_PRIM_TYPE"/>
       <mapping xsi:type="Calculation:ConstantAttributeMapping" target="STD_ADDR_PRIM_NUMBER" null="true" value=""/>
-    
+      <mapping xsi:type="Calculation:AttributeMapping" target="S_VALID_FROM" source="S_VALID_FROM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="S_VALID_TO" source="S_VALID_TO"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="ADR_KIND" source="ADR_KIND"/>
     
+      <mapping xsi:type="Calculation:AttributeMapping" target="VALID_FROM" source="VALID_FROM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VALID_TO" source="VALID_TO"/>
+    
       <mapping xsi:type="Calculation:AttributeMapping" target="REGION" source="REGION"/>
-    </input>
-  </calculationView>
+    </input></calculationView>
 </calculationViews>
 <logicalModel id="AddressUnion">
   <attributes>
@@ -293,62 +321,71 @@ if(isnull('$$IP_YEAR$$') or '$$IP_YEAR$$' = '', match(&quot;VALID_TO&quot;,'*'),
       <descriptions defaultDescription="SOURCE_ID"/>
       <keyMapping columnObjectName="AddressUnion" columnName="SOURCE_ID"/>
     </attribute>
-    <attribute id="VALID_FROM" order="4" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="VALID_FROM"/>
-      <keyMapping columnObjectName="AddressUnion" columnName="VALID_FROM"/>
-    </attribute>
-    <attribute id="VALID_TO" order="5" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="VALID_TO"/>
-      <keyMapping columnObjectName="AddressUnion" columnName="VALID_TO"/>
-    </attribute>
-    <attribute id="STD_ADDR_COUNTRY_2CHAR" order="6" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="STD_ADDR_COUNTRY_2CHAR" order="4" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="STD_ADDR_COUNTRY_2CHAR"/>
       <keyMapping columnObjectName="AddressUnion" columnName="STD_ADDR_COUNTRY_2CHAR"/>
     </attribute>
-    <attribute id="STD_ADDR_LOCALITY" order="7" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="STD_ADDR_LOCALITY" order="5" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="STD_ADDR_LOCALITY"/>
       <keyMapping columnObjectName="AddressUnion" columnName="STD_ADDR_LOCALITY"/>
     </attribute>
-    <attribute id="STD_ADDR_REGION" order="8" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="STD_ADDR_REGION" order="6" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="STD_ADDR_REGION"/>
       <keyMapping columnObjectName="AddressUnion" columnName="STD_ADDR_REGION"/>
     </attribute>
-    <attribute id="STD_ADDR_POSTCODE1" order="9" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="STD_ADDR_POSTCODE1" order="7" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="STD_ADDR_POSTCODE1"/>
       <keyMapping columnObjectName="AddressUnion" columnName="STD_ADDR_POSTCODE1"/>
     </attribute>
-    <attribute id="STD_ADDR_ADDRESS_DELIVERY" order="10" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="STD_ADDR_ADDRESS_DELIVERY" order="8" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="STD_ADDR_ADDRESS_DELIVERY"/>
       <keyMapping columnObjectName="AddressUnion" columnName="STD_ADDR_ADDRESS_DELIVERY"/>
     </attribute>
-    <attribute id="STD_ADDR_PRIM_ADDRESS" order="11" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="STD_ADDR_PRIM_ADDRESS" order="9" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="STD_ADDR_PRIM_ADDRESS"/>
       <keyMapping columnObjectName="AddressUnion" columnName="STD_ADDR_PRIM_ADDRESS"/>
     </attribute>
-    <attribute id="STD_ADDR_PRIM_NAME_FULL" order="12" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="STD_ADDR_PRIM_NAME_FULL" order="10" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="STD_ADDR_PRIM_NAME_FULL"/>
       <keyMapping columnObjectName="AddressUnion" columnName="STD_ADDR_PRIM_NAME_FULL"/>
     </attribute>
-    <attribute id="STD_ADDR_PRIM_NAME" order="13" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="STD_ADDR_PRIM_NAME" order="11" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="STD_ADDR_PRIM_NAME"/>
       <keyMapping columnObjectName="AddressUnion" columnName="STD_ADDR_PRIM_NAME"/>
     </attribute>
-    <attribute id="STD_ADDR_PRIM_TYPE" order="14" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="STD_ADDR_PRIM_TYPE" order="12" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="STD_ADDR_PRIM_TYPE"/>
       <keyMapping columnObjectName="AddressUnion" columnName="STD_ADDR_PRIM_TYPE"/>
     </attribute>
-    <attribute id="STD_ADDR_PRIM_NUMBER" order="15" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="STD_ADDR_PRIM_NUMBER" order="13" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="STD_ADDR_PRIM_NUMBER"/>
       <keyMapping columnObjectName="AddressUnion" columnName="STD_ADDR_PRIM_NUMBER"/>
     </attribute>
-  
+    <attribute id="S_VALID_FROM" order="14" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="S_VALID_FROM"/>
+      <keyMapping columnObjectName="AddressUnion" columnName="S_VALID_FROM"/>
+    </attribute>
+    <attribute id="S_VALID_TO" order="15" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="S_VALID_TO"/>
+      <keyMapping columnObjectName="AddressUnion" columnName="S_VALID_TO"/>
+    </attribute>
     <attribute id="ADR_KIND" order="16" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="ADR_KIND"/>
-  
       <keyMapping columnObjectName="AddressUnion" columnName="ADR_KIND"/>
+    </attribute>
+  
+    <attribute id="VALID_FROM" order="17" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="VALID_FROM"/>
+  
+      <keyMapping columnObjectName="AddressUnion" columnName="VALID_FROM"/>
   
     </attribute>
-    <attribute id="REGION" order="17" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="VALID_TO" order="18" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="VALID_TO"/>
+      <keyMapping columnObjectName="AddressUnion" columnName="VALID_TO"/>
+    </attribute>
+  
+    <attribute id="REGION" order="19" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="REGION"/>
       <keyMapping columnObjectName="AddressUnion" columnName="REGION"/>
     </attribute>

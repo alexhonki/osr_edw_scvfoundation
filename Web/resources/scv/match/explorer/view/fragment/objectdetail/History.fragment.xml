@@ -100,7 +100,7 @@
 						filterProperty="VALID_FROM">
 						<Label text="Valid From" />
 						<t:template>
-							<Text text="{scvExplorerModel>VALID_FROM}" wrapping="false" />
+							<Text text="{path:'scvExplorerModel>VALID_FROM', formatter:'.Formatters.formatDateObjectToString'}" wrapping="false" />
 						</t:template>
 					</t:Column>
 					
@@ -110,7 +110,7 @@
 						filterProperty="VALID_TO">
 						<Label text="Valid To" />
 						<t:template>
-							<Text text="{scvExplorerModel>VALID_TO}" wrapping="false" />
+							<Text text="{path:'scvExplorerModel>VALID_TO', formatter:'.Formatters.formatDateObjectToString'}" wrapping="false" />
 						</t:template>
 					</t:Column>
 					

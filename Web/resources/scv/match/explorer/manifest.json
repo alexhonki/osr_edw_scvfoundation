@@ -20,6 +20,11 @@
 				"settings": {
 					"odataVersion": "2.0"
 				}
+			},
+			"AdvanceFilterParametersJSON": {
+				"uri": "model/filterParameters.json",
+				"type": "JSON",
+				"settings": {}
 			}
 		},
 		"offline": true
@@ -75,25 +80,29 @@
 					"defaultCountMode": "None"
 				},
 				"preload": true
+			},
+			"advanceFilterModel": {
+				"dataSource": "AdvanceFilterParametersJSON",
+				"settings": {
+					"disableHeadRequestForToken": "false",
+					"defaultCountMode": "None"
+				}
 			}
 		},
 		"resources": {
-			"css": [
-				{
-					"uri": "css/style.css"
-				}
-			],
-			"js": [
-				{
-					"uri": "asset/lib/moment-with-locales.js"
-				},
-				{
-					"uri": "asset/lib/moment-business-days.js"
-				},
-				{
-					"uri": "asset/lib/bluebird.min.js"
-				}
-			]
+			"css": [{
+				"uri": "css/style.css"
+			}],
+			"js": [{
+				"uri": "asset/lib/moment-with-locales.js"
+			}, {
+				"uri": "asset/lib/moment-business-days.js"
+			}, {
+				"uri": "asset/lib/bluebird.min.js"
+			}]
+		},
+		"config": {
+			"unstructuredSearch": "/scv/match/srv/xs/explorer/unstructuredSearch.xsjs"
 		},
 		"routing": {
 			"config": {
@@ -104,23 +113,19 @@
 				"controlAggregation": "pages",
 				"controlId": "appRootControl"
 			},
-			"routes": [
-				{
-					"pattern": "",
-					"name": "homepage",
-					"target": "home"
-				},
-				{
-					"pattern": "home",
-					"name": "appHome",
-					"target": "home"
-				},
-				{
-					"pattern": "objectdetail/{scvId}",
-					"name": "objectdetail",
-					"target": "objectdetail"
-				}
-			],
+			"routes": [{
+				"pattern": "",
+				"name": "homepage",
+				"target": "home"
+			}, {
+				"pattern": "home",
+				"name": "appHome",
+				"target": "home"
+			}, {
+				"pattern": "objectdetail/{scvId}",
+				"name": "objectdetail",
+				"target": "objectdetail"
+			}],
 			"targets": {
 				"home": {
 					"viewType": "XML",

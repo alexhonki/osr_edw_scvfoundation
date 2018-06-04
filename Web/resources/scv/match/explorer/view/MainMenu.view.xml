@@ -33,21 +33,18 @@
           <Column>
             <Text text="{i18n>mainmenu.lastname}" />
           </Column>
-
+			
+			
+		 <Column>
+            <Text text="{i18n>mainmenu.dateofbirth}" />
+          </Column>
+          
           <Column>
             <Text text="{i18n>mainmenu.city}" />
           </Column>
 
           <Column>
-            <Text text="{i18n>mainmenu.dateofbirth}" />
-          </Column>
-
-          <Column>
-            <Text text="{i18n>mainmenu.validfrom}" />
-          </Column>
-
-          <Column>
-            <Text text="{i18n>mainmenu.validto}" />
+            <Text text="{i18n>mainmenu.postalcode}" />
           </Column>
 
         </columns>
@@ -56,12 +53,11 @@
                           press="onItemPressed"
                           app:scvId="{searchResult>SCV_ID}">
             <cells>
-              <Text text="{searchResult>SCV_ID}" />
-              <Text text="INPUT1" />
-              <Text text="INPUT1" />
-              <Text text="INPUT1" />
-              <Text text="INPUT1" />
-              <Text text="INPUT1" />
+              <Text text="{searchResult>FIRST_NAME}" />
+              <Text text="{searchResult>LAST_NAME}" />
+              <Text text="{searchResult>DOB}" />
+              <Text text="{searchResult>CITY}" />
+              <Text text="{searchResult>POSTAL_CODE}" />
 
             </cells>
           </ColumnListItem>

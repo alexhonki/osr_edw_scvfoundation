@@ -5,12 +5,14 @@
  */
 sap.ui.define([
 	"osr/scv/match/explorer/controller/SuperController",
-	"sap/ui/model/json/JSONModel"
-], function(SuperController, JSONModel) {
+	"sap/ui/model/json/JSONModel",
+	"osr/scv/match/explorer/asset/lib/Formatters"
+], function(SuperController, JSONModel, Formatters) {
 	"use strict";
 
 	let DetailObject = SuperController.extend("osr.scv.match.explorer.controller.DetailObject", {
-
+		
+		Formatters: Formatters,
 		/**
 		 * Run on initialize
 		 * @return {[type]} [description]

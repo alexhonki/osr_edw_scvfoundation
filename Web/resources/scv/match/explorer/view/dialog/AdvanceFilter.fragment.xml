@@ -46,48 +46,28 @@
 
               <Label vAlign="Middle"
                      text="Source ID" />
-              <Select forceSelection="false"
-                      selectedKey="{}"
-                      items="{
-                  path: '/',
-                  sorter: { path: '' }
-                }">
-                <core:Item key="{ProductId}" text="{Name}" />
-              </Select>
+              <Input
+				value=""
+				description="EUR / 5 pieces"/>
 
               <Label vAlign="Middle"
                      text="Postcode" />
-              <Select forceSelection="false"
-                      selectedKey="{}"
-                      items="{
-                  path: '/',
-                  sorter: { path: '' }
-                }">
-                <core:Item key="{ProductId}" text="{Name}" />
-              </Select>
+              <Input
+				value=""
+				description="EUR / 5 pieces"/>
 
 
               <Label vAlign="Middle"
                      text="City" />
-              <Select forceSelection="false"
-                      selectedKey="{}"
-                      items="{
-                  path: '/',
-                  sorter: { path: '' }
-                }">
-                <core:Item key="{ProductId}" text="{Name}" />
-              </Select>
+              <Input
+				value=""
+				description="EUR / 5 pieces"/>
               
               <Label vAlign="Middle"
                      text="SCV ID" />
-              <Select forceSelection="false"
-                      selectedKey="{}"
-                      items="{
-                  path: '/',
-                  sorter: { path: '' }
-                }">
-                <core:Item key="{ProductId}" text="{Name}" />
-              </Select>
+              <Input
+				value=""
+				description="EUR / 5 pieces"/>
               
               <Label vAlign="Middle"
                      text="Source" />
