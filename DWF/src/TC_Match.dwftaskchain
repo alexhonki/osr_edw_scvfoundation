@@ -8,13 +8,13 @@
     },
     "2": {
       "inline": {
-        "type": "executeProcedure",
+        "type": "executeFlowGraph",
         "taskGroup": "hanaNative",
-        "description": "Delta Detection",
+        "description": "Match Process",
         "parameterValues": [
           {
-            "id": "procName",
-            "value": "osr.scv.foundation.db.Procedures::SP_DetectScvStatus"
+            "id": "flowGraphName",
+            "value": "osr.scv.foundation.db.flowgraphs::MatchBusinessPartners"
           }
         ]
       },

@@ -10,11 +10,11 @@
       "inline": {
         "type": "executeProcedure",
         "taskGroup": "hanaNative",
-        "description": "Move to SCV",
+        "description": "Delta Detection Process",
         "parameterValues": [
           {
             "id": "procName",
-            "value": "osr.scv.foundation.db.Procedures::SP_MoveRowsToScvFoundation"
+            "value": "osr.scv.foundation.db.Procedures::SP_DetectScvRecords"
           }
         ]
       },

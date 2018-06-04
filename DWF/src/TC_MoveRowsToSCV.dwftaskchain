@@ -10,19 +10,11 @@
       "inline": {
         "type": "executeProcedure",
         "taskGroup": "hanaNative",
-        "description": "Move to Shadow",
+        "description": "Move Records to SCV",
         "parameterValues": [
           {
             "id": "procName",
-            "value": "osr.scv.foundation.db.Procedures::SP_MoveEntityToShadowTable"
-          },
-          {
-            "id": "procForm.I_USER",
-            "value": ""
-          },
-          {
-            "id": "procForm.I_TIMESTAMP",
-            "value": ""
+            "value": "osr.scv.foundation.db.Procedures::SP_MoveRowsToScvFoundation"
           }
         ]
       },

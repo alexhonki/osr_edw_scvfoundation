@@ -10,11 +10,15 @@
       "inline": {
         "type": "executeProcedure",
         "taskGroup": "hanaNative",
-        "description": "Hash Test",
+        "description": "Promote Records Move to Shadow Table",
         "parameterValues": [
           {
             "id": "procName",
-            "value": "osr.scv.foundation.db.Procedures::SP_TEST_DetectScvStatus"
+            "value": "osr.scv.foundation.db.Procedures::SP_MoveEntityToShadowTable"
+          },
+          {
+            "id": "procForm.I_USER",
+            "value": ""
           }
         ]
       },

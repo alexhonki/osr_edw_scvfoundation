@@ -10,11 +10,11 @@
       "inline": {
         "type": "executeProcedure",
         "taskGroup": "hanaNative",
-        "description": "Detect SCV Records",
+        "description": "Built search table for SCV API",
         "parameterValues": [
           {
             "id": "procName",
-            "value": "osr.scv.foundation.db.Procedures::SP_DetectScvRecords"
+            "value": "osr.scv.foundation.db.Procedures::SP_BuildScvSearchTable"
           }
         ]
       },
