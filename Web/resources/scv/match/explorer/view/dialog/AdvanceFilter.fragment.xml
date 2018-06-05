@@ -27,7 +27,7 @@
 							<Input value=""/>
 							
 							<Label vAlign="Middle" text="Source"/>
-							<Select forceSelection="false" items="{advanceFilterModel>Source}">
+							<Select forceSelection="false" items="{advanceFilterModel>SourceType}">
 								<core:Item key="{advanceFilterModel>/code}" text="{advanceFilterModel>/name}"/>
 							</Select>
 							

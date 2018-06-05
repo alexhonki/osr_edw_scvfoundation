@@ -21,7 +21,7 @@
 					"odataVersion": "2.0"
 				}
 			},
-			"AdvanceFilterParametersJSON": {
+			"advanceFilterParametersJSON": {
 				"uri": "model/filterParameters.json",
 				"type": "JSON",
 				"settings": {}
@@ -56,7 +56,7 @@
 			"type": "XML"
 		},
 		"dependencies": {
-			"minUI5Version": "1.52.6",
+			"minUI5Version": "1.44.3",
 			"libs": {
 				"sap.m": {},
 				"sap.ui.core": {}
@@ -82,7 +82,7 @@
 				"preload": true
 			},
 			"advanceFilterModel": {
-				"dataSource": "AdvanceFilterParametersJSON",
+				"dataSource": "advanceFilterParametersJSON",
 				"settings": {
 					"disableHeadRequestForToken": "false",
 					"defaultCountMode": "None"

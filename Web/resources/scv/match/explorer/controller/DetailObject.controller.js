@@ -52,6 +52,8 @@ sap.ui.define([
 			oController._readPersonData(oController.oPageParam.scvId); //person tab
 			oController._readAddressesData(oController.oPageParam.scvId); //history tab
 			oController._readPostalData(oController.oPageParam.scvId); //postal tab
+			
+			oController.getView().byId("scv-tabbar").setSelectedKey("1");
 
 		},
 
