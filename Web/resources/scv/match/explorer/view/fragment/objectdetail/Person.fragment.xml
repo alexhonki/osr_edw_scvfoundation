@@ -35,7 +35,7 @@
 						sortProperty="SOURCE"
 						autoResizable="true"
 						filterProperty="SOURCE">
-						<Label text="Source" />
+						<Label text="{i18n>person.contact.source}" />
 						<t:template>
 							<Text text="{scvExplorerModel>SOURCE}" wrapping="false" />
 						</t:template>
@@ -45,7 +45,7 @@
 						sortProperty="STD_PERSON_FN"
 						autoResizable="true"
 						filterProperty="STD_PERSON_FN" >
-						<Label text="First Name" />
+						<Label text="{i18n>person.contact.first_name}" />
 						<t:template>
 							<Text text="{scvExplorerModel>STD_PERSON_FN}" wrapping="false" />
 						</t:template>
@@ -55,7 +55,7 @@
 						sortProperty="STD_PERSON_GN"
 						autoResizable="true"
 						filterProperty="STD_PERSON_GN">
-						<Label text="Middle Name" />
+						<Label text="{i18n>person.contact.middle_name}" />
 						<t:template>
 							<Text text="{scvExplorerModel>STD_PERSON_GN}" wrapping="false" />
 						</t:template>
@@ -65,7 +65,7 @@
 						sortProperty="STD_PERSON_GN2"
 						autoResizable="true"
 						filterProperty="STD_PERSON_GN2">
-						<Label text="Last Name" />
+						<Label text="{i18n>person.contact.last_name}" />
 						<t:template>
 							<Text text="{scvExplorerModel>STD_PERSON_GN2}" wrapping="false" />
 						</t:template>
@@ -75,7 +75,7 @@
 						sortProperty="VALID_FROM"
 						autoResizable="true"
 						filterProperty="VALID_FROM">
-						<Label text="Valid From" />
+						<Label text="{i18n>person.contact.valid_from}" />
 						<t:template>
 							<Text text="{path:'scvExplorerModel>VALID_FROM', formatter:'.Formatters.formatDateObjectToString'}" wrapping="false" />
 						</t:template>
@@ -85,7 +85,7 @@
 						sortProperty="VALID_TO"
 						autoResizable="true"
 						filterProperty="VALID_TO">
-						<Label text="Valid To" />
+						<Label text="{i18n>person.contact.valid_to}" />
 						<t:template>
 							<Text text="{path:'scvExplorerModel>VALID_TO', formatter:'.Formatters.formatDateObjectToString'}" wrapping="false" />
 						</t:template>

@@ -10,6 +10,17 @@ sap.ui.define(['jquery.sap.global'], function() {
      */
     formatDateObjectToString: function(oTime) {
       return moment(oTime).format("DD/MM/YYYY");
+    }, 
+    
+    /**
+     * Format postal information depending on whether there is text or not
+     * @param  {[type]} sText [String containing the data]
+     * @return {[type]}       [string date]
+     */
+    formatNoDataTextPostal: function(sText){
+    	if(typeof sText === "undefined" || sText === ""){
+    		return "No PO Box for this."
+    	}
     }
 
   };

@@ -17,6 +17,14 @@
       <selection multiLine="false" type="Single"/>
     </variableProperties>
   </variable>
+
+  <variable id="IP_PO_BOX" parameter="true">
+    <descriptions defaultDescription="IP_PO_BOX"/>
+    <variableProperties datatype="VARCHAR" length="6" mandatory="false">
+      <valueDomain type="empty"/>
+      <selection multiLine="false" type="Single"/>
+    </variableProperties>
+  </variable>
 </localVariables>
 <variableMappings/>
 <dataSources>
@@ -107,7 +115,8 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="VALID_TO" source="VALID_TO"/>
     </input>
     <filter>(&quot;SCV_ID&quot; = '$$IP_SCV_ID$$') and
-if(isnull('$$IP_YEAR$$') or '$$IP_YEAR$$' = '', match(&quot;S_VALID_FROM&quot;,'*'), match(&quot;S_VALID_TO&quot;,'*$$IP_YEAR$$*') ) </filter>
+if(isnull('$$IP_YEAR$$') or '$$IP_YEAR$$' = '', match(&quot;S_VALID_FROM&quot;,'*'), match(&quot;S_VALID_TO&quot;,'*$$IP_YEAR$$*') ) 
+and if(isnull('$$IP_PO_BOX$$') or '$$IP_PO_BOX$$' = '', match(&quot;STD_ADDR_ADDRESS_DELIVERY&quot;,'*'), match(&quot;STD_ADDR_ADDRESS_DELIVERY&quot;,'*$$IP_PO_BOX$$*') ) </filter>
   </calculationView>
   <calculationView xsi:type="Calculation:ProjectionView" id="AddressTMR" filterExpressionLanguage="COLUMN_ENGINE">
     <viewAttributes>
@@ -194,7 +203,8 @@ if(isnull('$$IP_YEAR$$') or '$$IP_YEAR$$' = '', match(&quot;S_VALID_FROM&quot;,'
       <mapping xsi:type="Calculation:AttributeMapping" target="VALID_TO" source="VALID_TO"/>
     </input>
     <filter>(&quot;SCV_ID&quot; = '$$IP_SCV_ID$$') and
-if(isnull('$$IP_YEAR$$') or '$$IP_YEAR$$' = '', match(&quot;S_VALID_FROM&quot;,'*'), match(&quot;S_VALID_TO&quot;,'*$$IP_YEAR$$*') ) </filter>
+if(isnull('$$IP_YEAR$$') or '$$IP_YEAR$$' = '', match(&quot;S_VALID_FROM&quot;,'*'), match(&quot;S_VALID_TO&quot;,'*$$IP_YEAR$$*') ) 
+and if(isnull('$$IP_PO_BOX$$') or '$$IP_PO_BOX$$' = '', match(&quot;STD_ADDR_ADDRESS_DELIVERY&quot;,'*'), match(&quot;STD_ADDR_ADDRESS_DELIVERY&quot;,'*$$IP_PO_BOX$$*') ) </filter>
   </calculationView>
   <calculationView xsi:type="Calculation:UnionView" id="AddressUnion">
     <viewAttributes>
@@ -387,7 +397,9 @@ if(isnull('$$IP_YEAR$$') or '$$IP_YEAR$$' = '', match(&quot;S_VALID_FROM&quot;,'
   
     <attribute id="REGION" order="19" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="REGION"/>
+  
       <keyMapping columnObjectName="AddressUnion" columnName="REGION"/>
+  
     </attribute>
   </attributes>
   <calculatedAttributes/>

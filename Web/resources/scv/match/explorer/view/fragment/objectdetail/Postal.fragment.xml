@@ -17,7 +17,7 @@
   </Toolbar>
 
 
-  <f:SimpleForm id="form-display-postal"
+  <f:SimpleForm id="form-po-box"
                 editable="false"
                 layout="ResponsiveGridLayout"
                 labelSpanXL="1"
@@ -36,20 +36,20 @@
                 backgroundDesign="Solid">
     <f:content>
 
-      <Label text="Address" />
-      <Text text="{SupplierName}" />
+      <Label text="{i18n>postal.address}" />
+      <Text text="{path:'postalModel>/ADDRESS', formatter:'.Formatters.formatNoDataTextPostal'}" />
 
-      <Label text="City" />
-      <Text text="{Street} {HouseNumber}" />
+      <Label text="{i18n>postal.city}" />
+      <Text text="{postalModel>/CITY}" />
 
-      <Label text="State" />
-      <Text text="{ZIPCode} {City}" />
+      <Label text="{i18n>postal.state}" />
+      <Text text="{postalModel>/STATE}" />
 
-      <Label text="Post Code" />
-      <Text text="{Url}" />
+      <Label text="{i18n>postal.postcode}" />
+      <Text text="{postalModel>/POSTCODE}" />
 
-      <Label text="Country" />
-      <Text text="{Twitter}" />
+      <Label text="{i18n>postal.country}" />
+      <Text text="{postalModel>/COUNTRY}" />
 
 
     </f:content>
