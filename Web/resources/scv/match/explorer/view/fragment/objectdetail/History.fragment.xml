@@ -4,6 +4,7 @@
                          xmlns:l="sap.ui.layout"
                          xmlns:mvc="sap.ui.core.mvc"
                          xmlns:t="sap.ui.table"
+                         xmlns:timeline="sap.suite.ui.commons"
                          xmlns="sap.m">
 
 		  <Toolbar design="Transparent"
@@ -18,9 +19,17 @@
 		  
 			<Link
 				text="View As Timeline"
-				target="_blank"
-				href="#"
-        class="sapUiSmallMargin" />
+				visible="{= ${viewModel>/SHOW_HISTORY_TABLE} === true}"
+				press="onViewLinkPressed"
+        		class="sapUiSmallMargin"
+        		app:sWhichLink="showTimeline"/>
+   
+        	<Link
+				text="View As Table"
+				visible="{= ${viewModel>/SHOW_HISTORY_TIMELINE} === true}"
+				press="onViewLinkPressed"
+        		class="sapUiSmallMargin"
+        		app:sWhichLink="showTable"/>
         
 			<t:Table
 				id="history-address-table"
@@ -31,7 +40,8 @@
 				enableCellFilter="true"
 				enableSelectAll="false"
 				enableBusyIndicator="true"
-				ariaLabelledBy="title">
+				ariaLabelledBy="title"
+				visible="{= ${viewModel>/SHOW_HISTORY_TABLE} === true}">
 
 				<t:columns>
 					<t:Column
@@ -117,6 +127,28 @@
 				</t:columns>
 				
 			</t:Table>
+			
+		<timeline:Timeline
+			id="address-timeline"
+			enableDoubleSided="true"
+			growingThreshold="0"
+			sortOldestFirst="true"
+			content="{timelineModel>/}"
+			visible="{= ${viewModel>/SHOW_HISTORY_TIMELINE} === true}"
+			height="60%"
+			noDataText="No timeline available at this time."
+			showFilterBar="false">
+		<timeline:content>
+			<timeline:TimelineItem
+					dateTime="{path:'timelineModel>VALID_TO', formatter:'.Formatters.formatDateObjectToString'}"
+					title="{JobTitle}"
+					userNameClickable="false"
+					text="{timelineModel>STD_ADDR_ADDRESS_DELIVERY}"
+					userName="{timelineModel>SOURCE}"
+					icon="home">
+			</timeline:TimelineItem>
+		</timeline:content>
+	</timeline:Timeline>
 
 
 </core:FragmentDefinition>

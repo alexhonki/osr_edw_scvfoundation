@@ -23,7 +23,9 @@
       <Table id="searchapi-table"
              inset="false"
              items="{searchResult>/}"
-             noDataText="{i18n>nosearchresultdata}">
+             noDataText="{i18n>nosearchresultdata}"
+             enableBusyIndicator="true"
+             busyIndicatorDelay="100">
         <columns>
 
           <Column>
@@ -58,7 +60,6 @@
               <Text text="{searchResult>DOB}" />
               <Text text="{searchResult>CITY}" />
               <Text text="{searchResult>POSTAL_CODE}" />
-
             </cells>
           </ColumnListItem>
         </items>

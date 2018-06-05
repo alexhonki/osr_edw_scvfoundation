@@ -78,7 +78,6 @@
 				selectionMode="None"
 				rows="{scvExplorerModel}"
 				visibleRowCount="5"
-				sort=""
 				enableCellFilter="true"
 				enableSelectAll="false"
 				enableBusyIndicator="true"

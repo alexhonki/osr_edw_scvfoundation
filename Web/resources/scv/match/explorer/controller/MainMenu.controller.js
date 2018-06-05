@@ -36,7 +36,12 @@ sap.ui.define([
 		_onRouteMatched: function(oEvent) {
 
 		},
-
+		
+		/**
+		 * Helper to search base on what is the user string. 
+		 * this will get triggered after the timeout for the search is cleared. 
+		 * @param  {[String]} sQueryString [search string from the user]
+		 */
 		_querySearch: function(sQueryString) {
 
 			let oController = this;
