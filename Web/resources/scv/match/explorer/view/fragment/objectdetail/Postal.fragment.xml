@@ -36,19 +36,19 @@
                 backgroundDesign="Solid">
     <f:content>
 
-      <Label text="Address" />
-      <Text text="{postalModel>/ADDRESS}" />
+      <Label text="{i18n>postal.address}" />
+      <Text text="{path:'postalModel>/ADDRESS', formatter:'.Formatters.formatNoDataTextPostal'}" />
 
-      <Label text="City" />
+      <Label text="{i18n>postal.city}" />
       <Text text="{postalModel>/CITY}" />
 
-      <Label text="State" />
+      <Label text="{i18n>postal.state}" />
       <Text text="{postalModel>/STATE}" />
 
-      <Label text="Post Code" />
+      <Label text="{i18n>postal.postcode}" />
       <Text text="{postalModel>/POSTCODE}" />
 
-      <Label text="Country" />
+      <Label text="{i18n>postal.country}" />
       <Text text="{postalModel>/COUNTRY}" />
 
 

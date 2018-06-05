@@ -48,7 +48,7 @@
 						sortProperty="SOURCE"
 						autoResizable="true"
 						filterProperty="SOURCE">
-						<Label text="Type" />
+						<Label text="{i18n>history.address.type}" />
 						<t:template>
 							<Text text="{scvExplorerModel>SOURCE}" wrapping="false" />
 						</t:template>
@@ -58,7 +58,7 @@
 						sortProperty="STD_ADDR_ADDRESS_DELIVERY"
 						autoResizable="true"
 						filterProperty="STD_ADDR_ADDRESS_DELIVERY" >
-						<Label text="Address" />
+						<Label text="{i18n>history.address.address}" />
 						<t:template>
 							<Text text="{scvExplorerModel>STD_ADDR_ADDRESS_DELIVERY}" wrapping="false" />
 						</t:template>
@@ -68,7 +68,7 @@
 						sortProperty="STD_ADDR_LOCALITY"
 						autoResizable="true"
 						filterProperty="STD_ADDR_LOCALITY">
-						<Label text="City" />
+						<Label text="{i18n>history.address.city}" />
 						<t:template>
 							<Text text="{scvExplorerModel>STD_ADDR_LOCALITY}" wrapping="false" />
 						</t:template>
@@ -78,7 +78,7 @@
 						sortProperty="STD_ADDR_POSTCODE1"
 						autoResizable="true"
 						filterProperty="STD_ADDR_POSTCODE1">
-						<Label text="Postcode" />
+						<Label text="{i18n>history.address.postcode}" />
 						<t:template>
 							<Text text="{scvExplorerModel>STD_ADDR_POSTCODE1}" wrapping="false" />
 						</t:template>
@@ -88,7 +88,7 @@
 						sortProperty="REGION"
 						autoResizable="true"
 						filterProperty="REGION">
-						<Label text="Region" />
+						<Label text="{i18n>history.address.region}" />
 						<t:template>
 							<Text text="{scvExplorerModel>REGION}" wrapping="false" />
 						</t:template>
@@ -98,7 +98,7 @@
 						sortProperty="STD_ADDR_COUNTRY_2CHAR"
 						autoResizable="true"
 						filterProperty="STD_ADDR_COUNTRY_2CHAR">
-						<Label text="Country" />
+						<Label text="{i18n>history.address.country}" />
 						<t:template>
 							<Text text="{scvExplorerModel>STD_ADDR_COUNTRY_2CHAR}" wrapping="false" />
 						</t:template>
@@ -108,7 +108,7 @@
 						sortProperty="VALID_FROM"
 						autoResizable="true"
 						filterProperty="VALID_FROM">
-						<Label text="Valid From" />
+						<Label text="{i18n>history.address.valid_from}" />
 						<t:template>
 							<Text text="{path:'scvExplorerModel>VALID_FROM', formatter:'.Formatters.formatDateObjectToString'}" wrapping="false" />
 						</t:template>
@@ -118,7 +118,7 @@
 						sortProperty="VALID_TO"
 						autoResizable="true"
 						filterProperty="VALID_TO">
-						<Label text="Valid To" />
+						<Label text="{i18n>history.address.valid_to}" />
 						<t:template>
 							<Text text="{path:'scvExplorerModel>VALID_TO', formatter:'.Formatters.formatDateObjectToString'}" wrapping="false" />
 						</t:template>
