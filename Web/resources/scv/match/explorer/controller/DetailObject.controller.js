@@ -141,7 +141,7 @@ sap.ui.define([
 			oController.getModel("scvExplorerModel").read("/addressParameters" + "(IP_SCV_ID='" + sScvId +
 				"')/Results", {
 					urlParameters: {
-						"$orderby": "VALID_TO desc"
+						"$orderby": "VALID_TO asc"
 					},
 					success: function(data) {
 

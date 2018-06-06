@@ -23,6 +23,21 @@ sap.ui.define(['jquery.sap.global'], function() {
 			} else {
 				return sText;
 			}
+		},
+		
+		/**
+		 * Format postal information depending on whether there is text or not
+		 * @param  {[type]} sText [String containing the data]
+		 * @return {[type]}       [string date]
+		 */
+		formatAddressKind: function(sText) {
+			if (typeof sText === "undefined" || sText === "") {
+				return "No Kind."
+			} else if(sText === "TMR") {
+				return "EXT_TMR";
+			} else {
+				return sText;
+			}
 		}
 
 	};

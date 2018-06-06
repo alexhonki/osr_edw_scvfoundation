@@ -34,9 +34,20 @@ sap.ui.define([
 		 * @return {[type]}        [description]
 		 */
 		_onRouteMatched: function(oEvent) {
+			let oSourceType = {
+				"SourceType": [{
+					"name": "TMR",
+					"code": "TMR"
+				}, {
+					"name": "RMS",
+					"code": "RMS"
+				}]
+			};
+
+			//set model to the 
+			this.getModel("searchParameters").setData(oSourceType, false);
 
 		},
-		
 		/**
 		 * Helper to search base on what is the user string. 
 		 * this will get triggered after the timeout for the search is cleared. 

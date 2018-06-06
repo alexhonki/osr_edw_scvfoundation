@@ -20,11 +20,6 @@
 				"settings": {
 					"odataVersion": "2.0"
 				}
-			},
-			"advanceFilterParametersJSON": {
-				"uri": "model/filterParameters.json",
-				"type": "JSON",
-				"settings": {}
 			}
 		},
 		"offline": true
@@ -80,13 +75,6 @@
 					"defaultCountMode": "None"
 				},
 				"preload": true
-			},
-			"advanceFilterModel": {
-				"dataSource": "advanceFilterParametersJSON",
-				"settings": {
-					"disableHeadRequestForToken": "false",
-					"defaultCountMode": "None"
-				}
 			}
 		},
 		"resources": {
