@@ -27,7 +27,7 @@
 							<Input value="{searchParameters>/scvId}"/>
 							
 							<Label vAlign="Middle" text="Source"/>
-							<Select forceSelection="false" items="{searchParameters>/SourceType}">
+							<Select forceSelection="false" selectedKey="{searchParameters>/sourceSystem}" items="{searchParameters>/SourceType}">
 								<core:Item key="{searchParameters>code}" text="{searchParameters>name}"/>
 							</Select>
 							
