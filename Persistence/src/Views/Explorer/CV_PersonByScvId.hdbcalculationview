@@ -62,7 +62,14 @@
         <descriptions defaultDescription="STD_PERSON_FN"/>
       </viewAttribute>
     </viewAttributes>
-    <calculatedViewAttributes/>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="S_VALID_FROM" datatype="VARCHAR" length="10" expressionLanguage="SQL">
+        <formula>TO_VARCHAR(&quot;VALID_FROM&quot;)</formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="S_VALID_TO" datatype="VARCHAR" length="10" expressionLanguage="SQL">
+        <formula>TO_VARCHAR(&quot;VALID_TO&quot;)</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
     <restrictedViewAttributes/>
     <input node="osr.scv.foundation.db.data::SCVFoundation.PersonRms">
       <mapping xsi:type="Calculation:AttributeMapping" target="SCV_ID" source="SCV_ID"/>
@@ -138,7 +145,7 @@
     </input>
     <filter>(&quot;SCV_ID&quot; = '$$IP_SCV_ID$$')</filter>
   </calculationView>
-  <calculationView xsi:type="Calculation:UnionView" id="PersonUnion" filterExpressionLanguage="SQL">
+  <calculationView xsi:type="Calculation:UnionView" id="PersonUnion">
     <viewAttributes>
       <viewAttribute id="SCV_ID">
         <descriptions defaultDescription="SCV_ID"/>
@@ -182,6 +189,13 @@
       <viewAttribute id="VALID_TO">
         <descriptions defaultDescription="VALID_TO"/>
       </viewAttribute>
+    
+      <viewAttribute id="S_VALID_FROM">
+        <descriptions defaultDescription="S_VALID_FROM"/>
+      </viewAttribute>
+      <viewAttribute id="S_VALID_TO">
+        <descriptions defaultDescription="S_VALID_TO"/>
+      </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
@@ -200,6 +214,9 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="STD_PERSON_FN" source="STD_PERSON_FN"/>
       <mapping xsi:type="Calculation:ConstantAttributeMapping" target="VALID_FROM" null="true" value=""/>
       <mapping xsi:type="Calculation:ConstantAttributeMapping" target="VALID_TO" null="true" value=""/>
+    
+      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="S_VALID_FROM" null="true" value=""/>
+      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="S_VALID_TO" null="true" value=""/>
     </input>
     <input node="PersonRMS" emptyUnionBehavior="NO_ROW">
       <mapping xsi:type="Calculation:AttributeMapping" target="SCV_ID" source="SCV_ID"/>
@@ -216,6 +233,9 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="STD_PERSON_FN" source="STD_PERSON_FN"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="VALID_FROM" source="VALID_FROM"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="VALID_TO" source="VALID_TO"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="S_VALID_FROM" source="S_VALID_FROM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="S_VALID_TO" source="S_VALID_TO"/>
     </input>
   </calculationView>
 </calculationViews>
@@ -277,6 +297,15 @@
       <descriptions defaultDescription="VALID_TO"/>
       <keyMapping columnObjectName="PersonUnion" columnName="VALID_TO"/>
     </attribute>
+  
+    <attribute id="S_VALID_FROM" order="15" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="S_VALID_FROM"/>
+      <keyMapping columnObjectName="PersonUnion" columnName="S_VALID_FROM"/>
+    </attribute>
+    <attribute id="S_VALID_TO" order="16" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="S_VALID_TO"/>
+      <keyMapping columnObjectName="PersonUnion" columnName="S_VALID_TO"/>
+    </attribute>
   </attributes>
   <calculatedAttributes/>
   <baseMeasures/>
@@ -286,21 +315,21 @@
 <layout>
   <shapes>
     <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
-      <upperLeftCorner x="309.3736771970397" y="112"/>
+      <upperLeftCorner x="309" y="112"/>
     
       <rectangleSize width="140"/>
     </shape>
   
     <shape expanded="true" modelObjectName="PersonRMS" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="92.00000000000004" y="356.9999988079071"/>
+      <upperLeftCorner x="92" y="356"/>
       <rectangleSize height="30" width="218"/>
     </shape>
     <shape expanded="true" modelObjectName="PersonTMR" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="360.00000000000006" y="356.9999988079071"/>
+      <upperLeftCorner x="360" y="356"/>
       <rectangleSize height="30" width="229"/>
     </shape>
     <shape expanded="true" modelObjectName="PersonUnion" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="309.3736771970397" y="217"/>
+      <upperLeftCorner x="309" y="217"/>
       <rectangleSize height="30" width="140"/>
     </shape>
   </shapes>

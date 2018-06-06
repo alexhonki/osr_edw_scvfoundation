@@ -34,9 +34,28 @@ sap.ui.define([
 		 * @return {[type]}        [description]
 		 */
 		_onRouteMatched: function(oEvent) {
+			let oSourceType = {
+				"SourceType": [{
+					"name": "",
+					"code": ""
+				}, {
+					"name": "TMR",
+					"code": "TMR"
+				}, {
+					"name": "RMS",
+					"code": "RMS"
+				}]
+			};
+
+			//set model to the view, so that dialog can be accessed and there's data for it. 
+			//since we add dependent to it
+			this.getModel("searchParameters").setData(oSourceType, false);
 
 		},
-		
+
+		processAdvanceFilter: function() {
+			let oAdditionalFilter = this.getModel("searchParameters").getData();
+		},
 		/**
 		 * Helper to search base on what is the user string. 
 		 * this will get triggered after the timeout for the search is cleared. 
