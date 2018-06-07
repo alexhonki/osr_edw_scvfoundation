@@ -52,7 +52,7 @@ sap.ui.define([
 			oController._readPersonData(oController.oPageParam.scvId); //person tab
 			oController._readAddressesData(oController.oPageParam.scvId); //history tab
 			oController._readPostalData(oController.oPageParam.scvId); //postal tab
-			
+
 			oController.getView().byId("scv-tabbar").setSelectedKey("1");
 
 		},
@@ -94,11 +94,12 @@ sap.ui.define([
 					},
 					success: function(data) {
 
+						let oResult = {};
 						// if there is a PO Box coming in through for this particular SCV ID
 						if (data.results.length > 0) {
 
 							//transform the result and assign it to the model.
-							let oResult = {};
+
 							oResult.ADDRESS = data.results[0].STD_ADDR_ADDRESS_DELIVERY;
 							oResult.CITY = data.results[0].STD_ADDR_LOCALITY;
 							oResult.STATE = data.results[0].REGION;
@@ -107,6 +108,9 @@ sap.ui.define([
 
 							oController.getModel("postalModel").setData(oResult, false);
 
+						} else {
+							//set it as is and its blank.
+							oController.getModel("postalModel").setData(oResult, false);
 						}
 
 					},
@@ -141,7 +145,7 @@ sap.ui.define([
 			oController.getModel("scvExplorerModel").read("/addressParameters" + "(IP_SCV_ID='" + sScvId +
 				"')/Results", {
 					urlParameters: {
-						"$orderby": "VALID_TO asc"
+						"$orderby": "S_VALID_TO desc"
 					},
 					success: function(data) {
 
@@ -150,6 +154,9 @@ sap.ui.define([
 							//bind the result to JSON model, for enhancement flexibility 
 							//allow easy filter for non case sensitive search.
 							oController.getModel("timelineModel").setData(data.results, false);
+						} else {
+							//set blank when there's nothing
+							oController.getModel("timelineModel").setData({}, false);
 						}
 
 					},
@@ -265,7 +272,7 @@ sap.ui.define([
 				//transform for contact number, taking the very first hit for each type. 
 
 				for (i = 0; i < oData.length; i++) {
-	
+
 					if (typeof oResult.MOBILE_NUMBER === "undefined") {
 						if (oData[i].NUMBER_TYPE === "SMS") {
 							oResult.MOBILE_NUMBER = oData[i].CONTACT_NUMBER;
@@ -301,8 +308,17 @@ sap.ui.define([
 				oController.getModel("personModel").setData(oResult, true);
 			}
 
-		}
+		},
 
+		/**
+		 * Force the back button to go to homepage, without
+		 * taking into account the history of where it was from.
+		 */
+		onNavBack: function() {
+
+			this.getRouter().navTo("appHome");
+
+		}
 	});
 
 	return DetailObject;
