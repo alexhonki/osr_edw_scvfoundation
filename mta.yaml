@@ -69,7 +69,6 @@ modules:
     #properties:
     # API_END_POINT: "${xs-api-url}"
     # SAP_JWT_TRUST_ACL: "[{\"clientid\":\"*\",\"identityzone\":\"*\"}]"
-	# test entry for yaml ignore
 resources:
   - name: OsrScvFoundationContainer
     properties:

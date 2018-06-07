@@ -30,6 +30,9 @@ sap.ui.define([
 			//this can be changed for companies as well, 
 			//depending on the status, we just need to set flag. 
 			this.ownerController.processAdvanceFilter();
+			
+			//applied and close.
+			this.dialog.close();
 		},
 
 		/**
