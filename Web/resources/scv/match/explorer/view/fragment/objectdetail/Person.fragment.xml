@@ -72,22 +72,22 @@
 					</t:Column>
 					
 					<t:Column
-						sortProperty="VALID_FROM"
+						sortProperty="S_VALID_FROM"
 						autoResizable="true"
-						filterProperty="VALID_FROM">
+						filterProperty="S_VALID_FROM">
 						<Label text="{i18n>person.contact.valid_from}" />
 						<t:template>
-							<Text text="{path:'scvExplorerModel>VALID_FROM', formatter:'.Formatters.formatDateObjectToString'}" wrapping="false" />
+							<Text text="{path:'scvExplorerModel>S_VALID_FROM', formatter:'.Formatters.formatDateObjectToString'}" wrapping="false" />
 						</t:template>
 					</t:Column>
 					
 					<t:Column
-						sortProperty="VALID_TO"
+						sortProperty="S_VALID_TO"
 						autoResizable="true"
-						filterProperty="VALID_TO">
+						filterProperty="S_VALID_TO">
 						<Label text="{i18n>person.contact.valid_to}" />
 						<t:template>
-							<Text text="{path:'scvExplorerModel>VALID_TO', formatter:'.Formatters.formatDateObjectToString'}" wrapping="false" />
+							<Text text="{path:'scvExplorerModel>S_VALID_TO', formatter:'.Formatters.formatDateObjectToString'}" wrapping="false" />
 						</t:template>
 					</t:Column>
 					

@@ -286,7 +286,7 @@ and if(isnull('$$IP_PO_BOX$$') or '$$IP_PO_BOX$$' = '', match(&quot;STD_ADDR_ADD
       <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_PRIM_NUMBER" source="STD_ADDR_PRIM_NUMBER"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="S_VALID_FROM" source="S_VALID_FROM"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="S_VALID_TO" source="S_VALID_TO"/>
-      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="ADR_KIND" null="true" value=""/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ADR_KIND" source="SOURCE"/>
     
       <mapping xsi:type="Calculation:AttributeMapping" target="VALID_FROM" source="VALID_FROM"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="VALID_TO" source="VALID_TO"/>

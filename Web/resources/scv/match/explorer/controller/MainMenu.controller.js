@@ -34,24 +34,61 @@ sap.ui.define([
 		 * @return {[type]}        [description]
 		 */
 		_onRouteMatched: function(oEvent) {
+			let oSourceType = {
+				"SourceType": [{
+					"name": "",
+					"code": ""
+				}, {
+					"name": "TMR",
+					"code": "TMR"
+				}, {
+					"name": "RMS",
+					"code": "RMS"
+				}]
+			};
+
+			//set model to the view, so that dialog can be accessed and there's data for it. 
+			//since we add dependent to it
+			this.getModel("searchParameters").setData(oSourceType, false);
 
 		},
 		
 		/**
+		 * Upon clicking advance filter dialog criteria, it will 
+		 */
+		processAdvanceFilter: function() {
+			let oAdditionalFilter = this.getModel("searchParameters").getData();
+			
+			//transform payload data here, additional filters could be place here. 
+			//just need to adjust the xsjs
+			let oPayload = {};
+			oPayload.sQuery = oAdditionalFilter.searchString;
+			oPayload.sFuzzy = 0.8;
+			oPayload.sCity = oAdditionalFilter.city;
+			oPayload.sPostcode = oAdditionalFilter.postcode;
+			oPayload.sScvId = oAdditionalFilter.scvId;
+			oPayload.sSourceId = oAdditionalFilter.sourceId;
+			oPayload.sSourceSystem = oAdditionalFilter.sourceSystem;
+			
+			//call the query search func.
+			this._querySearch(oPayload);
+		},
+		/**
 		 * Helper to search base on what is the user string. 
 		 * this will get triggered after the timeout for the search is cleared. 
-		 * @param  {[String]} sQueryString [search string from the user]
+		 * @param  {[Object]} oPayload [contain all the payload that will be send to the xsjs]
 		 */
-		_querySearch: function(sQueryString) {
+		_querySearch: function(oPayload) {
 
 			let oController = this;
 			//for api call search
 			let sApiUrl = this.getOwnerComponent().getMetadata().getConfig("unstructuredSearch");
+			
+			//add fuzzy level search here. 
+			oPayload.sFuzzy=0.8;
+			
 			$.ajax(sApiUrl, {
-				data: {
-					sQuery: sQueryString,
-					sFuzzy: 0.8
-				},
+				data: oPayload,
 				beforeSend: function() {
 					//loading effect start
 				},
@@ -97,10 +134,13 @@ sap.ui.define([
 			// clear the timeout everytime, so that when its long enough it will go to the timeout self.
 			clearTimeout(oController.oTimeout);
 			let sQueryString = oEvent.getSource().getValue();
+			let oPayload = {
+				sQuery : sQueryString
+			};
 			//oTimeout that get clear above and if nothing clear it will go through then.
 			oController.oTimeout = setTimeout(function() {
 				// once its clear, execute search over here. 
-				oController._querySearch(sQueryString);
+				oController._querySearch(oPayload);
 
 			}, 400); //400ms before the search get trigger, so we dont bombard the query on every letter. gotta play with magic number.
 

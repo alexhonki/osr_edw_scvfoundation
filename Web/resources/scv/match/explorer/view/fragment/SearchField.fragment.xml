@@ -9,6 +9,7 @@
     <Button text="Filter Criteria" press="onFilterCriteriaPressed" />
     <SearchField id="searchfield"
                  liveChange="onSearch"
+                 value="{searchParameters>/searchString}"
                  placeholder="{i18n>searchfield}" />
 
   </Toolbar>
