@@ -1,0 +1,67 @@
+{
+  "taskList": {
+    "1": {
+      "inline": {
+        "type": "START",
+        "taskGroup": "com.sap.dwf.toe.executionControl"
+      }
+    },
+    "2": {
+      "inline": {
+        "type": "SUB",
+        "taskGroup": "com.sap.dwf.toe.executionControl",
+        "description": "Move Records to Shadow Table",
+        "parameterValues": [
+          {
+            "id": "taskChainId",
+            "value": "src#TC_PromoteRecords"
+          }
+        ]
+      },
+      "preconditions": [
+        {
+          "from": "1",
+          "status": "NEUTRAL"
+        }
+      ]
+    },
+    "3": {
+      "inline": {
+        "type": "SUB",
+        "taskGroup": "com.sap.dwf.toe.executionControl",
+        "description": "Promote Records to SCV",
+        "parameterValues": [
+          {
+            "id": "taskChainId",
+            "value": "src#TC_MoveRowsToSCV"
+          }
+        ]
+      },
+      "preconditions": [
+        {
+          "from": "2",
+          "status": "OK"
+        }
+      ]
+    },
+    "4": {
+      "inline": {
+        "type": "SUB",
+        "taskGroup": "com.sap.dwf.toe.executionControl",
+        "description": "Generate API Search Table",
+        "parameterValues": [
+          {
+            "id": "taskChainId",
+            "value": "src#TC_SCVSearchTable"
+          }
+        ]
+      },
+      "preconditions": [
+        {
+          "from": "3",
+          "status": "OK"
+        }
+      ]
+    }
+  }
+}
