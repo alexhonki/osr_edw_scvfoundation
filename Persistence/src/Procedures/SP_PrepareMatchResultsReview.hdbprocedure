@@ -101,7 +101,7 @@ BEGIN
 							   );
  */  
    UPDATE "osr.scv.foundation.db.data::MatchResults.MatchResults" SET SHOW_IN_REVIEW = NULL;
-   UPDATE "osr.scv.foundation.db.data::MatchResults.MatchResults" SET SHOW_IN_REVIEW = 'X' WHERE GROUP_ID IS NULL;
+   --UPDATE "osr.scv.foundation.db.data::MatchResults.MatchResults" SET SHOW_IN_REVIEW = 'X' WHERE GROUP_ID IS NULL;
    
    UPDATE "osr.scv.foundation.db.data::MatchResults.MatchResults" a
    SET a.SHOW_IN_REVIEW = b.SHOW_IN_REVIEW, a.GROUP_ROW_INDEX = b.GROUP_ROW_COUNT
