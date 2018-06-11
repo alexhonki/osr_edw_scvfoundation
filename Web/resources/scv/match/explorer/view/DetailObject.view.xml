@@ -29,7 +29,8 @@
           <IconTabFilter id="scv-current"
                          iconDensityAware="false"
                          icon="sap-icon://employee"
-                         text="{i18n>detailobject.tab.current}">
+                         text="{i18n>detailobject.tab.current}"
+                         key="current-tab-key">
             <content>
 
               <core:Fragment fragmentName="osr.scv.match.explorer.view.fragment.objectdetail.Current"

@@ -52,13 +52,13 @@ sap.ui.define([
 			this.getModel("searchParameters").setData(oSourceType, false);
 
 		},
-		
+
 		/**
 		 * Upon clicking advance filter dialog criteria, it will 
 		 */
 		processAdvanceFilter: function() {
 			let oAdditionalFilter = this.getModel("searchParameters").getData();
-			
+
 			//transform payload data here, additional filters could be place here. 
 			//just need to adjust the xsjs
 			let oPayload = {};
@@ -69,7 +69,7 @@ sap.ui.define([
 			oPayload.sScvId = oAdditionalFilter.scvId;
 			oPayload.sSourceId = oAdditionalFilter.sourceId;
 			oPayload.sSourceSystem = oAdditionalFilter.sourceSystem;
-			
+
 			//call the query search func.
 			this._querySearch(oPayload);
 		},
@@ -83,10 +83,10 @@ sap.ui.define([
 			let oController = this;
 			//for api call search
 			let sApiUrl = this.getOwnerComponent().getMetadata().getConfig("unstructuredSearch");
-			
+
 			//add fuzzy level search here. 
-			oPayload.sFuzzy=0.8;
-			
+			oPayload.sFuzzy = 0.8;
+
 			$.ajax(sApiUrl, {
 				data: oPayload,
 				beforeSend: function() {
@@ -130,13 +130,23 @@ sap.ui.define([
 		onSearch: function(oEvent) {
 
 			let oController = this;
+			
+			//grab the existing parameters if there's any.
+			let oAdditionalFilter = oController.getModel("searchParameters").getData();
 			// this is for delaying the input to safely wait for the barcode scanner.
 			// clear the timeout everytime, so that when its long enough it will go to the timeout self.
 			clearTimeout(oController.oTimeout);
 			let sQueryString = oEvent.getSource().getValue();
 			let oPayload = {
-				sQuery : sQueryString
+				sQuery: sQueryString,
+				sFuzzy: 0.8,
+				sCity: oAdditionalFilter.city,
+				sPostcode: oAdditionalFilter.postcode,
+				sScvId: oAdditionalFilter.scvId,
+				sSourceId: oAdditionalFilter.sourceId,
+				sSourceSystem: oAdditionalFilter.sourceSystem
 			};
+
 			//oTimeout that get clear above and if nothing clear it will go through then.
 			oController.oTimeout = setTimeout(function() {
 				// once its clear, execute search over here. 
@@ -161,6 +171,7 @@ sap.ui.define([
 				scvId: oEvent.getSource().data().scvId
 			};
 
+			this.showBusyIndicator(true);
 			this.getRouter().navTo("objectdetail", oCustomData);
 		}
 

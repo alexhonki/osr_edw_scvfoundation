@@ -1,4 +1,5 @@
 //let oUnstructuredSearchLib = $.import("Services.lib.explorer", "unstructuredSearch");
+//will be playing with the xsjslib and port func to the library. 
 try {
 	//definition of all different variables. 
 	let conn = $.db.getConnection();
