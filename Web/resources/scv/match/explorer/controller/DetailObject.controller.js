@@ -52,8 +52,13 @@ sap.ui.define([
 			oController._readPersonData(oController.oPageParam.scvId); //person tab
 			oController._readAddressesData(oController.oPageParam.scvId); //history tab
 			oController._readPostalData(oController.oPageParam.scvId); //postal tab
-
-			oController.getView().byId("scv-tabbar").setSelectedKey("1");
+			
+			//set the icontab bar to select the first tab everytime.
+			//setting the key in the view.
+			oController.getView().byId("scv-tabbar").setSelectedKey("current-tab-key");
+			
+			//when it hit this route, disable busy indicator if there's any.
+			oController.showBusyIndicator(false);
 
 		},
 
@@ -90,7 +95,7 @@ sap.ui.define([
 			oController.getModel("scvExplorerModel").read("/addressParameters" + "(IP_SCV_ID='" + sScvId +
 				"',IP_YEAR='9999',IP_PO_BOX='Po%20Box')/Results", {
 					urlParameters: {
-						"$orderby": "VALID_TO desc"
+						"$orderby": "S_VALID_TO desc"
 					},
 					success: function(data) {
 
