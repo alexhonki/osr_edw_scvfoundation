@@ -21,7 +21,6 @@ sap.ui.define([
 			this.oTimeout = null;
 
 			this.setModel(new JSONModel(), "searchResult");
-			this.setModel(new JSONModel(), "searchParameters");
 
 			this.getRouter().getRoute("homepage").attachPatternMatched(this._onRouteMatched, this);
 			this.getRouter().getRoute("appHome").attachPatternMatched(this._onRouteMatched, this);
@@ -34,23 +33,7 @@ sap.ui.define([
 		 * @return {[type]}        [description]
 		 */
 		_onRouteMatched: function(oEvent) {
-			let oSourceType = {
-				"SourceType": [{
-					"name": "",
-					"code": ""
-				}, {
-					"name": "TMR",
-					"code": "TMR"
-				}, {
-					"name": "RMS",
-					"code": "RMS"
-				}]
-			};
-
-			//set model to the view, so that dialog can be accessed and there's data for it. 
-			//since we add dependent to it
-			this.getModel("searchParameters").setData(oSourceType, false);
-
+			// modified as necessary.
 		},
 
 		/**

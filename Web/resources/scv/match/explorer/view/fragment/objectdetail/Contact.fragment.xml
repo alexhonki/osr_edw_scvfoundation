@@ -58,12 +58,22 @@
 					</t:Column>
 					
 					<t:Column
-						sortProperty="CONTACT_NUMBER"
+						sortProperty="MOBILE"
 						autoResizable="true"
-						filterProperty="CONTACT_NUMBER" >
-						<Label text="{i18n>contact.contact_number}" />
+						filterProperty="MOBILE" >
+						<Label text="{i18n>contact.mobile}" />
 						<t:template>
-							<Text textAlign="Center" text="{scvExplorerModel>CONTACT_NUMBER}" wrapping="false" />
+							<Text textAlign="Center" text="{scvExplorerModel>MOBILE}" wrapping="false" />
+						</t:template>
+					</t:Column>
+					
+					<t:Column
+						sortProperty="TELEPHONE"
+						autoResizable="true"
+						filterProperty="TELEPHONE" >
+						<Label text="{i18n>contact.telephone}" />
+						<t:template>
+							<Text textAlign="Center" text="{scvExplorerModel>TELEPHONE}" wrapping="false" />
 						</t:template>
 					</t:Column>
 					

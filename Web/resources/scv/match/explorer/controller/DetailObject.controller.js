@@ -95,7 +95,7 @@ sap.ui.define([
 			oController.getModel("scvExplorerModel").read("/addressParameters" + "(IP_SCV_ID='" + sScvId +
 				"',IP_YEAR='9999',IP_PO_BOX='Po%20Box')/Results", {
 					urlParameters: {
-						"$orderby": "VALID_TO desc"
+						"$orderby": "S_VALID_TO desc"
 					},
 					success: function(data) {
 
@@ -323,10 +323,6 @@ sap.ui.define([
 
 			this.getRouter().navTo("appHome");
 
-		}, 
-		
-		onSelectTab: function(oEvent){
-			let temp = 1; 
 		}
 	});
 
