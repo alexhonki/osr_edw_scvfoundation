@@ -1,4 +1,5 @@
-//let oUnstructuredSearchLib = $.import("Services.lib.explorer", "unstructuredSearch");
+//import xsjslib library depending on our need. 
+let oUnstructuredSearchLib = $.import("explorer", "unstructuredSearch");
 //will be playing with the xsjslib and port func to the library. 
 try {
 	//definition of all different variables. 
@@ -49,7 +50,7 @@ try {
 	let rs = "";
 	let ptsmt = "";
 
-	let sFinalResult = getFinalLoadForExecution(sScvId, sSource, sSourceId);
+	let sFinalResult = oUnstructuredSearchLib.getFinalLoadForExecution(sScvId, sSource, sSourceId);
 	ptsmt = conn.prepareStatement(sFinalResult);
 
 	ptsmt.setString(1, "%" + sScvId + "%"); //set for like sql statement for wildcards
@@ -79,35 +80,3 @@ try {
 	}
 }
 
-//build the sql query base on like, that way we don't get smashed doing
-//the logic and everything can go through
-function getFinalLoadForExecution(sScvId, sSource, sSourceId) {
-	//3 criterias for the WHERE clause 
-	//sourceid e.g 0001350449
-	//scvid e.g 2005337 - unique entry to the table
-	//source e.g RMS , TMR
-
-	let sFrontQuery =
-		"SELECT DISTINCT \"SCV_ID\",TO_DOUBLE(ROUND(TO_DECIMAL(SCORE()),2)) as SCORE, \"SEARCH_STRING_CLEANSED\" " +
-		"FROM \"osr.scv.foundation.db.data::SCVFoundation.Search\" WHERE ";
-
-	let sEndingQuery = "CONTAINS (SEARCH_STRING, ?, FUZZY (?)) ORDER BY SCORE DESC, \"SCV_ID\" ASC";
-
-	if (typeof sScvId !== "undefined") {
-		sFrontQuery += " \"SCV_ID\" LIKE ? AND ";
-	}
-
-	if (typeof sSource !== "undefined") {
-		sFrontQuery += " \"SOURCE\" LIKE ? AND ";
-	}
-
-	if (typeof sSourceId !== "undefined") {
-		sFrontQuery += " \"SOURCE_ID\" LIKE ? AND ";
-	}
-
-	//build the back part of the query. 
-	sFrontQuery += sEndingQuery;
-
-	//return the built sql search string.
-	return sFrontQuery;
-}
