@@ -71,6 +71,34 @@ BEGIN
    
    -- Identify survivor record per match group to be displayed in review UI start screen
    lt_survivor_match_records =
+								SELECT  *, CASE WHEN GROUP_ROW_COUNT = 1 AND GROUP_ROW_COUNT_POLICY = 1 THEN 'X' ELSE '' END AS SHOW_IN_REVIEW FROM (
+							
+								SELECT f1."Match_ROW_ID", GROUP_ROW_COUNT , f2.GROUP_ROW_COUNT_POLICY FROM (
+														   SELECT 
+												    		"Match_ROW_ID",
+								                        	ROW_NUMBER() OVER (PARTITION BY GROUP_ID ORDER BY SOURCE_SYSTEM DESC, SYSTEM_ID DESC) AS GROUP_ROW_COUNT
+							                               FROM "osr.scv.foundation.db.data::MatchResults.MatchResults"
+														  ) AS f1
+								LEFT OUTER JOIN (
+												SELECT 
+												"Match_ROW_ID",
+												ROW_NUMBER() OVER (PARTITION BY GROUP_ID ORDER BY SOURCE_SYSTEM DESC, SYSTEM_ID DESC) AS GROUP_ROW_COUNT_POLICY
+											    FROM "osr.scv.foundation.db.data::MatchResults.MatchResults" a
+											    WHERE ENTITY_ID IN (
+											                        SELECT 
+																	c.ENTITY_ID
+																	FROM   "osr.scv.foundation.db.data::MatchResults.MatchResults"  c
+																	LEFT OUTER JOIN (SELECT * 
+																				     FROM   "osr.scv.foundation.db.data::MatchResults.MatchTracing" 
+																				      ) AS b1
+																				      ON c."Match_ROW_ID" = b1.ROW_ID 
+																				      WHERE POLICY_NAME = 'Person, Address, Phone'
+											            			)
+												) AS f2 
+								ON f1."Match_ROW_ID" = f2."Match_ROW_ID")
+								;
+   
+/*   lt_survivor_match_records =
 								SELECT *, CASE WHEN GROUP_ROW_COUNT = 1 THEN 'X' ELSE '' END AS SHOW_IN_REVIEW FROM (
 								SELECT "Match_ROW_ID", GROUP_ROW_COUNT FROM (
 																		   SELECT 
@@ -89,6 +117,7 @@ BEGIN
 											                            						)
 																			) 
 							   );
+*/
 /*   lt_survivor_match_records = 
 								SELECT *, CASE WHEN GROUP_ROW_COUNT = 1 THEN 'X' ELSE '' END AS SHOW_IN_REVIEW FROM (
 								SELECT "Match_ROW_ID", GROUP_ROW_COUNT FROM (

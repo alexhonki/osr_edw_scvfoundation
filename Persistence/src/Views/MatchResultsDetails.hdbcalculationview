@@ -122,11 +122,11 @@
     </attribute>
     <attribute id="SCV_ID" order="25" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="SCV_ID"/>
-      <keyMapping columnObjectName="MatchResultsDetails" columnName="SCV_ID"/>
+      <keyMapping columnObjectName="MatchResultsDetails" columnName="SCORE"/>
     </attribute>
     <attribute id="ACTION" order="26" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="ACTION"/>
-      <keyMapping columnObjectName="MatchResultsDetails" columnName="ACTION"/>
+      <keyMapping columnObjectName="MatchResultsDetails" columnName="SCORE"/>
     </attribute>
   </attributes>
   <calculatedAttributes>

@@ -25,7 +25,8 @@ FUNCTION "osr.scv.foundation.db.functions::MatchResultsReview" ( )
             			ACTION NVARCHAR(20),
         				ACTION_RESOLVED NVARCHAR(20),
         				MATCH_PERSON_FN NVARCHAR(50),
-        				ACTION_RESOLVED_STATUS NVARCHAR(10)
+        				ACTION_RESOLVED_STATUS NVARCHAR(10),
+        				SHOW_IN_REVIEW NVARCHAR(1)
         			  )
        SQL SECURITY INVOKER AS 
 BEGIN 
@@ -56,7 +57,9 @@ BEGIN
 	                d.STRATEGY,
 	                d.ACTION,
 	                m.RMS_DUPLICATES,
-	                COALESCE(r.MATCH_PERSON_FN, t.MATCH_PERSON_FN) "MATCH_PERSON_FN"
+	                COALESCE(r.MATCH_PERSON_FN, t.MATCH_PERSON_FN) "MATCH_PERSON_FN",
+	                m.SHOW_IN_REVIEW
+	                
                 FROM "osr.scv.foundation.db.data::MatchResults.MatchResults" m
                
                 -- Master data BUT000
@@ -94,7 +97,7 @@ BEGIN
                                 	AND a.TIMESTAMP = b.MAX_TIMESTAMP
                                 ) AS d
                 ON d."ENTITY_ID" = m."ENTITY_ID"                                         
-                WHERE m.SHOW_IN_REVIEW = 'X'
+--                WHERE m.SHOW_IN_REVIEW = 'X'
 					AND (
 						 -- Unique records from RMS
 						 m."Match_ROW_ID" IN (SELECT "Match_ROW_ID" FROM "osr.scv.foundation.db.data::MatchResults.MatchResults" WHERE GROUP_ID IS NULL AND SOURCE_SYSTEM = 'RMS')
@@ -133,8 +136,8 @@ BEGIN
                   ACTION,
 				  CASE WHEN ACTION IS NOT NULL THEN ACTION WHEN (GROUP_CATEGORY = 0 OR GROUP_CATEGORY = 1) THEN 'Auto-Promotion' ELSE '' END AS ACTION_RESOLVED,
 				  MATCH_PERSON_FN,
-				  CASE WHEN (ACTION IS NOT NULL AND ACTION = 'Accept') THEN 'Success' WHEN (ACTION IS NOT NULL AND ACTION = 'Reject') THEN 'Error' WHEN (GROUP_CATEGORY = 0 OR GROUP_CATEGORY = 1) THEN 'Success' ELSE 'Error' END AS ACTION_RESOLVED_STATUS
-				  
+				  CASE WHEN (ACTION IS NOT NULL AND ACTION = 'Accept') THEN 'Success' WHEN (ACTION IS NOT NULL AND ACTION = 'Reject') THEN 'Error' WHEN (GROUP_CATEGORY = 0 OR GROUP_CATEGORY = 1) THEN 'Success' ELSE 'Error' END AS ACTION_RESOLVED_STATUS,
+				  SHOW_IN_REVIEW
 	FROM :lt_overview;
 	
 	-- TODO: Apply view filter here

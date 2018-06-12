@@ -82,6 +82,7 @@ BEGIN
 		                ON a."Match_ROW_ID" = b.ROW_ID
 		                LEFT OUTER JOIN (
 		                				 SELECT "MATCH_ROW_ID", "SCV_ID", "ACTION" FROM "osr.scv.foundation.db.data::MatchResults.MatchDelta"	
+		                				 GROUP BY "MATCH_ROW_ID", "SCV_ID", "ACTION" 
 		                				) AS h
 		                ON a."Match_ROW_ID" = h."MATCH_ROW_ID"
 						WHERE ENTITY_ID = :i_entity_id
