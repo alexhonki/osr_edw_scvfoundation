@@ -106,7 +106,14 @@
         <descriptions defaultDescription="CHECKSUM"/>
       </viewAttribute>
     </viewAttributes>
-    <calculatedViewAttributes/>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="TELEPHONE" datatype="NVARCHAR" length="20" expressionLanguage="COLUMN_ENGINE">
+        <formula>if(&quot;NUMBER_TYPE&quot; = 'PHO', &quot;CONTACT_NUMBER&quot;, '' )</formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="MOBILE" datatype="NVARCHAR" length="20" expressionLanguage="COLUMN_ENGINE">
+        <formula>if(&quot;NUMBER_TYPE&quot; != 'PHO', &quot;CONTACT_NUMBER&quot;, '' )</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
     <restrictedViewAttributes/>
     <input node="osr.scv.foundation.db.data::SCVFoundation.ContactNumber">
       <mapping xsi:type="Calculation:AttributeMapping" target="SCV_ID" source="SCV_ID"/>
@@ -163,10 +170,17 @@
       <viewAttribute id="CONTACT_EMAIL">
         <descriptions defaultDescription="CONTACT_EMAIL"/>
       </viewAttribute>
+    
+      <viewAttribute id="TELEPHONE">
+        <descriptions defaultDescription="TELEPHONE"/>
+      </viewAttribute>
+      <viewAttribute id="MOBILE">
+        <descriptions defaultDescription="MOBILE"/>
+      </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
-    <input node="Number">
+    <input node="Number" emptyUnionBehavior="NO_ROW">
       <mapping xsi:type="Calculation:AttributeMapping" target="SCV_ID" source="SCV_ID"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="SOURCE" source="SOURCE"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="SOURCE_ID" source="SOURCE_ID"/>
@@ -180,8 +194,11 @@
       <mapping xsi:type="Calculation:ConstantAttributeMapping" target="EMAIL_DESC" null="true" value=""/>
       <mapping xsi:type="Calculation:ConstantAttributeMapping" target="STD_EMAIL" null="true" value=""/>
       <mapping xsi:type="Calculation:ConstantAttributeMapping" target="CONTACT_EMAIL" null="true" value=""/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="TELEPHONE" source="TELEPHONE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MOBILE" source="MOBILE"/>
     </input>
-    <input node="Email">
+    <input node="Email" emptyUnionBehavior="NO_ROW">
       <mapping xsi:type="Calculation:AttributeMapping" target="SCV_ID" source="SCV_ID"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="SOURCE" source="SOURCE"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="SOURCE_ID" source="SOURCE_ID"/>
@@ -195,6 +212,9 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="EMAIL_DESC" source="EMAIL_DESC"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="STD_EMAIL" source="STD_EMAIL"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CONTACT_EMAIL" source="CONTACT_EMAIL"/>
+    
+      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="TELEPHONE" null="true" value=""/>
+      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="MOBILE" null="true" value=""/>
     </input>
   </calculationView>
 </calculationViews>
@@ -252,6 +272,15 @@
       <descriptions defaultDescription="CONTACT_EMAIL"/>
       <keyMapping columnObjectName="SCVContact" columnName="CONTACT_EMAIL"/>
     </attribute>
+  
+    <attribute id="TELEPHONE" order="14" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="TELEPHONE"/>
+      <keyMapping columnObjectName="SCVContact" columnName="TELEPHONE"/>
+    </attribute>
+    <attribute id="MOBILE" order="15" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="MOBILE"/>
+      <keyMapping columnObjectName="SCVContact" columnName="MOBILE"/>
+    </attribute>
   </attributes>
   <calculatedAttributes/>
   <baseMeasures/>
@@ -261,21 +290,21 @@
 <layout>
   <shapes>
     <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
-      <upperLeftCorner x="318.8256841276593" y="112"/>
+      <upperLeftCorner x="318" y="112"/>
     
       <rectangleSize width="140"/>
     </shape>
   
     <shape expanded="true" modelObjectName="Email" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="366.99999999999994" y="356.9999988079071"/>
+      <upperLeftCorner x="366" y="356"/>
       <rectangleSize height="30" width="238"/>
     </shape>
     <shape expanded="true" modelObjectName="Number" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="92" y="356.9999988079071"/>
+      <upperLeftCorner x="92" y="356"/>
       <rectangleSize height="30" width="225"/>
     </shape>
     <shape expanded="true" modelObjectName="SCVContact" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="318.8256841276593" y="217"/>
+      <upperLeftCorner x="318" y="217"/>
       <rectangleSize height="30" width="140"/>
     </shape>
   </shapes>

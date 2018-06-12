@@ -71,6 +71,27 @@ BEGIN
 		                				) AS h
 		                ON a."Match_ROW_ID" = h."MATCH_ROW_ID"
 						WHERE ENTITY_ID = :i_entity_id
+						
+						GROUP BY GROUP_ID ,
+        				ENTITY_ID ,
+        				SCV_ID ,
+						ACTION ,
+        				GROUP_ROW_INDEX ,
+        				SOURCE_SYSTEM ,
+        				SYSTEM_ID ,
+        				COALESCE(e.FNAME_ORIG_BUT, f.FNAME_ORIG_TMR),
+        				COALESCE(e.MNAME_ORIG_BUT, f.MNAME_ORIG_TMR),
+		            	COALESCE(e.LNAME_ORIG_BUT, f.LNAME_ORIG_TMR),
+		            	COALESCE(e.BIRTHDT_ORIG_BUT, f.BIRTHDT_ORIG_TMR),
+        			    ADDRNUMBER , 
+        				COALESCE(e1.COUNTRY_ORIG_ADRC, f.COUNTRY_ORIG_TMR),
+						COALESCE(e1.CITY_ORIG_ADRC, f.CITY_ORIG_TMR),
+						COALESCE(e1.REGION_ORIG_ADRC, f.REGION_ORIG_TMR),
+						COALESCE(e1.POSTCODE_ORIG_ADRC, f.POSTCODE_ORIG_TMR),
+		            	COALESCE(e1.STREET_ORIG_ADRC, f.STREET_ORIG_TMR),
+		            	COALESCE(e1.STREET_NUMBER_ORIG_ADRC, f.STREET_NUMBER_ORIG_TMR),
+					    "Match_ROW_ID" 
+						
 		                ORDER  BY SOURCE_SYSTEM ASC, 
 		                          SYSTEM_ID DESC
 

@@ -48,6 +48,7 @@ context MatchResultsReview {
             ACTION_RESOLVED          : String(20);
             MATCH_PERSON_FN          : String(50);
             ACTION_RESOLVED_STATUS   : String(10);
+            SHOW_IN_REVIEW           : String(1);
     }
     technical configuration {
         index index_0 on (PROMOTED_TO_SCV);

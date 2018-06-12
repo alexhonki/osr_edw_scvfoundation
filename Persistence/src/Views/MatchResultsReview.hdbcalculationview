@@ -9,7 +9,7 @@
   </DataSource>
 </dataSources>
 <calculationViews>
-  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_1">
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_1" filterExpressionLanguage="SQL">
     <viewAttributes>
       <viewAttribute id="ENTITY_ID">
         <descriptions defaultDescription="ENTITY_ID"/>
@@ -91,6 +91,10 @@
       <viewAttribute id="MATCH_PERSON_FN">
         <descriptions defaultDescription="MATCH_PERSON_FN"/>
       </viewAttribute>
+    
+      <viewAttribute id="SHOW_IN_REVIEW">
+        <descriptions defaultDescription="SHOW_IN_REVIEW"/>
+      </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
@@ -123,7 +127,11 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="ACTION_RESOLVED" source="ACTION_RESOLVED"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="ACTION_RESOLVED_STATUS" source="ACTION_RESOLVED_STATUS"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_FN" source="MATCH_PERSON_FN"/>
-    </input></calculationView>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="SHOW_IN_REVIEW" source="SHOW_IN_REVIEW"/>
+    </input>
+    <filter>&quot;SHOW_IN_REVIEW&quot; = 'X'</filter>
+  </calculationView>
 </calculationViews>
 <logicalModel id="Projection_1">
   <attributes>
@@ -232,7 +240,7 @@
       <keyCalculation datatype="NVARCHAR" expressionLanguage="SQL" length="256">
         <formula>CONCAT(CONCAT(&quot;LAST_NAME&quot;, ', '), CONCAT(&quot;FIRST_NAME&quot;, CONCAT(' ',CASE WHEN &quot;MIDDLE_NAME&quot; IS NULL THEN '' ELSE &quot;MIDDLE_NAME&quot; END)))</formula>
       </keyCalculation>
-      </calculatedAttribute></calculatedAttributes>
+    </calculatedAttribute></calculatedAttributes>
   <baseMeasures/>
   <calculatedMeasures/>
   <restrictedMeasures/></logicalModel>

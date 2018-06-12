@@ -132,16 +132,13 @@
 			id="address-timeline"
 			enableDoubleSided="true"
 			growingThreshold="0"
-			sortOldestFirst="true"
 			content="{timelineModel>/}"
 			visible="{= ${viewModel>/SHOW_HISTORY_TIMELINE} === true}"
-			height="60%"
 			noDataText="No timeline available at this time."
 			showFilterBar="false">
 		<timeline:content>
 			<timeline:TimelineItem
 					dateTime="{path:'timelineModel>VALID_TO', formatter:'.Formatters.formatDateObjectToString'}"
-					title="{JobTitle}"
 					userNameClickable="false"
 					text="{timelineModel>STD_ADDR_ADDRESS_DELIVERY} {timelineModel>STD_ADDR_LOCALITY} {timelineModel>REGION} {timelineModel>STD_ADDR_POSTCODE1}"
 					userName="{path:'timelineModel>ADR_KIND', formatter:'.Formatters.formatAddressKind'}"

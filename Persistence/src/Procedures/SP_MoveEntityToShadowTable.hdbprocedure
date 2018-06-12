@@ -69,12 +69,29 @@ BEGIN
 	ELSE
 	*/	
 		-- Promote all entities with status 'Promote' or 'Promote*'
+		lt_entites_to_exclude = 
+		SELECT ENTITY_ID 
+		FROM "osr.scv.foundation.db.data::MatchResultsReview.Review"
+		WHERE STRATEGY_RESOLVED LIKE 'Review%' AND ENTITY_ID IN (
+															SELECT 
+															DISTINCT c.ENTITY_ID
+										            	    FROM   "osr.scv.foundation.db.data::MatchResults.MatchResults" AS c 
+										            	    LEFT OUTER JOIN (SELECT * FROM   "osr.scv.foundation.db.data::MatchResults.MatchTracing" 
+										            	                    ) AS b
+										        		     ON c."Match_ROW_ID" = b.ROW_ID 
+										            	     WHERE POLICY_NAME = 'Person, Address, Phone'
+															);
 		
 		-- Move into shadow table, use same CV as in SCV Review UI to get latest strategy per entity
-		lt_entities = SELECT ENTITY_ID, ACTION_RESOLVED 
+/*		lt_entities = SELECT ENTITY_ID, ACTION_RESOLVED 
 					  FROM "osr.scv.foundation.db.data::MatchResultsReview.Review"
 					  WHERE STRATEGY_RESOLVED LIKE 'Promote%';
-		
+*/
+		lt_entities = SELECT ENTITY_ID, ACTION_RESOLVED 
+					  FROM "osr.scv.foundation.db.data::MatchResultsReview.Review"
+					  WHERE ENTITY_ID NOT IN (SELECT ENTITY_ID FROM :lt_entites_to_exclude);
+
+
 		-- Move entities
 		INSERT INTO "osr.scv.foundation.db.data::MatchResults.MatchResultsShadow"
 		(
