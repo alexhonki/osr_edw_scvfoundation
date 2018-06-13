@@ -69,7 +69,8 @@ sap.ui.define([
 
 			//add fuzzy level search here. 
 			oPayload.sFuzzy = 0.8;
-
+			oController.getView().byId("searchapi-table").setBusy(true);
+			
 			$.ajax(sApiUrl, {
 				data: oPayload,
 				beforeSend: function() {
@@ -99,10 +100,11 @@ sap.ui.define([
 							oFinalData[i].POSTAL_CODE = aSplitResult[5];
 						}
 					}
+					oController.getView().byId("searchapi-table").setBusy(false);
 					oController.getModel("searchResult").setData(oFinalData, false);
 				},
 				failure: function(error) {
-
+					oController.getView().byId("searchapi-table").setBusy(false);
 					console.log(error);
 				}
 			});
