@@ -10,7 +10,7 @@
            ariaLabelledBy="headerToolbar"
            class="osrSCVToolBar">
     <Title level="H3"
-           text="{i18n>headercontent.contact} {viewModel>/STD_PERSON_FN} {viewModel>/STD_PERSON_GN} {viewModel>/STD_PERSON_GN2}" />
+           text="{i18n>headercontent.contact} {viewModel>/STD_PERSON_GN} {viewModel>/STD_PERSON_GN2} {viewModel>/STD_PERSON_FN} " />
     <ToolbarSpacer/>
     <Title level="H3"
            text="{i18n>headercontent.scvid} {viewModel>/SCV_ID}" />
@@ -106,6 +106,16 @@
 							<Text text="{path:'scvExplorerModel>VALID_TO', formatter:'.Formatters.formatDateObjectToString'}" wrapping="false" />
 						</t:template>
 					</t:Column>
+					
+					<!--<t:Column-->
+					<!--	sortProperty="S_TMR_LAST_CONTACT_DATE"-->
+					<!--	autoResizable="true"-->
+					<!--	filterProperty="S_TMR_LAST_CONTACT_DATE">-->
+					<!--	<Label text="{i18n>contact.tmr_last_contact_date}" />-->
+					<!--	<t:template>-->
+					<!--		<Text text="{path:'scvExplorerModel>S_TMR_LAST_CONTACT_DATE', formatter:'.Formatters.formatDateObjectToString'}" wrapping="false" />-->
+					<!--	</t:template>-->
+					<!--</t:Column>-->
 					
 				</t:columns>
 				

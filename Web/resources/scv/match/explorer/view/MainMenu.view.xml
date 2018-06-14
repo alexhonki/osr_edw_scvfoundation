@@ -25,7 +25,9 @@
              items="{searchResult>/}"
              noDataText="{i18n>nosearchresultdata}"
              enableBusyIndicator="true"
-             busyIndicatorDelay="100">
+             busyIndicatorDelay="100"
+             growingScrollToLoad="true"
+             growing="true">
         <columns>
 
           <Column>

@@ -10,7 +10,7 @@
            ariaLabelledBy="headerToolbar"
            class="osrSCVToolBar">
     <Title level="H3"
-           text="{i18n>headercontent.person} {viewModel>/STD_PERSON_FN} {viewModel>/STD_PERSON_GN} {viewModel>/STD_PERSON_GN2}" />
+           text="{i18n>headercontent.person} {viewModel>/STD_PERSON_GN} {viewModel>/STD_PERSON_GN2} {viewModel>/STD_PERSON_FN}" />
     <ToolbarSpacer/>
     <Title level="H3"
            text="{i18n>headercontent.scvid} {viewModel>/SCV_ID}" />
