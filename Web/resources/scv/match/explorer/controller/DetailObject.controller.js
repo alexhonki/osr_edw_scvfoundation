@@ -6,8 +6,9 @@
 sap.ui.define([
 	"osr/scv/match/explorer/controller/SuperController",
 	"sap/ui/model/json/JSONModel",
-	"osr/scv/match/explorer/asset/lib/Formatters"
-], function(SuperController, JSONModel, Formatters) {
+	"osr/scv/match/explorer/asset/lib/Formatters", 
+	"sap/m/Text"
+], function(SuperController, JSONModel, Formatters, Text) {
 	"use strict";
 
 	let DetailObject = SuperController.extend("osr.scv.match.explorer.controller.DetailObject", {
@@ -261,11 +262,21 @@ sap.ui.define([
 				oResult.BIRTH_DATE = moment(oData[0].BIRTH_DATE).format("DD/MM/YYYY");
 				oResult.DRIVER_LICENSE = oData[0].SOURCE_ID;
 				oResult.BP_NUMBER = "";
-
+				
+				let oRmsVbox = oController.getView().byId("rms-bp-number");
+				let oText;
 				//loop through all the results set. 
 				for (i = 0; i < oData.length; i++) {
 					if (oData[i].SOURCE === "RMS") {
-						oResult.BP_NUMBER += oData[i].SOURCE_ID + "\n";
+						
+						//build a text control and add it into the VBox control.
+						//oResult.BP_NUMBER += oData[i].SOURCE_ID + "\n";
+						oText = new Text({text: oData[i].SOURCE_ID});
+						
+						if(oData[i].INACTIVE === "X"){ //check for flag set from the back-end
+							oText.addStyleClass("rmsBPActive");
+						}
+						oRmsVbox.addItem(oText);
 					}
 
 				}

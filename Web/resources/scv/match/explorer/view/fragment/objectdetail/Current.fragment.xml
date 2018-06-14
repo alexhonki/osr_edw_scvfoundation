@@ -54,8 +54,12 @@
       <Text text="{personModel>/DRIVER_LICENSE}" />
 
       <Label text="{i18n>current.rms_bp_number}" />
-      <Text text="{personModel>/BP_NUMBER}" />
-
+      <VBox id="rms-bp-number">
+      	<items>
+		<!--this is dynamically added in the controller to allow css adding.-->
+      	</items>
+      </VBox>
+      
 
       <core:Title text="Contact" />
       <Label text="{i18n>current.mobile_number}" />
