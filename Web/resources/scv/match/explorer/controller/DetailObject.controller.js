@@ -264,6 +264,7 @@ sap.ui.define([
 				oResult.BP_NUMBER = "";
 				
 				let oRmsVbox = oController.getView().byId("rms-bp-number");
+				oRmsVbox.destroyItems();
 				let oText;
 				//loop through all the results set. 
 				for (i = 0; i < oData.length; i++) {
