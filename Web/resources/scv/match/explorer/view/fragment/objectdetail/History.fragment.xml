@@ -124,6 +124,16 @@
 						</t:template>
 					</t:Column>
 					
+					<t:Column
+						sortProperty="S_TMR_LAST_CONTACT_DATE"
+						autoResizable="true"
+						filterProperty="S_TMR_LAST_CONTACT_DATE">
+						<Label text="{i18n>history.address.tmr_last_contact_date}" />
+						<t:template>
+							<Text text="{path:'scvExplorerModel>S_TMR_LAST_CONTACT_DATE', formatter:'.Formatters.formatDateObjectToString'}" wrapping="false" />
+						</t:template>
+					</t:Column>
+					
 				</t:columns>
 				
 			</t:Table>

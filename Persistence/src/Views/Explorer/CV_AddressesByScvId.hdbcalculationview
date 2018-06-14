@@ -171,6 +171,10 @@ and if(isnull('$$IP_PO_BOX$$') or '$$IP_PO_BOX$$' = '', match(&quot;STD_ADDR_ADD
       <viewAttribute id="VALID_TO">
         <descriptions defaultDescription="VALID_TO"/>
       </viewAttribute>
+    
+      <viewAttribute id="LAST_CONTACT_DATE">
+        <descriptions defaultDescription="LAST_CONTACT_DATE"/>
+      </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes>
       <calculatedViewAttribute id="S_VALID_FROM" datatype="NVARCHAR" length="10" expressionLanguage="SQL">
@@ -178,6 +182,10 @@ and if(isnull('$$IP_PO_BOX$$') or '$$IP_PO_BOX$$' = '', match(&quot;STD_ADDR_ADD
       </calculatedViewAttribute>
       <calculatedViewAttribute id="S_VALID_TO" datatype="NVARCHAR" length="10" expressionLanguage="SQL">
         <formula>TO_VARCHAR(&quot;VALID_TO&quot;)</formula>
+      </calculatedViewAttribute>
+    
+      <calculatedViewAttribute id="S_TMR_LAST_CONTACT_DATE" datatype="NVARCHAR" length="10" expressionLanguage="SQL">
+        <formula>TO_VARCHAR(&quot;LAST_CONTACT_DATE&quot;)</formula>
       </calculatedViewAttribute>
     </calculatedViewAttributes>
     <restrictedViewAttributes/>
@@ -201,6 +209,8 @@ and if(isnull('$$IP_PO_BOX$$') or '$$IP_PO_BOX$$' = '', match(&quot;STD_ADDR_ADD
     
       <mapping xsi:type="Calculation:AttributeMapping" target="VALID_FROM" source="VALID_FROM"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="VALID_TO" source="VALID_TO"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="LAST_CONTACT_DATE" source="LAST_CONTACT_DATE"/>
     </input>
     <filter>(&quot;SCV_ID&quot; = '$$IP_SCV_ID$$') and
 if(isnull('$$IP_YEAR$$') or '$$IP_YEAR$$' = '', match(&quot;S_VALID_FROM&quot;,'*'), match(&quot;S_VALID_TO&quot;,'*$$IP_YEAR$$*') ) 
@@ -267,6 +277,10 @@ and if(isnull('$$IP_PO_BOX$$') or '$$IP_PO_BOX$$' = '', match(&quot;STD_ADDR_ADD
       <viewAttribute id="REGION">
         <descriptions defaultDescription="REGION"/>
       </viewAttribute>
+    
+      <viewAttribute id="S_TMR_LAST_CONTACT_DATE">
+        <descriptions defaultDescription="S_TMR_LAST_CONTACT_DATE"/>
+      </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
@@ -292,6 +306,8 @@ and if(isnull('$$IP_PO_BOX$$') or '$$IP_PO_BOX$$' = '', match(&quot;STD_ADDR_ADD
       <mapping xsi:type="Calculation:AttributeMapping" target="VALID_TO" source="VALID_TO"/>
     
       <mapping xsi:type="Calculation:AttributeMapping" target="REGION" source="STATE"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="S_TMR_LAST_CONTACT_DATE" source="S_TMR_LAST_CONTACT_DATE"/>
     </input>
     <input node="AddressRMS" emptyUnionBehavior="NO_ROW">
       <mapping xsi:type="Calculation:AttributeMapping" target="SCV_ID" source="SCV_ID"/>
@@ -315,6 +331,8 @@ and if(isnull('$$IP_PO_BOX$$') or '$$IP_PO_BOX$$' = '', match(&quot;STD_ADDR_ADD
       <mapping xsi:type="Calculation:AttributeMapping" target="VALID_TO" source="VALID_TO"/>
     
       <mapping xsi:type="Calculation:AttributeMapping" target="REGION" source="REGION"/>
+    
+      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="S_TMR_LAST_CONTACT_DATE" null="true" value=""/>
     </input></calculationView>
 </calculationViews>
 <logicalModel id="AddressUnion">
@@ -400,6 +418,11 @@ and if(isnull('$$IP_PO_BOX$$') or '$$IP_PO_BOX$$' = '', match(&quot;STD_ADDR_ADD
   
       <keyMapping columnObjectName="AddressUnion" columnName="REGION"/>
   
+    </attribute>
+  
+    <attribute id="S_TMR_LAST_CONTACT_DATE" order="20" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="S_TMR_LAST_CONTACT_DATE"/>
+      <keyMapping columnObjectName="AddressUnion" columnName="S_TMR_LAST_CONTACT_DATE"/>
     </attribute>
   </attributes>
   <calculatedAttributes/>
