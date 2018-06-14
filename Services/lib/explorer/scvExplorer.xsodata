@@ -7,7 +7,7 @@ service {
 
 	"osr.scv.foundation.db.views.Explorer::CV_PersonByScvId" as "person"
 	with("SCV_ID", "SOURCE", "SOURCE_ID", "UPDATED_AT", "BIRTH_DATE", "DEATH_DATE", "STD_PERSON_GN", 
-	"STD_PERSON_GN2", "STD_PERSON_FN", "VALID_FROM", "VALID_TO", "S_VALID_FROM", "S_VALID_TO")
+	"STD_PERSON_GN2", "STD_PERSON_FN", "VALID_FROM", "VALID_TO", "S_VALID_FROM", "S_VALID_TO", "INACTIVE")
 	keys generate local "UNIQUE_ID"
 	parameters via entity
 	create forbidden 
@@ -25,7 +25,7 @@ service {
 	
 	"osr.scv.foundation.db.views.Explorer::CV_AddressesByScvId" as "address"
 	with("SCV_ID", "SOURCE", "SOURCE_ID", "ADR_KIND", "S_VALID_FROM", "S_VALID_TO", "VALID_TO", "VALID_FROM", 
-	"STD_ADDR_ADDRESS_DELIVERY", "STD_ADDR_LOCALITY", "STD_ADDR_POSTCODE1", "REGION", "STD_ADDR_COUNTRY_2CHAR")
+	"STD_ADDR_ADDRESS_DELIVERY", "STD_ADDR_LOCALITY", "STD_ADDR_POSTCODE1", "REGION", "STD_ADDR_COUNTRY_2CHAR", "S_TMR_LAST_CONTACT_DATE")
 	keys generate local "UNIQUE_ID"
 	parameters via entity
 	create forbidden 

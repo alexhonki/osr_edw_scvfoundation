@@ -10,7 +10,7 @@
            ariaLabelledBy="headerToolbar"
            class="osrSCVToolBar">
     <Title level="H3"
-           text="{i18n>headercontent.current} {viewModel>/STD_PERSON_FN} {viewModel>/STD_PERSON_GN} {viewModel>/STD_PERSON_GN2}" />
+           text="{i18n>headercontent.current} {viewModel>/STD_PERSON_GN} {viewModel>/STD_PERSON_GN2} {viewModel>/STD_PERSON_FN}" />
     <ToolbarSpacer/>
     <Title level="H3"
            text="{i18n>headercontent.scvid} {viewModel>/SCV_ID}" />
@@ -54,8 +54,12 @@
       <Text text="{personModel>/DRIVER_LICENSE}" />
 
       <Label text="{i18n>current.rms_bp_number}" />
-      <Text text="{personModel>/BP_NUMBER}" />
-
+      <VBox id="rms-bp-number">
+      	<items>
+		<!--this is dynamically added in the controller to allow css adding.-->
+      	</items>
+      </VBox>
+      
 
       <core:Title text="Contact" />
       <Label text="{i18n>current.mobile_number}" />
