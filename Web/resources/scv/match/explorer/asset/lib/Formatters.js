@@ -9,7 +9,12 @@ sap.ui.define(['jquery.sap.global'], function() {
 		 * @return {[type]}       [string date]
 		 */
 		formatDateObjectToString: function(oTime) {
-			return moment(oTime).format("DD/MM/YYYY");
+			if(oTime === null){
+				return "No date";
+			}else{
+				return moment(oTime).format("DD/MM/YYYY");
+			}
+			
 		},
 
 		/**
