@@ -24,24 +24,6 @@ sap.ui.define([
 			// set the device model
 			this.setModel(models.createDeviceModel(), "device");
 
-			// set app wide model for advance filter
-			let oSourceType = {
-				"SourceType": [{
-					"name": "",
-					"code": ""
-				}, {
-					"name": "TMR",
-					"code": "TMR"
-				}, {
-					"name": "RMS",
-					"code": "RMS"
-				}]
-			};
-
-			//set model to the view, so that dialog can be accessed and there's data for it. 
-			//since we add dependent to it
-			this.setModel(new JSONModel(oSourceType), "searchParameters");
-
 			// call the base component's init function
 			UIComponent.prototype.init.apply(this, arguments);
 

@@ -22,6 +22,10 @@ sap.ui.define([
 
 			this.setModel(new JSONModel(), "searchResult");
 
+			//set model to the view, so that dialog can be accessed and there's data for it. 
+			//since we add dependent to it
+			this.setModel(new JSONModel(), "searchParameters");
+
 			this.getRouter().getRoute("homepage").attachPatternMatched(this._onRouteMatched, this);
 			this.getRouter().getRoute("appHome").attachPatternMatched(this._onRouteMatched, this);
 
@@ -33,7 +37,24 @@ sap.ui.define([
 		 * @return {[type]}        [description]
 		 */
 		_onRouteMatched: function(oEvent) {
-			// modified as necessary.
+
+			//reset the model everytime it enters and clear everything else. 
+			// set model for source selection
+			let oSourceType = {
+				"SourceType": [{
+					"name": "",
+					"code": ""
+				}, {
+					"name": "TMR",
+					"code": "TMR"
+				}, {
+					"name": "RMS",
+					"code": "RMS"
+				}]
+			};
+
+			this.getModel("searchParameters").setData(oSourceType, false);
+
 		},
 
 		/**
@@ -70,7 +91,7 @@ sap.ui.define([
 			//add fuzzy level search here. 
 			oPayload.sFuzzy = 0.8;
 			oController.getView().byId("searchapi-table").setBusy(true);
-			
+
 			$.ajax(sApiUrl, {
 				data: oPayload,
 				beforeSend: function() {
@@ -115,7 +136,7 @@ sap.ui.define([
 		onSearch: function(oEvent) {
 
 			let oController = this;
-			
+
 			//grab the existing parameters if there's any.
 			let oAdditionalFilter = oController.getModel("searchParameters").getData();
 			// this is for delaying the input to safely wait for the barcode scanner.
