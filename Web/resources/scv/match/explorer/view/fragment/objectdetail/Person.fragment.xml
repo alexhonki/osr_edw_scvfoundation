@@ -31,6 +31,7 @@
 				ariaLabelledBy="title">
 
 				<t:columns>
+
 					<t:Column
 						sortProperty="SOURCE"
 						autoResizable="true"

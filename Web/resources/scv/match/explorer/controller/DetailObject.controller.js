@@ -20,7 +20,8 @@ sap.ui.define([
 		 */
 		onInit: function() {
 
-			//setting up of all models to serve.
+			//setting up of all models to serve if needed.
+			//some are binded straight away
 			this.setModel(new JSONModel(), "viewModel");
 			this.setModel(new JSONModel(), "personModel");
 			this.setModel(new JSONModel(), "addressesModel");
