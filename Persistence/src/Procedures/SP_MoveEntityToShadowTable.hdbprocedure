@@ -95,7 +95,7 @@ BEGIN
 
 		lt_entities = SELECT DISTINCT ENTITY_ID, ACTION_RESOLVED 
 					  FROM "osr.scv.foundation.db.data::MatchResultsReview.Review"
-					  WHERE ENTITY_ID NOT IN (SELECT ENTITY_ID 
+					  WHERE ENTITY_ID NOT LIKE '0-%' AND ENTITY_ID NOT IN (SELECT ENTITY_ID 
 															FROM "osr.scv.foundation.db.data::MatchResultsReview.Review"
 															WHERE STRATEGY_RESOLVED LIKE 'Review%' AND ENTITY_ID IN 
 															(
