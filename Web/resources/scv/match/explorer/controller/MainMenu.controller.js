@@ -38,6 +38,17 @@ sap.ui.define([
 		 */
 		_onRouteMatched: function(oEvent) {
 
+			//reset filters that is being applied
+			this._resetSearchFilter();
+
+		},
+
+		/**
+		 * Function helper to reset search filter of the model. 
+		 * @param  {[type]} oEvent [description]
+		 * @return {[type]}        [description]
+		 */
+		_resetSearchFilter: function() {
 			//reset the model everytime it enters and clear everything else. 
 			// set model for source selection
 			let oSourceType = {
@@ -52,9 +63,8 @@ sap.ui.define([
 					"code": "RMS"
 				}]
 			};
-
+			//set the data and replace everything that is inside. 
 			this.getModel("searchParameters").setData(oSourceType, false);
-
 		},
 
 		/**
@@ -95,31 +105,42 @@ sap.ui.define([
 			$.ajax(sApiUrl, {
 				data: oPayload,
 				beforeSend: function() {
-					//loading effect start
+					//loading effect start if needed
 				},
 				complete: function() {
-					//loading effect end
+					//loading effect end if needed
 				},
 				success: function(data) {
 
 					let oFinalData = data;
+					let aIdChecker = []; //use to check whether an id exist or not
 					//transform the data according to the results. 
-					for (let i = 0; i < data.length; i++) {
-						let aSplitResult = data[i].SEARCH_STRING_CLEANSED.split("|");
+					for (let i = 0; i < oFinalData.length; i++) {
+	
+						//if it does not exist add it into the result.
+						if (aIdChecker.indexOf(oFinalData[i].SCV_ID) === -1) {
+							
+							//push this SCV ID into the array for checking next.
+							aIdChecker.push(oFinalData[i].SCV_ID);
+							
+							//pre-process the result
+							let aSplitResult = oFinalData[i].SEARCH_STRING_CLEANSED.split("|");
 
-						if (aSplitResult.length === 10) {
-							oFinalData[i].FIRST_NAME = aSplitResult[0];
-							oFinalData[i].LAST_NAME = aSplitResult[1];
-							oFinalData[i].CITY = aSplitResult[3];
-							oFinalData[i].DOB = moment(aSplitResult[2]).format("DD/MM/YYYY");
-							oFinalData[i].POSTAL_CODE = aSplitResult[4];
-						} else if (aSplitResult.length === 11) {
-							oFinalData[i].FIRST_NAME = aSplitResult[0];
-							oFinalData[i].LAST_NAME = aSplitResult[1] + " " + aSplitResult[2];
-							oFinalData[i].CITY = aSplitResult[4];
-							oFinalData[i].DOB = moment(aSplitResult[3]).format("DD/MM/YYYY");
-							oFinalData[i].POSTAL_CODE = aSplitResult[5];
+							if (aSplitResult.length === 10) {
+								oFinalData[i].FIRST_NAME = aSplitResult[0];
+								oFinalData[i].LAST_NAME = aSplitResult[1];
+								oFinalData[i].CITY = aSplitResult[3];
+								oFinalData[i].DOB = moment(aSplitResult[2]).format("DD/MM/YYYY");
+								oFinalData[i].POSTAL_CODE = aSplitResult[4];
+							} else if (aSplitResult.length === 11) {
+								oFinalData[i].FIRST_NAME = aSplitResult[0];
+								oFinalData[i].LAST_NAME = aSplitResult[1] + " " + aSplitResult[2];
+								oFinalData[i].CITY = aSplitResult[4];
+								oFinalData[i].DOB = moment(aSplitResult[3]).format("DD/MM/YYYY");
+								oFinalData[i].POSTAL_CODE = aSplitResult[5];
+							}
 						}
+
 					}
 					oController.getView().byId("searchapi-table").setBusy(false);
 					oController.getModel("searchResult").setData(oFinalData, false);
