@@ -39,8 +39,8 @@ sap.ui.define([
 		_onRouteMatched: function(oEvent) {
 
 			//reset filters that is being applied
-			this._resetSearchFilter();
-
+			this._resetAllSearch();
+			
 		},
 
 		/**
@@ -48,7 +48,7 @@ sap.ui.define([
 		 * @param  {[type]} oEvent [description]
 		 * @return {[type]}        [description]
 		 */
-		_resetSearchFilter: function() {
+		_resetAllSearch: function() {
 			//reset the model everytime it enters and clear everything else. 
 			// set model for source selection
 			let oSourceType = {
@@ -65,6 +65,9 @@ sap.ui.define([
 			};
 			//set the data and replace everything that is inside. 
 			this.getModel("searchParameters").setData(oSourceType, false);
+			
+			//enable below to wipe clean all data results after going back to search
+			//this.getModel("searchResult").setData({}, false);
 		},
 
 		/**
@@ -112,36 +115,42 @@ sap.ui.define([
 				},
 				success: function(data) {
 
-					let oFinalData = data;
+					let oFinalData = [];
 					let aIdChecker = []; //use to check whether an id exist or not
+					let aIndexToRemove = [];
 					//transform the data according to the results. 
-					for (let i = 0; i < oFinalData.length; i++) {
-	
+					for (let i = 0; i < data.length; i++) {
+
 						//if it does not exist add it into the result.
-						if (aIdChecker.indexOf(oFinalData[i].SCV_ID) === -1) {
-							
+						if (aIdChecker.indexOf(data[i].SCV_ID) === -1) {
+
 							//push this SCV ID into the array for checking next.
-							aIdChecker.push(oFinalData[i].SCV_ID);
-							
+							aIdChecker.push(data[i].SCV_ID);
+
 							//pre-process the result
-							let aSplitResult = oFinalData[i].SEARCH_STRING_CLEANSED.split("|");
+							let aSplitResult = data[i].SEARCH_STRING_CLEANSED.split("|");
 
 							if (aSplitResult.length === 10) {
-								oFinalData[i].FIRST_NAME = aSplitResult[0];
-								oFinalData[i].LAST_NAME = aSplitResult[1];
-								oFinalData[i].CITY = aSplitResult[3];
-								oFinalData[i].DOB = moment(aSplitResult[2]).format("DD/MM/YYYY");
-								oFinalData[i].POSTAL_CODE = aSplitResult[4];
+								data[i].FIRST_NAME = aSplitResult[0];
+								data[i].LAST_NAME = aSplitResult[1];
+								data[i].CITY = aSplitResult[3];
+								data[i].DOB = moment(aSplitResult[2]).format("DD/MM/YYYY");
+								data[i].POSTAL_CODE = aSplitResult[4];
 							} else if (aSplitResult.length === 11) {
-								oFinalData[i].FIRST_NAME = aSplitResult[0];
-								oFinalData[i].LAST_NAME = aSplitResult[1] + " " + aSplitResult[2];
-								oFinalData[i].CITY = aSplitResult[4];
-								oFinalData[i].DOB = moment(aSplitResult[3]).format("DD/MM/YYYY");
-								oFinalData[i].POSTAL_CODE = aSplitResult[5];
+								data[i].FIRST_NAME = aSplitResult[0];
+								data[i].LAST_NAME = aSplitResult[1] + " " + aSplitResult[2];
+								data[i].CITY = aSplitResult[4];
+								data[i].DOB = moment(aSplitResult[3]).format("DD/MM/YYYY");
+								data[i].POSTAL_CODE = aSplitResult[5];
 							}
-						}
+							
+							oFinalData.push(data[i]);
+
+						} 
 
 					}
+
+
 					oController.getView().byId("searchapi-table").setBusy(false);
 					oController.getModel("searchResult").setData(oFinalData, false);
 				},
