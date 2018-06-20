@@ -152,10 +152,13 @@ sap.ui.define([
 
 
 					oController.getView().byId("searchapi-table").setBusy(false);
+					oController.oSearchControlHolder.setBusy(false);
 					oController.getModel("searchResult").setData(oFinalData, false);
 				},
 				failure: function(error) {
 					oController.getView().byId("searchapi-table").setBusy(false);
+					oController.oSearchControlHolder.setBusy(false);
+					oController.sendMessageToast("Something went wrong, our apologies. Please try again.");
 					console.log(error);
 				}
 			});
@@ -182,12 +185,14 @@ sap.ui.define([
 				sSourceId: oAdditionalFilter.sourceId,
 				sSourceSystem: oAdditionalFilter.sourceSystem
 			};
-
+			
+			oController.oSearchControlHolder = oEvent.getSource();
+	
 			//oTimeout that get clear above and if nothing clear it will go through then.
 			oController.oTimeout = setTimeout(function() {
 				// once its clear, execute search over here. 
 				oController._querySearch(oPayload);
-
+				oController.oSearchControlHolder.setBusy(true);
 			}, 400); //400ms before the search get trigger, so we dont bombard the query on every letter. gotta play with magic number.
 
 		},
