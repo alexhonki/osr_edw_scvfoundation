@@ -2,7 +2,12 @@
   border-bottom: none;
 }
 
-.rmsBPActive {
+.rmsBPInactive {
 	color: #ff0000;
+	font-weight: bold;
+}
+
+.rmsBPActive {
+	color: #228B22;
 	font-weight: bold;
 }

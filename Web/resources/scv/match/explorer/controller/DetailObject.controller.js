@@ -6,7 +6,7 @@
 sap.ui.define([
 	"osr/scv/match/explorer/controller/SuperController",
 	"sap/ui/model/json/JSONModel",
-	"osr/scv/match/explorer/asset/lib/Formatters", 
+	"osr/scv/match/explorer/asset/lib/Formatters",
 	"sap/m/Text"
 ], function(SuperController, JSONModel, Formatters, Text) {
 	"use strict";
@@ -20,7 +20,8 @@ sap.ui.define([
 		 */
 		onInit: function() {
 
-			//setting up of all models to serve.
+			//setting up of all models to serve if needed.
+			//some are binded straight away
 			this.setModel(new JSONModel(), "viewModel");
 			this.setModel(new JSONModel(), "personModel");
 			this.setModel(new JSONModel(), "addressesModel");
@@ -53,11 +54,11 @@ sap.ui.define([
 			oController._readPersonData(oController.oPageParam.scvId); //person tab
 			oController._readAddressesData(oController.oPageParam.scvId); //history tab
 			oController._readPostalData(oController.oPageParam.scvId); //postal tab
-			
+
 			//set the icontab bar to select the first tab everytime.
 			//setting the key in the view.
 			oController.getView().byId("scv-tabbar").setSelectedKey("current-tab-key");
-			
+
 			//when it hit this route, disable busy indicator if there's any.
 			oController.showBusyIndicator(false);
 
@@ -262,19 +263,23 @@ sap.ui.define([
 				oResult.BIRTH_DATE = moment(oData[0].BIRTH_DATE).format("DD/MM/YYYY");
 				oResult.DRIVER_LICENSE = oData[0].SOURCE_ID;
 				oResult.BP_NUMBER = "";
-				
+
 				let oRmsVbox = oController.getView().byId("rms-bp-number");
 				oRmsVbox.destroyItems();
 				let oText;
 				//loop through all the results set. 
 				for (i = 0; i < oData.length; i++) {
 					if (oData[i].SOURCE === "RMS") {
-						
+
 						//build a text control and add it into the VBox control.
 						//oResult.BP_NUMBER += oData[i].SOURCE_ID + "\n";
-						oText = new Text({text: oData[i].SOURCE_ID});
-						
-						if(oData[i].INACTIVE === "X"){ //check for flag set from the back-end
+						oText = new Text({
+							text: oData[i].SOURCE_ID
+						});
+
+						if (oData[i].INACTIVE === "X") { //check for flag set from the back-end
+							oText.addStyleClass("rmsBPInactive");
+						} else {
 							oText.addStyleClass("rmsBPActive");
 						}
 						oRmsVbox.addItem(oText);
