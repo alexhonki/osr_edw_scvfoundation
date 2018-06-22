@@ -600,7 +600,7 @@ BEGIN
 									       CHECKSUM
 							 ;
 	
-	INSERT INTO "osr.scv.foundation.db.data::SCVFoundation.ContactNumber" (SELECT SCV_ID, SOURCE_SYSTEM, SYSTEM_ID, VALID_FROM, VALID_TO, CONTACT_NUMBER, NUMBER_EXT, NUMBER_TYPE, '', CHECKSUM
+	INSERT INTO "osr.scv.foundation.db.data::SCVFoundation.ContactNumber" (SELECT SCV_ID, SOURCE_SYSTEM, SYSTEM_ID, VALID_FROM, VALID_TO, CONTACT_NUMBER, NUMBER_EXT, NUMBER_TYPE, '', CHECKSUM, ''
 																		   FROM :lt_contact_entities_rms_number
 																		   );						 
 	
@@ -674,7 +674,7 @@ BEGIN
 	
 	
 	INSERT INTO "osr.scv.foundation.db.data::SCVFoundation.ContactNumber" (
-																			SELECT SCV_ID, SOURCE_SYSTEM, SYSTEM_ID, UPDATED_AT, UPDATED_AT, CONTACT_PHONE_NO, '', NUMBER_TYPE, DESC, CHECKSUM 
+																			SELECT SCV_ID, SOURCE_SYSTEM, SYSTEM_ID, UPDATED_AT, UPDATED_AT, CONTACT_PHONE_NO, '', NUMBER_TYPE, DESC, CHECKSUM, UPDATED_AT
 																			FROM (
 																				SELECT DISTINCT SCV_ID, SOURCE_SYSTEM, SYSTEM_ID, UPDATED_AT, CONTACT_PHONE_NO, '',NUMBER_TYPE,  '' as DESC, CHECKSUM
 																				FROM :lt_contact_entities_tmr_custMain_number
@@ -708,9 +708,9 @@ BEGIN
 	;
 						 
 	INSERT INTO "osr.scv.foundation.db.data::SCVFoundation.ContactEmail" (
-																		  SELECT SCV_ID, SOURCE_SYSTEM, SYSTEM_ID, UPDATED_AT, UPDATED_AT, EMAIL_ADDRESS, '', 'TMR: Customer main table', CHECKSUM, STD_EMAIL, STD_CHECKSUM
+																		  SELECT SCV_ID, SOURCE_SYSTEM, SYSTEM_ID, UPDATED_AT, UPDATED_AT, EMAIL_ADDRESS, '', 'TMR: Customer main table', CHECKSUM, STD_EMAIL, STD_CHECKSUM, UPDATED_AT
 																		  FROM :lt_contact_entities_tmr_custContact_email
-																		  GROUP BY SCV_ID, SOURCE_SYSTEM, SYSTEM_ID, UPDATED_AT, UPDATED_AT, EMAIL_ADDRESS, '', 'TMR: Customer main table', CHECKSUM, STD_EMAIL, STD_CHECKSUM
+																		  GROUP BY SCV_ID, SOURCE_SYSTEM, SYSTEM_ID, UPDATED_AT, UPDATED_AT, EMAIL_ADDRESS, '', 'TMR: Customer main table', CHECKSUM, STD_EMAIL, STD_CHECKSUM, UPDATED_AT
 																		 )
 	;		
 	
