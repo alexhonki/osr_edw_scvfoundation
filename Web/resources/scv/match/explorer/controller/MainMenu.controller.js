@@ -137,8 +137,8 @@ sap.ui.define([
 								data[i].DOB = moment(aSplitResult[2]).format("DD/MM/YYYY");
 								data[i].POSTAL_CODE = aSplitResult[4];
 							} else if (aSplitResult.length === 11) {
-								data[i].FIRST_NAME = aSplitResult[0];
-								data[i].LAST_NAME = aSplitResult[1] + " " + aSplitResult[2];
+								data[i].FIRST_NAME = aSplitResult[0] + " " + aSplitResult[1];
+								data[i].LAST_NAME = aSplitResult[2];
 								data[i].CITY = aSplitResult[4];
 								data[i].DOB = moment(aSplitResult[3]).format("DD/MM/YYYY");
 								data[i].POSTAL_CODE = aSplitResult[5];

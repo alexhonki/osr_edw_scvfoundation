@@ -14,12 +14,21 @@ function getFinalLoadForExecution(sScvId, sSource, sSourceId) {
 	//sourceid e.g 0001350449
 	//scvid e.g 2005337 - unique entry to the table
 	//source e.g RMS , TMR
+	
+	// REMOVE SELECTING THE SCORE, can be re-enable if needed.
+	// seems the distinct on SCORE, even though the score is the same is considered 2 
+	// different records.
+	// let sFrontQuery =
+	// 	"SELECT DISTINCT \"SCV_ID\",TO_DOUBLE(ROUND(TO_DECIMAL(SCORE()),2)) as SCORE, \"SEARCH_STRING_CLEANSED\" " +
+	// 	"FROM \"osr.scv.foundation.db.data::SCVFoundation.Search\" WHERE ";
 
+	// let sEndingQuery = "CONTAINS (SEARCH_STRING, ?, FUZZY (?)) ORDER BY SCORE DESC, \"SCV_ID\" ASC";
+	
 	let sFrontQuery =
-		"SELECT DISTINCT \"SCV_ID\",TO_DOUBLE(ROUND(TO_DECIMAL(SCORE()),2)) as SCORE, \"SEARCH_STRING_CLEANSED\" " +
+		"SELECT DISTINCT \"SCV_ID\", \"SEARCH_STRING_CLEANSED\" " +
 		"FROM \"osr.scv.foundation.db.data::SCVFoundation.Search\" WHERE ";
 
-	let sEndingQuery = "CONTAINS (SEARCH_STRING, ?, FUZZY (?)) ORDER BY SCORE DESC, \"SCV_ID\" ASC";
+	let sEndingQuery = "CONTAINS (SEARCH_STRING, ?, FUZZY (?)) ORDER BY \"SCV_ID\" ASC";
 
 	if (typeof sScvId !== "undefined") {
 		sFrontQuery += " \"SCV_ID\" LIKE ? AND ";
