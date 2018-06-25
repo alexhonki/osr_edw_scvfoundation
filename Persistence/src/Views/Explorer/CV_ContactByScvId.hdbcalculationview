@@ -55,8 +55,16 @@
       <viewAttribute id="STD_CHECKSUM">
         <descriptions defaultDescription="STD_CHECKSUM"/>
       </viewAttribute>
+    
+      <viewAttribute id="LAST_UPDATED">
+        <descriptions defaultDescription="LAST_UPDATED"/>
+      </viewAttribute>
     </viewAttributes>
-    <calculatedViewAttributes/>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="S_LAST_UPDATED" datatype="NVARCHAR" length="10" expressionLanguage="SQL">
+        <formula>TO_VARCHAR(&quot;LAST_UPDATED&quot;)</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
     <restrictedViewAttributes/>
     <input node="osr.scv.foundation.db.data::SCVFoundation.ContactEmail">
       <mapping xsi:type="Calculation:AttributeMapping" target="SCV_ID" source="SCV_ID"/>
@@ -70,6 +78,8 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="CHECKSUM" source="CHECKSUM"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="STD_EMAIL" source="STD_EMAIL"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="STD_CHECKSUM" source="STD_CHECKSUM"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="LAST_UPDATED" source="LAST_UPDATED"/>
     </input>
     <filter>(&quot;SCV_ID&quot; = '$$IP_SCV_ID$$')</filter>
   </calculationView>
@@ -105,6 +115,10 @@
       <viewAttribute id="CHECKSUM">
         <descriptions defaultDescription="CHECKSUM"/>
       </viewAttribute>
+    
+      <viewAttribute id="LAST_UPDATED">
+        <descriptions defaultDescription="LAST_UPDATED"/>
+      </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes>
       <calculatedViewAttribute id="TELEPHONE" datatype="NVARCHAR" length="20" expressionLanguage="COLUMN_ENGINE">
@@ -112,6 +126,12 @@
       </calculatedViewAttribute>
       <calculatedViewAttribute id="MOBILE" datatype="NVARCHAR" length="20" expressionLanguage="COLUMN_ENGINE">
         <formula>if(&quot;NUMBER_TYPE&quot; != 'PHO', &quot;CONTACT_NUMBER&quot;, '' )</formula>
+      </calculatedViewAttribute>
+    
+      <calculatedViewAttribute id="S_LAST_UPDATED" datatype="NVARCHAR" length="10" expressionLanguage="SQL">
+    
+        <formula>TO_VARCHAR(&quot;LAST_UPDATED&quot;)</formula>
+    
       </calculatedViewAttribute>
     </calculatedViewAttributes>
     <restrictedViewAttributes/>
@@ -126,6 +146,8 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="NUMBER_TYPE" source="NUMBER_TYPE"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="NUMBER_DESC" source="NUMBER_DESC"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="CHECKSUM" source="CHECKSUM"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="LAST_UPDATED" source="LAST_UPDATED"/>
     </input>
     <filter>(&quot;SCV_ID&quot; = '$$IP_SCV_ID$$')</filter>
   </calculationView>
@@ -177,6 +199,10 @@
       <viewAttribute id="MOBILE">
         <descriptions defaultDescription="MOBILE"/>
       </viewAttribute>
+    
+      <viewAttribute id="S_LAST_UPDATED">
+        <descriptions defaultDescription="S_LAST_UPDATED"/>
+      </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
@@ -197,6 +223,8 @@
     
       <mapping xsi:type="Calculation:AttributeMapping" target="TELEPHONE" source="TELEPHONE"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="MOBILE" source="MOBILE"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="S_LAST_UPDATED" source="S_LAST_UPDATED"/>
     </input>
     <input node="Email" emptyUnionBehavior="NO_ROW">
       <mapping xsi:type="Calculation:AttributeMapping" target="SCV_ID" source="SCV_ID"/>
@@ -215,6 +243,8 @@
     
       <mapping xsi:type="Calculation:ConstantAttributeMapping" target="TELEPHONE" null="true" value=""/>
       <mapping xsi:type="Calculation:ConstantAttributeMapping" target="MOBILE" null="true" value=""/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="S_LAST_UPDATED" source="S_LAST_UPDATED"/>
     </input>
   </calculationView>
 </calculationViews>
@@ -275,11 +305,18 @@
   
     <attribute id="TELEPHONE" order="14" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="TELEPHONE"/>
+  
       <keyMapping columnObjectName="SCVContact" columnName="TELEPHONE"/>
+  
     </attribute>
     <attribute id="MOBILE" order="15" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="MOBILE"/>
       <keyMapping columnObjectName="SCVContact" columnName="MOBILE"/>
+    </attribute>
+  
+    <attribute id="S_LAST_UPDATED" order="16" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="S_LAST_UPDATED"/>
+      <keyMapping columnObjectName="SCVContact" columnName="S_LAST_UPDATED"/>
     </attribute>
   </attributes>
   <calculatedAttributes/>

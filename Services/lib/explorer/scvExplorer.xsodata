@@ -16,7 +16,7 @@ service {
 	
 	"osr.scv.foundation.db.views.Explorer::CV_ContactByScvId" as "contact"
 	with("SCV_ID", "SOURCE", "SOURCE_ID", "VALID_FROM", "VALID_TO", "CONTACT_NUMBER", "NUMBER_EXT", 
-	"NUMBER_TYPE", "NUMBER_DESC", "EMAIL_TYPE", "EMAIL_DESC", "STD_EMAIL", "CONTACT_EMAIL", "TELEPHONE", "MOBILE")
+	"NUMBER_TYPE", "NUMBER_DESC", "EMAIL_TYPE", "EMAIL_DESC", "STD_EMAIL", "CONTACT_EMAIL", "TELEPHONE", "MOBILE", "S_LAST_UPDATED")
 	keys generate local "UNIQUE_ID"
 	parameters via entity
 	create forbidden 
