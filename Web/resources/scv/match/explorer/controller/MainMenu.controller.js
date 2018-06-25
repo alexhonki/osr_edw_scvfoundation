@@ -24,7 +24,19 @@ sap.ui.define([
 
 			//set model to the view, so that dialog can be accessed and there's data for it. 
 			//since we add dependent to it
-			this.setModel(new JSONModel(), "searchParameters");
+			let oSourceType = {
+				"SourceType": [{
+					"name": "",
+					"code": ""
+				}, {
+					"name": "TMR",
+					"code": "TMR"
+				}, {
+					"name": "RMS",
+					"code": "RMS"
+				}]
+			};
+			this.setModel(new JSONModel(oSourceType), "searchParameters");
 
 			this.getRouter().getRoute("homepage").attachPatternMatched(this._onRouteMatched, this);
 			this.getRouter().getRoute("appHome").attachPatternMatched(this._onRouteMatched, this);
@@ -51,23 +63,22 @@ sap.ui.define([
 		_resetAllSearch: function() {
 			//reset the model everytime it enters and clear everything else. 
 			// set model for source selection
-			let oSourceType = {
-				"SourceType": [{
-					"name": "",
-					"code": ""
-				}, {
-					"name": "TMR",
-					"code": "TMR"
-				}, {
-					"name": "RMS",
-					"code": "RMS"
-				}]
-			};
+			// disable, in the event that we want to reset everything else. 
+			// let oSourceType = {
+			// 	"SourceType": [{
+			// 		"name": "",
+			// 		"code": ""
+			// 	}, {
+			// 		"name": "TMR",
+			// 		"code": "TMR"
+			// 	}, {
+			// 		"name": "RMS",
+			// 		"code": "RMS"
+			// 	}]
+			// };
 			//set the data and replace everything that is inside. 
-			this.getModel("searchParameters").setData(oSourceType, false);
-			
-			//enable below to wipe clean all data results after going back to search
-			//this.getModel("searchResult").setData({}, false);
+			this.getModel("searchParameters").setProperty("/searchString", "");
+		
 		},
 
 		/**
