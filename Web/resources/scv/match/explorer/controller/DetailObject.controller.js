@@ -303,7 +303,9 @@ sap.ui.define([
 
 					if (typeof oResult.HOME_NUMBER === "undefined") {
 						if (oData[i].NUMBER_TYPE === "PHO") {
+
 							oResult.HOME_NUMBER = oData[i].CONTACT_NUMBER;
+
 						}
 					}
 
@@ -324,6 +326,13 @@ sap.ui.define([
 						break;
 					}
 
+				}
+
+				//if no data returned, set to none.
+				if (oData.length === 0) {
+					oResult.HOME_NUMBER = '';
+					oResult.CONTACT_EMAIL = '';
+					oResult.MOBILE_NUMBER = '';
 				}
 
 				//set the data and set merge to true, so we dont wipe existing data.

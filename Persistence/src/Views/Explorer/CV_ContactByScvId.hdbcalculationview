@@ -64,6 +64,13 @@
       <calculatedViewAttribute id="S_LAST_UPDATED" datatype="NVARCHAR" length="10" expressionLanguage="SQL">
         <formula>TO_VARCHAR(&quot;LAST_UPDATED&quot;)</formula>
       </calculatedViewAttribute>
+    
+      <calculatedViewAttribute id="S_VALID_FROM" datatype="NVARCHAR" length="10" expressionLanguage="SQL">
+        <formula>TO_VARCHAR(&quot;VALID_FROM&quot;)</formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="S_VALID_TO" datatype="NVARCHAR" length="10" expressionLanguage="SQL">
+        <formula>TO_VARCHAR(&quot;VALID_TO&quot;)</formula>
+      </calculatedViewAttribute>
     </calculatedViewAttributes>
     <restrictedViewAttributes/>
     <input node="osr.scv.foundation.db.data::SCVFoundation.ContactEmail">
@@ -132,6 +139,13 @@
     
         <formula>TO_VARCHAR(&quot;LAST_UPDATED&quot;)</formula>
     
+      </calculatedViewAttribute>
+    
+      <calculatedViewAttribute id="S_VALID_FROM" datatype="NVARCHAR" length="10" expressionLanguage="SQL">
+        <formula>TO_VARCHAR(&quot;VALID_FROM&quot;)</formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="S_VALID_TO" datatype="NVARCHAR" length="10" expressionLanguage="SQL">
+        <formula>TO_VARCHAR(&quot;VALID_TO&quot;)</formula>
       </calculatedViewAttribute>
     </calculatedViewAttributes>
     <restrictedViewAttributes/>
@@ -203,6 +217,13 @@
       <viewAttribute id="S_LAST_UPDATED">
         <descriptions defaultDescription="S_LAST_UPDATED"/>
       </viewAttribute>
+    
+      <viewAttribute id="S_VALID_FROM">
+        <descriptions defaultDescription="S_VALID_FROM"/>
+      </viewAttribute>
+      <viewAttribute id="S_VALID_TO">
+        <descriptions defaultDescription="S_VALID_TO"/>
+      </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
@@ -225,6 +246,9 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="MOBILE" source="MOBILE"/>
     
       <mapping xsi:type="Calculation:AttributeMapping" target="S_LAST_UPDATED" source="S_LAST_UPDATED"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="S_VALID_FROM" source="S_VALID_FROM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="S_VALID_TO" source="S_VALID_TO"/>
     </input>
     <input node="Email" emptyUnionBehavior="NO_ROW">
       <mapping xsi:type="Calculation:AttributeMapping" target="SCV_ID" source="SCV_ID"/>
@@ -245,6 +269,9 @@
       <mapping xsi:type="Calculation:ConstantAttributeMapping" target="MOBILE" null="true" value=""/>
     
       <mapping xsi:type="Calculation:AttributeMapping" target="S_LAST_UPDATED" source="S_LAST_UPDATED"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="S_VALID_FROM" source="S_VALID_FROM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="S_VALID_TO" source="S_VALID_TO"/>
     </input>
   </calculationView>
 </calculationViews>
@@ -316,7 +343,18 @@
   
     <attribute id="S_LAST_UPDATED" order="16" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="S_LAST_UPDATED"/>
+  
       <keyMapping columnObjectName="SCVContact" columnName="S_LAST_UPDATED"/>
+  
+    </attribute>
+  
+    <attribute id="S_VALID_FROM" order="17" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="S_VALID_FROM"/>
+      <keyMapping columnObjectName="SCVContact" columnName="S_VALID_FROM"/>
+    </attribute>
+    <attribute id="S_VALID_TO" order="18" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="S_VALID_TO"/>
+      <keyMapping columnObjectName="SCVContact" columnName="S_VALID_TO"/>
     </attribute>
   </attributes>
   <calculatedAttributes/>

@@ -62,11 +62,12 @@ try {
 	//execute the query base on what is prepared on the statement. 
 
 	rs = ptsmt.executeQuery();
-
-	let finalResult = JSON.stringify(rs._rows);
+	
+	let oPreResult = oUnstructuredSearchLib.transformResults(rs._rows);
+	let oFinalResult = JSON.stringify(oPreResult);
 
 	$.response.contentType = "application/json";
-	$.response.setBody(finalResult);
+	$.response.setBody(oFinalResult);
 	$.response.status = $.net.http.OK;
 
 	ptsmt.close();

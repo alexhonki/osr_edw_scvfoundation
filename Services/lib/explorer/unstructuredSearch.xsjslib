@@ -4,17 +4,17 @@
  * Logic function doing
  * 07.06.2018 
  */
- 
- "use strict";
 
- //build the sql query base on like, that way we don't get smashed doing
+"use strict";
+
+//build the sql query base on like, that way we don't get smashed doing
 //the logic and everything can go through
 function getFinalLoadForExecution(sScvId, sSource, sSourceId) {
 	//3 criterias for the WHERE clause 
 	//sourceid e.g 0001350449
 	//scvid e.g 2005337 - unique entry to the table
 	//source e.g RMS , TMR
-	
+
 	// REMOVE SELECTING THE SCORE, can be re-enable if needed.
 	// seems the distinct on SCORE, even though the score is the same is considered 2 
 	// different records.
@@ -23,7 +23,7 @@ function getFinalLoadForExecution(sScvId, sSource, sSourceId) {
 	// 	"FROM \"osr.scv.foundation.db.data::SCVFoundation.Search\" WHERE ";
 
 	// let sEndingQuery = "CONTAINS (SEARCH_STRING, ?, FUZZY (?)) ORDER BY SCORE DESC, \"SCV_ID\" ASC";
-	
+
 	let sFrontQuery =
 		"SELECT DISTINCT \"SCV_ID\", \"SEARCH_STRING_CLEANSED\" " +
 		"FROM \"osr.scv.foundation.db.data::SCVFoundation.Search\" WHERE ";
@@ -47,4 +47,55 @@ function getFinalLoadForExecution(sScvId, sSource, sSourceId) {
 
 	//return the built sql search string.
 	return sFrontQuery;
+}
+
+function transformResults(oResultRows) {
+	
+	let oFinalData = [];
+	let aIdChecker = []; //use to check whether an id exist or not
+	let aIndexToRemove = [];
+	
+	//transform the data according to the results. 
+	for (let i = 0; i < oResultRows.length; i++) {
+
+		//if it does not exist add it into the result.
+		if (aIdChecker.indexOf(oResultRows[i].SCV_ID) === -1) {
+
+			//push this SCV ID into the array for checking next.
+			aIdChecker.push(oResultRows[i].SCV_ID);
+
+			//pre-process the result
+			let aSplitResult = oResultRows[i].SEARCH_STRING_CLEANSED.split("|");
+
+			if (aSplitResult.length === 10) {
+				oResultRows[i].FIRST_NAME = aSplitResult[0];
+				oResultRows[i].LAST_NAME = aSplitResult[1];
+				oResultRows[i].CITY = aSplitResult[3];
+				oResultRows[i].DOB = this._reverseStringDOB(aSplitResult[2]);
+				oResultRows[i].POSTAL_CODE = aSplitResult[4];
+			} else if (aSplitResult.length === 11) {
+				oResultRows[i].FIRST_NAME = aSplitResult[0] + " " + aSplitResult[1];
+				oResultRows[i].LAST_NAME = aSplitResult[2];
+				oResultRows[i].CITY = aSplitResult[4];
+				oResultRows[i].DOB = this._reverseStringDOB(aSplitResult[3]);
+				oResultRows[i].POSTAL_CODE = aSplitResult[5];
+			}
+
+			oFinalData.push(oResultRows[i]);
+
+		}
+
+	}
+	
+	return oFinalData;
+}
+
+/**
+ * Reverse the string of DOB for the SCV.
+ * Split base on the '-'
+ * reverse the array with reverse
+ * join it back with seperator of '/'
+ */
+function _reverseStringDOB(str) {
+    return str.split("-").reverse().join("/");
 }

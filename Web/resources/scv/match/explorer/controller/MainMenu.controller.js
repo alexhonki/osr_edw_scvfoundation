@@ -126,45 +126,9 @@ sap.ui.define([
 				},
 				success: function(data) {
 
-					let oFinalData = [];
-					let aIdChecker = []; //use to check whether an id exist or not
-					let aIndexToRemove = [];
-					//transform the data according to the results. 
-					for (let i = 0; i < data.length; i++) {
-
-						//if it does not exist add it into the result.
-						if (aIdChecker.indexOf(data[i].SCV_ID) === -1) {
-
-							//push this SCV ID into the array for checking next.
-							aIdChecker.push(data[i].SCV_ID);
-
-							//pre-process the result
-							let aSplitResult = data[i].SEARCH_STRING_CLEANSED.split("|");
-
-							if (aSplitResult.length === 10) {
-								data[i].FIRST_NAME = aSplitResult[0];
-								data[i].LAST_NAME = aSplitResult[1];
-								data[i].CITY = aSplitResult[3];
-								data[i].DOB = moment(aSplitResult[2]).format("DD/MM/YYYY");
-								data[i].POSTAL_CODE = aSplitResult[4];
-							} else if (aSplitResult.length === 11) {
-								data[i].FIRST_NAME = aSplitResult[0] + " " + aSplitResult[1];
-								data[i].LAST_NAME = aSplitResult[2];
-								data[i].CITY = aSplitResult[4];
-								data[i].DOB = moment(aSplitResult[3]).format("DD/MM/YYYY");
-								data[i].POSTAL_CODE = aSplitResult[5];
-							}
-							
-							oFinalData.push(data[i]);
-
-						} 
-
-					}
-
-
 					oController.getView().byId("searchapi-table").setBusy(false);
 					oController.oSearchControlHolder.setBusy(false);
-					oController.getModel("searchResult").setData(oFinalData, false);
+					oController.getModel("searchResult").setData(data, false);
 				},
 				failure: function(error) {
 					oController.getView().byId("searchapi-table").setBusy(false);
@@ -204,7 +168,7 @@ sap.ui.define([
 				// once its clear, execute search over here. 
 				oController._querySearch(oPayload);
 				oController.oSearchControlHolder.setBusy(true);
-			}, 400); //400ms before the search get trigger, so we dont bombard the query on every letter. gotta play with magic number.
+			}, 500); //500ms before the search get trigger, so we dont bombard the query on every letter. gotta play with magic number.
 
 		},
 
