@@ -24,19 +24,8 @@ sap.ui.define([
 
 			//set model to the view, so that dialog can be accessed and there's data for it. 
 			//since we add dependent to it
-			let oSourceType = {
-				"SourceType": [{
-					"name": "",
-					"code": ""
-				}, {
-					"name": "TMR",
-					"code": "TMR"
-				}, {
-					"name": "RMS",
-					"code": "RMS"
-				}]
-			};
-			this.setModel(new JSONModel(oSourceType), "searchParameters");
+
+			this.setModel(new JSONModel(), "searchParameters");
 
 			this.getRouter().getRoute("homepage").attachPatternMatched(this._onRouteMatched, this);
 			this.getRouter().getRoute("appHome").attachPatternMatched(this._onRouteMatched, this);
@@ -64,20 +53,21 @@ sap.ui.define([
 			//reset the model everytime it enters and clear everything else. 
 			// set model for source selection
 			// disable, in the event that we want to reset everything else. 
-			// let oSourceType = {
-			// 	"SourceType": [{
-			// 		"name": "",
-			// 		"code": ""
-			// 	}, {
-			// 		"name": "TMR",
-			// 		"code": "TMR"
-			// 	}, {
-			// 		"name": "RMS",
-			// 		"code": "RMS"
-			// 	}]
-			// };
+			let oSourceType = {
+				"SourceType": [{
+					"name": "",
+					"code": ""
+				}, {
+					"name": "TMR",
+					"code": "TMR"
+				}, {
+					"name": "RMS",
+					"code": "RMS"
+				}]
+			};
 			//set the data and replace everything that is inside. 
-			this.getModel("searchParameters").setProperty("/searchString", "");
+			this.getModel("searchParameters").setData(oSourceType, false);
+			//this.getModel("searchParameters").setProperty("/searchString", "");
 		
 		},
 
