@@ -24,9 +24,6 @@ sap.ui.define([
 			//some are binded straight away
 			this.setModel(new JSONModel(), "viewModel");
 			this.setModel(new JSONModel(), "personModel");
-			this.setModel(new JSONModel(), "addressesModel");
-			this.setModel(new JSONModel(), "contactsModel");
-			this.setModel(new JSONModel(), "currentModel");
 			this.setModel(new JSONModel(), "postalModel");
 			this.setModel(new JSONModel(), "timelineModel");
 
@@ -48,6 +45,9 @@ sap.ui.define([
 			oController.getModel("viewModel").setProperty("/SHOW_HISTORY_TABLE", true);
 			oController.getModel("viewModel").setProperty("/SHOW_HISTORY_TIMELINE", false);
 
+			//reset all JSON model used. 
+			oController.getModel("personModel").setData({}, false);
+			
 			//do data read whenever route change. 
 			oController._readCurrentPersonData(oController.oPageParam.scvId); //current tab
 			oController._readScvContactData(oController.oPageParam.scvId); //current tab for their current contact
@@ -184,7 +184,7 @@ sap.ui.define([
 			let oController = this;
 			oController.getModel("scvExplorerModel").read("/contactParameters" + "(IP_SCV_ID='" + sScvId + "')/Results", {
 				urlParameters: {
-					"$orderby": "SOURCE desc,VALID_TO desc"
+					"$orderby": "SOURCE desc,S_LAST_UPDATED desc,S_VALID_TO desc"
 				},
 				success: function(data) {
 
@@ -303,7 +303,9 @@ sap.ui.define([
 
 					if (typeof oResult.HOME_NUMBER === "undefined") {
 						if (oData[i].NUMBER_TYPE === "PHO") {
+
 							oResult.HOME_NUMBER = oData[i].CONTACT_NUMBER;
+
 						}
 					}
 
@@ -324,6 +326,13 @@ sap.ui.define([
 						break;
 					}
 
+				}
+
+				//if no data returned, set to none.
+				if (oData.length === 0) {
+					oResult.HOME_NUMBER = '';
+					oResult.CONTACT_EMAIL = '';
+					oResult.MOBILE_NUMBER = '';
 				}
 
 				//set the data and set merge to true, so we dont wipe existing data.
