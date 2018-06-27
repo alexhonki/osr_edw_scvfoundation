@@ -30,7 +30,7 @@ context SCVFoundation {
             STD_PERSON_GN2 : String(50);
             STD_PERSON_FN  : String(50);
             STD_CHECKSUM   : Binary(32);
-            INACTIVE	   : String(1); /* Input e.g 'X' or '' coming from RMS System */	
+            INACTIVE       : String(1); /* Input e.g 'X' or '' coming from RMS System */
     }
     technical configuration {
         fuzzy search index on (LAST_NAME);
@@ -139,8 +139,8 @@ context SCVFoundation {
             ADDR_LATITUDE              : BinaryFloat default 0.00;
             ADDR_LONGITUDE             : BinaryFloat default 0.00;
             STD_CHECKSUM               : Binary(32);
-            LAST_CONTACT_DATE		   : LocalDate; /* either when source DB get updated OR when a user update the date*/
-            
+            LAST_CONTACT_DATE          : LocalDate; /* either when source DB get updated OR when a user update the date*/
+
     };
 
     /*@@layout{"layoutInfo":{}}*/
@@ -179,6 +179,8 @@ context SCVFoundation {
         SOURCE_ID              : String(20);
         SEARCH_STRING          : String(1024);
         SEARCH_STRING_CLEANSED : String(1024);
+        ADR_CHECKSUM           : Binary(32);
+        ADR_STD_CHECKSUM       : Binary(32);
     }
     technical configuration {
         fulltext index idx_fulltext          on (SEARCH_STRING)

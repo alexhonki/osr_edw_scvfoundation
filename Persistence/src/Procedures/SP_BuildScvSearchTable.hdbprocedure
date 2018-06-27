@@ -15,12 +15,14 @@ BEGIN
 	INSERT INTO "osr.scv.foundation.db.data::SCVFoundation.Search" 
 	(
 		SELECT DISTINCT * FROM (
-			SELECT a.SCV_ID, a.SOURCE, a.SOURCE_ID, (a.FIRST_NAME || '|' || a.MIDDLE_NAME || '|' || a.LAST_NAME || '|' || a.BIRTH_DATE || '|' ||  b.CITY1
+			SELECT a.SCV_ID, a.SOURCE, a.SOURCE_ID, 
+			(a.FIRST_NAME || '|' || a.MIDDLE_NAME || '|' || a.LAST_NAME || '|' || a.BIRTH_DATE || '|' ||  b.CITY1
 			|| '|' || POST_CODE1 || '|' || STREET || '|' || HOUSE_NUM1 || '|' || REGION || '|' || COUNTRY
 			),
 			(a.STD_PERSON_GN || '|' || a.STD_PERSON_GN2 || '|' || a.STD_PERSON_FN || '|' || a.BIRTH_DATE || '|' ||  b.STD_ADDR_LOCALITY
 			|| '|' || STD_ADDR_POSTCODE1 || '|' || STD_ADDR_PRIM_NAME || '|' || STD_ADDR_PRIM_TYPE || '|' || STD_ADDR_PRIM_NUMBER || '|' || STD_ADDR_REGION || '|' || STD_ADDR_COUNTRY_NAME
-			)
+			),
+			b.CHECKSUM, b.STD_CHECKSUM
 			FROM "osr.scv.foundation.db.data::SCVFoundation.PersonRms" a
 			INNER JOIN
 			"osr.scv.foundation.db.data::SCVFoundation.AddressRms" b
@@ -32,12 +34,14 @@ BEGIN
 	INSERT INTO "osr.scv.foundation.db.data::SCVFoundation.Search" 
 	(
 		SELECT DISTINCT * FROM (
-			SELECT a.SCV_ID, a.SOURCE, a.SOURCE_ID, (a.FIRST_NAME || '|' || a.MIDDLE_NAME || '|' || a.LAST_NAME || '|' || a.BIRTH_DATE || '|' ||  b.SUBURB
+			SELECT a.SCV_ID, a.SOURCE, a.SOURCE_ID, 
+			(a.FIRST_NAME || '|' || a.MIDDLE_NAME || '|' || a.LAST_NAME || '|' || a.BIRTH_DATE || '|' ||  b.SUBURB
 			|| '|' || POSTCODE || '|' || STREET_NAME || '|' || STREET_NO || '|' || STATE || '|' || COUNTRY
 			),
 			(a.STD_PERSON_GN || '|' || a.STD_PERSON_GN2 || '|' || a.STD_PERSON_FN || '|' || a.BIRTH_DATE || '|' ||  b.STD_ADDR_LOCALITY
 			|| '|' || STD_ADDR_POSTCODE1 || '|' || STD_ADDR_PRIM_NAME || '|' || STD_ADDR_PRIM_TYPE || '|' || STD_ADDR_PRIM_NUMBER || '|' || STD_ADDR_REGION || '|' || STD_ADDR_COUNTRY_NAME
-			)
+			),
+			b.CHECKSUM, b.STD_CHECKSUM
 			FROM "osr.scv.foundation.db.data::SCVFoundation.PersonTmr" a
 			INNER JOIN
 			"osr.scv.foundation.db.data::SCVFoundation.AddressTmr" b
