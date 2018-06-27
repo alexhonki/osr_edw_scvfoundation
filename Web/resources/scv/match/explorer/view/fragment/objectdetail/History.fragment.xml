@@ -17,19 +17,19 @@
 		           text="{i18n>headercontent.scvid} {viewModel>/SCV_ID}"  />
 		  </Toolbar>
 		  
-			<Link
-				text="View As Timeline"
-				visible="{= ${viewModel>/SHOW_HISTORY_TABLE} === true}"
-				press="onViewLinkPressed"
-        		class="sapUiSmallMargin"
-        		app:sWhichLink="showTimeline"/>
+			<!--<Link-->
+			<!--	text="View As Timeline"-->
+			<!--	visible="{= ${viewModel>/SHOW_HISTORY_TABLE} === true}"-->
+			<!--	press="onViewLinkPressed"-->
+   <!--     		class="sapUiSmallMargin"-->
+   <!--     		app:sWhichLink="showTimeline"/>-->
    
-        	<Link
-				text="View As Table"
-				visible="{= ${viewModel>/SHOW_HISTORY_TIMELINE} === true}"
-				press="onViewLinkPressed"
-        		class="sapUiSmallMargin"
-        		app:sWhichLink="showTable"/>
+   <!--     	<Link-->
+			<!--	text="View As Table"-->
+			<!--	visible="{= ${viewModel>/SHOW_HISTORY_TIMELINE} === true}"-->
+			<!--	press="onViewLinkPressed"-->
+   <!--     		class="sapUiSmallMargin"-->
+   <!--     		app:sWhichLink="showTable"/>-->
         
 			<t:Table
 				id="history-address-table"

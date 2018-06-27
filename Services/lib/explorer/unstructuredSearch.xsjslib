@@ -23,10 +23,11 @@ function getFinalLoadForExecution(sScvId, sSource, sSourceId) {
 	// 	"FROM \"osr.scv.foundation.db.data::SCVFoundation.Search\" WHERE ";
 
 	// let sEndingQuery = "CONTAINS (SEARCH_STRING, ?, FUZZY (?)) ORDER BY SCORE DESC, \"SCV_ID\" ASC";
-
+	
+	//NOT NULL is used for fail safe in case there's NULL happening in the table itself.
 	let sFrontQuery =
 		"SELECT DISTINCT \"SCV_ID\", \"SEARCH_STRING_CLEANSED\" " +
-		"FROM \"osr.scv.foundation.db.data::SCVFoundation.Search\" WHERE ";
+		"FROM \"osr.scv.foundation.db.data::SCVFoundation.Search\" WHERE \"SEARCH_STRING_CLEANSED\" IS NOT NULL AND ";
 
 	let sEndingQuery = "CONTAINS (SEARCH_STRING, ?, FUZZY (?)) ORDER BY \"SCV_ID\" ASC";
 
@@ -49,12 +50,30 @@ function getFinalLoadForExecution(sScvId, sSource, sSourceId) {
 	return sFrontQuery;
 }
 
+/**
+ * get chosen if we are only searching the source id. 
+ * NOT NULL is used for fail safe in case there's NULL happening
+ * on the Search table. 
+ */
+function getSourceIdSearchOnly() {
+	let sFrontQuery =
+		"SELECT DISTINCT \"SCV_ID\", \"SEARCH_STRING_CLEANSED\" " +
+		"FROM \"osr.scv.foundation.db.data::SCVFoundation.Search\" WHERE \"SEARCH_STRING_CLEANSED\" IS NOT NULL AND \"SOURCE_ID\" = ? ";
+
+	return sFrontQuery;
+}
+
+/**
+ * Transform result before spitting out the data, so that no pre-processing 
+ * happen in the front-end to reduce load for the browsers.
+ * @return  {[Array]} oFinalData [contain all pre-processed result and distinct]
+ */
 function transformResults(oResultRows) {
-	
+
 	let oFinalData = [];
 	let aIdChecker = []; //use to check whether an id exist or not
 	let aIndexToRemove = [];
-	
+
 	//transform the data according to the results. 
 	for (let i = 0; i < oResultRows.length; i++) {
 
@@ -64,9 +83,10 @@ function transformResults(oResultRows) {
 			//push this SCV ID into the array for checking next.
 			aIdChecker.push(oResultRows[i].SCV_ID);
 
-			//pre-process the result
+			//pre-process the result and split base on "|"
 			let aSplitResult = oResultRows[i].SEARCH_STRING_CLEANSED.split("|");
-
+			
+			//determine to check whether it is 3 names or not.
 			if (aSplitResult.length === 10) {
 				oResultRows[i].FIRST_NAME = aSplitResult[0];
 				oResultRows[i].LAST_NAME = aSplitResult[1];
@@ -86,7 +106,7 @@ function transformResults(oResultRows) {
 		}
 
 	}
-	
+
 	return oFinalData;
 }
 
@@ -97,5 +117,5 @@ function transformResults(oResultRows) {
  * join it back with seperator of '/'
  */
 function _reverseStringDOB(str) {
-    return str.split("-").reverse().join("/");
+	return str.split("-").reverse().join("/");
 }
