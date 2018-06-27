@@ -181,6 +181,8 @@ context SCVFoundation {
         SOURCE_ID              : String(20);
         SEARCH_STRING          : String(1024);
         SEARCH_STRING_CLEANSED : String(1024);
+        ADR_CHECKSUM           : Binary(32);
+        ADR_STD_CHECKSUM       : Binary(32);
     }
     technical configuration {
         fulltext index idx_fulltext          on (SEARCH_STRING)
