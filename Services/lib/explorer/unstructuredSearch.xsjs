@@ -11,13 +11,14 @@ try {
 	let sCity = $.request.parameters.get("sCity");
 	let sScvId = $.request.parameters.get("sScvId");
 	let sSource = $.request.parameters.get("sSourceSystem");
+	let sSourceIdinQuery = $.request.parameters.get("sSourceIdinQuery");
 	let sFinalSearchString = "";
 
 	//do check for each variable being passed on. 
 	if (typeof sFuzzy === "undefined" || sFuzzy === "") {
 		sFuzzy = 0.8; // default to 0.8 if none set. 
 	}
-	
+
 	//do check for each of the variable coming in as a failsafe. 
 	// Will be appended to the search string for the query.
 	// if there's nothing, then it will just be an empty string.
@@ -28,15 +29,15 @@ try {
 	if (typeof sCity === "undefined") {
 		sCity = ""; // set to blank if there's none coming
 	}
-	
+
 	if (typeof sScvId === "undefined") {
 		sScvId = ""; // set to blank if there's none coming
 	}
-	
+
 	if (typeof sSource === "undefined") {
 		sSource = ""; // set to blank if there's none coming
 	}
-	
+
 	if (typeof sSourceId === "undefined") {
 		sSourceId = ""; // set to blank if there's none coming
 	}
@@ -49,20 +50,29 @@ try {
 	let sSqlQuery = "";
 	let rs = "";
 	let ptsmt = "";
+	let sFinalResult = "";
+	
+	if (typeof sSourceIdinQuery !== "undefined") {
+		sFinalResult = oUnstructuredSearchLib.getSourceIdSearchOnly();
+		ptsmt = conn.prepareStatement(sFinalResult);
+		
+		ptsmt.setString(1, sSourceIdinQuery);
+		
+	} else {
+		sFinalResult = oUnstructuredSearchLib.getFinalLoadForExecution(sScvId, sSource, sSourceId);
+		ptsmt = conn.prepareStatement(sFinalResult);
 
-	let sFinalResult = oUnstructuredSearchLib.getFinalLoadForExecution(sScvId, sSource, sSourceId);
-	ptsmt = conn.prepareStatement(sFinalResult);
-
-	ptsmt.setString(1, "%" + sScvId + "%"); //set for like sql statement for wildcards
-	ptsmt.setString(2, "%" + sSource + "%"); //set for like sql statement for wildcards
-	ptsmt.setString(3, "%" + sSourceId + "%"); //set for like sql statement for wildcards
-	ptsmt.setString(4, sFinalSearchString);
-	ptsmt.setString(5, sFuzzy);
+		ptsmt.setString(1, "%" + sScvId + "%"); //set for like sql statement for wildcards
+		ptsmt.setString(2, "%" + sSource + "%"); //set for like sql statement for wildcards
+		ptsmt.setString(3, "%" + sSourceId + "%"); //set for like sql statement for wildcards
+		ptsmt.setString(4, sFinalSearchString);
+		ptsmt.setString(5, sFuzzy);
+	}
 
 	//execute the query base on what is prepared on the statement. 
 
 	rs = ptsmt.executeQuery();
-	
+
 	let oPreResult = oUnstructuredSearchLib.transformResults(rs._rows);
 	let oFinalResult = JSON.stringify(oPreResult);
 
@@ -80,4 +90,3 @@ try {
 		conn.close();
 	}
 }
-

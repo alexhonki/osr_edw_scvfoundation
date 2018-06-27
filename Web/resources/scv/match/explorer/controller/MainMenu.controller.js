@@ -41,7 +41,7 @@ sap.ui.define([
 
 			//reset filters that is being applied
 			this._resetAllSearch();
-			
+
 		},
 
 		/**
@@ -68,7 +68,7 @@ sap.ui.define([
 			//set the data and replace everything that is inside. 
 			this.getModel("searchParameters").setData(oSourceType, false);
 			//this.getModel("searchParameters").setProperty("/searchString", "");
-		
+
 		},
 
 		/**
@@ -91,6 +91,61 @@ sap.ui.define([
 			//call the query search func.
 			this._querySearch(oPayload);
 		},
+
+		/**
+		 * Function helper to determine whether a string contain number
+		 * @param  {[String]} sString [a string]
+		 * @return {[Boolean]}        [true or false depending on the regex]
+		 */
+		_hasNumber: function(sString) {
+			return /\d/.test(sString);
+		},
+
+		/**
+		 * Function helper to determine whether the search action 
+		 * will just trigger the source only comparison or not
+		 * @param  {[String]} sQuery [a string]
+		 * @return {[Object]}        [the id and flag for whether it source only or not]
+		 */
+		_determineSearchAction: function(sQuery) {
+
+			let oResult = {};
+
+			//check whether the string contain number first or not
+			//then do accordingly
+			if (this._hasNumber(sQuery)) {
+				let aQueryWords = sQuery.split(" ");
+				//loop through each word in the query.
+				for (let key in aQueryWords) {
+
+					//check this word is a number or not.
+					let bContainNumber = this._hasNumber(aQueryWords[key]);
+
+					//if yes, then check length of the number to determine our source id. 
+					if (bContainNumber) {
+						//a min of 7 characters to trigger this
+						if (aQueryWords[key].length > 6) {
+							//if the number is less than 0, add further zero infront 
+							//to pad and make sure its consistent.
+							let iLetterDiff = 10 - aQueryWords[key].length;
+							let sFinalSourceId = aQueryWords[key];
+							for (let i = 0; i < iLetterDiff; i++) {
+								sFinalSourceId = "0" + sFinalSourceId;
+							}
+
+							//set the flag for the query and final source id.
+							oResult.sSourceId = sFinalSourceId;
+							oResult.bOnlySourceId = true;
+						}
+					}
+				}
+				return oResult;
+			} else {
+				return; // do nothing and terminate
+			}
+
+		},
+
 		/**
 		 * Helper to search base on what is the user string. 
 		 * this will get triggered after the timeout for the search is cleared. 
@@ -99,6 +154,15 @@ sap.ui.define([
 		_querySearch: function(oPayload) {
 
 			let oController = this;
+
+			//determine whether we are going to 
+			let oFlag = oController._determineSearchAction(oPayload.sQuery);
+
+			//add result from oFlag
+			if (typeof oFlag !== "undefined") {
+				oPayload.sSourceIdinQuery = oFlag.sSourceId;
+				oPayload.bOnlySourceId = oFlag.bOnlySourceId;
+			}
 			//for api call search
 			let sApiUrl = this.getOwnerComponent().getMetadata().getConfig("unstructuredSearch");
 
@@ -150,9 +214,9 @@ sap.ui.define([
 				sSourceId: oAdditionalFilter.sourceId,
 				sSourceSystem: oAdditionalFilter.sourceSystem
 			};
-			
+
 			oController.oSearchControlHolder = oEvent.getSource();
-	
+
 			//oTimeout that get clear above and if nothing clear it will go through then.
 			oController.oTimeout = setTimeout(function() {
 				// once its clear, execute search over here. 
