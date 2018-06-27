@@ -22,6 +22,11 @@ sap.ui.define([
 
 			this.setModel(new JSONModel(), "searchResult");
 
+			//set model to the view, so that dialog can be accessed and there's data for it. 
+			//since we add dependent to it
+
+			this.setModel(new JSONModel(), "searchParameters");
+
 			this.getRouter().getRoute("homepage").attachPatternMatched(this._onRouteMatched, this);
 			this.getRouter().getRoute("appHome").attachPatternMatched(this._onRouteMatched, this);
 
@@ -33,7 +38,37 @@ sap.ui.define([
 		 * @return {[type]}        [description]
 		 */
 		_onRouteMatched: function(oEvent) {
-			// modified as necessary.
+
+			//reset filters that is being applied
+			this._resetAllSearch();
+
+		},
+
+		/**
+		 * Function helper to reset search filter of the model. 
+		 * @param  {[type]} oEvent [description]
+		 * @return {[type]}        [description]
+		 */
+		_resetAllSearch: function() {
+			//reset the model everytime it enters and clear everything else. 
+			// set model for source selection
+			// disable, in the event that we want to reset everything else. 
+			let oSourceType = {
+				"SourceType": [{
+					"name": "",
+					"code": ""
+				}, {
+					"name": "TMR",
+					"code": "TMR"
+				}, {
+					"name": "RMS",
+					"code": "RMS"
+				}]
+			};
+			//set the data and replace everything that is inside. 
+			this.getModel("searchParameters").setData(oSourceType, false);
+			//this.getModel("searchParameters").setProperty("/searchString", "");
+
 		},
 
 		/**
@@ -56,6 +91,61 @@ sap.ui.define([
 			//call the query search func.
 			this._querySearch(oPayload);
 		},
+
+		/**
+		 * Function helper to determine whether a string contain number
+		 * @param  {[String]} sString [a string]
+		 * @return {[Boolean]}        [true or false depending on the regex]
+		 */
+		_hasNumber: function(sString) {
+			return /\d/.test(sString);
+		},
+
+		/**
+		 * Function helper to determine whether the search action 
+		 * will just trigger the source only comparison or not
+		 * @param  {[String]} sQuery [a string]
+		 * @return {[Object]}        [the id and flag for whether it source only or not]
+		 */
+		_determineSearchAction: function(sQuery) {
+
+			let oResult = {};
+
+			//check whether the string contain number first or not
+			//then do accordingly
+			if (this._hasNumber(sQuery)) {
+				let aQueryWords = sQuery.split(" ");
+				//loop through each word in the query.
+				for (let key in aQueryWords) {
+
+					//check this word is a number or not.
+					let bContainNumber = this._hasNumber(aQueryWords[key]);
+
+					//if yes, then check length of the number to determine our source id. 
+					if (bContainNumber) {
+						//a min of 7 characters to trigger this
+						if (aQueryWords[key].length > 6) {
+							//if the number is less than 0, add further zero infront 
+							//to pad and make sure its consistent.
+							let iLetterDiff = 10 - aQueryWords[key].length;
+							let sFinalSourceId = aQueryWords[key];
+							for (let i = 0; i < iLetterDiff; i++) {
+								sFinalSourceId = "0" + sFinalSourceId;
+							}
+
+							//set the flag for the query and final source id.
+							oResult.sSourceId = sFinalSourceId;
+							oResult.bOnlySourceId = true;
+						}
+					}
+				}
+				return oResult;
+			} else {
+				return; // do nothing and terminate
+			}
+
+		},
+
 		/**
 		 * Helper to search base on what is the user string. 
 		 * this will get triggered after the timeout for the search is cleared. 
@@ -64,47 +154,40 @@ sap.ui.define([
 		_querySearch: function(oPayload) {
 
 			let oController = this;
+
+			//determine whether we are going to 
+			let oFlag = oController._determineSearchAction(oPayload.sQuery);
+
+			//add result from oFlag
+			if (typeof oFlag !== "undefined") {
+				oPayload.sSourceIdinQuery = oFlag.sSourceId;
+				oPayload.bOnlySourceId = oFlag.bOnlySourceId;
+			}
 			//for api call search
 			let sApiUrl = this.getOwnerComponent().getMetadata().getConfig("unstructuredSearch");
 
 			//add fuzzy level search here. 
 			oPayload.sFuzzy = 0.8;
 			oController.getView().byId("searchapi-table").setBusy(true);
-			
+
 			$.ajax(sApiUrl, {
 				data: oPayload,
 				beforeSend: function() {
-					//loading effect start
+					//loading effect start if needed
 				},
 				complete: function() {
-					//loading effect end
+					//loading effect end if needed
 				},
 				success: function(data) {
 
-					let oFinalData = data;
-					//transform the data according to the results. 
-					for (let i = 0; i < data.length; i++) {
-						let aSplitResult = data[i].SEARCH_STRING_CLEANSED.split("|");
-
-						if (aSplitResult.length === 10) {
-							oFinalData[i].FIRST_NAME = aSplitResult[0];
-							oFinalData[i].LAST_NAME = aSplitResult[1];
-							oFinalData[i].CITY = aSplitResult[3];
-							oFinalData[i].DOB = moment(aSplitResult[2]).format("DD/MM/YYYY");
-							oFinalData[i].POSTAL_CODE = aSplitResult[4];
-						} else if (aSplitResult.length === 11) {
-							oFinalData[i].FIRST_NAME = aSplitResult[0];
-							oFinalData[i].LAST_NAME = aSplitResult[1] + " " + aSplitResult[2];
-							oFinalData[i].CITY = aSplitResult[4];
-							oFinalData[i].DOB = moment(aSplitResult[3]).format("DD/MM/YYYY");
-							oFinalData[i].POSTAL_CODE = aSplitResult[5];
-						}
-					}
 					oController.getView().byId("searchapi-table").setBusy(false);
-					oController.getModel("searchResult").setData(oFinalData, false);
+					oController.oSearchControlHolder.setBusy(false);
+					oController.getModel("searchResult").setData(data, false);
 				},
 				failure: function(error) {
 					oController.getView().byId("searchapi-table").setBusy(false);
+					oController.oSearchControlHolder.setBusy(false);
+					oController.sendMessageToast("Something went wrong, our apologies. Please try again.");
 					console.log(error);
 				}
 			});
@@ -115,7 +198,7 @@ sap.ui.define([
 		onSearch: function(oEvent) {
 
 			let oController = this;
-			
+
 			//grab the existing parameters if there's any.
 			let oAdditionalFilter = oController.getModel("searchParameters").getData();
 			// this is for delaying the input to safely wait for the barcode scanner.
@@ -132,12 +215,14 @@ sap.ui.define([
 				sSourceSystem: oAdditionalFilter.sourceSystem
 			};
 
+			oController.oSearchControlHolder = oEvent.getSource();
+
 			//oTimeout that get clear above and if nothing clear it will go through then.
 			oController.oTimeout = setTimeout(function() {
 				// once its clear, execute search over here. 
 				oController._querySearch(oPayload);
-
-			}, 400); //400ms before the search get trigger, so we dont bombard the query on every letter. gotta play with magic number.
+				oController.oSearchControlHolder.setBusy(true);
+			}, 500); //500ms before the search get trigger, so we dont bombard the query on every letter. gotta play with magic number.
 
 		},
 

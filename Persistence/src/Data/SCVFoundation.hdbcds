@@ -155,6 +155,7 @@ context SCVFoundation {
         key NUMBER_TYPE    : String(10);
         key NUMBER_DESC    : String(256);
         key CHECKSUM       : Binary(32);
+        key LAST_UPDATED   : LocalDate;
     };
 
     /*@@layout{"layoutInfo":{}}*/
@@ -170,6 +171,7 @@ context SCVFoundation {
         key CHECKSUM      : Binary(32);
         key STD_EMAIL     : String(100);
         key STD_CHECKSUM  : Binary(32);
+        key LAST_UPDATED  : LocalDate;
     };
 
     /*@@layout{"layoutInfo":{"x":-630,"y":2.5}}*/
