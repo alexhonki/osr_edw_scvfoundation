@@ -134,8 +134,8 @@ sap.ui.define([
 							}
 
 							//set the flag for the query and final source id.
-							oResult.sSourceId = sFinalSourceId;
-							oResult.bOnlySourceId = true;
+							oResult.sSourceIdRMS = sFinalSourceId; //to accomodate the prefix zeros in front
+							oResult.sSourceIdTMR = aQueryWords[key]; //to search through TMR without the zeros
 						}
 					}
 				}
@@ -160,8 +160,8 @@ sap.ui.define([
 
 			//add result from oFlag
 			if (typeof oFlag !== "undefined") {
-				oPayload.sSourceIdinQuery = oFlag.sSourceId;
-				oPayload.bOnlySourceId = oFlag.bOnlySourceId;
+				oPayload.sSourceIdinQueryRMS = oFlag.sSourceIdRMS;
+				oPayload.sSourceIdinQueryTMR = oFlag.sSourceIdTMR;
 			}
 			//for api call search
 			let sApiUrl = this.getOwnerComponent().getMetadata().getConfig("unstructuredSearch");
