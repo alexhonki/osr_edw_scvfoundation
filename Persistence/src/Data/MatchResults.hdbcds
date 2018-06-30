@@ -104,5 +104,6 @@ context MatchResults {
         MATCH_ROW_ID : Integer;
         SCV_ID       : Integer;
         ACTION       : String(10);
+        ACTION_RMS   : String(10);
     };
 };

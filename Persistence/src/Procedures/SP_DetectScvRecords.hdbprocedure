@@ -54,8 +54,8 @@ BEGIN
 		                -- Add original fields
 		                --BUT000-RMS
 		                LEFT OUTER JOIN ( 
-		                			      SELECT BIRTHDT , NAME_FIRST, NAMEMIDDLE, NAME_LAST, DEATHDT, "Cleanse_TABLE_ID", "Z_RUN_SEQ_ID", "PARTNER",
-		                			      (NAME_FIRST || NAMEMIDDLE || NAME_LAST || (CASE WHEN BIRTHDT = ' ' THEN TO_DATE('19990101', 'YYYYMMDD') ELSE TO_DATE(BIRTHDT, 'YYYYMMDD') END)) as PERSON_RMS
+		                			      SELECT BIRTHDT , NAME_FIRST, NAMEMIDDLE, NAME_LAST, DEATHDT, "Cleanse_TABLE_ID", "Z_RUN_SEQ_ID", "PARTNER", "XDELE",
+		                			      (NAME_FIRST || NAMEMIDDLE || NAME_LAST || (CASE WHEN BIRTHDT = ' ' THEN TO_DATE('19990101', 'YYYYMMDD') ELSE TO_DATE(BIRTHDT, 'YYYYMMDD') END) || XDELE || PARTNER ) as PERSON_RMS
 		                			      FROM "osr.scv.foundation.db.synonyms::BUT000"
 		                					
 		                				) as prms
@@ -124,6 +124,25 @@ BEGIN
 		                          --SYSTEM_ID DESC,
 		                          --MATCH_ROW ASC
 					    ;
+					    
+-- Person RMS Hash without the xdele field						    
+	lt_matchresults_RMSPerson_hash  = SELECT
+					            	a.ENTITY_ID, a."Match_ROW_ID" as MATCH_ROW ,
+									HASH_SHA256(TO_BINARY(TO_VARCHAR(CASE WHEN PERSON_RMS IS NULL THEN '' ELSE PERSON_RMS END))
+									) AS HASH_MATCH
+					                FROM   "osr.scv.foundation.db.data::MatchResults.MatchResults" AS a 
+					                -- Add original fields
+					                --BUT000-RMS Person details without the XDELE field
+					                LEFT OUTER JOIN ( 
+					                			      SELECT BIRTHDT , NAME_FIRST, NAMEMIDDLE, NAME_LAST, DEATHDT, "Cleanse_TABLE_ID", "Z_RUN_SEQ_ID", "PARTNER",
+					                			      (NAME_FIRST || NAMEMIDDLE || NAME_LAST || (CASE WHEN BIRTHDT = ' ' THEN TO_DATE('19990101', 'YYYYMMDD') ELSE TO_DATE(BIRTHDT, 'YYYYMMDD') END) || PARTNER) as PERSON_RMS
+					                			      FROM "osr.scv.foundation.db.synonyms::BUT000"
+					                			     
+					                				) as prms
+					                ON a."Cleanse_ROW_ID_BUT" = prms."Z_RUN_SEQ_ID" AND a."Cleanse_TABLE_ID_BUT" = prms."Cleanse_TABLE_ID" AND a."SYSTEM_ID" = prms."PARTNER" and a."SOURCE_SYSTEM" = 'RMS'
+					                ;
+	
+	
 	
 	lt_scvrms_hash =  SELECT 
 		            	DISTINCT a.SCV_ID,
@@ -140,8 +159,8 @@ BEGIN
 		                LEFT OUTER JOIN (
 		                				SELECT SCV_ID, FIRST_NAME, MIDDLE_NAME, LAST_NAME, BIRTH_DATE, DEATH_DATE, SOURCE_ID, 
 		                				--(FIRST_NAME || MIDDLE_NAME || LAST_NAME || TO_VARCHAR (TO_DATE(BIRTH_DATE), 'YYYY-MM-DD') || DEATH_DATE) as PERSON_RMS,
-		                				(FIRST_NAME || MIDDLE_NAME || LAST_NAME || BIRTH_DATE) as PERSON_RMS,
-		                				HASH_SHA256(TO_BINARY(TO_VARCHAR(FIRST_NAME)), TO_BINARY(TO_VARCHAR(MIDDLE_NAME)), TO_BINARY(TO_VARCHAR(LAST_NAME)), TO_BINARY(TO_VARCHAR(BIRTH_DATE)), TO_BINARY(TO_VARCHAR(DEATH_DATE))) as CHECKSUM_PERSON_RMS
+		                				(FIRST_NAME || MIDDLE_NAME || LAST_NAME || BIRTH_DATE|| SOURCE_ID || INACTIVE ) as PERSON_RMS
+		                				--HASH_SHA256(TO_BINARY(TO_VARCHAR(FIRST_NAME)), TO_BINARY(TO_VARCHAR(MIDDLE_NAME)), TO_BINARY(TO_VARCHAR(LAST_NAME)), TO_BINARY(TO_VARCHAR(BIRTH_DATE)), TO_BINARY(TO_VARCHAR(DEATH_DATE)), TO_BINARY(TO_VARCHAR(SOURCE_ID)), TO_BINARY(TO_VARCHAR(INACTIVE))) as CHECKSUM_PERSON_RMS
 		                				FROM "osr.scv.foundation.db.data::SCVFoundation.PersonRms"
 		                ) as pr
 		                ON a.SCV_ID = pr.SCV_ID
@@ -169,8 +188,21 @@ BEGIN
 		                ) as faxr
 		                 ON ar.SCV_ID = faxr.SCV_ID
 		                ;
-	
-	
+		                
+-- Person RMS Hash without the xdele field	
+	lt_scvrms_RMSPerson_hash =  SELECT 
+				            	DISTINCT a.SCV_ID,
+				            	HASH_SHA256(TO_BINARY(TO_VARCHAR(CASE WHEN PERSON_RMS IS NULL THEN '' ELSE PERSON_RMS END))
+								) AS HASH_SCV
+				                FROM  "osr.scv.foundation.db.data::SCVFoundation.Master" AS a
+				                --RMS Name
+				                LEFT OUTER JOIN (
+				                				SELECT SCV_ID, FIRST_NAME, MIDDLE_NAME, LAST_NAME, BIRTH_DATE, DEATH_DATE, SOURCE_ID, 
+				                				(FIRST_NAME || MIDDLE_NAME || LAST_NAME || BIRTH_DATE || SOURCE_ID) as PERSON_RMS
+				                			--	HASH_SHA256(TO_BINARY(TO_VARCHAR(FIRST_NAME)), TO_BINARY(TO_VARCHAR(MIDDLE_NAME)), TO_BINARY(TO_VARCHAR(LAST_NAME)), TO_BINARY(TO_VARCHAR(BIRTH_DATE)), TO_BINARY(TO_VARCHAR(DEATH_DATE)), TO_BINARY(TO_VARCHAR(SOURCE_ID))) as CHECKSUM_PERSON_RMS
+				                				FROM "osr.scv.foundation.db.data::SCVFoundation.PersonRms"
+				                ) as pr
+				                ON a.SCV_ID = pr.SCV_ID;
 	
 	lt_scvtmr_hash = SELECT 
 		            	a.SCV_ID,
@@ -199,7 +231,7 @@ BEGIN
 		   --TMR Tel Phone
 		                LEFT OUTER JOIN(
 		                				SELECT SCV_ID, CONTACT_NUMBER AS NUMBER_TMR, NUMBER_EXT, NUMBER_TYPE, VALID_FROM, SOURCE,
-		                				(VALID_FROM || CONTACT_NUMBER) as TEL_TMR
+		                				(LAST_UPDATED || CONTACT_NUMBER) as TEL_TMR
 		                				FROM "osr.scv.foundation.db.data::SCVFoundation.ContactNumber"
 		        	     				WHERE SOURCE = 'TMR' and NUMBER_TYPE = 'PHO'
 		                ) as teltmr
@@ -207,7 +239,7 @@ BEGIN
 		    --TMR SMS Phone
 		                 LEFT OUTER JOIN(
 		                				SELECT SCV_ID, CONTACT_NUMBER AS SMS_TMR_NUM, NUMBER_EXT, NUMBER_TYPE, VALID_FROM SOURCE,
-		                				(VALID_FROM || CONTACT_NUMBER) as SMS_TMR
+		                				(LAST_UPDATED || CONTACT_NUMBER) as SMS_TMR
 		                				FROM "osr.scv.foundation.db.data::SCVFoundation.ContactNumber"
 		        	     				WHERE SOURCE = 'TMR' and NUMBER_TYPE = 'SMS'
 		                ) as smstmr
@@ -215,7 +247,7 @@ BEGIN
 		    --TMR Email
 		                 LEFT OUTER JOIN(
 		                				SELECT SCV_ID, VALID_TO, CONTACT_EMAIL, SOURCE,
-		                				(VALID_TO || CONTACT_EMAIL) as EMAIL_TMR
+		                				(LAST_UPDATED || CONTACT_EMAIL) as EMAIL_TMR
 		                				FROM "osr.scv.foundation.db.data::SCVFoundation.ContactEmail"
 		        	     				WHERE SOURCE = 'TMR' 
 		                ) as em
@@ -233,6 +265,13 @@ BEGIN
 					) as sh
 		ON mh.HASH_MATCH = sh.HASH_SCV;
 
+-- Person RMS Hash without the xdele field	
+	lt_exisitng_RMSPerson_records = SELECT mh.ENTITY_ID, mh.MATCH_ROW, sh.SCV_ID AS SCV_ID, 'Existing' AS ACTION  FROM :lt_matchresults_RMSPerson_hash as mh
+		INNER JOIN (
+					SELECT SCV_ID, HASH_SCV  FROM :lt_scvrms_RMSPerson_hash
+					) as sh
+		ON mh.HASH_MATCH = sh.HASH_SCV;
+
 
 	lt_add_new_records = SELECT mh.ENTITY_ID, mh.MATCH_ROW, 0 AS SCV_ID , 'Add' AS ACTION 
 						FROM   :lt_matchresults_hash as mh
@@ -244,7 +283,7 @@ BEGIN
 						SELECT MATCH_ROW, SCV_ID, ACTION  FROM :lt_add_new_records);
 						
 						
-	INSERT INTO "osr.scv.foundation.db.data::MatchResults.MatchDelta" ( SELECT f.MATCH_ROW, g.SCV_ID, f.ACTION FROM (
+	INSERT INTO "osr.scv.foundation.db.data::MatchResults.MatchDelta" ( SELECT f.MATCH_ROW, g.SCV_ID, f.ACTION, 'Add' FROM (
 																		SELECT b.ENTITY_ID, MATCH_ROW, SCV_ID, a.ACTION FROM :lt_total_records as a
 																		INNER JOIN "osr.scv.foundation.db.data::MatchResults.MatchResults" as b
 																		ON a.MATCH_ROW = b."Match_ROW_ID"
@@ -256,6 +295,18 @@ BEGIN
 																						GROUP BY e.ENTITY_ID
 																		)g
 																		ON f.ENTITY_ID = g.ENTITY_ID);
+	
+																		
+	UPDATE "osr.scv.foundation.db.data::MatchResults.MatchDelta" a SET  a.ACTION_RMS = b.ACTION
+	FROM "osr.scv.foundation.db.data::MatchResults.MatchDelta" a , :lt_exisitng_RMSPerson_records b
+	WHERE a.MATCH_ROW_ID = b.MATCH_ROW;																	
+	
+--	MERGE INTO "osr.scv.foundation.db.data::MatchResults.MatchDelta" a USING :lt_exisitng_RMSPerson_records b ON a.MATCH_ROW_ID = b.MATCH_ROW
+--	WHEN MATCHED THEN UPDATE SET a.ACTION = b.ACTION;
+
+	
+	
+--	UPDATE "osr.scv.foundation.db.data::MatchResults.MatchResults" SET AVERAGE_SCORE = NULL;
 	
 
 	--	SELECT * FROM :lt_scvall_hash;	

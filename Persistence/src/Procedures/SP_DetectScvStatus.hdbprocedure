@@ -402,7 +402,7 @@ BEGIN
 			lv_current_entity := :lv_current_entity + lv_max_group_row;
 	END WHILE;		
 			--SELECT * FROM #lt_record_action;
-			INSERT INTO "osr.scv.foundation.db.data::MatchResults.MatchDelta" (SELECT MATCH_ROW_ID, SCV_ID, ACTION FROM #lt_record_action);
+			INSERT INTO "osr.scv.foundation.db.data::MatchResults.MatchDelta" (SELECT MATCH_ROW_ID, SCV_ID, ACTION, 'Add' FROM #lt_record_action);
 			DROP TABLE #lt_record_action;
 --			o_return_code := 'SUCCESS';
  --   		o_message := 'Entites moved successfully';
