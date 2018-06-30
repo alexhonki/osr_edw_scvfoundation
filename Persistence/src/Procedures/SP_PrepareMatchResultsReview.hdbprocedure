@@ -125,12 +125,13 @@ BEGIN
 												    		"Match_ROW_ID",
 								                        	ROW_NUMBER() OVER (PARTITION BY GROUP_ID ORDER BY SOURCE_SYSTEM DESC, SYSTEM_ID DESC) AS GROUP_ROW_COUNT
 							                               FROM "osr.scv.foundation.db.data::MatchResults.MatchResults"
+							                               WHERE GROUP_ID IS NOT NULL
 														  )
 							   --WHERE GROUP_ROW_COUNT = 1;
 							   );
   
    UPDATE "osr.scv.foundation.db.data::MatchResults.MatchResults" SET SHOW_IN_REVIEW = NULL;
-   --UPDATE "osr.scv.foundation.db.data::MatchResults.MatchResults" SET SHOW_IN_REVIEW = 'X' WHERE GROUP_ID IS NULL;
+--   UPDATE "osr.scv.foundation.db.data::MatchResults.MatchResults" SET SHOW_IN_REVIEW = 'X' WHERE GROUP_ID IS NULL;
    
    UPDATE "osr.scv.foundation.db.data::MatchResults.MatchResults" a
    SET a.SHOW_IN_REVIEW = b.SHOW_IN_REVIEW, a.GROUP_ROW_INDEX = b.GROUP_ROW_COUNT
