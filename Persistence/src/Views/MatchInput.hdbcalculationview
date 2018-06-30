@@ -190,7 +190,6 @@
     AND
 (lower(&quot;NAMEMIDDLE&quot;) NOT LIKE '%duplicat%' AND &quot;NAMEMIDDLE&quot; NOT LIKE '%&amp;%' AND lower(&quot;NAMEMIDDLE&quot;) NOT LIKE '%trust%' AND lower(&quot;NAMEMIDDLE&quot;) NOT LIKE '%executor%' AND lower(&quot;NAMEMIDDLE&quot;) NOT LIKE '%copy%' AND (&quot;NAMEMIDDLE&quot; NOT LIKE  '%0%') AND (&quot;NAMEMIDDLE&quot; NOT LIKE  '%1%')AND (&quot;NAMEMIDDLE&quot; NOT LIKE  '%2%')AND (&quot;NAMEMIDDLE&quot; NOT LIKE  '%3%')AND (&quot;NAMEMIDDLE&quot; NOT LIKE  '%4%')AND (&quot;NAMEMIDDLE&quot; NOT LIKE  '%5%')AND (&quot;NAMEMIDDLE&quot; NOT LIKE  '%6%')AND (&quot;NAMEMIDDLE&quot; NOT LIKE  '%7%')AND (&quot;NAMEMIDDLE&quot; NOT LIKE  '%8%')AND (&quot;NAMEMIDDLE&quot; NOT LIKE  '%9%') AND (&quot;NAMEMIDDLE&quot; NOT LIKE '% and %'))
 
-
 </filter>
   </calculationView>
   <calculationView xsi:type="Calculation:ProjectionView" id="P_TimedependendAddressUsage">
@@ -2147,7 +2146,9 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_LOCALITY2" source="MATCH_ADDR_LOCALITY2"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_PRIM_NUMBER" source="MATCH_ADDR_PRIM_NUMBER"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_ADDRESS_DELIVERY" source="STD_ADDR_ADDRESS_DELIVERY"/>
-    </input></calculationView>
+    </input>
+    <filter>&quot;CUSTOMER_TYPE&quot; = 'I' </filter>
+  </calculationView>
 </calculationViews>
 <logicalModel id="U_AllMatchFields">
   <attributes>

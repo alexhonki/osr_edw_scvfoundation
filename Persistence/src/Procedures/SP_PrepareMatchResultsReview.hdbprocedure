@@ -68,7 +68,7 @@ BEGIN
    FROM "osr.scv.foundation.db.data::MatchResults.MatchResults" a, :lt_average_group_score b
    WHERE a.GROUP_ID = b.GROUP_ID;
    
-   
+/*   Start of new code
    -- Identify survivor record per match group to be displayed in review UI start screen
    lt_survivor_match_records =
 								SELECT  *, CASE WHEN GROUP_ROW_COUNT = 1 AND GROUP_ROW_COUNT_POLICY = 1 THEN 'X' ELSE '' END AS SHOW_IN_REVIEW FROM (
@@ -97,7 +97,7 @@ BEGIN
 												) AS f2 
 								ON f1."Match_ROW_ID" = f2."Match_ROW_ID")
 								;
-   
+ */ --End of New Code  
 /*   lt_survivor_match_records =
 								SELECT *, CASE WHEN GROUP_ROW_COUNT = 1 THEN 'X' ELSE '' END AS SHOW_IN_REVIEW FROM (
 								SELECT "Match_ROW_ID", GROUP_ROW_COUNT FROM (
@@ -118,7 +118,7 @@ BEGIN
 																			) 
 							   );
 */
-/*   lt_survivor_match_records = 
+   lt_survivor_match_records = 
 								SELECT *, CASE WHEN GROUP_ROW_COUNT = 1 THEN 'X' ELSE '' END AS SHOW_IN_REVIEW FROM (
 								SELECT "Match_ROW_ID", GROUP_ROW_COUNT FROM (
 														   SELECT 
@@ -128,7 +128,7 @@ BEGIN
 														  )
 							   --WHERE GROUP_ROW_COUNT = 1;
 							   );
- */  
+  
    UPDATE "osr.scv.foundation.db.data::MatchResults.MatchResults" SET SHOW_IN_REVIEW = NULL;
    --UPDATE "osr.scv.foundation.db.data::MatchResults.MatchResults" SET SHOW_IN_REVIEW = 'X' WHERE GROUP_ID IS NULL;
    
