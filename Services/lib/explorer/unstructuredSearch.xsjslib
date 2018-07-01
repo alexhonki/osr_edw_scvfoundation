@@ -26,10 +26,10 @@ function getFinalLoadForExecution(sScvId, sSource, sSourceId) {
 	
 	//NOT NULL is used for fail safe in case there's NULL happening in the table itself.
 	let sFrontQuery =
-		"SELECT DISTINCT \"SCV_ID\", \"SEARCH_STRING_CLEANSED\" " +
+		"SELECT DISTINCT \"SCV_ID\", \"SEARCH_STRING_CLEANSED\", SCORE() as \"SCORE\" " +
 		"FROM \"osr.scv.foundation.db.data::SCVFoundation.Search\" WHERE \"SEARCH_STRING_CLEANSED\" IS NOT NULL AND ";
 
-	let sEndingQuery = "CONTAINS (SEARCH_STRING, ?, FUZZY (?)) ORDER BY \"SCV_ID\" ASC";
+	let sEndingQuery = "CONTAINS (SEARCH_STRING, ?, FUZZY (?)) ORDER BY \"SCORE\" DESC";
 
 	if (typeof sScvId !== "undefined") {
 		sFrontQuery += " \"SCV_ID\" LIKE ? AND ";
