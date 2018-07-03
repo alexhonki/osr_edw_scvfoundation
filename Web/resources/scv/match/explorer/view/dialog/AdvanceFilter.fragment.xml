@@ -12,7 +12,7 @@
 						<f:content>
 							
 							<Label vAlign="Middle" text="Search"/>
-							<SearchField id="searchfield" value="{searchParameters>/searchString}" liveChange="onSearch" placeholder="{i18n>searchfield}" />
+							<SearchField id="searchfield" value="{searchParameters>/searchString}" search="onSearch" placeholder="{i18n>searchfield}" />
 							
 							<Label vAlign="Middle" text="Source ID"/>
 							<Input value="{searchParameters>/sourceId}"/>
