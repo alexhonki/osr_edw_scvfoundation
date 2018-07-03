@@ -1,0 +1,22 @@
+/*
+	Move entities from match results shadow table to SCV foundation
+	
+		This code will move all promoted match result entities from the match results shadow table to the SCV foundation. The entities will be split into the following tables:
+			- SCV Master
+			- SCV Person
+			- SCV Address
+			- SCV Contact
+						
+		SAP Australia, September 2017	
+*/
+PROCEDURE "osr.scv.foundation.db.Procedures::SP_MoveRowsToScvFoundation2" (
+
+)
+   LANGUAGE SQLSCRIPT
+   SQL SECURITY INVOKER
+   AS
+BEGIN
+
+
+
+END
