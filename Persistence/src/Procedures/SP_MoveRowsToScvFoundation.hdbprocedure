@@ -253,56 +253,23 @@ BEGIN
 						 
 --	INSERT INTO "osr.scv.foundation.db.data::SCVFoundation.PersonRms" (SELECT SCV_ID, SOURCE_SYSTEM, SYSTEM_ID, VALID_FROM, VALID_TO, SCV_NAME_LAST, SCV_NAME_MIDDLE, SCV_NAME_FIRST, BIRTH_DATE, DEATH_DATE, CHECKSUM, STD_PERSON_GN, STD_PERSON_GN2, STD_PERSON_FN, STD_CHECKSUM, XDELE FROM :lt_person_entities_rms_update);
 lt_person_entities_tmr = 
-						SELECT								
-								   --Z_RUN_SEQ_ID,
-								   SCV_ID,
-								   ENTITY_ID, SOURCE_SYSTEM, SYSTEM_ID, 
-								   UPDATED_FROM, UPDATED_TO, 
-								   UPDATED_AT, 
-								   SCV_NAME_LAST, SCV_NAME_MIDDLE, SCV_NAME_FIRST, 
-								   BIRTH_DATE, DEATH_DATE,
-								   CHECKSUM,
-								   STD_PERSON_GN, STD_PERSON_GN2, STD_PERSON_FN,
-								   STD_CHECKSUM
-							FROM (
 								SELECT ma.SCV_ID, mr.* FROM 
 								(
-									SELECT mr.Z_RUN_SEQ_ID, mr.ENTITY_ID, mr.SOURCE_SYSTEM, mr.SYSTEM_ID, (CASE WHEN (LOCATE(mr."UPDATED_AT",'|') < 1) THEN mr."UPDATED_AT" ELSE SUBSTRING(mr."UPDATED_AT",1,LOCATE(mr."UPDATED_AT",'|')-1) END) as UPDATED_AT, 
-											UPDATED_FROM, UPDATED_TO, 
-											mr.SCV_NAME_LAST, mr.SCV_NAME_MIDDLE, mr.SCV_NAME_FIRST, 
-	    								   mr.BIRTH_DATE, mr.DEATH_DATE,
-	    								   -- Create checksum for TMR MD fields for domain PERSON
-	    								   HASH_SHA256(TO_BINARY(TO_VARCHAR(mr.SCV_NAME_FIRST)), TO_BINARY(TO_VARCHAR(mr.SCV_NAME_MIDDLE)), TO_BINARY(TO_VARCHAR(mr.SCV_NAME_LAST)), TO_BINARY(TO_VARCHAR(mr.BIRTH_DATE)), TO_BINARY(TO_VARCHAR(''))) as CHECKSUM,
-	    							       md.STD_PERSON_GN, md.STD_PERSON_GN2, md.STD_PERSON_FN,
-	    								   -- Create checksum for TMR STD fields for domain PERSON
-	    								   HASH_SHA256(TO_BINARY(TO_VARCHAR(md.STD_PERSON_GN)), TO_BINARY(TO_VARCHAR(md.STD_PERSON_GN2)), TO_BINARY(TO_VARCHAR(md.STD_PERSON_FN)), TO_BINARY(TO_VARCHAR(mr.BIRTH_DATE)), TO_BINARY(TO_VARCHAR(''))) as STD_CHECKSUM,
-	    								   "Match_ROW_ID"
-									FROM (
-										-- Aggregation for domain PERSON
-										SELECT MAX(Z_RUN_SEQ_ID) AS Z_RUN_SEQ_ID, ENTITY_ID, SOURCE_SYSTEM, SYSTEM_ID, SCV_NAME_FIRST, SCV_NAME_MIDDLE, SCV_NAME_LAST, BIRTH_DATE, DEATH_DATE, 
-		    							       STRING_AGG(UPDATED_AT,'|' ORDER BY UPDATED_AT DESC) as UPDATED_AT, 
-									           STRING_AGG("Cleanse_ROW_ID_TMR",'|' ORDER BY "Cleanse_ROW_ID_TMR" DESC) as "Cleanse_ROW_ID_TMR",
-									           STRING_AGG("Match_ROW_ID",'|' ORDER BY "Match_ROW_ID" DESC) as "Match_ROW_ID" 
-										FROM (	
-											-- Add master data and show only unique combinations of fields for domain PERSON
-											SELECT DISTINCT Z_RUN_SEQ_ID, a.ENTITY_ID, a.SOURCE_SYSTEM, a.SYSTEM_ID, b.LAST_CONTACT_UPDATE_DT AS UPDATED_AT, b.FIRST_NAME AS SCV_NAME_FIRST, 
-		    	            					   b.MIDDLE_NAME AS SCV_NAME_MIDDLE, b.FAMILY_ORG_NAME AS SCV_NAME_LAST, DATE_OF_BIRTH as BIRTH_DATE, '' as DEATH_DATE, a."Cleanse_ROW_ID_TMR", a."Match_ROW_ID"
-											FROM "osr.scv.foundation.db.data::MatchResults.MatchResultsShadow" a
-											LEFT OUTER JOIN "osr.scv.foundation.db.synonyms::TMR_CustMain" b
-											ON a."Cleanse_ROW_ID_TMR" = b."Z_RUN_SEQ_ID"
-											WHERE a.SOURCE_SYSTEM = 'TMR'-- AND a.SYSTEM_ID = '100762476'
-										) GROUP BY ENTITY_ID, SOURCE_SYSTEM, SYSTEM_ID, SCV_NAME_FIRST, SCV_NAME_MIDDLE, SCV_NAME_LAST, BIRTH_DATE, DEATH_DATE
-									) mr
-									
-									LEFT OUTER JOIN
-									(	SELECT MAX (m.Z_RUN_SEQ_ID) AS Z_RUN_SEQ_ID , m."CUSTOMER_REF",m."FIRST_NAME",m."MIDDLE_NAME",m."FAMILY_ORG_NAME",m."DATE_OF_BIRTH",m.STD_PERSON_GN, m.STD_PERSON_GN2, m.STD_PERSON_FN, UPDATED_FROM, UPDATED_TO
+								SELECT 	ms.ENTITY_ID as ENTITY_ID, ms.SOURCE_SYSTEM as SOURCE_SYSTEM, ms.SYSTEM_ID as SYSTEM_ID,  UPDATED_FROM, UPDATED_TO, UPDATE_AT2 as UPDATED_AT, zdate."FAMILY_ORG_NAME" as SCV_NAME_LAST, zdate."MIDDLE_NAME" as SCV_NAME_MIDDLE, zdate."FIRST_NAME"as SCV_NAME_FIRST,zdate."DATE_OF_BIRTH" as BIRTH_DATE, '' as DEATH_DATE,
+									HASH_SHA256(TO_BINARY(TO_VARCHAR(zdate."FIRST_NAME")), TO_BINARY(TO_VARCHAR(zdate."MIDDLE_NAME")), TO_BINARY(TO_VARCHAR(zdate."FAMILY_ORG_NAME")), TO_BINARY(TO_VARCHAR(zdate."DATE_OF_BIRTH")), TO_BINARY(TO_VARCHAR(''))) as CHECKSUM,
+									zdate.STD_PERSON_GN as STD_PERSON_GN, zdate.STD_PERSON_GN2 as STD_PERSON_GN2, zdate.STD_PERSON_FN as STD_PERSON_FN,
+									HASH_SHA256(TO_BINARY(TO_VARCHAR(zdate.STD_PERSON_GN)), TO_BINARY(TO_VARCHAR(zdate.STD_PERSON_GN2)), TO_BINARY(TO_VARCHAR(zdate. STD_PERSON_FN)), TO_BINARY(TO_VARCHAR(zdate."DATE_OF_BIRTH")), TO_BINARY(TO_VARCHAR(''))) as STD_CHECKSUM,
+									ms."Match_ROW_ID" as MATCH_ROW_ID
+									FROM "osr.scv.foundation.db.data::MatchResults.MatchResultsShadow" ms
+									INNER JOIN
+									(	SELECT MAX (m.Z_RUN_SEQ_ID) AS Z_RUN_SEQ_ID , m."CUSTOMER_REF",m."FIRST_NAME",m."MIDDLE_NAME",m."FAMILY_ORG_NAME",m."DATE_OF_BIRTH",m.STD_PERSON_GN, m.STD_PERSON_GN2, m.STD_PERSON_FN, UPDATED_FROM, UPDATED_TO, UPDATE_AT2
 										FROM "osr.scv.foundation.db.data::MatchResults.MatchResultsShadow" t
 										INNER JOIN (
-										SELECT a.Z_RUN_SEQ_ID, a."CUSTOMER_REF",a."FIRST_NAME",a."MIDDLE_NAME",a."FAMILY_ORG_NAME",a."DATE_OF_BIRTH",a.STD_PERSON_GN, a.STD_PERSON_GN2, a.STD_PERSON_FN, UPDATED_FROM, UPDATED_TO
+										SELECT a.Z_RUN_SEQ_ID, a."CUSTOMER_REF",a."FIRST_NAME",a."MIDDLE_NAME",a."FAMILY_ORG_NAME",a."DATE_OF_BIRTH",a.STD_PERSON_GN, a.STD_PERSON_GN2, a.STD_PERSON_FN, UPDATED_FROM, UPDATED_TO, UPDATE_AT2
 										FROM "osr.scv.foundation.db.synonyms::TMR_CustMain" a
 										LEFT OUTER JOIN(
 										 SELECT "Z_RUN_SEQ_ID", "CUSTOMER_REF","FIRST_NAME","MIDDLE_NAME","FAMILY_ORG_NAME","DATE_OF_BIRTH",STD_PERSON_GN, STD_PERSON_GN2, STD_PERSON_FN, 
-											UPDATED_FROM,
+											UPDATED_FROM, UPDATE_AT2,
 											COALESCE (a.UPDATED_TO, b.UPDATED_TO) AS UPDATED_TO
 											FROM (	
 												SELECT 
@@ -317,12 +284,14 @@ lt_person_entities_tmr =
 											LEFT OUTER JOIN (
 												            SELECT 
 												            MAX ("Z_RUN_SEQ_ID") as MAXID,
-												            '9999-12-31' AS UPDATED_TO
+												            '9999-12-31' AS UPDATED_TO,
+												            MAX (LAST_CONTACT_UPDATE_DT) AS UPDATE_AT2
 												            FROM "osr.scv.foundation.db.synonyms::TMR_CustMain"
+												            --WHERE CUSTOMER_REF = '100762476' and DATE_OF_BIRTH != '1900-01-01'
 												            GROUP BY "CUSTOMER_REF"
 												            ) a
 															ON "Z_RUN_SEQ_ID" = a."MAXID"
-											--WHERE CUSTOMER_REF = '100762476' and DATE_OF_BIRTH != '1900-01-01'
+											--WHERE CUSTOMER_REF = '101188623' and DATE_OF_BIRTH != '1900-01-01'
 											) f
 											ON a."CUSTOMER_REF" = f."CUSTOMER_REF" AND 
 											a."FIRST_NAME"		= f."FIRST_NAME" AND 
@@ -336,33 +305,20 @@ lt_person_entities_tmr =
 										ON t."Cleanse_ROW_ID_TMR" = m.Z_RUN_SEQ_ID
 										WHERE m.DATE_OF_BIRTH != '1900-01-01'
 										--	WHERE m.CUSTOMER_REF = '101188623' and m.DATE_OF_BIRTH != '1900-01-01'
-											--WHERE m.CUSTOMER_REF = '100762476' and m.DATE_OF_BIRTH != '1900-01-01'
-											GROUP BY m."CUSTOMER_REF",m."FIRST_NAME",m."MIDDLE_NAME",m."FAMILY_ORG_NAME",m."DATE_OF_BIRTH",m.STD_PERSON_GN, m.STD_PERSON_GN2, m.STD_PERSON_FN, UPDATED_FROM, UPDATED_TO
-											
+										--	WHERE m.CUSTOMER_REF = '100762476' and m.DATE_OF_BIRTH != '1900-01-01'
+											GROUP BY m."CUSTOMER_REF",m."FIRST_NAME",m."MIDDLE_NAME",m."FAMILY_ORG_NAME",m."DATE_OF_BIRTH",m.STD_PERSON_GN, m.STD_PERSON_GN2, m.STD_PERSON_FN, UPDATED_FROM, UPDATED_TO, UPDATE_AT2
+									
+										
 									) AS zdate
-									ON zdate."Z_RUN_SEQ_ID" = (CASE WHEN (LOCATE(mr."Cleanse_ROW_ID_TMR",'|') < 1) THEN mr."Cleanse_ROW_ID_TMR" ELSE SUBSTRING(mr."Cleanse_ROW_ID_TMR",1,LOCATE(mr."Cleanse_ROW_ID_TMR",'|')-1) END) 
+									ON zdate."Z_RUN_SEQ_ID" = ms."Cleanse_ROW_ID_TMR" 
 								
-									
-									
-									LEFT OUTER JOIN "osr.scv.foundation.db.synonyms::TMR_CustMain" md
-									ON (CASE WHEN (LOCATE(mr."Cleanse_ROW_ID_TMR",'|') < 1) THEN mr."Cleanse_ROW_ID_TMR" ELSE SUBSTRING(mr."Cleanse_ROW_ID_TMR",1,LOCATE(mr."Cleanse_ROW_ID_TMR",'|')-1) END)  = md."Z_RUN_SEQ_ID"
 								) mr
+							
+								
 									-- Add SCV ID
 									INNER JOIN #lt_entity_mappingss ma
-									ON mr.ENTITY_ID = ma.ENTITY_ID AND 
-									(CASE WHEN (LOCATE(mr."Match_ROW_ID",'|') < 1) THEN mr."Match_ROW_ID" ELSE SUBSTRING(mr."Match_ROW_ID",1,LOCATE(mr."Match_ROW_ID",'|')-1) END)  = ma.MATCH_ROW_ID
-							
-								)
-								GROUP BY 
-									   --Z_RUN_SEQ_ID,
-									   SCV_ID,
-									   ENTITY_ID, SOURCE_SYSTEM, SYSTEM_ID, 
-									   UPDATED_FROM, UPDATED_TO, 
-									   UPDATED_AT, SCV_NAME_LAST, SCV_NAME_MIDDLE, SCV_NAME_FIRST, 
-									   BIRTH_DATE, DEATH_DATE,
-									   CHECKSUM,
-									   STD_PERSON_GN, STD_PERSON_GN2, STD_PERSON_FN,
-									   STD_CHECKSUM;
+									ON mr.ENTITY_ID = ma.ENTITY_ID AND mr.MATCH_ROW_ID  = ma.MATCH_ROW_ID
+								 ;
 
 /*
 -- NEW CODE 3/7/2018 OLD
