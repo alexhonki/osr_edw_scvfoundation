@@ -274,7 +274,7 @@ lt_person_entities_tmr =
 											FROM (	
 												SELECT 
 												"CUSTOMER_REF","FIRST_NAME","MIDDLE_NAME","FAMILY_ORG_NAME","DATE_OF_BIRTH",  STD_PERSON_GN, STD_PERSON_GN2, STD_PERSON_FN,
-												MAX ("Z_RUN_SEQ_ID") AS "Z_RUN_SEQ_ID",
+												MAX ("Z_RUN_SEQ_ID") AS "Z_RUN_SEQ_ID",MAX (LAST_CONTACT_UPDATE_DT) AS UPDATE_AT2,
 												CASE WHEN SUBSTRING (MIN ("NAME"), 19,2) = '01' THEN '20'||SUBSTRING (MIN ("NAME"), 17,2)||'-01-01' ELSE '20'||SUBSTRING (MIN ("NAME"), 17,2)||'-07-01' END AS UPDATED_FROM,
 												CASE WHEN SUBSTRING (MAX ("NAME"), 19,2) = '01' THEN '20'||SUBSTRING (MAX ("NAME"), 17,2)||'-06-30' ELSE '20'||SUBSTRING (MAX ("NAME"), 17,2)||'-12-31' END AS UPDATED_TO
 												FROM "osr.scv.foundation.db.synonyms::TMR_CustMain"
@@ -284,8 +284,8 @@ lt_person_entities_tmr =
 											LEFT OUTER JOIN (
 												            SELECT 
 												            MAX ("Z_RUN_SEQ_ID") as MAXID,
-												            '9999-12-31' AS UPDATED_TO,
-												            MAX (LAST_CONTACT_UPDATE_DT) AS UPDATE_AT2
+												            '9999-12-31' AS UPDATED_TO
+												   --         MAX (LAST_CONTACT_UPDATE_DT) AS UPDATE_AT2
 												            FROM "osr.scv.foundation.db.synonyms::TMR_CustMain"
 												            --WHERE CUSTOMER_REF = '100762476' and DATE_OF_BIRTH != '1900-01-01'
 												            GROUP BY "CUSTOMER_REF"
@@ -652,7 +652,7 @@ lt_person_entities_tmr =
 												"CUSTOMER_REF", "FLOOR", UNIT, BUILDING_NAME, STREET_NO, STREET_NAME, STREET_TYPE, STREET_SUFFIX, SUBURB, POSTCODE, STATE, COUNTRY,
 									    		STD_ADDR_COUNTRY_2CHAR, STD_ADDR_COUNTRY_NAME, STD_ADDR_BUILDING_NAME, STD_ADDR_ADDRESS_DELIVERY, STD_ADDR_PRIM_ADDRESS, STD_ADDR_PRIM_NAME_FULL,
 									    		STD_ADDR_PRIM_NAME, STD_ADDR_PRIM_TYPE, STD_ADDR_PRIM_NUMBER, STD_ADDR_LOCALITY, STD_ADDR_REGION, STD_ADDR_POSTCODE1,
-												MAX ("Z_RUN_SEQ_ID") AS "Z_RUN_SEQ_ID",
+												MAX ("Z_RUN_SEQ_ID") AS "Z_RUN_SEQ_ID",MAX (LAST_CONTACT_UPDATE_DT) AS UPDATE_AT2, MAX(ADDR_LATITUDE) AS ADDR_LATITUDE2,MAX(ADDR_LONGITUDE) AS ADDR_LONGITUDE2,
 												CASE WHEN SUBSTRING (MIN ("NAME"), 19,2) = '01' THEN '20'||SUBSTRING (MIN ("NAME"), 17,2)||'-01-01' ELSE '20'||SUBSTRING (MIN ("NAME"), 17,2)||'-07-01' END AS UPDATED_FROM,
 												CASE WHEN SUBSTRING (MAX ("NAME"), 19,2) = '01' THEN '20'||SUBSTRING (MAX ("NAME"), 17,2)||'-06-30' ELSE '20'||SUBSTRING (MAX ("NAME"), 17,2)||'-12-31' END AS UPDATED_TO
 												FROM "osr.scv.foundation.db.synonyms::TMR_CustMain"
@@ -664,10 +664,10 @@ lt_person_entities_tmr =
 											LEFT OUTER JOIN (
 												            SELECT 
 												            MAX ("Z_RUN_SEQ_ID") as MAXID,
-												            '9999-12-31' AS UPDATED_TO,
-												            MAX (LAST_CONTACT_UPDATE_DT) AS UPDATE_AT2,
-												            MAX(ADDR_LATITUDE) AS ADDR_LATITUDE2,
-												            MAX(ADDR_LONGITUDE) AS ADDR_LONGITUDE2
+												            '9999-12-31' AS UPDATED_TO
+												            --MAX (LAST_CONTACT_UPDATE_DT) AS UPDATE_AT2,
+												            --MAX(ADDR_LATITUDE) AS ADDR_LATITUDE2,
+												            --MAX(ADDR_LONGITUDE) AS ADDR_LONGITUDE2
 												            FROM "osr.scv.foundation.db.synonyms::TMR_CustMain"
 												            --WHERE CUSTOMER_REF = '100762476' and DATE_OF_BIRTH != '1900-01-01'
 												            GROUP BY "CUSTOMER_REF"
