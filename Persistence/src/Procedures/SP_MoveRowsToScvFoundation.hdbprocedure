@@ -128,7 +128,7 @@ BEGIN
 
 		lt_accept_scv_ids_detail_zero = SELECT 'ACCEPT', b.SCV_ID, a.ENTITY_ID, a.MATCH_ROW_ID FROM (
 									--SELECT 'ACCEPT', md.SCV_ID, s.ENTITY_ID, md.MATCH_ROW_ID 
-									SELECT md.SCV_ID, ENTITY_ID, MATCH_ROW_ID
+									SELECT DISTINCT md.SCV_ID, ENTITY_ID, MATCH_ROW_ID
 									FROM "osr.scv.foundation.db.data::MatchResultsReview.Assessments" s
 									INNER JOIN "osr.scv.foundation.db.data::MatchResults.MatchDelta" md
 									ON s.MATCH_ROW = md.MATCH_ROW_ID
