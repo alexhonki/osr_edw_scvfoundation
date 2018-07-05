@@ -1163,7 +1163,7 @@ lt_person_entities_tmr =
 										FROM "osr.scv.foundation.db.data::MatchResults.MatchResultsShadow" a
 										LEFT OUTER JOIN "osr.scv.foundation.db.synonyms::TMR_CustMain" b
 										ON a."Cleanse_ROW_ID_TMR" = b."Z_RUN_SEQ_ID"
-										WHERE SOURCE_SYSTEM = 'TMR'
+										WHERE SOURCE_SYSTEM = 'TMR' AND LENGTH (b.CONTACT_PHONE_NO) >= 8
 									) GROUP BY ENTITY_ID, SOURCE_SYSTEM, SYSTEM_ID, CONTACT_PHONE_NO, "Match_ROW_ID"
 								) mr
 								LEFT OUTER JOIN "osr.scv.foundation.db.synonyms::TMR_CustMain" md
@@ -1192,7 +1192,7 @@ lt_person_entities_tmr =
 												FROM "osr.scv.foundation.db.data::MatchResults.MatchResultsShadow" a
 												INNER JOIN "osr.scv.foundation.db.synonyms::TMR_CustContact" b
 												ON a."SYSTEM_ID" = b."CUSTOMER_REF"
-												WHERE SOURCE_SYSTEM = 'TMR' and b.SMS_CONTACT_NUMBER <> ''
+												WHERE SOURCE_SYSTEM = 'TMR' and LENGTH (b.SMS_CONTACT_NUMBER) >= 8
 											) mr	
 											-- Add SCV ID
 											INNER JOIN (SELECT SCV_ID, ENTITY_ID AS ENTITY_ID1, MATCH_ROW_ID FROM #lt_entity_mappingss) ma
