@@ -1,4 +1,9 @@
 {
+  "description": "Run matching process",
+  "responsible": {
+    "email": "dwfalerts@gmail.com"
+  },
+  "taskTimeout": 2700,
   "taskList": {
     "1": {
       "inline": {
