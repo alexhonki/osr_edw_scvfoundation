@@ -4,10 +4,10 @@ context ScvApi {
 
     /*@@layout{"layoutInfo":{"x":-625,"y":-315}}*/
     entity Settings {
-        key SETTING   : Integer    not null;
-            TYPE      : String(50) not null;
-            CATEGORY  : String(50) not null;
-            PARAMETER : String(50) not null;
+        key SETTING   : Integer not null;
+            TYPE      : String(50);
+            CATEGORY  : String(50);
+            PARAMETER : String(50);
             VALUE_1   : String(100);
             VALUE_2   : String(100);
             VALUE_3   : String(100);
