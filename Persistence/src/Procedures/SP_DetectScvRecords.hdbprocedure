@@ -135,7 +135,8 @@ BEGIN
 					                --BUT000-RMS Person details without the XDELE field
 					                LEFT OUTER JOIN ( 
 					                			      SELECT BIRTHDT , NAME_FIRST, NAMEMIDDLE, NAME_LAST, DEATHDT, "Cleanse_TABLE_ID", "Z_RUN_SEQ_ID", "PARTNER",
-					                			      (NAME_FIRST || NAMEMIDDLE || NAME_LAST || (CASE WHEN BIRTHDT = ' ' THEN TO_DATE('19990101', 'YYYYMMDD') ELSE TO_DATE(BIRTHDT, 'YYYYMMDD') END) || PARTNER) as PERSON_RMS
+					                			     -- (NAME_FIRST || NAMEMIDDLE || NAME_LAST || (CASE WHEN BIRTHDT = ' ' THEN TO_DATE('19990101', 'YYYYMMDD') ELSE TO_DATE(BIRTHDT, 'YYYYMMDD') END) || PARTNER) as PERSON_RMS
+					                			     ((CASE WHEN BIRTHDT = ' ' THEN TO_DATE('19990101', 'YYYYMMDD') ELSE TO_DATE(BIRTHDT, 'YYYYMMDD') END) || PARTNER) as PERSON_RMS
 					                			      FROM "osr.scv.foundation.db.synonyms::BUT000"
 					                			     
 					                				) as prms
@@ -198,7 +199,8 @@ BEGIN
 				                --RMS Name
 				                LEFT OUTER JOIN (
 				                				SELECT SCV_ID, FIRST_NAME, MIDDLE_NAME, LAST_NAME, BIRTH_DATE, DEATH_DATE, SOURCE_ID, 
-				                				(FIRST_NAME || MIDDLE_NAME || LAST_NAME || BIRTH_DATE || SOURCE_ID) as PERSON_RMS
+				                				--(FIRST_NAME || MIDDLE_NAME || LAST_NAME || BIRTH_DATE || SOURCE_ID) as PERSON_RMS
+				                				( BIRTH_DATE || SOURCE_ID) as PERSON_RMS
 				                			--	HASH_SHA256(TO_BINARY(TO_VARCHAR(FIRST_NAME)), TO_BINARY(TO_VARCHAR(MIDDLE_NAME)), TO_BINARY(TO_VARCHAR(LAST_NAME)), TO_BINARY(TO_VARCHAR(BIRTH_DATE)), TO_BINARY(TO_VARCHAR(DEATH_DATE)), TO_BINARY(TO_VARCHAR(SOURCE_ID))) as CHECKSUM_PERSON_RMS
 				                				FROM "osr.scv.foundation.db.data::SCVFoundation.PersonRms"
 				                ) as pr

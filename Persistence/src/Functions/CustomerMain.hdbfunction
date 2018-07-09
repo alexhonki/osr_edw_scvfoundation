@@ -226,6 +226,6 @@ BEGIN
 											GROUP BY c.CUSTOMER_REF
 						) e
 						ON e.CUSTOMER_REF = a.CUSTOMER_REF
-						WHERE a.CUSTOMER_TYPE = 'I'
+						WHERE a.CUSTOMER_TYPE = 'I' --AND NAME = 'TMR_CUST_MAIN_FY1602.txt'
 					    ;
 END;
