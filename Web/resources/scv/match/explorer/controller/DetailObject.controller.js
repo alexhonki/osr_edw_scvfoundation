@@ -261,8 +261,9 @@ sap.ui.define([
 				oResult.STD_PERSON_GN = oData[0].STD_PERSON_GN;
 				oResult.STD_PERSON_GN2 = oData[0].STD_PERSON_GN2;
 				oResult.BIRTH_DATE = moment(oData[0].BIRTH_DATE).format("DD/MM/YYYY");
-				oResult.DRIVER_LICENSE = oData[0].SOURCE_ID;
+				oResult.DRIVER_LICENSE = "";
 				oResult.BP_NUMBER = "";
+				
 
 				let oRmsVbox = oController.getView().byId("rms-bp-number");
 				oRmsVbox.destroyItems();
@@ -283,6 +284,11 @@ sap.ui.define([
 							oText.addStyleClass("rmsBPActive");
 						}
 						oRmsVbox.addItem(oText);
+					} else if(oData[i].SOURCE === "TMR"){
+						if(oResult.DRIVER_LICENSE === ""){
+							oResult.DRIVER_LICENSE = oData[i].SOURCE_ID;
+						}
+						
 					}
 
 				}
