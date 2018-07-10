@@ -33,7 +33,7 @@ try {
 } catch (err) {
     console.error(err);
 }
-
+x
 // configure UAA
 try {
     options = Object.assign(options, xsenv.getServices({ uaa: {tag: "xsuaa"} }));

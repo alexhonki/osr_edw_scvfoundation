@@ -11,7 +11,8 @@
 		"passport": "0.3.2",
 		"request": "2.79.0",
 		"util": "0.10.3",
-		"swagger-ui-express": "2.0.6"
+		"swagger-ui-express": "2.0.6",
+		"@sap/xssec": "1.0.2"
 	},
 	"description": "OSR SCV Foundation Services Module",
 	"devDependencies": {
