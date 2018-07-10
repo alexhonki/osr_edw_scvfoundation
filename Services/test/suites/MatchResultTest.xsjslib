@@ -7,7 +7,7 @@ var tableDataSet = $.import('sap.hana.testtools.unit.util', 'tableDataSet');
  * Test suite: Match Review
  */
 describe("Match Review Test Suite", function() {
-
+    var sqlExecutor = null;
 	var testEnvironment = null;
 	
 	/**
