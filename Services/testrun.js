@@ -1,6 +1,19 @@
 /*eslint no-console: 0*/
 "use strict";
 
+/*Server Authentication*/
+var port = process.env.PORT || 3000,
+	server = require("http").createServer(),
+	express = require("express"),
+	init = require(__dirname + "/" + "utils/initialize"),
+	//Initialize Express App for XSA UAA and HDBEXT Middleware
+	app = init.initExpress(),
+	xssec = require("@sap/xssec"),
+	// xsjs = require("sap-xsjs"),
+	//xsenv = require("sap-xsenv"),
+	passport = require("passport"),
+	xsHDBConn = require("@sap/hdbext");
+
 var xsjstest = require("@sap/xsjs-test");
 var xsenv = require("@sap/xsenv");
 var request = require("request");
@@ -11,34 +24,55 @@ var testResultFileName = timestamp + "_report";
 var coverageFile = timestamp + "_coverage";
 
 var options = {
-    test: {
-        format: "xml",
-        pattern: ".*Test",
-        reportdir: testResultsDir,
-        filename: testResultFileName
-    },
-    coverage: {
-        reporting: {
-            reports: ["json"]
-        },
-        dir: testResultsDir,
-        filename: coverageFile
-    }
+	test: {
+		format: "xml",
+		/*package: "OSR_SCV_FOUNDATION.Services.test.suites",*/
+		pattern: ".*Test",
+		reportdir: testResultsDir,
+		filename: testResultFileName
+	},
+	coverage: {
+		reporting: {
+			reports: ["json"]
+		},
+		dir: testResultsDir,
+		filename: coverageFile
+	}
 };
-
 
 //configure HANA
 try {
-    options = Object.assign(options, xsenv.getServices({ hana: {tag: "hana"} }));
+	options = Object.assign(options, xsenv.getServices({
+		hana: {
+			tag: "hana"
+		}
+	}));
 } catch (err) {
-    console.error(err);
+	console.error(err);
 }
-
+x
 // configure UAA
 try {
-    options = Object.assign(options, xsenv.getServices({ uaa: {tag: "xsuaa"} }));
+	options = Object.assign(options, xsenv.getServices({
+		uaa: {
+			tag: "xsuaa"
+		}
+	}));
 } catch (err) {
-    console.error(err);
+	console.error(err);
 }
 
+// Authentication Module Configuration
+passport.use("JWT", new xssec.JWTStrategy(options.uaa));
+
+// Use for every Request this Authentication mode
+app.use(
+	passport.authenticate("JWT", {
+		session: false
+	}),
+	xsHDBConn.middleware(options.hana)
+);
+
 xsjstest(options).runTests();
+app.use(xsjstest);
+app.listen(port);
