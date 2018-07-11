@@ -48,7 +48,7 @@
 						filterProperty="STD_PERSON_FN" >
 						<Label text="{i18n>person.contact.first_name}" />
 						<t:template>
-							<Text text="{scvExplorerModel>STD_PERSON_FN}" wrapping="false" />
+							<Text text="{personModel>/STD_PERSON_GN}" wrapping="false" />
 						</t:template>
 					</t:Column>
 					
@@ -58,7 +58,7 @@
 						filterProperty="STD_PERSON_GN">
 						<Label text="{i18n>person.contact.middle_name}" />
 						<t:template>
-							<Text text="{scvExplorerModel>STD_PERSON_GN}" wrapping="false" />
+							<Text text="{personModel>/STD_PERSON_GN2}" wrapping="false" />
 						</t:template>
 					</t:Column>
 					
@@ -68,7 +68,7 @@
 						filterProperty="STD_PERSON_GN2">
 						<Label text="{i18n>person.contact.last_name}" />
 						<t:template>
-							<Text text="{scvExplorerModel>STD_PERSON_GN2}" wrapping="false" />
+							<Text text="{personModel>/STD_PERSON_FN}" wrapping="false" />
 						</t:template>
 					</t:Column>
 					
