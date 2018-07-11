@@ -7,7 +7,7 @@ var tableDataSet = $.import('sap.hana.testtools.unit.util', 'tableDataSet');
  * Test suite: Match Review
  */
 describe("Match Review Test Suite", function() {
-
+    var sqlExecutor = null;
 	var testEnvironment = null;
 	
 	/**
@@ -50,6 +50,7 @@ describe("Match Review Test Suite", function() {
 	 */ 
 	beforeEach(function() {
 		//testEnvironment.clearAllTestTables();
+		sqlExecutor = new SqlExecutor(jasmine.dbConnection);
 	});
 
 	/**
@@ -60,10 +61,11 @@ describe("Match Review Test Suite", function() {
 		//addResult();
 		
 		var callStatement = 'CALL ' + '\"osr.scv.foundation.db.Procedures.Test::SP_TestMatchResultsIntegrity\"(?);';
-    	var callable = jasmine.dbConnection.prepareCall(callStatement);
-    	callable.execute();
-    	var resultSet = tableDataSet.createFromResultSet(callable.getResultSet());
-    	callable.close();
+    	//var callable = jasmine.dbConnection.prepareCall(callStatement);
+    	//callable.execute();
+    	//var resultSet = tableDataSet.createFromResultSet(callable.getResultSet());
+    	var resultset = sqlExecutor.execQuery(callStatement);
+    	//callable.close();
     	
     	var expectedData = {
     		"O_TEST_ID": ["Match results integrity"],
