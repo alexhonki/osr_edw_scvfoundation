@@ -22,7 +22,7 @@
 							<IconTabFilter text="Entity Info" key="key1">
 								<content>
 									<t:Table id="table" rows="{ path: 'matchResults', sorter: { path: 'GROUP_ROW_COUNT', descending: false}}" ariaLabelledBy="title"
-										selectionMode="MultiToggle" rowSelectionChange="boxTickedEvent">
+										selectionMode="MultiToggle" rowSelectionChange="boxTickedEvent" enableBusyIndicator="true" busyIndicatorDelay="50">
 										<t:toolbar>
 											<Toolbar>
 												<Title id="tableDetailsHeader" text="Match Group Details"/>
@@ -141,7 +141,7 @@
 									</t:Table>
 									<t:Table id="detailsTable1"
 										rows="{ path: '/matchResultsDetailsRelatedParameters(I_MATCH_ROW=\'1\')/Results', sorter: [{ path: 'POLICY_NAME', descending: true },{ path: 'SCORE', descending: false }]}"
-										ariaLabelledBy="title" selectionMode="None">
+										ariaLabelledBy="title" selectionMode="None" enableBusyIndicator="true" busyIndicatorDelay="50">
 										<t:toolbar>
 											<Toolbar>
 												<Title id="tableDetails1Header" text="Matching Rows"/>
