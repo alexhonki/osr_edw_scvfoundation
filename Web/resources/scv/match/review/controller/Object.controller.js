@@ -279,6 +279,8 @@ sap.ui.define([
 		},
 
 		onPress2: function(oEvent) {
+			//set busy state for matching rows table. 
+			this.getView().byId("detailsTable1").setBusy(true);
 			// The source is the list item that got pressed
 			var newMatchRow = oEvent.getSource().getBindingContext().getProperty("MATCH_ROW_STR");
 			var sObjectPathRelated = "/matchResultsDetailsRelatedParameters(I_MATCH_ROW='" + newMatchRow + "')/Results";
@@ -288,6 +290,10 @@ sap.ui.define([
 			});
 			var that = this;
 			this.fOnDataReceived2 = function(oData) {
+				
+				//set busy state for matching rows table. 
+				this.getView().byId("detailsTable1").setBusy(false);
+				
 				var tableLength = oData.getSource().iLength;
 				if (tableLength === 0) {
 					that.getView().byId("detailsTable1").setVisibleRowCount(1);
