@@ -451,6 +451,7 @@ sap.ui.define([
 		},
 
 		onSearch: function(oEvent) {
+			this.getView().byId("table").setBusy(true);
 			if (oEvent.getParameters().refreshButtonPressed) {
 				// Search field's 'refresh' button has been pressed.
 				// This is visible if you select any master list item.
@@ -476,6 +477,7 @@ sap.ui.define([
 		 */
 		onRefresh: function() {
 			this._oTable.getBinding("rows").refresh();
+			this.getView().byId("table").setBusy(false);
 		},
 
 		/* =========================================================== */
@@ -547,7 +549,9 @@ sap.ui.define([
 			// Reset icon tab filters
 			//this.getView().byId("iconTabBar").setSelectedKey('all');
 			//this.getView().byId("subIconTabBar").setSelectedKey('all');
-
+			
+			//set busy state for the table.
+			this.getView().byId("table").setBusy(false);
 		},
 
 		/**
