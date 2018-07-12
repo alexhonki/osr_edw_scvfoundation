@@ -581,7 +581,60 @@ lt_person_entities_tmr =
 */
 	INSERT INTO "osr.scv.foundation.db.data::SCVFoundation.PersonTmr" (SELECT SCV_ID, SOURCE_SYSTEM, SYSTEM_ID, UPDATED_FROM ,UPDATED_TO ,UPDATED_AT, SCV_NAME_LAST, SCV_NAME_MIDDLE, SCV_NAME_FIRST, BIRTH_DATE, DEATH_DATE, CHECKSUM, STD_PERSON_GN, STD_PERSON_GN2, STD_PERSON_FN, STD_CHECKSUM FROM :lt_person_entities_tmr);						 
 
+/*
+Calculate the correct Valid To and From dates and update the SCV foudation with the correct values.
+*/
 
+lt_person_entities_date_tmr = 
+							SELECT f.SCV_ID, "Z_RUN_SEQ_ID", "CUSTOMER_REF",b."FIRST_NAME",b."MIDDLE_NAME","FAMILY_ORG_NAME","DATE_OF_BIRTH",b.STD_PERSON_GN, b.STD_PERSON_GN2, b.STD_PERSON_FN, 
+							UPDATED_FROM, UPDATE_AT2,
+							COALESCE (a.UPDATED_TO, b.UPDATED_TO) AS UPDATED_TO
+							FROM (	
+								SELECT 
+								"CUSTOMER_REF","FIRST_NAME","MIDDLE_NAME","FAMILY_ORG_NAME","DATE_OF_BIRTH",  STD_PERSON_GN, STD_PERSON_GN2, STD_PERSON_FN,
+								MAX ("Z_RUN_SEQ_ID") AS "Z_RUN_SEQ_ID",MAX (LAST_CONTACT_UPDATE_DT) AS UPDATE_AT2,
+								CASE WHEN SUBSTRING (MIN ("NAME"), 19,2) = '01' THEN '20'||SUBSTRING (MIN ("NAME"), 17,2)||'-01-01' ELSE '20'||SUBSTRING (MIN ("NAME"), 17,2)||'-07-01' END AS UPDATED_FROM,
+								CASE WHEN SUBSTRING (MAX ("NAME"), 19,2) = '01' THEN '20'||SUBSTRING (MAX ("NAME"), 17,2)||'-06-30' ELSE '20'||SUBSTRING (MAX ("NAME"), 17,2)||'-12-31' END AS UPDATED_TO
+								FROM "osr.scv.foundation.db.synonyms::TMR_CustMain"
+								
+								GROUP BY "CUSTOMER_REF","FIRST_NAME","MIDDLE_NAME","FAMILY_ORG_NAME","DATE_OF_BIRTH",  STD_PERSON_GN, STD_PERSON_GN2, STD_PERSON_FN
+							) b
+							LEFT OUTER JOIN (
+								            SELECT 
+								            MAX ("Z_RUN_SEQ_ID") as MAXID,
+								            '9999-12-31' AS UPDATED_TO
+								   --         MAX (LAST_CONTACT_UPDATE_DT) AS UPDATE_AT2
+								            FROM "osr.scv.foundation.db.synonyms::TMR_CustMain"
+								            --WHERE CUSTOMER_REF = '100762476' and DATE_OF_BIRTH != '1900-01-01'
+								            GROUP BY "CUSTOMER_REF"
+								            ) a
+											ON "Z_RUN_SEQ_ID" = a."MAXID"
+							INNER JOIN "osr.scv.foundation.db.data::SCVFoundation.PersonTmr" f
+							ON 
+							b."CUSTOMER_REF" = f."SOURCE_ID" AND 
+							b."FIRST_NAME"		= f."FIRST_NAME" AND 
+							b."MIDDLE_NAME" 	= f."MIDDLE_NAME" AND 
+							b."FAMILY_ORG_NAME" = f."LAST_NAME" AND 
+							b."DATE_OF_BIRTH"	= f."BIRTH_DATE" AND 
+							b.STD_PERSON_GN 	= f."STD_PERSON_GN" AND 
+							b.STD_PERSON_GN2	= f."STD_PERSON_GN2" AND 
+							b.STD_PERSON_FN 	= f."STD_PERSON_FN"  
+							
+							WHERE DATE_OF_BIRTH != '1900-01-01';
+							
+		UPDATE "osr.scv.foundation.db.data::SCVFoundation.PersonTmr" a 
+		SET 	a.VALID_TO = b.UPDATED_TO,
+				a.VAILD_FROM = b.UPDATED_FROM
+		FROM "osr.scv.foundation.db.data::SCVFoundation.PersonTmr" a , :lt_person_entities_date_tmr b
+		WHERE 
+		a."SCV_ID" = b."SCV_ID" AND
+	--	b."SOURCE" = 'TMR' AND
+		a."SOURCE_ID" =  b."CUSTOMER_REF" AND
+		a."UPDATED_AT" = b.UPDATE_AT2 AND
+		a."LAST_NAME" = b."FAMILY_ORG_NAME" AND
+		a."MIDDLE_NAME" = b."MIDDLE_NAME" AND
+		a."FIRST_NAME" = b."FIRST_NAME" AND
+		a."BIRTH_DATE" = b."DATE_OF_BIRTH";
 
 
 
@@ -755,7 +808,12 @@ lt_person_entities_tmr =
 															FROM "osr.scv.foundation.db.data::SCVFoundation.AddressTmr"
 															WHERE SCV_ID = ma.SCV_ID)
 								 ;
-		
+								 
+	 	INSERT INTO "osr.scv.foundation.db.data::SCVFoundation.AddressTmr" (SELECT SCV_ID, SOURCE_SYSTEM, SYSTEM_ID, '', UPDATED_FROM, UPDATED_TO, FLOOR, UNIT, BUILDING_NAME, STREET_NO, STREET_NAME, STREET_TYPE , STREET_SUFFIX, SUBURB, POSTCODE, STATE, COUNTRY, '','','','', CHECKSUM,
+                                                   STD_ADDR_COUNTRY_2CHAR, STD_ADDR_COUNTRY_NAME, STD_ADDR_BUILDING_NAME, STD_ADDR_ADDRESS_DELIVERY, STD_ADDR_PRIM_ADDRESS, STD_ADDR_PRIM_NAME_FULL,
+				                                   STD_ADDR_PRIM_NAME, STD_ADDR_PRIM_TYPE, STD_ADDR_PRIM_NUMBER, STD_ADDR_LOCALITY, STD_ADDR_REGION, STD_ADDR_POSTCODE1,
+				                                   ADDR_LATITUDE, ADDR_LONGITUDE, STD_CHECKSUM, UPDATED_AT
+											FROM :lt_address_entities_tmr);			
 /*
 --OLD CODE 3/7/2018	
 		lt_address_entities_tmr = SELECT SCV_ID,
@@ -1108,16 +1166,98 @@ lt_person_entities_tmr =
 	    						   ADDR_LATITUDE, ADDR_LONGITUDE,
 	    						   STD_CHECKSUM
 */						    
-						 
-						 
-	INSERT INTO "osr.scv.foundation.db.data::SCVFoundation.AddressTmr" (SELECT SCV_ID, SOURCE_SYSTEM, SYSTEM_ID, '', UPDATED_FROM, UPDATED_TO, FLOOR, UNIT, BUILDING_NAME, STREET_NO, STREET_NAME, STREET_TYPE , STREET_SUFFIX, SUBURB, POSTCODE, STATE, COUNTRY, '','','','', CHECKSUM,
-	                                                                           STD_ADDR_COUNTRY_2CHAR, STD_ADDR_COUNTRY_NAME, STD_ADDR_BUILDING_NAME, STD_ADDR_ADDRESS_DELIVERY, STD_ADDR_PRIM_ADDRESS, STD_ADDR_PRIM_NAME_FULL,
-	    	            					                                   STD_ADDR_PRIM_NAME, STD_ADDR_PRIM_TYPE, STD_ADDR_PRIM_NUMBER, STD_ADDR_LOCALITY, STD_ADDR_REGION, STD_ADDR_POSTCODE1,
-	    	            					                                   ADDR_LATITUDE, ADDR_LONGITUDE, STD_CHECKSUM, UPDATED_AT
-																		FROM :lt_address_entities_tmr);						 
+
+/*
+Calculate the correct Valid To and From dates and update the SCV foudation with the correct values.
+*/
+
+lt_address_entities_date_tmr = 
+								SELECT f.SCV_ID, "Z_RUN_SEQ_ID", "CUSTOMER_REF",b."FLOOR", b.UNIT, b.BUILDING_NAME, b.STREET_NO, b.STREET_NAME, b.STREET_TYPE, b.STREET_SUFFIX, b.SUBURB, b.POSTCODE, b.STATE, b.COUNTRY,
+											    b.STD_ADDR_COUNTRY_2CHAR, b.STD_ADDR_COUNTRY_NAME, b.STD_ADDR_BUILDING_NAME, b.STD_ADDR_ADDRESS_DELIVERY, b.STD_ADDR_PRIM_ADDRESS, b.STD_ADDR_PRIM_NAME_FULL,
+											    b.STD_ADDR_PRIM_NAME, b.STD_ADDR_PRIM_TYPE, b.STD_ADDR_PRIM_NUMBER, b.STD_ADDR_LOCALITY, b.STD_ADDR_REGION, b.STD_ADDR_POSTCODE1, 
+											 UPDATE_AT2, ADDR_LATITUDE2, ADDR_LONGITUDE2, UPDATED_FROM,
+											COALESCE (a.UPDATED_TO, b.UPDATED_TO) AS UPDATED_TO
+											FROM (	
+												SELECT 
+												"CUSTOMER_REF", "FLOOR", UNIT, BUILDING_NAME, STREET_NO, STREET_NAME, STREET_TYPE, STREET_SUFFIX, SUBURB, POSTCODE, STATE, COUNTRY,
+									    		STD_ADDR_COUNTRY_2CHAR, STD_ADDR_COUNTRY_NAME, STD_ADDR_BUILDING_NAME, STD_ADDR_ADDRESS_DELIVERY, STD_ADDR_PRIM_ADDRESS, STD_ADDR_PRIM_NAME_FULL,
+									    		STD_ADDR_PRIM_NAME, STD_ADDR_PRIM_TYPE, STD_ADDR_PRIM_NUMBER, STD_ADDR_LOCALITY, STD_ADDR_REGION, STD_ADDR_POSTCODE1,
+												MAX ("Z_RUN_SEQ_ID") AS "Z_RUN_SEQ_ID",MAX (LAST_CONTACT_UPDATE_DT) AS UPDATE_AT2, MAX(ADDR_LATITUDE) AS ADDR_LATITUDE2,MAX(ADDR_LONGITUDE) AS ADDR_LONGITUDE2,
+												CASE WHEN SUBSTRING (MIN ("NAME"), 19,2) = '01' THEN '20'||SUBSTRING (MIN ("NAME"), 17,2)||'-01-01' ELSE '20'||SUBSTRING (MIN ("NAME"), 17,2)||'-07-01' END AS UPDATED_FROM,
+												CASE WHEN SUBSTRING (MAX ("NAME"), 19,2) = '01' THEN '20'||SUBSTRING (MAX ("NAME"), 17,2)||'-06-30' ELSE '20'||SUBSTRING (MAX ("NAME"), 17,2)||'-12-31' END AS UPDATED_TO
+												FROM "osr.scv.foundation.db.synonyms::TMR_CustMain"
+												
+												GROUP BY "CUSTOMER_REF", "FLOOR", UNIT, BUILDING_NAME, STREET_NO, STREET_NAME, STREET_TYPE, STREET_SUFFIX, SUBURB, POSTCODE, STATE, COUNTRY,
+													    STD_ADDR_COUNTRY_2CHAR, STD_ADDR_COUNTRY_NAME, STD_ADDR_BUILDING_NAME, STD_ADDR_ADDRESS_DELIVERY, STD_ADDR_PRIM_ADDRESS, STD_ADDR_PRIM_NAME_FULL,
+													    STD_ADDR_PRIM_NAME, STD_ADDR_PRIM_TYPE, STD_ADDR_PRIM_NUMBER, STD_ADDR_LOCALITY, STD_ADDR_REGION, STD_ADDR_POSTCODE1
+											) b
+											LEFT OUTER JOIN (
+												            SELECT 
+												            MAX ("Z_RUN_SEQ_ID") as MAXID,
+												            '9999-12-31' AS UPDATED_TO
+												            --MAX (LAST_CONTACT_UPDATE_DT) AS UPDATE_AT2,
+												            --MAX(ADDR_LATITUDE) AS ADDR_LATITUDE2,
+												            --MAX(ADDR_LONGITUDE) AS ADDR_LONGITUDE2
+												            FROM "osr.scv.foundation.db.synonyms::TMR_CustMain"
+-- DELETE AFTER TESTING
+--															WHERE NAME = 'TMR_CUST_MAIN_FY1602.txt'
+												            --WHERE CUSTOMER_REF = '100762476' and DATE_OF_BIRTH != '1900-01-01'
+												            GROUP BY "CUSTOMER_REF"
+												            ) a
+															ON "Z_RUN_SEQ_ID" = a."MAXID"
+										--	WHERE CUSTOMER_REF = '62183274' --and DATE_OF_BIRTH != '1900-01-01'
+											INNER JOIN "osr.scv.foundation.db.data::SCVFoundation.AddressTmr" f
+											ON 
+											b."CUSTOMER_REF" = f."SOURCE_ID" AND
+											b."FLOOR" = f."FLOOR"  AND 
+											b.UNIT = f."UNIT"  AND  
+											b.BUILDING_NAME = f."BUILDING_NAME"  AND  
+											b.STREET_NO = f."STREET_NO"  AND  
+											b.STREET_NAME = f."STREET_NAME"  AND  
+											b.STREET_TYPE = f."STREET_TYPE"  AND  
+											b.STREET_SUFFIX = f."STREET_SUFFIX"  AND 
+											b.SUBURB = f."SUBURB"  AND 
+											b.POSTCODE = f."POSTCODE"  AND 
+											b.STATE = f."STATE"  AND  
+											b.COUNTRY = f."COUNTRY"  AND 
+											b.STD_ADDR_COUNTRY_2CHAR = f."STD_ADDR_COUNTRY_2CHAR"  AND  
+											b.STD_ADDR_COUNTRY_NAME = f."STD_ADDR_COUNTRY_NAME"  AND  
+											b.STD_ADDR_BUILDING_NAME = f."STD_ADDR_BUILDING_NAME"  AND 
+											b.STD_ADDR_ADDRESS_DELIVERY = f."STD_ADDR_ADDRESS_DELIVERY"  AND 
+											b.STD_ADDR_PRIM_ADDRESS = f."STD_ADDR_PRIM_ADDRESS"  AND 
+											b.STD_ADDR_PRIM_NAME_FULL = f."STD_ADDR_PRIM_NAME_FULL"  AND 
+											b.STD_ADDR_PRIM_NAME = f."STD_ADDR_PRIM_NAME"  AND 
+											b.STD_ADDR_PRIM_TYPE = f."STD_ADDR_PRIM_TYPE"  AND 
+											b.STD_ADDR_PRIM_NUMBER = f."STD_ADDR_PRIM_NUMBER"  AND 
+											b.STD_ADDR_LOCALITY = f."STD_ADDR_LOCALITY"  AND 
+											b.STD_ADDR_REGION = f."STD_ADDR_REGION"  AND 
+											b.STD_ADDR_POSTCODE1 = f."STD_ADDR_POSTCODE1" 
+-- DELETE AFTER TESTING
+--											WHERE NAME = 'TMR_CUST_MAIN_FY1602.txt'
+											;							 
 	
-	
-	
+	UPDATE "osr.scv.foundation.db.data::SCVFoundation.AddressTmr" a 
+		SET 	a.VALID_TO = b.UPDATED_TO,
+				a.VALID_FROM = b.UPDATED_FROM
+		FROM "osr.scv.foundation.db.data::SCVFoundation.AddressTmr" a , :lt_address_entities_date_tmr b
+		WHERE 
+		a."SCV_ID" = b."SCV_ID" AND
+	--	b."SOURCE" = 'TMR' AND
+		a."SOURCE_ID" =  b."CUSTOMER_REF" AND
+		a."LAST_CONTACT_DATE" = b.UPDATE_AT2 AND
+		a."FLOOR" = b."FLOOR"  AND 
+		a.UNIT = b."UNIT"  AND  
+		a.BUILDING_NAME = b."BUILDING_NAME"  AND  
+		a.STREET_NO = b."STREET_NO"  AND  
+		a.STREET_NAME = b."STREET_NAME"  AND  
+		a.STREET_TYPE = b."STREET_TYPE"  AND  
+		a.STREET_SUFFIX = b."STREET_SUFFIX"  AND 
+		a.SUBURB = b."SUBURB"  AND 
+		a.POSTCODE = b."POSTCODE"  AND 
+		a.STATE = b."STATE"  AND  
+		a.COUNTRY = b."COUNTRY" ;
+							 
+
 	-- ### SCV contact ##############################################################################################################
 	
 	lt_contact_entities_rms_number = 
