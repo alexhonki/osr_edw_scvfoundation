@@ -311,6 +311,8 @@ lt_person_entities_tmr =
 												            '9999-12-31' AS UPDATED_TO
 												   --         MAX (LAST_CONTACT_UPDATE_DT) AS UPDATE_AT2
 												            FROM "osr.scv.foundation.db.synonyms::TMR_CustMain"
+-- DELETE AFTER TESTING
+--												            WHERE NAME = 'TMR_CUST_MAIN_FY1602.txt'												            
 												            --WHERE CUSTOMER_REF = '100762476' and DATE_OF_BIRTH != '1900-01-01'
 												            GROUP BY "CUSTOMER_REF"
 												            ) a
@@ -325,6 +327,8 @@ lt_person_entities_tmr =
 											a.STD_PERSON_GN 	= f."STD_PERSON_GN" AND 
 											a.STD_PERSON_GN2	= f."STD_PERSON_GN2" AND 
 											a.STD_PERSON_FN 	= f."STD_PERSON_FN"  
+-- DELETE AFTER TESTING
+--								            WHERE NAME = 'TMR_CUST_MAIN_FY1602.txt'											
 										) m
 										ON t."Cleanse_ROW_ID_TMR" = m.Z_RUN_SEQ_ID
 										WHERE m.DATE_OF_BIRTH != '1900-01-01'
@@ -579,7 +583,8 @@ lt_person_entities_tmr =
 									   STD_PERSON_GN, STD_PERSON_GN2, STD_PERSON_FN,
 									   STD_CHECKSUM;
 */
-	INSERT INTO "osr.scv.foundation.db.data::SCVFoundation.PersonTmr" (SELECT SCV_ID, SOURCE_SYSTEM, SYSTEM_ID, UPDATED_FROM ,UPDATED_TO ,UPDATED_AT, SCV_NAME_LAST, SCV_NAME_MIDDLE, SCV_NAME_FIRST, BIRTH_DATE, DEATH_DATE, CHECKSUM, STD_PERSON_GN, STD_PERSON_GN2, STD_PERSON_FN, STD_CHECKSUM FROM :lt_person_entities_tmr);						 
+	INSERT INTO "osr.scv.foundation.db.data::SCVFoundation.PersonTmr" (SELECT SCV_ID, SOURCE_SYSTEM, SYSTEM_ID, UPDATED_FROM ,UPDATED_TO ,UPDATED_AT, SCV_NAME_LAST, SCV_NAME_MIDDLE, SCV_NAME_FIRST, BIRTH_DATE, DEATH_DATE, CHECKSUM, STD_PERSON_GN, STD_PERSON_GN2, STD_PERSON_FN, STD_CHECKSUM FROM :lt_person_entities_tmr
+	GROUP BY SCV_ID, SOURCE_SYSTEM, SYSTEM_ID, UPDATED_FROM ,UPDATED_TO ,UPDATED_AT, SCV_NAME_LAST, SCV_NAME_MIDDLE, SCV_NAME_FIRST, BIRTH_DATE, DEATH_DATE, CHECKSUM, STD_PERSON_GN, STD_PERSON_GN2, STD_PERSON_FN, STD_CHECKSUM);						 
 
 /*
 Calculate the correct Valid To and From dates and update the SCV foudation with the correct values.
@@ -605,6 +610,8 @@ lt_person_entities_date_tmr =
 								            '9999-12-31' AS UPDATED_TO
 								   --         MAX (LAST_CONTACT_UPDATE_DT) AS UPDATE_AT2
 								            FROM "osr.scv.foundation.db.synonyms::TMR_CustMain"
+-- DELETE AFTER TESTING
+--								            WHERE NAME = 'TMR_CUST_MAIN_FY1602.txt'								            
 								            --WHERE CUSTOMER_REF = '100762476' and DATE_OF_BIRTH != '1900-01-01'
 								            GROUP BY "CUSTOMER_REF"
 								            ) a
@@ -619,8 +626,9 @@ lt_person_entities_date_tmr =
 							b.STD_PERSON_GN 	= f."STD_PERSON_GN" AND 
 							b.STD_PERSON_GN2	= f."STD_PERSON_GN2" AND 
 							b.STD_PERSON_FN 	= f."STD_PERSON_FN"  
-							
-							WHERE DATE_OF_BIRTH != '1900-01-01';
+-- DELETE AFTER TESTING
+--												            						
+							WHERE DATE_OF_BIRTH != '1900-01-01'; --and NAME = 'TMR_CUST_MAIN_FY1602.txt;
 							
 		UPDATE "osr.scv.foundation.db.data::SCVFoundation.PersonTmr" a 
 		SET 	a.VALID_TO = b.UPDATED_TO,
@@ -634,7 +642,11 @@ lt_person_entities_date_tmr =
 		a."LAST_NAME" = b."FAMILY_ORG_NAME" AND
 		a."MIDDLE_NAME" = b."MIDDLE_NAME" AND
 		a."FIRST_NAME" = b."FIRST_NAME" AND
-		a."BIRTH_DATE" = b."DATE_OF_BIRTH";
+		a."BIRTH_DATE" = b."DATE_OF_BIRTH" AND
+		a.STD_PERSON_GN = b."STD_PERSON_GN" AND 
+		a.STD_PERSON_GN2 = b."STD_PERSON_GN2" AND 
+		a.STD_PERSON_FN = b."STD_PERSON_FN"  
+	;
 
 
 
@@ -646,7 +658,77 @@ lt_person_entities_date_tmr =
 	
 	-- ### SCV address ##############################################################################################################
 	
+		lt_address_entities_rms = 
+								SELECT Z_RUN_SEQ_ID, SCV_ID,
+									   ENTITY_ID, SOURCE_SYSTEM, SYSTEM_ID, ADDRNUMBER, ADR_KIND, VALID_FROM, VALID_TO, CITY1, POST_CODE1, STREET, HOUSE_NUM1, COUNTRY, REGION, PERS_ADDR, MC_CITY1, MC_STREET, TIME_ZONE, ADRC_UUID,
+									   CHECKSUM,
+									   STD_ADDR_COUNTRY_2CHAR, STD_ADDR_COUNTRY_NAME, STD_ADDR_BUILDING_NAME, STD_ADDR_ADDRESS_DELIVERY, STD_ADDR_PRIM_ADDRESS,
+	                				   STD_ADDR_PRIM_NAME_FULL, STD_ADDR_PRIM_NAME, STD_ADDR_PRIM_TYPE, STD_ADDR_PRIM_NUMBER, STD_ADDR_LOCALITY, STD_ADDR_REGION, STD_ADDR_POSTCODE1,
+	                				   ADDR_LATITUDE, ADDR_LONGITUDE,
+	                				   STD_CHECKSUM
+								FROM (
+								SELECT ma.SCV_ID, mr.* FROM 
+								(
+									SELECT mk.*, lt.ADDR_LATITUDE, lt.ADDR_LONGITUDE FROM 
+													(SELECT DISTINCT c.Z_RUN_SEQ_ID, a.ENTITY_ID, a.SOURCE_SYSTEM, a.SYSTEM_ID, b.ADDRNUMBER, b.ADR_KIND, CASE WHEN SUBSTRING(to_nvarchar(b.VALID_FROM),1,4) < 1900 THEN DATS_TO_DATE('19000101') ELSE DATS_TO_DATE(SUBSTRING(to_nvarchar(b.VALID_FROM),1,8)) END  AS VALID_FROM, CASE WHEN SUBSTRING(to_nvarchar(b.VALID_TO),1,4) < 1900 THEN DATS_TO_DATE('19000101') ELSE DATS_TO_DATE(SUBSTRING(to_nvarchar(b.VALID_TO),1,8)) END  AS VALID_TO, c.CITY1, c.POST_CODE1, c.STREET, c.HOUSE_NUM1, c.COUNTRY, c.REGION, c.PERS_ADDR, c.MC_CITY1, c.MC_STREET, c.TIME_ZONE, c.ADRC_UUID, 
+	                							    -- Create checksum for RMS MD fields for domain ADDRESS
+    												HASH_SHA256(TO_BINARY(TO_VARCHAR(c.CITY1)), TO_BINARY(TO_VARCHAR(c.POST_CODE1)), TO_BINARY(TO_VARCHAR(c.STREET)), TO_BINARY(TO_VARCHAR(c.HOUSE_NUM1)), TO_BINARY(TO_VARCHAR(c.COUNTRY)),
+    												TO_BINARY(TO_VARCHAR(c.REGION)), TO_BINARY(TO_VARCHAR(c.PERS_ADDR)), TO_BINARY(TO_VARCHAR(c.MC_CITY1)), TO_BINARY(TO_VARCHAR(c.STREET)), TO_BINARY(TO_VARCHAR(c.TIME_ZONE)), TO_BINARY(TO_VARCHAR(c.ADRC_UUID))) as CHECKSUM,
+	                							    STD_ADDR_COUNTRY_2CHAR, STD_ADDR_COUNTRY_NAME, STD_ADDR_BUILDING_NAME, STD_ADDR_ADDRESS_DELIVERY, STD_ADDR_PRIM_ADDRESS,
+	                								STD_ADDR_PRIM_NAME_FULL, STD_ADDR_PRIM_NAME, STD_ADDR_PRIM_TYPE, STD_ADDR_PRIM_NUMBER, STD_ADDR_LOCALITY, STD_ADDR_REGION, STD_ADDR_POSTCODE1,
+	                								--ADDR_LATITUDE, ADDR_LONGITUDE,  
+	                								-- Create checksum for RMS STD MD fields for domain ADDRESS
+	                								HASH_SHA256(TO_BINARY(TO_VARCHAR(c.STD_ADDR_COUNTRY_2CHAR)), TO_BINARY(TO_VARCHAR(c.STD_ADDR_COUNTRY_NAME)), TO_BINARY(TO_VARCHAR(c.STD_ADDR_BUILDING_NAME)), TO_BINARY(TO_VARCHAR(c.STD_ADDR_ADDRESS_DELIVERY)), TO_BINARY(TO_VARCHAR(c.STD_ADDR_PRIM_ADDRESS)),
+    												TO_BINARY(TO_VARCHAR(c.STD_ADDR_PRIM_NAME_FULL)), TO_BINARY(TO_VARCHAR(c.STD_ADDR_PRIM_NAME)), TO_BINARY(TO_VARCHAR(c.STD_ADDR_PRIM_TYPE)), TO_BINARY(TO_VARCHAR(c.STD_ADDR_PRIM_NUMBER)), TO_BINARY(TO_VARCHAR(c.STD_ADDR_REGION)), TO_BINARY(TO_VARCHAR(c.STD_ADDR_POSTCODE1))) as STD_CHECKSUM,
+    												"Match_ROW_ID"
+									FROM "osr.scv.foundation.db.data::MatchResults.MatchResultsShadow" a
+									LEFT OUTER JOIN "osr.scv.foundation.db.synonyms::BUT021_FS" b
+									ON a.SYSTEM_ID = b.PARTNER
+									LEFT OUTER JOIN "osr.scv.foundation.db.synonyms::ADRC" c
+									ON b.ADDRNUMBER = c.ADDRNUMBER
+									LEFT OUTER JOIN "osr.scv.foundation.db.data::MatchResults.MatchDelta" e
+									ON a."Match_ROW_ID" = e.MATCH_ROW_ID 
+									WHERE e.ACTION_RMS = 'Add'
+--									WHERE a.SOURCE_SYSTEM = 'RMS' AND e.ACTION_RMS = 'Add' AND b.PARTNER = '0001639368'
+									) mk
+									LEFT OUTER JOIN 
+													(SELECT ADDRNUMBER, 
+															(SELECT ADDR_LATITUDE FROM "osr.scv.foundation.db.synonyms::ADRC" WHERE MAX(c.Z_RUN_SEQ_ID) = Z_RUN_SEQ_ID) as ADDR_LATITUDE,
+															(SELECT ADDR_LONGITUDE FROM "osr.scv.foundation.db.synonyms::ADRC" WHERE MAX(c.Z_RUN_SEQ_ID) = Z_RUN_SEQ_ID) as ADDR_LONGITUDE 
+													FROM "osr.scv.foundation.db.synonyms::ADRC" c
+													GROUP BY ADDRNUMBER) lt
+									ON	mk.ADDRNUMBER = lt.ADDRNUMBER			
+									WHERE mk.SOURCE_SYSTEM = 'RMS'  
+									--AND mk.SYSTEM_ID = '0001639368'	
+								--	WHERE a.SOURCE_SYSTEM = 'RMS'
+								) mr
+							-- Add SCV ID
+							INNER JOIN (SELECT SCV_ID, ENTITY_ID AS ENTITY_ID1, MATCH_ROW_ID FROM #lt_entity_mappingss) ma
+							ON mr.ENTITY_ID = ma.ENTITY_ID1 AND mr."Match_ROW_ID" = ma.MATCH_ROW_ID
+							AND mr.CHECKSUM NOT IN (SELECT "CHECKSUM"
+															FROM "osr.scv.foundation.db.data::SCVFoundation.AddressRms"
+															WHERE SCV_ID = ma.SCV_ID)
+							) 
+							GROUP BY Z_RUN_SEQ_ID, SCV_ID,
+									   ENTITY_ID, SOURCE_SYSTEM, SYSTEM_ID, ADDRNUMBER, ADR_KIND, VALID_FROM, VALID_TO, CITY1, POST_CODE1, STREET, HOUSE_NUM1, COUNTRY, REGION, PERS_ADDR, MC_CITY1, MC_STREET, TIME_ZONE, ADRC_UUID,
+									   CHECKSUM,
+									   STD_ADDR_COUNTRY_2CHAR, STD_ADDR_COUNTRY_NAME, STD_ADDR_BUILDING_NAME, STD_ADDR_ADDRESS_DELIVERY, STD_ADDR_PRIM_ADDRESS,
+	                				   STD_ADDR_PRIM_NAME_FULL, STD_ADDR_PRIM_NAME, STD_ADDR_PRIM_TYPE, STD_ADDR_PRIM_NUMBER, STD_ADDR_LOCALITY, STD_ADDR_REGION, STD_ADDR_POSTCODE1,
+	                				   ADDR_LATITUDE, ADDR_LONGITUDE,
+	                				   STD_CHECKSUM
+						 ;
 	
+	INSERT INTO "osr.scv.foundation.db.data::SCVFoundation.AddressRms" (
+																		SELECT  SCV_ID, SOURCE_SYSTEM, SYSTEM_ID, ADDRNUMBER, ADR_KIND, VALID_FROM, VALID_TO, CITY1, POST_CODE1, STREET, HOUSE_NUM1, COUNTRY, REGION, PERS_ADDR, MC_CITY1, MC_STREET, TIME_ZONE, ADRC_UUID, CHECKSUM, 
+																		        STD_ADDR_COUNTRY_2CHAR, STD_ADDR_COUNTRY_NAME, STD_ADDR_BUILDING_NAME, STD_ADDR_ADDRESS_DELIVERY, STD_ADDR_PRIM_ADDRESS, STD_ADDR_PRIM_NAME_FULL, STD_ADDR_PRIM_NAME, STD_ADDR_PRIM_TYPE, 
+																		        STD_ADDR_PRIM_NUMBER, STD_ADDR_LOCALITY, STD_ADDR_REGION, STD_ADDR_POSTCODE1, ADDR_LATITUDE, ADDR_LONGITUDE, STD_CHECKSUM, Z_RUN_SEQ_ID
+																		FROM :lt_address_entities_rms
+																	  )
+	;	
+	
+	
+	
+/*	OLD CODE
 	lt_address_entities_rms = 
 								SELECT SCV_ID,
 									   ENTITY_ID, SOURCE_SYSTEM, SYSTEM_ID, ADDRNUMBER, ADR_KIND, VALID_FROM, VALID_TO, CITY1, POST_CODE1, STREET, HOUSE_NUM1, COUNTRY, REGION, PERS_ADDR, MC_CITY1, MC_STREET, TIME_ZONE, ADRC_UUID,
@@ -700,9 +782,12 @@ lt_person_entities_date_tmr =
 																		        STD_ADDR_COUNTRY_2CHAR, STD_ADDR_COUNTRY_NAME, STD_ADDR_BUILDING_NAME, STD_ADDR_ADDRESS_DELIVERY, STD_ADDR_PRIM_ADDRESS, STD_ADDR_PRIM_NAME_FULL, STD_ADDR_PRIM_NAME, STD_ADDR_PRIM_TYPE, 
 																		        STD_ADDR_PRIM_NUMBER, STD_ADDR_LOCALITY, STD_ADDR_REGION, STD_ADDR_POSTCODE1, ADDR_LATITUDE, ADDR_LONGITUDE, STD_CHECKSUM
 																		FROM :lt_address_entities_rms
+																		GROUP BY SCV_ID, SOURCE_SYSTEM, SYSTEM_ID, ADDRNUMBER, ADR_KIND, VALID_FROM, VALID_TO, CITY1, POST_CODE1, STREET, HOUSE_NUM1, COUNTRY, REGION, PERS_ADDR, MC_CITY1, MC_STREET, TIME_ZONE, ADRC_UUID, CHECKSUM, 
+																		        STD_ADDR_COUNTRY_2CHAR, STD_ADDR_COUNTRY_NAME, STD_ADDR_BUILDING_NAME, STD_ADDR_ADDRESS_DELIVERY, STD_ADDR_PRIM_ADDRESS, STD_ADDR_PRIM_NAME_FULL, STD_ADDR_PRIM_NAME, STD_ADDR_PRIM_TYPE, 
+																		        STD_ADDR_PRIM_NUMBER, STD_ADDR_LOCALITY, STD_ADDR_REGION, STD_ADDR_POSTCODE1, ADDR_LATITUDE, ADDR_LONGITUDE, STD_CHECKSUM
 																	  )
 	;	
-
+*/
 
 		lt_address_entities_tmr =
 		
@@ -756,6 +841,8 @@ lt_person_entities_date_tmr =
 												            --MAX(ADDR_LATITUDE) AS ADDR_LATITUDE2,
 												            --MAX(ADDR_LONGITUDE) AS ADDR_LONGITUDE2
 												            FROM "osr.scv.foundation.db.synonyms::TMR_CustMain"
+-- DELETE AFTER TESTING
+--												            WHERE NAME = 'TMR_CUST_MAIN_FY1602.txt'												            
 												            --WHERE CUSTOMER_REF = '100762476' and DATE_OF_BIRTH != '1900-01-01'
 												            GROUP BY "CUSTOMER_REF"
 												            ) a
@@ -787,6 +874,8 @@ lt_person_entities_date_tmr =
 											a.STD_ADDR_LOCALITY = f."STD_ADDR_LOCALITY"  AND 
 											a.STD_ADDR_REGION = f."STD_ADDR_REGION"  AND 
 											a.STD_ADDR_POSTCODE1 = f."STD_ADDR_POSTCODE1" 
+-- DELETE AFTER TESTING
+--							            WHERE NAME = 'TMR_CUST_MAIN_FY1602.txt'
 										) m
 										ON t."Cleanse_ROW_ID_TMR" = m.Z_RUN_SEQ_ID
 									--	WHERE m.DATE_OF_BIRTH != '1900-01-01'
@@ -813,7 +902,11 @@ lt_person_entities_date_tmr =
                                                    STD_ADDR_COUNTRY_2CHAR, STD_ADDR_COUNTRY_NAME, STD_ADDR_BUILDING_NAME, STD_ADDR_ADDRESS_DELIVERY, STD_ADDR_PRIM_ADDRESS, STD_ADDR_PRIM_NAME_FULL,
 				                                   STD_ADDR_PRIM_NAME, STD_ADDR_PRIM_TYPE, STD_ADDR_PRIM_NUMBER, STD_ADDR_LOCALITY, STD_ADDR_REGION, STD_ADDR_POSTCODE1,
 				                                   ADDR_LATITUDE, ADDR_LONGITUDE, STD_CHECKSUM, UPDATED_AT
-											FROM :lt_address_entities_tmr);			
+											FROM :lt_address_entities_tmr
+											GROUP BY SCV_ID, SOURCE_SYSTEM, SYSTEM_ID, '', UPDATED_FROM, UPDATED_TO, FLOOR, UNIT, BUILDING_NAME, STREET_NO, STREET_NAME, STREET_TYPE , STREET_SUFFIX, SUBURB, POSTCODE, STATE, COUNTRY, '','','','', CHECKSUM,
+                                                   STD_ADDR_COUNTRY_2CHAR, STD_ADDR_COUNTRY_NAME, STD_ADDR_BUILDING_NAME, STD_ADDR_ADDRESS_DELIVERY, STD_ADDR_PRIM_ADDRESS, STD_ADDR_PRIM_NAME_FULL,
+				                                   STD_ADDR_PRIM_NAME, STD_ADDR_PRIM_TYPE, STD_ADDR_PRIM_NUMBER, STD_ADDR_LOCALITY, STD_ADDR_REGION, STD_ADDR_POSTCODE1,
+				                                   ADDR_LATITUDE, ADDR_LONGITUDE, STD_CHECKSUM, UPDATED_AT);			
 /*
 --OLD CODE 3/7/2018	
 		lt_address_entities_tmr = SELECT SCV_ID,
@@ -1255,7 +1348,19 @@ lt_address_entities_date_tmr =
 		a.SUBURB = b."SUBURB"  AND 
 		a.POSTCODE = b."POSTCODE"  AND 
 		a.STATE = b."STATE"  AND  
-		a.COUNTRY = b."COUNTRY" ;
+		a.COUNTRY = b."COUNTRY" AND 
+		a.STD_ADDR_COUNTRY_2CHAR = b."STD_ADDR_COUNTRY_2CHAR"  AND  
+		a.STD_ADDR_COUNTRY_NAME = b."STD_ADDR_COUNTRY_NAME"  AND  
+		a.STD_ADDR_BUILDING_NAME = b."STD_ADDR_BUILDING_NAME"  AND 
+		a.STD_ADDR_ADDRESS_DELIVERY = b."STD_ADDR_ADDRESS_DELIVERY"  AND 
+		a.STD_ADDR_PRIM_ADDRESS = b."STD_ADDR_PRIM_ADDRESS"  AND 
+		a.STD_ADDR_PRIM_NAME_FULL = b."STD_ADDR_PRIM_NAME_FULL"  AND 
+		a.STD_ADDR_PRIM_NAME = b."STD_ADDR_PRIM_NAME"  AND 
+		a.STD_ADDR_PRIM_TYPE = b."STD_ADDR_PRIM_TYPE"  AND 
+		a.STD_ADDR_PRIM_NUMBER = b."STD_ADDR_PRIM_NUMBER"  AND 
+		a.STD_ADDR_LOCALITY = b."STD_ADDR_LOCALITY"  AND 
+		a.STD_ADDR_REGION = b."STD_ADDR_REGION"  AND 
+		a.STD_ADDR_POSTCODE1 = b."STD_ADDR_POSTCODE1" ;
 							 
 
 	-- ### SCV contact ##############################################################################################################

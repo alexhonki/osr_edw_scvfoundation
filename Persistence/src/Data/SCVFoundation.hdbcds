@@ -66,6 +66,7 @@ context SCVFoundation {
 
     /*@@layout{"layoutInfo":{}}*/
     entity AddressRms {
+        key RUN_SEQ_ID                : Integer;
         key SCV_ID                    : String(10);
         key SOURCE                    : String(10);
         key SOURCE_ID                 : String(10);

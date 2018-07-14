@@ -1,0 +1,30 @@
+namespace osr.scv.foundation.db.data;
+
+context HashResults {
+
+    /*@@layout{"layoutInfo":{"x":-903,"y":-277.5}}*/
+    entity MatchResultsHash {
+        ENTITY_ID    : String(20);
+        MATCH_ROW_ID : Integer;
+        HASH         : Binary(32);
+    };
+
+    /*@@layout{"layoutInfo":{"x":-643,"y":-277.5}}*/
+    entity MatchResultsHashRMS {
+        ENTITY_ID    : String(20);
+        MATCH_ROW_ID : Integer;
+        HASH         : Binary(32);
+    };
+
+    /*@@layout{"layoutInfo":{"x":-372,"y":-278.5}}*/
+    entity SCVRecordHash {
+        SCV_ID : String(20);
+        HASH   : Binary(32);
+    };
+
+    /*@@layout{"layoutInfo":{"x":-136,"y":-278.5}}*/
+    entity SCVRecordHashRMS {
+        SCV_ID : String(20);
+        HASH   : Binary(32);
+    };
+};
