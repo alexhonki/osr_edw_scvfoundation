@@ -53,7 +53,45 @@
       "inline": {
         "type": "SUB",
         "taskGroup": "com.sap.dwf.toe.executionControl",
-        "description": "Delta Detection Process",
+        "description": "Populate Match Hash",
+        "parameterValues": [
+          {
+            "id": "taskChainId",
+            "value": "src#TC_MatchResultsHash"
+          }
+        ]
+      },
+      "preconditions": [
+        {
+          "from": "3",
+          "status": "OK"
+        }
+      ]
+    },
+    "5": {
+      "inline": {
+        "type": "SUB",
+        "taskGroup": "com.sap.dwf.toe.executionControl",
+        "description": "Populate SCV Hash",
+        "parameterValues": [
+          {
+            "id": "taskChainId",
+            "value": "src#TC_SCVRecordHash"
+          }
+        ]
+      },
+      "preconditions": [
+        {
+          "from": "4",
+          "status": "OK"
+        }
+      ]
+    },
+    "6": {
+      "inline": {
+        "type": "SUB",
+        "taskGroup": "com.sap.dwf.toe.executionControl",
+        "description": "Delta Detection",
         "parameterValues": [
           {
             "id": "taskChainId",
@@ -63,7 +101,7 @@
       },
       "preconditions": [
         {
-          "from": "3",
+          "from": "5",
           "status": "OK"
         }
       ]
