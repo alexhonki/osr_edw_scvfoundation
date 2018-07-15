@@ -10,5 +10,11 @@
       "object": "MATCH_GROUP_INFO",
       "schema": "_SYS_TASK"
     }
+  },
+  "osr.scv.foundation.db.synonyms::TASK_EXECUTIONS": {
+    "target": {
+      "object": "TASK_EXECUTIONS",
+      "schema": "_SYS_TASK"
+    }
   }
 }
