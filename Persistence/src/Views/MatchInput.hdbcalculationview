@@ -190,7 +190,7 @@
     AND
 (lower(&quot;NAMEMIDDLE&quot;) NOT LIKE '%duplicat%' AND &quot;NAMEMIDDLE&quot; NOT LIKE '%&amp;%' AND lower(&quot;NAMEMIDDLE&quot;) NOT LIKE '%trust%' AND lower(&quot;NAMEMIDDLE&quot;) NOT LIKE '%executor%' AND lower(&quot;NAMEMIDDLE&quot;) NOT LIKE '%copy%' AND (&quot;NAMEMIDDLE&quot; NOT LIKE  '%0%') AND (&quot;NAMEMIDDLE&quot; NOT LIKE  '%1%')AND (&quot;NAMEMIDDLE&quot; NOT LIKE  '%2%')AND (&quot;NAMEMIDDLE&quot; NOT LIKE  '%3%')AND (&quot;NAMEMIDDLE&quot; NOT LIKE  '%4%')AND (&quot;NAMEMIDDLE&quot; NOT LIKE  '%5%')AND (&quot;NAMEMIDDLE&quot; NOT LIKE  '%6%')AND (&quot;NAMEMIDDLE&quot; NOT LIKE  '%7%')AND (&quot;NAMEMIDDLE&quot; NOT LIKE  '%8%')AND (&quot;NAMEMIDDLE&quot; NOT LIKE  '%9%') AND (&quot;NAMEMIDDLE&quot; NOT LIKE '% and %'))
 )
- OR ((&quot;NAME_LAST&quot; LIKE '%Dedupped - same as %' ) )
+ OR ((&quot;NAME_LAST&quot; LIKE '%BlaDedupped - same as %' ) )
  </filter>
   </calculationView>
   <calculationView xsi:type="Calculation:ProjectionView" id="P_TimedependendAddressUsage">
@@ -1901,7 +1901,7 @@
     </input>
     <filter>&quot;PATH&quot; = 'DONOTLOAD'</filter>
   </calculationView>
-  <calculationView xsi:type="Calculation:ProjectionView" id="P_TMRCustomers" filterExpressionLanguage="SQL">
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_TMRCustomers">
     <viewAttributes>
       <viewAttribute id="MATCH_PERSON_GN_STD6">
         <descriptions defaultDescription="MATCH_PERSON_GN_STD6"/>

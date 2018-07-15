@@ -9,24 +9,17 @@ BEGIN
        Write your procedure logic 
    *************************************/
    
-   lt_matchresults_hash =
+   lt_matchresults_hashRMS =
 						 SELECT 
 		            	--ROW_NUMBER() OVER (ORDER BY a.ENTITY_ID ASC) as ROW_COUNT,
 		            	--a.GROUP_ID,
 					--	a.ENTITY_ID,PERSON_RMS, PERSON_TMR,	ADDR_RMS, ADDR_TMR,	TEL_RMS,FAX_RMS,TEL_TMR, SMS_TMR, EMAIL_TMR,a.SOURCE_SYSTEM,
 		            	a.ENTITY_ID, a."Match_ROW_ID" as MATCH_ROW ,
-					
-	
+						
 						HASH_SHA256(TO_BINARY(TO_VARCHAR(CASE WHEN PERSON_RMS IS NULL THEN '' ELSE PERSON_RMS END)),
-									TO_BINARY(TO_VARCHAR(CASE WHEN PERSON_TMR IS NULL THEN '' ELSE PERSON_TMR END)),
 									TO_BINARY(TO_VARCHAR(CASE WHEN ADDR_RMS IS NULL THEN '' ELSE ADDR_RMS END)),
-									TO_BINARY(TO_VARCHAR(CASE WHEN ADDR_TMR IS NULL THEN '' ELSE ADDR_TMR END)),
 									TO_BINARY(TO_VARCHAR(CASE WHEN TEL_RMS IS NULL THEN '' ELSE TEL_RMS END)),
-									TO_BINARY(TO_VARCHAR(CASE WHEN FAX_RMS IS NULL THEN '' ELSE FAX_RMS END)),
-									TO_BINARY(TO_VARCHAR(CASE WHEN TEL_TMR IS NULL THEN '' ELSE TEL_TMR END)),
-									TO_BINARY(TO_VARCHAR(CASE WHEN SMS_TMR IS NULL THEN '' ELSE SMS_TMR END)),
-									TO_BINARY(TO_VARCHAR(CASE WHEN EMAIL_TMR IS NULL THEN '' ELSE EMAIL_TMR END))
-							
+									TO_BINARY(TO_VARCHAR(CASE WHEN FAX_RMS IS NULL THEN '' ELSE FAX_RMS END))
 						) AS HASH_MATCH
 						
 		            	
@@ -40,7 +33,7 @@ BEGIN
 		                			      FROM "osr.scv.foundation.db.synonyms::BUT000"
 		                					
 		                				) as prms
-		                ON a."Cleanse_ROW_ID_BUT" = prms."Z_RUN_SEQ_ID" AND a."Cleanse_TABLE_ID_BUT" = prms."Cleanse_TABLE_ID" AND a."SYSTEM_ID" = prms."PARTNER" and a."SOURCE_SYSTEM" = 'RMS'
+		                ON a."Cleanse_ROW_ID_BUT" = prms."Z_RUN_SEQ_ID" AND a."Cleanse_TABLE_ID_BUT" = prms."Cleanse_TABLE_ID" AND a."SYSTEM_ID" = prms."PARTNER"
 		                --ADRC-RMS
 		                LEFT OUTER JOIN (
 		                				 SELECT TEL_NUMBER, TEL_EXTENS, ADDRNUMBER, COUNTRY as COUNTRY_ORIG_ADRC, REGION AS REGION_ORIG_ADRC, CITY1 AS CITY_ORIG_ADRC, STREET AS STREET_ORIG_ADRC, HOUSE_NUM1 AS STREET_NUMBER_ORIG_ADRC, POST_CODE1 as POSTCODE_ORIG_ADRC, "Cleanse_TABLE_ID", "Z_RUN_SEQ_ID",
@@ -50,7 +43,7 @@ BEGIN
 
 		                				 FROM "osr.scv.foundation.db.synonyms::ADRC"
 		                				) as e1
-		                ON a."Cleanse_TABLE_ID_ADRC" = e1."Cleanse_TABLE_ID" AND a."Cleanse_ROW_ID_ADRC" = e1."Z_RUN_SEQ_ID" AND a."SOURCE_SYSTEM" = 'RMS'
+		                ON a."Cleanse_TABLE_ID_ADRC" = e1."Cleanse_TABLE_ID" AND a."Cleanse_ROW_ID_ADRC" = e1."Z_RUN_SEQ_ID"
 		                --Phone number-RMS
 		                LEFT OUTER JOIN(
 		                				SELECT TEL_NUMBER, TEL_EXTENS, "Cleanse_TABLE_ID", "Z_RUN_SEQ_ID",
@@ -58,7 +51,7 @@ BEGIN
 		                				FROM "osr.scv.foundation.db.synonyms::ADRC"
 		                				WHERE ( LENGTH(TEL_NUMBER) > 0)
 		                				) e2
-		                ON a."Cleanse_TABLE_ID_ADRC" = e2."Cleanse_TABLE_ID" AND a."Cleanse_ROW_ID_ADRC" = e2."Z_RUN_SEQ_ID" AND a."SOURCE_SYSTEM" = 'RMS'
+		                ON a."Cleanse_TABLE_ID_ADRC" = e2."Cleanse_TABLE_ID" AND a."Cleanse_ROW_ID_ADRC" = e2."Z_RUN_SEQ_ID"
 		                --Fax number-RMS
 		                LEFT OUTER JOIN(
 		                				SELECT FAX_NUMBER, FAX_EXTENS, "Cleanse_TABLE_ID", "Z_RUN_SEQ_ID",
@@ -66,8 +59,35 @@ BEGIN
 		                				FROM "osr.scv.foundation.db.synonyms::ADRC"
 		                				WHERE ( LENGTH(FAX_NUMBER) > 0)
 		                				) e3
-		                ON a."Cleanse_TABLE_ID_ADRC" = e3."Cleanse_TABLE_ID" AND a."Cleanse_ROW_ID_ADRC" = e3."Z_RUN_SEQ_ID" AND a."SOURCE_SYSTEM" = 'RMS'
+		                ON a."Cleanse_TABLE_ID_ADRC" = e3."Cleanse_TABLE_ID" AND a."Cleanse_ROW_ID_ADRC" = e3."Z_RUN_SEQ_ID" 
+		                WHERE a.SOURCE_SYSTEM = 'RMS'
 		                
+		                ORDER  BY ENTITY_ID ASC
+		                		  --SOURCE_SYSTEM ASC, 
+		                          --SYSTEM_ID DESC,
+		                          --MATCH_ROW ASC
+					    ;
+					    
+	lt_matchresults_hashTMR =
+						 SELECT 
+		            	--ROW_NUMBER() OVER (ORDER BY a.ENTITY_ID ASC) as ROW_COUNT,
+		            	--a.GROUP_ID,
+					--	a.ENTITY_ID,PERSON_RMS, PERSON_TMR,	ADDR_RMS, ADDR_TMR,	TEL_RMS,FAX_RMS,TEL_TMR, SMS_TMR, EMAIL_TMR,a.SOURCE_SYSTEM,
+		            	a.ENTITY_ID, a."Match_ROW_ID" as MATCH_ROW ,
+					
+	
+						HASH_SHA256(TO_BINARY(TO_VARCHAR(CASE WHEN PERSON_TMR IS NULL THEN '' ELSE PERSON_TMR END)),
+									TO_BINARY(TO_VARCHAR(CASE WHEN ADDR_TMR IS NULL THEN '' ELSE ADDR_TMR END)),
+									TO_BINARY(TO_VARCHAR(CASE WHEN TEL_TMR IS NULL THEN '' ELSE TEL_TMR END)),
+									TO_BINARY(TO_VARCHAR(CASE WHEN SMS_TMR IS NULL THEN '' ELSE SMS_TMR END)),
+									TO_BINARY(TO_VARCHAR(CASE WHEN EMAIL_TMR IS NULL THEN '' ELSE EMAIL_TMR END))
+							
+						) AS HASH_MATCH
+						
+		            	
+
+		                FROM   "osr.scv.foundation.db.data::MatchResults.MatchResults" AS a 
+		                -- Add original fields
 		                --Name and Address-TMR
 		                LEFT OUTER JOIN ( 
 		                			      SELECT DATE_OF_BIRTH, FIRST_NAME, MIDDLE_NAME, FAMILY_ORG_NAME, COUNTRY, STATE, SUBURB, STREET_NAME, STREET_NO, POSTCODE, "Cleanse_TABLE_ID", "Z_RUN_SEQ_ID", "CUSTOMER_REF",
@@ -75,14 +95,16 @@ BEGIN
 		                			      (FLOOR || UNIT || BUILDING_NAME || STREET_NO || STREET_NAME || STREET_TYPE || STREET_SUFFIX || SUBURB || POSTCODE || STATE || COUNTRY) as ADDR_TMR
 		                			      FROM "osr.scv.foundation.db.synonyms::TMR_CustMain"
 		                				) as ptmr
-		                ON a."Cleanse_ROW_ID_TMR" = ptmr."Z_RUN_SEQ_ID" AND a."Cleanse_TABLE_ID_TMR" = ptmr."Cleanse_TABLE_ID" AND a."SYSTEM_ID" = ptmr."CUSTOMER_REF" AND a."SOURCE_SYSTEM" = 'TMR'			
+		                ON a."Cleanse_ROW_ID_TMR" = ptmr."Z_RUN_SEQ_ID" AND a."Cleanse_TABLE_ID_TMR" = ptmr."Cleanse_TABLE_ID" AND a."SYSTEM_ID" = ptmr."CUSTOMER_REF" 
+	
 		                --Phone number-TMR
 		                LEFT OUTER JOIN(
 		                				SELECT CONTACT_PHONE_EFFECT_DT,CONTACT_PHONE_NO,"Z_RUN_SEQ_ID","Cleanse_TABLE_ID","CUSTOMER_REF",
 		                				(CONTACT_PHONE_EFFECT_DT || CONTACT_PHONE_NO) as TEL_TMR
 		                				FROM "osr.scv.foundation.db.synonyms::TMR_CustMain"
 		                				) as f1
-		                ON a."Cleanse_ROW_ID_TMR" = f1."Z_RUN_SEQ_ID" AND a."Cleanse_TABLE_ID_TMR" = f1."Cleanse_TABLE_ID" AND a."SYSTEM_ID" = f1."CUSTOMER_REF" AND a."SOURCE_SYSTEM" = 'TMR'	
+		                ON a."Cleanse_ROW_ID_TMR" = f1."Z_RUN_SEQ_ID" AND a."Cleanse_TABLE_ID_TMR" = f1."Cleanse_TABLE_ID" AND a."SYSTEM_ID" = f1."CUSTOMER_REF" 
+
 		                --SMS number-TMR
 		                LEFT OUTER JOIN(
 		                				SELECT LAST_UPDATED,SMS_CONTACT_NUMBER,CUSTOMER_REF,
@@ -98,13 +120,18 @@ BEGIN
 		                				FROM "osr.scv.foundation.db.synonyms::TMR_CustContact" 
 										WHERE EMAIL_ADDRESS <> ''
 		                		   )f3
-		                ON a."SYSTEM_ID" = f3."CUSTOMER_REF" AND a.SOURCE_SYSTEM = 'TMR'
+		                ON a."SYSTEM_ID" = f3."CUSTOMER_REF" 
+		                WHERE a.SOURCE_SYSTEM = 'TMR'
 		                
 		                ORDER  BY ENTITY_ID ASC
 		                		  --SOURCE_SYSTEM ASC, 
 		                          --SYSTEM_ID DESC,
 		                          --MATCH_ROW ASC
 					    ;
+					    
+	lt_matchresults_hash =	SELECT * FROM :lt_matchresults_hashRMS
+								UNION ALL
+							SELECT * FROM :lt_matchresults_hashTMR;				    
 	
 	INSERT INTO "osr.scv.foundation.db.data::HashResults.MatchResultsHash"	(SELECT * FROM :lt_matchresults_hash);			    
 					    
@@ -122,7 +149,8 @@ BEGIN
 						                			      FROM "osr.scv.foundation.db.synonyms::BUT000"
 						                			     
 						                				) as prms
-						                ON a."Cleanse_ROW_ID_BUT" = prms."Z_RUN_SEQ_ID" AND a."Cleanse_TABLE_ID_BUT" = prms."Cleanse_TABLE_ID" AND a."SYSTEM_ID" = prms."PARTNER" and a."SOURCE_SYSTEM" = 'RMS'
+						                ON a."Cleanse_ROW_ID_BUT" = prms."Z_RUN_SEQ_ID" AND a."Cleanse_TABLE_ID_BUT" = prms."Cleanse_TABLE_ID" AND a."SYSTEM_ID" = prms."PARTNER" 
+						                WHERE a."SOURCE_SYSTEM" = 'RMS'
 						                ;
 						                
 	INSERT INTO "osr.scv.foundation.db.data::HashResults.MatchResultsHashRMS"	(SELECT * FROM :lt_matchresults_RMSPerson_hash);

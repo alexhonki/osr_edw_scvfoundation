@@ -100,8 +100,24 @@ BEGIN
 								ON a.ENTITY_ID = b.ENTITY_ID;						  
 	
 		INSERT INTO #lt_entity_mappingss (SELECT * FROM :lt_auto_entity_ids_detail);
-
 		
+		
+		lt_reject_scv_ids = SELECT  "STD_PERSON_GN",  "STD_PERSON_GN2", "STD_PERSON_FN", "osr.scv.foundation.db.data::SEQ_ScvMaster".NEXTVAL as SCV_ID FROM (
+						SELECT s.SYSTEM_ID,  s."Match_ROW_ID" ,
+						COALESCE (bu."STD_PERSON_GN", cm."STD_PERSON_GN") AS "STD_PERSON_GN",
+						COALESCE (bu."STD_PERSON_GN2", cm."STD_PERSON_GN2") AS "STD_PERSON_GN2",
+						COALESCE (bu."STD_PERSON_FN", cm."STD_PERSON_FN") AS "STD_PERSON_FN"
+						FROM "osr.scv.foundation.db.data::MatchResults.MatchResultsShadow" s
+						INNER JOIN "osr.scv.foundation.db.data::MatchResultsReview.Assessments" a
+						ON s."Match_ROW_ID" = a.MATCH_ROW
+							LEFT OUTER JOIN "osr.scv.foundation.db.synonyms::BUT000" bu
+							ON s."Cleanse_ROW_ID_BUT" = bu.Z_RUN_SEQ_ID
+								LEFT OUTER JOIN "osr.scv.foundation.db.synonyms::TMR_CustMain" cm
+								ON s."Cleanse_ROW_ID_TMR" = cm.Z_RUN_SEQ_ID
+						WHERE a.Action = 'Reject'
+				  ) GROUP BY  "STD_PERSON_GN",  "STD_PERSON_GN2", "STD_PERSON_FN";
+	
+/*		
 		lt_reject_scv_ids = SELECT SYSTEM_ID, "osr.scv.foundation.db.data::SEQ_ScvMaster".NEXTVAL as SCV_ID FROM (
 							SELECT s.SYSTEM_ID,  s."Match_ROW_ID" 
 							FROM "osr.scv.foundation.db.data::MatchResults.MatchResultsShadow" s
@@ -110,8 +126,27 @@ BEGIN
 							WHERE a.Action = 'Reject'
 							ORDER BY s.ENTITY_ID ASC, s.SOURCE_SYSTEM ASC, s.SYSTEM_ID ASC, s."Match_ROW_ID" ASC
 						  ) GROUP BY SYSTEM_ID;
-
-
+*/
+    	lt_reject_scv_ids_detail = SELECT 'REJECT', b.SCV_ID, a.ENTITY_ID, a."Match_ROW_ID" FROM (
+									SELECT s.ENTITY_ID, s.SYSTEM_ID,  s."Match_ROW_ID", 
+									COALESCE (bu."STD_PERSON_GN", cm."STD_PERSON_GN") AS "STD_PERSON_GN",
+									COALESCE (bu."STD_PERSON_GN2", cm."STD_PERSON_GN2") AS "STD_PERSON_GN2",
+									COALESCE (bu."STD_PERSON_FN", cm."STD_PERSON_FN") AS "STD_PERSON_FN"
+									FROM "osr.scv.foundation.db.data::MatchResults.MatchResultsShadow" s
+									INNER JOIN "osr.scv.foundation.db.data::MatchResultsReview.Assessments" a
+									ON s."Match_ROW_ID" = a.MATCH_ROW
+										LEFT OUTER JOIN "osr.scv.foundation.db.synonyms::BUT000" bu
+										ON s."Cleanse_ROW_ID_BUT" = bu.Z_RUN_SEQ_ID
+											LEFT OUTER JOIN "osr.scv.foundation.db.synonyms::TMR_CustMain" cm
+											ON s."Cleanse_ROW_ID_TMR" = cm.Z_RUN_SEQ_ID									
+									WHERE a.Action = 'Reject'
+									ORDER BY s.ENTITY_ID ASC, s.SOURCE_SYSTEM ASC, s.SYSTEM_ID ASC, s."Match_ROW_ID" ASC
+								) a
+								LEFT OUTER JOIN :lt_reject_scv_ids b
+								ON a."STD_PERSON_GN" = b."STD_PERSON_GN" AND  
+								a."STD_PERSON_GN2" = b."STD_PERSON_GN2" AND 
+								a."STD_PERSON_FN" = b."STD_PERSON_FN";
+/*
     	lt_reject_scv_ids_detail = SELECT 'REJECT', b.SCV_ID, a.ENTITY_ID, a."Match_ROW_ID" FROM (
 									SELECT s.ENTITY_ID, s.SYSTEM_ID,  s."Match_ROW_ID" 
 									FROM "osr.scv.foundation.db.data::MatchResults.MatchResultsShadow" s
@@ -122,7 +157,7 @@ BEGIN
 								) a
 								LEFT OUTER JOIN :lt_reject_scv_ids b
 								ON a.SYSTEM_ID = b.SYSTEM_ID;
-		
+*/		
 		INSERT INTO #lt_entity_mappingss (SELECT * FROM :lt_reject_scv_ids_detail);
 
 		lt_accept_scv_ids = SELECT ENTITY_ID, "osr.scv.foundation.db.data::SEQ_ScvMaster".NEXTVAL as SCV_ID FROM (
