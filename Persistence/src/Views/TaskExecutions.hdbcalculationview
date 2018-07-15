@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="osr.scv.foundation.db.views::TaskExecutions" applyPrivilegeType="NONE" dataCategory="DEFAULT" schemaVersion="3.0" outputViewType="Projection" cacheInvalidationPeriod="NONE" enforceSqlExecution="false">
+<descriptions defaultDescription="TaskExecutions"/>
+<localVariables/>
+<variableMappings/>
+<dataSources>
+  <DataSource id="osr.scv.foundation.db.synonyms::TASK_EXECUTIONS">
+    <resourceUri>osr.scv.foundation.db.synonyms::TASK_EXECUTIONS</resourceUri>
+  </DataSource>
+</dataSources>
+<calculationViews/>
+<logicalModel id="osr.scv.foundation.db.synonyms::TASK_EXECUTIONS">
+  <attributes>
+    <attribute id="HOST" order="1" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="HOST"/>
+      <keyMapping columnObjectName="TASK_EXECUTIONS" columnName="HOST"/>
+    </attribute>
+    <attribute id="PORT" order="2" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="PORT"/>
+      <keyMapping columnObjectName="TASK_EXECUTIONS" columnName="PORT"/>
+    </attribute>
+    <attribute id="SCHEMA_NAME" order="3" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="SCHEMA_NAME"/>
+      <keyMapping columnObjectName="TASK_EXECUTIONS" columnName="SCHEMA_NAME"/>
+    </attribute>
+    <attribute id="TASK_NAME" order="4" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="TASK_NAME"/>
+      <keyMapping columnObjectName="TASK_EXECUTIONS" columnName="TASK_NAME"/>
+    </attribute>
+    <attribute id="CONNECTION_ID" order="5" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CONNECTION_ID"/>
+      <keyMapping columnObjectName="TASK_EXECUTIONS" columnName="CONNECTION_ID"/>
+    </attribute>
+    <attribute id="TRANSACTION_ID" order="6" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="TRANSACTION_ID"/>
+      <keyMapping columnObjectName="TASK_EXECUTIONS" columnName="TRANSACTION_ID"/>
+    </attribute>
+    <attribute id="TASK_EXECUTION_ID" order="7" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="TASK_EXECUTION_ID"/>
+      <keyMapping columnObjectName="TASK_EXECUTIONS" columnName="TASK_EXECUTION_ID"/>
+    </attribute>
+    <attribute id="PARENT_TASK_EXECUTION_ID" order="8" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="PARENT_TASK_EXECUTION_ID"/>
+      <keyMapping columnObjectName="TASK_EXECUTIONS" columnName="PARENT_TASK_EXECUTION_ID"/>
+    </attribute>
+    <attribute id="IS_ASYNC" order="9" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="IS_ASYNC"/>
+      <keyMapping columnObjectName="TASK_EXECUTIONS" columnName="IS_ASYNC"/>
+    </attribute>
+    <attribute id="PARAMETERS" order="10" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="PARAMETERS"/>
+      <keyMapping columnObjectName="TASK_EXECUTIONS" columnName="PARAMETERS"/>
+    </attribute>
+    <attribute id="PROCEDURE_PARAMETERS" order="11" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="PROCEDURE_PARAMETERS"/>
+      <keyMapping columnObjectName="TASK_EXECUTIONS" columnName="PROCEDURE_PARAMETERS"/>
+    </attribute>
+    <attribute id="START_TIME" order="12" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="START_TIME"/>
+      <keyMapping columnObjectName="TASK_EXECUTIONS" columnName="START_TIME"/>
+    </attribute>
+    <attribute id="END_TIME" order="13" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="END_TIME"/>
+      <keyMapping columnObjectName="TASK_EXECUTIONS" columnName="END_TIME"/>
+    </attribute>
+    <attribute id="DURATION" order="14" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="DURATION"/>
+      <keyMapping columnObjectName="TASK_EXECUTIONS" columnName="DURATION"/>
+    </attribute>
+    <attribute id="STATUS" order="15" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="STATUS"/>
+      <keyMapping columnObjectName="TASK_EXECUTIONS" columnName="STATUS"/>
+    </attribute>
+    <attribute id="CURRENT_OPERATION" order="16" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CURRENT_OPERATION"/>
+      <keyMapping columnObjectName="TASK_EXECUTIONS" columnName="CURRENT_OPERATION"/>
+    </attribute>
+    <attribute id="PROCESSED_RECORDS" order="17" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="PROCESSED_RECORDS"/>
+      <keyMapping columnObjectName="TASK_EXECUTIONS" columnName="PROCESSED_RECORDS"/>
+    </attribute>
+    <attribute id="PARTITION_COUNT" order="18" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="PARTITION_COUNT"/>
+      <keyMapping columnObjectName="TASK_EXECUTIONS" columnName="PARTITION_COUNT"/>
+    </attribute>
+    <attribute id="TOTAL_PROGRESS_PERCENT" order="19" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="TOTAL_PROGRESS_PERCENT"/>
+      <keyMapping columnObjectName="TASK_EXECUTIONS" columnName="TOTAL_PROGRESS_PERCENT"/>
+    </attribute>
+    <attribute id="USER_NAME" order="20" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="USER_NAME"/>
+      <keyMapping columnObjectName="TASK_EXECUTIONS" columnName="USER_NAME"/>
+    </attribute>
+    <attribute id="APPLICATION_USER_NAME" order="21" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="APPLICATION_USER_NAME"/>
+      <keyMapping columnObjectName="TASK_EXECUTIONS" columnName="APPLICATION_USER_NAME"/>
+    </attribute>
+    <attribute id="HAS_SIDE_EFFECTS" order="22" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="HAS_SIDE_EFFECTS"/>
+      <keyMapping columnObjectName="TASK_EXECUTIONS" columnName="HAS_SIDE_EFFECTS"/>
+    </attribute>
+  </attributes>
+  <calculatedAttributes/>
+  <baseMeasures/>
+  <calculatedMeasures/>
+  <restrictedMeasures/>
+</logicalModel>
+<layout>
+  <shapes>
+    <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+      <upperLeftCorner x="40" y="85"/>
+    </shape>
+  </shapes>
+</layout>
+</Calculation:scenario>
