@@ -741,7 +741,7 @@ lt_person_entities_date_tmr =
 							-- Add SCV ID
 							INNER JOIN (SELECT SCV_ID, ENTITY_ID AS ENTITY_ID1, MATCH_ROW_ID FROM #lt_entity_mappingss) ma
 							ON mr.ENTITY_ID = ma.ENTITY_ID1 AND mr."Match_ROW_ID" = ma.MATCH_ROW_ID
-							AND mr.CHECKSUM NOT IN (SELECT "CHECKSUM"
+							WHERE mr.CHECKSUM NOT IN (SELECT "CHECKSUM"
 															FROM "osr.scv.foundation.db.data::SCVFoundation.AddressRms"
 															WHERE SCV_ID = ma.SCV_ID)
 							) 
