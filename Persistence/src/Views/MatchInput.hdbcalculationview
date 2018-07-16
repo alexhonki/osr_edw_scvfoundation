@@ -2147,9 +2147,7 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_LOCALITY2" source="MATCH_ADDR_LOCALITY2"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_PRIM_NUMBER" source="MATCH_ADDR_PRIM_NUMBER"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_ADDRESS_DELIVERY" source="STD_ADDR_ADDRESS_DELIVERY"/>
-    </input>
-    <filter>&quot;DATE_OF_BIRTH&quot; != '1900-01-01'</filter>
-  </calculationView>
+    </input></calculationView>
 </calculationViews>
 <logicalModel id="U_AllMatchFields">
   <attributes>
