@@ -28,8 +28,8 @@ BEGIN
 		                -- Add original fields
 		                --BUT000-RMS
 		                LEFT OUTER JOIN ( 
-		                			      SELECT BIRTHDT , NAME_FIRST, NAMEMIDDLE, NAME_LAST, DEATHDT, "Cleanse_TABLE_ID", "Z_RUN_SEQ_ID", "PARTNER", "XDELE",
-		                			      (NAME_FIRST || NAMEMIDDLE || NAME_LAST || (CASE WHEN BIRTHDT = ' ' THEN TO_DATE('19990101', 'YYYYMMDD') ELSE TO_DATE(BIRTHDT, 'YYYYMMDD') END) || XDELE || PARTNER ) as PERSON_RMS
+		                			      SELECT BIRTHDT , NAME_FIRST, NAMEMIDDLE, NAME_LAST, DEATHDT, "Cleanse_TABLE_ID", "Z_RUN_SEQ_ID", "PARTNER", "XBLCK",
+		                			      (NAME_FIRST || NAMEMIDDLE || NAME_LAST || (CASE WHEN BIRTHDT = ' ' THEN TO_DATE('19990101', 'YYYYMMDD') ELSE TO_DATE(BIRTHDT, 'YYYYMMDD') END) || XBLCK || PARTNER ) as PERSON_RMS
 		                			      FROM "osr.scv.foundation.db.synonyms::BUT000"
 		                					
 		                				) as prms
