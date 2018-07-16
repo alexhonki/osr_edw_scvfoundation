@@ -913,7 +913,7 @@ lt_person_entities_date_tmr =
 --							            WHERE NAME = 'TMR_CUST_MAIN_FY1602.txt'
 										) m
 										ON t."Cleanse_ROW_ID_TMR" = m.Z_RUN_SEQ_ID
-									--	WHERE m.DATE_OF_BIRTH != '1900-01-01'
+										--WHERE m.DATE_OF_BIRTH != '1900-01-01'
 										--	WHERE m.CUSTOMER_REF = '101188623' and m.DATE_OF_BIRTH != '1900-01-01'
 										--	WHERE m.CUSTOMER_REF = '100762476' and m.DATE_OF_BIRTH != '1900-01-01'
 											GROUP BY m."CUSTOMER_REF", m."FLOOR", m.UNIT, m.BUILDING_NAME, m.STREET_NO, m.STREET_NAME, m.STREET_TYPE, m.STREET_SUFFIX, m.SUBURB, m.POSTCODE, m.STATE, m.COUNTRY,
