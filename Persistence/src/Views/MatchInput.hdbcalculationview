@@ -1901,7 +1901,7 @@
     </input>
     <filter>&quot;PATH&quot; = 'DONOTLOAD'</filter>
   </calculationView>
-  <calculationView xsi:type="Calculation:ProjectionView" id="P_TMRCustomers">
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_TMRCustomers" filterExpressionLanguage="SQL">
     <viewAttributes>
       <viewAttribute id="MATCH_PERSON_GN_STD6">
         <descriptions defaultDescription="MATCH_PERSON_GN_STD6"/>
@@ -2147,7 +2147,9 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_LOCALITY2" source="MATCH_ADDR_LOCALITY2"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_PRIM_NUMBER" source="MATCH_ADDR_PRIM_NUMBER"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_ADDRESS_DELIVERY" source="STD_ADDR_ADDRESS_DELIVERY"/>
-    </input></calculationView>
+    </input>
+    <filter>&quot;DATE_OF_BIRTH&quot; != '1900-01-01'</filter>
+  </calculationView>
 </calculationViews>
 <logicalModel id="U_AllMatchFields">
   <attributes>
