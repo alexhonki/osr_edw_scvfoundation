@@ -15,12 +15,12 @@ context SCVFoundation {
 
     /*@@layout{"layoutInfo":{}}*/
     entity PersonRms {
-        key RUN_SEQ_ID     : Integer;
-            SCV_ID         : String(20);
-            SOURCE         : String(10);
-            SOURCE_ID      : String(10);
-            VALID_FROM     : LocalDate;
-            VALID_TO       : LocalDate;
+        key SCV_ID         : String(20);
+        key SOURCE         : String(10);
+        key SOURCE_ID      : String(10);
+        key VALID_FROM     : LocalDate;
+        key VALID_TO       : LocalDate;
+        key PERSON_RMS_ID  : String(32);
             LAST_NAME      : String(40);
             MIDDLE_NAME    : String(40);
             FIRST_NAME     : String(40);
@@ -42,12 +42,12 @@ context SCVFoundation {
 
     /*@@layout{"layoutInfo":{}}*/
     entity PersonTmr {
-        key RUN_SEQ_ID     : Integer;
-            SCV_ID         : String(20);
-            SOURCE         : String(10);
-            SOURCE_ID      : String(10);
-            VAILD_FROM     : LocalDate;
-            VALID_TO       : LocalDate;
+        key SCV_ID         : String(20);
+        key SOURCE         : String(10);
+        key SOURCE_ID      : String(10);
+        key VALID_FROM     : LocalDate;
+        key VALID_TO       : LocalDate;
+        key PERSON_TMR_ID  : String(32);
             UPDATED_AT     : LocalDate;
             LAST_NAME      : String(80);
             MIDDLE_NAME    : String(40);
@@ -68,14 +68,14 @@ context SCVFoundation {
 
     /*@@layout{"layoutInfo":{}}*/
     entity AddressRms {
-        key RUN_SEQ_ID                : Integer;
-            SCV_ID                    : String(10);
-            SOURCE                    : String(10);
-            SOURCE_ID                 : String(10);
-            ADDRNUMBER                : String(10);
-            ADR_KIND                  : String(10);
-            VALID_FROM                : LocalDate;
-            VALID_TO                  : LocalDate;
+        key SCV_ID                    : String(10);
+        key SOURCE                    : String(10);
+        key SOURCE_ID                 : String(10);
+        key ADDRNUMBER                : String(10);
+        key ADR_KIND                  : String(10);
+        key VALID_FROM                : LocalDate;
+        key VALID_TO                  : LocalDate;
+        key ADDRESS_RMS_ID            : String(32);
             CITY1                     : String(40);
             POST_CODE1                : String(10);
             STREET                    : String(60);
@@ -107,13 +107,13 @@ context SCVFoundation {
 
     /*@@layout{"layoutInfo":{}}*/
     entity AddressTmr {
-        key RUN_SEQ_ID                 : Integer;
-            SCV_ID                     : String(10);
-            SOURCE                     : String(10);
-            SOURCE_ID                  : String(10);
-            ADDRESS_ID                 : String(10);
-            VALID_FROM                 : LocalDate;
-            VALID_TO                   : LocalDate;
+        key SCV_ID                     : String(10);
+        key SOURCE                     : String(10);
+        key SOURCE_ID                  : String(10);
+        key ADDRESS_ID                 : String(10);
+        key VALID_FROM                 : LocalDate;
+        key VALID_TO                   : LocalDate;
+        key ADDRESS_TMR_ID             : String(32);
             FLOOR                      : String(8);
             UNIT                       : String(12);
             BUILDING_NAME              : String(40);
@@ -156,28 +156,30 @@ context SCVFoundation {
         key SOURCE_ID      : String(10);
         key VALID_FROM     : LocalDate;
         key VALID_TO       : LocalDate;
-        key CONTACT_NUMBER : String(20);
-        key NUMBER_EXT     : String(20);
-        key NUMBER_TYPE    : String(10);
-        key NUMBER_DESC    : String(256);
-        key CHECKSUM       : Binary(32);
-        key LAST_UPDATED   : LocalDate;
+        key CONTACT_ID     : String(32);
+            CONTACT_NUMBER : String(20);
+            NUMBER_EXT     : String(20);
+            NUMBER_TYPE    : String(10);
+            NUMBER_DESC    : String(256);
+            CHECKSUM       : Binary(32);
+            LAST_UPDATED   : LocalDate;
     };
 
     /*@@layout{"layoutInfo":{}}*/
     entity ContactEmail {
-        key SCV_ID        : String(10);
-        key SOURCE        : String(10);
-        key SOURCE_ID     : String(10);
-        key VALID_FROM    : LocalDate;
-        key VALID_TO      : LocalDate;
-        key CONTACT_EMAIL : String(200);
-        key EMAIL_TYPE    : String(10);
-        key EMAIL_DESC    : String(256);
-        key CHECKSUM      : Binary(32);
-        key STD_EMAIL     : String(100);
-        key STD_CHECKSUM  : Binary(32);
-        key LAST_UPDATED  : LocalDate;
+        key SCV_ID           : String(10);
+        key SOURCE           : String(10);
+        key SOURCE_ID        : String(10);
+        key VALID_FROM       : LocalDate;
+        key VALID_TO         : LocalDate;
+        key CONTACT_EMAIL_ID : String(32);
+            CONTACT_EMAIL    : String(200);
+            EMAIL_TYPE       : String(10);
+            EMAIL_DESC       : String(256);
+            CHECKSUM         : Binary(32);
+            STD_EMAIL        : String(100);
+            STD_CHECKSUM     : Binary(32);
+            LAST_UPDATED     : LocalDate;
     };
 
     /*@@layout{"layoutInfo":{"x":-630,"y":2.5}}*/
@@ -210,4 +212,4 @@ context SCVFoundation {
             text mining off
             search only on;
     };
-}; 
+};
