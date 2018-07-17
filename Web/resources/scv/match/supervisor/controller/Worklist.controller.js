@@ -720,6 +720,77 @@ sap.ui.define([
 
 		},
 
+		// BEGIN UPDATED CODE // 
+		/**
+		 * Event handler for the promote to SCV.
+		 * @public
+		 */
+
+		_refreshFrame: function(iTimerDelay) {
+			let oController = this; 
+			setTimeout(function() {
+				oController.getView().byId("idVizFrame").getModel().refresh(true);
+			}, iTimerDelay);
+		},
+		
+		_setBusyStateFrame : function(bShow){
+			let oController = this;
+			oController.getView().byId("idVizFrame").setBusy(bShow);
+		},
+
+		onPromoteToSCV2: function() {
+
+			let oController = this;
+
+			var dialog = new Dialog({
+				title: 'Confirm',
+				type: 'Message',
+				content: new Text({
+					text: 'Promote all entities to SCV layer? Note: This will move all entities with strategy \'Promote\' to the SCV foundation layer.'
+				}),
+				beginButton: new Button({
+					text: 'Promote',
+					press: function() {
+
+						// Set to busy
+						oController._setBusyStateFrame(true);
+
+						// $.ajax({
+						// 	type: "POST",
+						// 	url: "/scv/match/srv/xs/supervisor/moveEntitiesToShadowTable.xsjs",
+						// 	contentType: "application/json",
+						// 	crossDomain: true,
+						// 	success: function(data) {
+						// 		oController._refreshFrame();
+						// 		MessageToast.show('All Entities promoted!');
+						// 		oController._setBusyStateFrame(false);
+						// 	},
+						// 	error: function(data) {
+						// 		var message = JSON.stringify(data);
+						// 		alert(message);
+						// 		oController._setBusyStateFrame(false);
+						// 	}
+						// });
+
+						dialog.close();
+					}
+				}),
+				endButton: new Button({
+					text: 'Cancel',
+					press: function() {
+						dialog.close();
+					}
+				}),
+				afterClose: function() {
+					dialog.destroy();
+				}
+			});
+
+			dialog.open();
+
+		},
+		// END UPDATED CODE //
+
 		handleViewSettingsDialogButtonPressed: function(oEvent) {
 			if (!this._oDialog) {
 				this._oDialog = sap.ui.xmlfragment("myCompany.myApp.dialogs.TableViewSettingsDialog", this);

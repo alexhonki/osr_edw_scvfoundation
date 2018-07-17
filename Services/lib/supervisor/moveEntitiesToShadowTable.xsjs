@@ -40,8 +40,7 @@ function getTimestamp() {
 /**
  * Moves entities to match results shadow table
  */
-function moveEntitiesToShadowTable() {
-	var conn = $.hdb.getConnection();
+function moveEntitiesToShadowTable(conn) {
 	//var output = JSON.stringify(entities);
 	var fnMoveEntitiesToShadowTable = conn.loadProcedure("osr.scv.foundation.db.Procedures::SP_MoveEntityToShadowTable");
 	var result = fnMoveEntitiesToShadowTable({
@@ -49,9 +48,7 @@ function moveEntitiesToShadowTable() {
 		I_USER: $.session.getUsername(),
 		I_TIMESTAMP: getTimestamp()
 	});
-	conn.commit();
-	conn.close();
-
+	
 	if (result && result.o_return_code === "ERROR") {
 		return {
 			result: "ERROR"
@@ -63,8 +60,28 @@ function moveEntitiesToShadowTable() {
 	}
 }
 
+/**
+ */
+function moveEntitiesToSearchTable (dbConn){
+	
+	let fnMoveToSearchTable = dbConn.loadProcedure("osr.scv.foundation.db.Procedures::SP_BuildScvSearchTable");
+	fnMoveToSearchTable();
+}
+
+/**
+ */
+function moveEntitiesToScvFoundationTable(dbConn){
+	
+	let fnMoveToScvFoundationTable = dbConn.loadProcedure("osr.scv.foundation.db.Procedures::SP_MoveEntityToScvFoundation");
+	fnMoveToScvFoundationTable();
+}
+
 // validate the inputs here!
-var output = moveEntitiesToShadowTable();
+let oConn = $.hdb.getConnection();
+
+var output = moveEntitiesToShadowTable(oConn);
+moveEntitiesToSearchTable(oConn);
+moveEntitiesToScvFoundationTable(oConn);
 var response = {};
 if (output.result === "ERROR") {
 		$.response.status = 500;
