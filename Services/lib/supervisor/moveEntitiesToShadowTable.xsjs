@@ -70,9 +70,9 @@ function moveEntitiesToSearchTable (dbConn){
 
 /**
  */
-function moveEntitiesToScvFoundationTable(dbConn){
+function moveRowsToScvFoundationTable(dbConn){
 	
-	let fnMoveToScvFoundationTable = dbConn.loadProcedure("osr.scv.foundation.db.Procedures::SP_MoveEntityToScvFoundation");
+	let fnMoveToScvFoundationTable = dbConn.loadProcedure("osr.scv.foundation.db.Procedures::SP_MoveRowsToScvFoundation");
 	fnMoveToScvFoundationTable();
 }
 
@@ -80,8 +80,12 @@ function moveEntitiesToScvFoundationTable(dbConn){
 let oConn = $.hdb.getConnection();
 
 var output = moveEntitiesToShadowTable(oConn);
+moveRowsToScvFoundationTable(oConn);
 moveEntitiesToSearchTable(oConn);
-moveEntitiesToScvFoundationTable(oConn);
+
+oConn.commit();
+oConn.close();
+
 var response = {};
 if (output.result === "ERROR") {
 		$.response.status = 500;
