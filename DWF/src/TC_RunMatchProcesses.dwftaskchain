@@ -25,8 +25,8 @@
       },
       "preconditions": [
         {
-          "from": "1",
-          "status": "NEUTRAL"
+          "from": "7",
+          "status": "OK"
         }
       ]
     },
@@ -103,6 +103,25 @@
         {
           "from": "5",
           "status": "OK"
+        }
+      ]
+    },
+    "7": {
+      "inline": {
+        "type": "SUB",
+        "taskGroup": "com.sap.dwf.toe.executionControl",
+        "description": "Reset Match Tables",
+        "parameterValues": [
+          {
+            "id": "taskChainId",
+            "value": "src#TC_ResetmatchTables"
+          }
+        ]
+      },
+      "preconditions": [
+        {
+          "from": "1",
+          "status": "NEUTRAL"
         }
       ]
     }
