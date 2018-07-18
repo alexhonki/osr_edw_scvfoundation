@@ -184,11 +184,16 @@ sap.ui.define([
 					oController.oSearchControlHolder.setBusy(false);
 					oController.getModel("searchResult").setData(data, false);
 				},
-				failure: function(error) {
+				error: function(error) {
+					//check for http error and serve accordingly.
+					if(error.status === 403){
+						oController.sendMessageToast("You do not have enough authorisation please contact your system admin.");
+					}else{
+						oController.sendMessageToast("Something went wrong, our apologies. Please try again.");
+					}
 					oController.getView().byId("searchapi-table").setBusy(false);
 					oController.oSearchControlHolder.setBusy(false);
-					oController.sendMessageToast("Something went wrong, our apologies. Please try again.");
-					console.log(error);
+
 				}
 			});
 		},

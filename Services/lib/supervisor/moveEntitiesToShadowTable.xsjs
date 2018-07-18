@@ -29,7 +29,7 @@ function getTimestamp() {
 	if (seconds.length < 2) {
 		seconds = '0' + seconds;
 	}
-	
+
 	//var date_int = [year, month, day].join('-');
 	//var time_int = [hours, minutes, seconds].join(':');
 
@@ -38,17 +38,19 @@ function getTimestamp() {
 }
 
 /**
- * Moves entities to match results shadow table
+ * Load SP_MoveEntityToShadowTable procedure and call it. 
+ * @param  {[Object]} dbConn [the given DB conn]
+ * @return {[type]}        [description]
  */
 function moveEntitiesToShadowTable(conn) {
-	//var output = JSON.stringify(entities);
+
 	var fnMoveEntitiesToShadowTable = conn.loadProcedure("osr.scv.foundation.db.Procedures::SP_MoveEntityToShadowTable");
 	var result = fnMoveEntitiesToShadowTable({
 		//I_ENTITIES: entities,
 		I_USER: $.session.getUsername(),
 		I_TIMESTAMP: getTimestamp()
 	});
-	
+
 	if (result && result.o_return_code === "ERROR") {
 		return {
 			result: "ERROR"
@@ -61,40 +63,67 @@ function moveEntitiesToShadowTable(conn) {
 }
 
 /**
+ * Load SP_BuildScvSearchTable procedure and call it. 
+ * Can be modified to spit out sucess / fail of the procedure and return accordingly.
+ * @param  {[Object]} dbConn [the given DB conn]
+ * @return {[type]}        [description]
  */
-function moveEntitiesToSearchTable (dbConn){
-	
+function moveEntitiesToSearchTable(dbConn) {
+
 	let fnMoveToSearchTable = dbConn.loadProcedure("osr.scv.foundation.db.Procedures::SP_BuildScvSearchTable");
 	fnMoveToSearchTable();
 }
 
 /**
+ * Load SP_MoveRowsToScvFoundation procedure and call it. 
+ * Can be modified to spit out sucess / fail of the procedure and return accordingly.
+ * @param  {[Object]} dbConn [the given DB conn]
+ * @return {[type]}        [description]
  */
-function moveRowsToScvFoundationTable(dbConn){
-	
+function moveRowsToScvFoundationTable(dbConn) {
+
 	let fnMoveToScvFoundationTable = dbConn.loadProcedure("osr.scv.foundation.db.Procedures::SP_MoveRowsToScvFoundation");
 	fnMoveToScvFoundationTable();
 }
 
-// validate the inputs here!
-let oConn = $.hdb.getConnection();
+try {
+	// validate the inputs here!
+	//let moment = require('moment');
+	let oConn = $.hdb.getConnection();
+	var output = moveEntitiesToShadowTable(oConn);
+	moveRowsToScvFoundationTable(oConn);
+	moveEntitiesToSearchTable(oConn);
 
-var output = moveEntitiesToShadowTable(oConn);
-moveRowsToScvFoundationTable(oConn);
-moveEntitiesToSearchTable(oConn);
-
-oConn.commit();
-oConn.close();
-
-var response = {};
-if (output.result === "ERROR") {
+	//commit everything and close the entire db connection for clean up.
+	oConn.commit();
+	oConn.close();
+	
+	//old code to adjust once check is in place.
+	var response = {};
+	if (output.result === "ERROR") {
 		$.response.status = 500;
 		$.response.status = $.net.http.INTERNAL_SERVER_ERROR;
-		response = {"status": "error", "data": {}, "message": "Internal server error!" };
-		$.response.setBody(response);			
-} else {
+		response = {
+			"status": "error",
+			"data": {},
+			"message": "Internal server error!"
+		};
+		$.response.setBody(response);
+	} else {
 		$.response.status = 201;
 		$.response.status = $.net.http.CREATED;
-		response = {"status": "success", "data": {}, "message": "Request successful!" };
+		response = {
+			"status": "success",
+			"data": {},
+			"message": "Request successful!"
+		};
 		$.response.setBody(response);
+	}
+} catch (err) {
+	$.response.setBody("Error occured " + err);
+	$.response.status = $.net.http.INTERNAL_SERVER_ERROR;
+} finally {
+	if (typeof oConn !== "undefined") {
+		oConn.close();
+	}
 }
