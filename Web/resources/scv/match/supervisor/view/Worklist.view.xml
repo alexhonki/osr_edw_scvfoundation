@@ -58,7 +58,7 @@
         <!--</layout:flexContent>-->
 		</semantic:content>
 		<semantic:positiveAction>
-			<semantic:PositiveAction text="{i18n>PromoteToSCV}" press="onPromoteToSCV2"/>
+			<semantic:PositiveAction text="{i18n>PromoteToSCV}" press="onPromoteToSCV"/>
 		</semantic:positiveAction>
 	</semantic:FullscreenPage>
 </mvc:View>

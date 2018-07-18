@@ -645,80 +645,80 @@ sap.ui.define([
 		 * Event handler for the promote to SCV.
 		 * @public
 		 */
-		onPromoteToSCV: function() {
+		// onPromoteToSCV: function() {
 
-			var that = this;
+		// 	var that = this;
 
-			function wait(ms) {
-				var start = new Date().getTime();
-				var end = start;
-				while (end < start + ms) {
-					end = new Date().getTime();
-				}
-			}
+		// 	function wait(ms) {
+		// 		var start = new Date().getTime();
+		// 		var end = start;
+		// 		while (end < start + ms) {
+		// 			end = new Date().getTime();
+		// 		}
+		// 	}
 
-			function refresh() {
-				wait(1000);
-				that.byId("idVizFrame").getModel().refresh(true);
-			}
+		// 	function refresh() {
+		// 		wait(1000);
+		// 		that.byId("idVizFrame").getModel().refresh(true);
+		// 	}
 
-			function setBusy(bBusy) {
-				that.byId("idVizFrame").setBusy(bBusy);
-			}
+		// 	function setBusy(bBusy) {
+		// 		that.byId("idVizFrame").setBusy(bBusy);
+		// 	}
 
-			var dialog = new Dialog({
-				title: 'Confirm',
-				type: 'Message',
-				content: new Text({
-					text: 'Promote all entities to SCV layer? Note: This will move all entities with strategy \'Promote\' to the SCV foundation layer.'
-				}),
-				beginButton: new Button({
-					text: 'Promote',
-					press: function() {
+		// 	var dialog = new Dialog({
+		// 		title: 'Confirm',
+		// 		type: 'Message',
+		// 		content: new Text({
+		// 			text: 'Promote all entities to SCV layer? Note: This will move all entities with strategy \'Promote\' to the SCV foundation layer.'
+		// 		}),
+		// 		beginButton: new Button({
+		// 			text: 'Promote',
+		// 			press: function() {
 
-						var payload = {};
-						var data = JSON.stringify(payload);
+		// 				var payload = {};
+		// 				var data = JSON.stringify(payload);
 
-						// Set to busy
-						setBusy(true);
+		// 				// Set to busy
+		// 				setBusy(true);
 
-						$.ajax({
-							type: "POST",
-							url: "/scv/match/srv/xs/supervisor/moveEntitiesToShadowTable.xsjs",
-							contentType: "application/json",
-							data: data,
-							dataType: "json",
-							crossDomain: true,
+		// 				$.ajax({
+		// 					type: "POST",
+		// 					url: "/scv/match/srv/xs/supervisor/moveEntitiesToShadowTable.xsjs",
+		// 					contentType: "application/json",
+		// 					data: data,
+		// 					dataType: "json",
+		// 					crossDomain: true,
 
-							success: function(data) {
-								refresh();
-								MessageToast.show('All Entities promoted!');
-								setBusy(false);
-							},
-							error: function(data) {
-								var message = JSON.stringify(data);
-								alert(message);
-								setBusy(false);
-							}
-						});
+		// 					success: function(data) {
+		// 						refresh();
+		// 						MessageToast.show('All Entities promoted!');
+		// 						setBusy(false);
+		// 					},
+		// 					error: function(data) {
+		// 						var message = JSON.stringify(data);
+		// 						alert(message);
+		// 						setBusy(false);
+		// 					}
+		// 				});
 
-						dialog.close();
-					}
-				}),
-				endButton: new Button({
-					text: 'Cancel',
-					press: function() {
-						dialog.close();
-					}
-				}),
-				afterClose: function() {
-					dialog.destroy();
-				}
-			});
+		// 				dialog.close();
+		// 			}
+		// 		}),
+		// 		endButton: new Button({
+		// 			text: 'Cancel',
+		// 			press: function() {
+		// 				dialog.close();
+		// 			}
+		// 		}),
+		// 		afterClose: function() {
+		// 			dialog.destroy();
+		// 		}
+		// 	});
 
-			dialog.open();
+		// 	dialog.open();
 
-		},
+		// },
 
 		// BEGIN UPDATED CODE // 
 		/**
@@ -727,18 +727,18 @@ sap.ui.define([
 		 */
 
 		_refreshFrame: function(iTimerDelay) {
-			let oController = this; 
+			let oController = this;
 			setTimeout(function() {
 				oController.getView().byId("idVizFrame").getModel().refresh(true);
 			}, iTimerDelay);
 		},
-		
-		_setBusyStateFrame : function(bShow){
+
+		_setBusyStateFrame: function(bShow) {
 			let oController = this;
 			oController.getView().byId("idVizFrame").setBusy(bShow);
 		},
 
-		onPromoteToSCV2: function() {
+		onPromoteToSCV: function() {
 
 			let oController = this;
 
