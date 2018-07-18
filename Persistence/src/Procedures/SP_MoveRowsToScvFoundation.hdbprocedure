@@ -178,7 +178,7 @@ BEGIN
 									ON s.MATCH_ROW = md.MATCH_ROW_ID
 									WHERE md.ACTION = 'Add' and s.ACTION = 'Accept' and md.SCV_ID = 0
 									) a
-									LEFT OUTER JOIN :lt_accept_scv_ids b
+									INNER JOIN :lt_accept_scv_ids b
 									ON a.ENTITY_ID = b.ENTITY_ID;
 									
 		INSERT INTO #lt_entity_mappingss (SELECT * FROM :lt_accept_scv_ids_detail_zero);
