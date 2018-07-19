@@ -96,7 +96,7 @@ BEGIN
                 ON m.GROUP_ID = br.GROUP_ID
                 -- Match strategy user overrides
                 LEFT OUTER JOIN (
-                                 SELECT a.ENTITY_ID, a.STRATEGY, a.ACTION
+                                 SELECT a.ENTITY_ID, a.STRATEGY, a.ACTION, a.MATCH_ROW
                                  FROM "osr.scv.foundation.db.data::MatchResultsReview.Assessments" AS a
                                  INNER JOIN (
                                              -- Latest strategy
@@ -107,7 +107,7 @@ BEGIN
                                  ON a.ENTITY_ID = b.ENTITY_ID
                                 	AND a.TIMESTAMP = b.MAX_TIMESTAMP
                                 ) AS d
-                ON d."ENTITY_ID" = m."ENTITY_ID"                                         
+                ON d."ENTITY_ID" = m."ENTITY_ID" AND d.MATCH_ROW = m."Match_ROW_ID"                                        
 --                WHERE m.SHOW_IN_REVIEW = 'X'
 					AND (
 						 -- Unique records from RMS
