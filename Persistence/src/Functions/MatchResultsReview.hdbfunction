@@ -34,6 +34,13 @@ BEGIN
        SCV Review UI - Match Results Review
  *****************************/ 
 	
+	-- Business rules
+	lt_groups_to_be_promoted_using_business_rule = SELECT DISTINCT m.GROUP_ID, 'X' AS BUSINESS_RULE_REJECT
+								  FROM "osr.scv.foundation.db.data::MatchResults.MatchResults" m
+								  INNER JOIN "osr.scv.foundation.db.data::MatchResults.MatchTracing" s
+								  ON m."Match_ROW_ID" = s.ROW_ID
+								  WHERE s.POLICY_NAME = 'Person, Address, Phone';
+	
 	lt_overview =
 	
 		SELECT * FROM (
@@ -58,7 +65,8 @@ BEGIN
 	                d.ACTION,
 	                m.RMS_DUPLICATES,
 	                COALESCE(r.MATCH_PERSON_FN, t.MATCH_PERSON_FN) "MATCH_PERSON_FN",
-	                m.SHOW_IN_REVIEW
+	                m.SHOW_IN_REVIEW,
+	                br.BUSINESS_RULE_REJECT
 	                
                 FROM "osr.scv.foundation.db.data::MatchResults.MatchResults" m
                
@@ -83,6 +91,9 @@ BEGIN
                 -- Match group information
                 LEFT OUTER JOIN  "osr.scv.foundation.db.data::MatchResults.MatchGroupInfo" s1
                 ON m."GROUP_ID" = s1.GROUP_ID
+                -- Business rules overrides - promote
+                LEFT OUTER JOIN :lt_groups_to_be_promoted_using_business_rule as br
+                ON m.GROUP_ID = br.GROUP_ID
                 -- Match strategy user overrides
                 LEFT OUTER JOIN (
                                  SELECT a.ENTITY_ID, a.STRATEGY, a.ACTION
@@ -110,35 +121,70 @@ BEGIN
 		)
 		;
 	
-	return SELECT 
-				  "Match_ROW_ID" as MATCH_ROW, 
+	return 
+	
+		SELECT 
+				  MATCH_ROW, 
 				  SOURCE_SYSTEM,
 			      SYSTEM_ID,
 				  ENTITY_ID,
 				  GROUP_ID,
 				  REVIEW_GROUP,
 				  GROUP_COUNT,
-				  0 AS GROUP_ROW_COUNT,
+				  GROUP_ROW_COUNT,
 				  GROUP_CATEGORY,
-				  FNAME_ORIG as FIRST_NAME, 
-				  MNAME_ORIG as MIDDLE_NAME, 
-				  LNAME_ORIG as LAST_NAME,
-				  RELATED_ROW_ID as RELATED_ROW, 
+				  FIRST_NAME, 
+				  MIDDLE_NAME, 
+				  LAST_NAME,
+				  RELATED_ROW, 
 				  SCORE,
 				  AVG_SCORE,
 				  STRATEGY,
-				  CASE WHEN STRATEGY IS NOT NULL THEN STRATEGY WHEN (GROUP_CATEGORY = 0 OR GROUP_CATEGORY = 1) THEN 'Promote' ELSE 'Review' END AS STRATEGY_RESOLVED,
-				  CASE WHEN (STRATEGY IS NOT NULL AND STRATEGY = 'Promote') THEN 'Success' WHEN (STRATEGY IS NOT NULL AND STRATEGY = 'Review') THEN 'Error' WHEN (GROUP_CATEGORY = 0 OR GROUP_CATEGORY = 1) THEN 'Success' ELSE 'Error' END AS STRATEGY_RESOLVED_STATUS,
-				  '' AS PROMOTED_TO_SCV,
-            	  null AS PROMOTION_TIMESTAMP,
-                  '' AS PROMOTED_BY,
+				  STRATEGY_RESOLVED,
+				  STRATEGY_RESOLVED_STATUS,
+				  PROMOTED_TO_SCV,
+            	  PROMOTION_TIMESTAMP,
+                  PROMOTED_BY,
                   RMS_DUPLICATES,
                   ACTION,
-				  CASE WHEN ACTION IS NOT NULL THEN ACTION WHEN (GROUP_CATEGORY = 0 OR GROUP_CATEGORY = 1) THEN 'Auto-Promotion' ELSE 'Review' END AS ACTION_RESOLVED,
+				  ACTION_RESOLVED,
 				  MATCH_PERSON_FN,
-				  CASE WHEN (ACTION IS NOT NULL AND ACTION = 'Accept') THEN 'Success' WHEN (ACTION IS NOT NULL AND ACTION = 'Reject') THEN 'Error' WHEN (GROUP_CATEGORY = 0 OR GROUP_CATEGORY = 1) THEN 'Success' ELSE 'Error' END AS ACTION_RESOLVED_STATUS,
+				  ACTION_RESOLVED_STATUS,
 				  SHOW_IN_REVIEW
-	FROM :lt_overview;
+		FROM (		  
+		
+			SELECT 
+					  "Match_ROW_ID" as MATCH_ROW, 
+					  SOURCE_SYSTEM,
+				      SYSTEM_ID,
+					  ENTITY_ID,
+					  GROUP_ID,
+					  REVIEW_GROUP,
+					  GROUP_COUNT,
+					  0 AS GROUP_ROW_COUNT,
+					  GROUP_CATEGORY,
+					  FNAME_ORIG as FIRST_NAME, 
+					  MNAME_ORIG as MIDDLE_NAME, 
+					  LNAME_ORIG as LAST_NAME,
+					  RELATED_ROW_ID as RELATED_ROW, 
+					  SCORE,
+					  AVG_SCORE,
+					  STRATEGY,
+					  BUSINESS_RULE_REJECT,
+					  CASE WHEN STRATEGY IS NOT NULL THEN STRATEGY WHEN (GROUP_CATEGORY = 0 OR GROUP_CATEGORY = 1) THEN 'Identical' ELSE CASE WHEN BUSINESS_RULE_REJECT = 'X' THEN 'Review' ELSE 'Business Rule Accept' END END AS STRATEGY_RESOLVED,
+					  --CASE WHEN STRATEGY IS NOT NULL THEN STRATEGY WHEN (GROUP_CATEGORY = 0 OR GROUP_CATEGORY = 1) THEN 'Promote' ELSE 'Review' END AS STRATEGY_RESOLVED,
+					  CASE WHEN (STRATEGY IS NOT NULL AND STRATEGY = 'Promote') THEN 'Success' WHEN (STRATEGY IS NOT NULL AND STRATEGY = 'Review') THEN 'Error' WHEN (GROUP_CATEGORY = 0 OR GROUP_CATEGORY = 1) THEN 'Success' ELSE CASE WHEN BUSINESS_RULE_REJECT = 'X' THEN 'Error' ELSE 'Success' END END AS STRATEGY_RESOLVED_STATUS,
+					  '' AS PROMOTED_TO_SCV,
+	            	  null AS PROMOTION_TIMESTAMP,
+	                  '' AS PROMOTED_BY,
+	                  RMS_DUPLICATES,
+	                  ACTION,
+					  CASE WHEN ACTION IS NOT NULL THEN ACTION WHEN (GROUP_CATEGORY = 0 OR GROUP_CATEGORY = 1) THEN 'Auto-Promotion' ELSE CASE WHEN BUSINESS_RULE_REJECT = 'X' THEN '' ELSE 'Promote' END END AS ACTION_RESOLVED,
+					  MATCH_PERSON_FN,
+					  CASE WHEN (ACTION IS NOT NULL AND ACTION = 'Accept') THEN 'Success' WHEN (ACTION IS NOT NULL AND ACTION = 'Reject') THEN 'Error' WHEN (GROUP_CATEGORY = 0 OR GROUP_CATEGORY = 1) THEN 'Success' ELSE CASE WHEN BUSINESS_RULE_REJECT = 'X' THEN '' ELSE 'Success' END END AS ACTION_RESOLVED_STATUS,
+					  SHOW_IN_REVIEW
+			FROM :lt_overview
+		);
 	
 	-- TODO: Apply view filter here
 
