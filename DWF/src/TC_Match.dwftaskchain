@@ -1,4 +1,8 @@
 {
+  "description": "Match",
+  "responsible": {
+    "email": "dwfalerts@gmail.com"
+  },
   "taskList": {
     "1": {
       "inline": {
