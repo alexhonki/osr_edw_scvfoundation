@@ -1,4 +1,8 @@
 {
+  "description": "Reset Match Tables",
+  "responsible": {
+    "email": "dwfalerts@gmail.com"
+  },
   "taskList": {
     "1": {
       "inline": {

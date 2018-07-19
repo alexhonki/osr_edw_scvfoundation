@@ -1,4 +1,8 @@
 {
+  "description": "Move Rows to SCV Foundation",
+  "responsible": {
+    "email": "dwfalerts@gmail.com"
+  },
   "taskList": {
     "1": {
       "inline": {

@@ -1,4 +1,8 @@
 {
+  "description": "Match Results Hash",
+  "responsible": {
+    "email": "dwfalerts@gmail.com"
+  },
   "taskList": {
     "1": {
       "inline": {
