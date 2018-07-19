@@ -16,7 +16,7 @@ FUNCTION "osr.scv.foundation.db.functions::MatchResultsReview" ( )
         				SCORE INTEGER,
         				AVG_SCORE INTEGER,
         				STRATEGY NVARCHAR(10),
-        				STRATEGY_RESOLVED NVARCHAR(10),
+        				STRATEGY_RESOLVED NVARCHAR(20),
         				STRATEGY_RESOLVED_STATUS NVARCHAR(10),
         				PROMOTED_TO_SCV NVARCHAR(1),
             			PROMOTION_TIMESTAMP TIMESTAMP,
