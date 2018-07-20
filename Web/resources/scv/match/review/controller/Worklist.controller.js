@@ -591,8 +591,9 @@ sap.ui.define([
 
 			var oIconTabBar = this.getView().byId("iconTabBar");
 			var oEvent = new sap.ui.base.Event("customSelect", oIconTabBar, {
-				"selectedKey": oIconTabBar.getSelectedKey(),
-				"item": this.getView().byId(this.getView().byId("iconTabBar").getSelectedKey())
+				"selectedKey": oIconTabBar.getSelectedKey(), 
+				"item": this.getView().byId(this.getView().byId("iconTabBar").getSelectedKey()),
+				"selectedItem": this.getView().byId(this.getView().byId("iconTabBar").getSelectedKey())
 			});
 			this.onQuickFilter(oEvent);
 
