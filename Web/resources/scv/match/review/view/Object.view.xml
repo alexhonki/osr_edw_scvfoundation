@@ -27,7 +27,7 @@
 											<Toolbar>
 												<Title id="tableDetailsHeader" text="Match Group Details"/>
 												<ToolbarSpacer/>
-												<Button id="acceptButton" type="Accept" text="Save Entity" press="onOpenAcceptDialog"/>
+												<Button id="acceptButton" type="Accept" text="Save Entity" press="onOpenAcceptDialog" enabled="{= ${STRATEGY_RESOLVED} !== 'System Exclude'}"/>
 												<!--<Button id="rejectButton" type="Reject" text="Reject" press="onOpenRejectDialog"/>-->
 												<!--<Button id="promoteButton" type="Accept" text="Promote" enabled="{= ${STRATEGY_RESOLVED}.match('Review') ? true : false}" pressed="true"
 													press="onPromote" visible="{= ${STRATEGY_RESOLVED}.match('Review') ? true : false}"/>
