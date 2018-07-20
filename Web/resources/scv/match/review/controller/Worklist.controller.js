@@ -273,10 +273,14 @@ sap.ui.define([
 			// Global filters
 			var rmsDuplicatesFilter = new sap.ui.model.Filter("RMS_DUPLICATES", sap.ui.model.FilterOperator.EQ, 1);
 			var rmsAllDuplicatesFilter = new sap.ui.model.Filter("RMS_DUPLICATES", sap.ui.model.FilterOperator.NE, -1);
+			var reviewGroupsFilter = new sap.ui.model.Filter("STRATEGY_RESOLVED", sap.ui.model.FilterOperator.EQ, 'Review');
+			var promoteGroupsFilter = new sap.ui.model.Filter("STRATEGY_RESOLVED", sap.ui.model.FilterOperator.EQ, 'Promote');
 
 			this._mGlobalFilters = {
 				"rmsDuplicates": rmsDuplicatesFilter,
-				"allDuplicates": rmsAllDuplicatesFilter
+				"allDuplicates": rmsAllDuplicatesFilter,
+				'reviewGroups': reviewGroupsFilter,
+				'promoteGroups': promoteGroupsFilter
 			};
 
 			// Make sure, busy indication is showing immediately so there is no
@@ -573,7 +577,12 @@ sap.ui.define([
 			if (sKey === 'rmsDuplicates') {
 				// Show RMS duplicates only
 				oViewModel.setProperty("/globalFilter", "rmsDuplicates");
-			} else {
+			} else if (sKey === 'reviewGroups') {
+				oViewModel.setProperty("/globalFilter", "reviewGroups");
+			} else if (sKey === 'promoteGroups') {
+				oViewModel.setProperty("/globalFilter", "promoteGroups");
+			}
+			else {
 				oViewModel.setProperty("/globalFilter", "allDuplicates");
 			}
 
