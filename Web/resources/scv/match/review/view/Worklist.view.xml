@@ -8,6 +8,8 @@
 					<items>
 						<SegmentedButtonItem id="rmsDuplicates" text="RMS Duplicates" key="rmsDuplicates" press="handleToggleDuplicateViewButtonPress"/>
 						<SegmentedButtonItem id="allDuplicates" text="All Duplicates" key="allDuplicates" press="handleToggleDuplicateViewButtonPress"/>
+						<SegmentedButtonItem id="reviewGroups" text="Entities for Review" key="reviewGroups" press="handleToggleDuplicateViewButtonPress"/>
+						<SegmentedButtonItem id="promoteGroups" text="Entities for Promotion" key="promoteGroups" press="handleToggleDuplicateViewButtonPress"/>
 					</items>
 				</SegmentedButton>
 				<ToolbarSpacer/>
