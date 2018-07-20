@@ -69,8 +69,12 @@ try {
 		ptsmt2.setString(1, sSourceIdinQueryTMR);
 		rs = ptsmt2.executeQuery();
 		let oPreResult2 = rs._rows;
+		
+		//to search scv id
+		// sFinalResult = oUnstructuredSearchLib.getScvIdSearchOnly();
+		// let ptsmt
 			
-		//combine the 2 array together. 
+		//combine all array together. 
 		Array.prototype.push.apply(oPreResult1, oPreResult2);
 		
 		//once all results together, transform the result in the case there's
