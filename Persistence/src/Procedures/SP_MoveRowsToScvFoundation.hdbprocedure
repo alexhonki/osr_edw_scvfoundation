@@ -6,16 +6,18 @@
 			- SCV Person
 			- SCV Address
 			- SCV Contact
+			
+		Note: This script supports both FULL and DELTA loads into the SCV Foundation.
 						
 		SAP Australia, September 2017	
 */
 PROCEDURE "osr.scv.foundation.db.Procedures::SP_MoveRowsToScvFoundation" (
 	
-	--IN i_entities		TABLE (ENTITY_ID NVARCHAR(10)),
---	IN i_user			NVARCHAR(20),
---	IN i_timestamp		TIMESTAMP,
---	OUT o_return_code	NVARCHAR(10),
---	OUT o_message		NVARCHAR(200)
+	-- IN i_entities		TABLE (ENTITY_ID NVARCHAR(10)),
+	-- IN i_user			NVARCHAR(20),
+	-- IN i_timestamp		TIMESTAMP,
+	-- OUT o_return_code	NVARCHAR(10),
+	-- OUT o_message			NVARCHAR(200)
 )
    LANGUAGE SQLSCRIPT
    SQL SECURITY INVOKER
@@ -49,35 +51,20 @@ BEGIN
             SCV_ID INTEGER
     );
 
-	-- Truncate for test purposes
---	TRUNCATE TABLE "osr.scv.foundation.db.data::SCVFoundation.Master";
---	TRUNCATE TABLE "osr.scv.foundation.db.data::SCVFoundation.PersonRms";
---	TRUNCATE TABLE "osr.scv.foundation.db.data::SCVFoundation.PersonTmr";
---	TRUNCATE TABLE "osr.scv.foundation.db.data::SCVFoundation.AddressRms";
---	TRUNCATE TABLE "osr.scv.foundation.db.data::SCVFoundation.AddressTmr";
---	TRUNCATE TABLE "osr.scv.foundation.db.data::SCVFoundation.ContactNumber";
---	TRUNCATE TABLE "osr.scv.foundation.db.data::SCVFoundation.ContactEmail";
-	
 	-- ### SCV master ##############################################################################################################
 	BEGIN
 		
-
-	
 		-- Auto promotions
-		
-		
 		-- With rejects i can group by System ID instead of Entity ID!!!---
-		
-		
-		
-		lt_auto_entity_ids = SELECT ENTITY_ID, "osr.scv.foundation.db.data::SEQ_ScvMaster".NEXTVAL as SCV_ID FROM (
-							SELECT s.ENTITY_ID,  s."Match_ROW_ID" 
-							FROM "osr.scv.foundation.db.data::MatchResults.MatchResultsShadow" s
-							INNER JOIN "osr.scv.foundation.db.data::MatchResultsReview.Promotions" a
-							ON s.ENTITY_ID = a.ENTITY_ID
-							WHERE a.Action = 'Auto-Promotion' OR  a.Action = 'Review'
-							ORDER BY s.ENTITY_ID ASC, s.SOURCE_SYSTEM ASC, s.SYSTEM_ID ASC, s."Match_ROW_ID" ASC
-						  ) GROUP BY ENTITY_ID;
+		lt_auto_entity_ids =	SELECT ENTITY_ID, "osr.scv.foundation.db.data::SEQ_ScvMaster".NEXTVAL as SCV_ID 
+								FROM (
+									SELECT s.ENTITY_ID,  s."Match_ROW_ID" 
+									FROM "osr.scv.foundation.db.data::MatchResults.MatchResultsShadow" s
+									INNER JOIN "osr.scv.foundation.db.data::MatchResultsReview.Promotions" a
+									ON s.ENTITY_ID = a.ENTITY_ID
+									WHERE a.Action = 'Auto-Promotion' 
+									ORDER BY s.ENTITY_ID ASC, s.SOURCE_SYSTEM ASC, s.SYSTEM_ID ASC, s."Match_ROW_ID" ASC
+								) GROUP BY ENTITY_ID;
 						  
     	lt_auto_entity_ids_detail = SELECT 'AUTO', b.SCV_ID, a.ENTITY_ID, a."Match_ROW_ID" FROM (
     								SELECT s.ENTITY_ID,  s."Match_ROW_ID" , md.SCV_ID
@@ -86,7 +73,7 @@ BEGIN
 									ON s.ENTITY_ID = a.ENTITY_ID
 									INNER JOIN "osr.scv.foundation.db.data::MatchResults.MatchDelta" md
 									ON s."Match_ROW_ID" = md.MATCH_ROW_ID
-									WHERE (a.Action = 'Auto-Promotion' OR  a.Action = 'Review') AND md.SCV_ID = 0 
+									WHERE (a.Action = 'Auto-Promotion') AND md.SCV_ID = 0 
 									ORDER BY s.ENTITY_ID ASC, s.SOURCE_SYSTEM ASC, s.SYSTEM_ID ASC, s."Match_ROW_ID" ASC
 								/*	SELECT s.ENTITY_ID,  s."Match_ROW_ID" 
 									FROM "osr.scv.foundation.db.data::MatchResults.MatchResultsShadow" s
@@ -217,7 +204,7 @@ BEGIN
 									ON s.ENTITY_ID = a.ENTITY_ID
 									INNER JOIN "osr.scv.foundation.db.data::MatchResults.MatchDelta" md
 									ON s."Match_ROW_ID" = md.MATCH_ROW_ID
-									WHERE (a.Action = 'Auto-Promotion' OR  a.Action = 'Review') AND md.SCV_ID > 0 
+									WHERE (a.Action = 'Auto-Promotion') AND md.SCV_ID > 0 
 									ORDER BY s.ENTITY_ID ASC, s.SOURCE_SYSTEM ASC, s.SYSTEM_ID ASC, s."Match_ROW_ID" ASC;	
 					
 		INSERT INTO #lt_entity_mappingss (SELECT * FROM :lt_auto_scv_ids_detail);
@@ -1585,8 +1572,8 @@ lt_address_entities_date_tmr =
 	DROP TABLE #lt_entity_mappingss;
 	DROP TABLE #lt_scv_counters;
 	
---    o_return_code := 'SUCCESS';
---    o_message := 'Entites moved successfully';
+	-- o_return_code := 'SUCCESS';
+	-- o_message := 'Entites moved successfully';
 
 
 END
