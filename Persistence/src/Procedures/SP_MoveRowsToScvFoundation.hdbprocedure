@@ -55,22 +55,33 @@ BEGIN
 	BEGIN
 		
 		-- Auto promotions
-		-- Generate SCV system IDs
+		-- With rejects i can group by System ID instead of Entity ID!!!---
 		lt_auto_entity_ids =	SELECT ENTITY_ID, "osr.scv.foundation.db.data::SEQ_ScvMaster".NEXTVAL as SCV_ID 
 								FROM (
 									SELECT s.ENTITY_ID,  s."Match_ROW_ID" 
 									FROM "osr.scv.foundation.db.data::MatchResults.MatchResultsShadow" s
-									WHERE s.Action = 'Auto-Promotion' 
+									INNER JOIN "osr.scv.foundation.db.data::MatchResultsReview.Promotions" a
+									ON s.ENTITY_ID = a.ENTITY_ID
+									WHERE a.Action = 'Auto-Promotion' 
 									ORDER BY s.ENTITY_ID ASC, s.SOURCE_SYSTEM ASC, s.SYSTEM_ID ASC, s."Match_ROW_ID" ASC
 								) GROUP BY ENTITY_ID;
 						  
     	lt_auto_entity_ids_detail = SELECT 'AUTO', b.SCV_ID, a.ENTITY_ID, a."Match_ROW_ID" FROM (
     								SELECT s.ENTITY_ID,  s."Match_ROW_ID" , md.SCV_ID
 									FROM "osr.scv.foundation.db.data::MatchResults.MatchResultsShadow" s
+									INNER JOIN "osr.scv.foundation.db.data::MatchResultsReview.Promotions" a
+									ON s.ENTITY_ID = a.ENTITY_ID
 									INNER JOIN "osr.scv.foundation.db.data::MatchResults.MatchDelta" md
 									ON s."Match_ROW_ID" = md.MATCH_ROW_ID
-									WHERE (s.Action = 'Auto-Promotion') AND md.SCV_ID = 0 
+									WHERE (a.Action = 'Auto-Promotion') AND md.SCV_ID = 0 
 									ORDER BY s.ENTITY_ID ASC, s.SOURCE_SYSTEM ASC, s.SYSTEM_ID ASC, s."Match_ROW_ID" ASC
+								/*	SELECT s.ENTITY_ID,  s."Match_ROW_ID" 
+									FROM "osr.scv.foundation.db.data::MatchResults.MatchResultsShadow" s
+									INNER JOIN "osr.scv.foundation.db.data::MatchResultsReview.Promotions" a
+									ON s.ENTITY_ID = a.ENTITY_ID
+									WHERE a.Action = 'Auto-Promotion' OR  a.Action = 'Review'
+									ORDER BY s.ENTITY_ID ASC, s.SOURCE_SYSTEM ASC, s.SYSTEM_ID ASC, s."Match_ROW_ID" ASC
+								*/	
 								) a
 								LEFT OUTER JOIN :lt_auto_entity_ids b
 								ON a.ENTITY_ID = b.ENTITY_ID;						  
@@ -193,7 +204,7 @@ BEGIN
 									ON s.ENTITY_ID = a.ENTITY_ID
 									INNER JOIN "osr.scv.foundation.db.data::MatchResults.MatchDelta" md
 									ON s."Match_ROW_ID" = md.MATCH_ROW_ID
-									WHERE (a.Action = 'Auto-Promotion' OR  a.Action = 'Review') AND md.SCV_ID > 0 
+									WHERE (a.Action = 'Auto-Promotion') AND md.SCV_ID > 0 
 									ORDER BY s.ENTITY_ID ASC, s.SOURCE_SYSTEM ASC, s.SYSTEM_ID ASC, s."Match_ROW_ID" ASC;	
 					
 		INSERT INTO #lt_entity_mappingss (SELECT * FROM :lt_auto_scv_ids_detail);
