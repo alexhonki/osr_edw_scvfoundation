@@ -86,7 +86,7 @@
 				id="current-address-table"
 				selectionMode="None"
 				rows="{scvExplorerModel}"
-				visibleRowCount="5"
+				visibleRowCount="10"
 				enableCellFilter="true"
 				enableSelectAll="false"
 				enableBusyIndicator="true"
