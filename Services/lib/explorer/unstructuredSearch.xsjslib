@@ -64,6 +64,19 @@ function getSourceIdSearchOnly() {
 }
 
 /**
+ * get chosen when we are searching the source id and this because the length
+ * of SCV ID could be in the same region as driver and RMS BP number or TMR number. 
+ * NOT NULL is used for fail safe in case there's NULL happening
+ * on the Search table. 
+ */
+function getScvIdSearchOnly() {
+	let sFrontQuery =
+		"SELECT DISTINCT \"SCV_ID\", \"SEARCH_STRING_CLEANSED\" " +
+		"FROM \"osr.scv.foundation.db.data::SCVFoundation.Search\" WHERE \"SEARCH_STRING_CLEANSED\" IS NOT NULL AND \"SCV_ID\" = ? ";
+	return sFrontQuery;
+}
+
+/**
  * Transform result before spitting out the data, so that no pre-processing 
  * happen in the front-end to reduce load for the browsers.
  * @return  {[Array]} oFinalData [contain all pre-processed result and distinct]

@@ -215,7 +215,7 @@ sap.ui.define([
 			let oController = this;
 			oController.getModel("scvExplorerModel").read("/personParameters(IP_SCV_ID='" + sScvId + "')/Results", {
 				urlParameters: {
-					"$orderby": "SOURCE desc,VALID_TO desc"
+					"$orderby": "SOURCE desc,UPDATED_AT desc, VALID_TO desc"
 				},
 				success: function(data) {
 
@@ -264,7 +264,10 @@ sap.ui.define([
 				oResult.DRIVER_LICENSE = "";
 				oResult.BP_NUMBER = "";
 				
-
+				//dynamic adding of license number box.
+				let oDriverLicenseBox = oController.getView().byId("driver-license-number");
+				oDriverLicenseBox.destroyItems();
+				
 				let oRmsVbox = oController.getView().byId("rms-bp-number");
 				oRmsVbox.destroyItems();
 				let oText;
@@ -285,9 +288,16 @@ sap.ui.define([
 						}
 						oRmsVbox.addItem(oText);
 					} else if(oData[i].SOURCE === "TMR"){
-						if(oResult.DRIVER_LICENSE === ""){
-							oResult.DRIVER_LICENSE = oData[i].SOURCE_ID;
-						}
+						
+						//add for multiple license number.
+						oText = new Text({
+							text: oData[i].SOURCE_ID
+						});
+						oDriverLicenseBox.addItem(oText);
+						
+						// if(oResult.DRIVER_LICENSE === ""){
+						// 	oResult.DRIVER_LICENSE = oData[i].SOURCE_ID;
+						// }
 						
 					}
 
