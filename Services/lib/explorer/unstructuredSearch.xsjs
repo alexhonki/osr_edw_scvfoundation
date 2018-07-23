@@ -57,26 +57,37 @@ try {
 
 	if (typeof sSourceIdinQueryRMS !== "undefined" || typeof sSourceIdinQueryTMR !== "undefined") {
 		sFinalResult = oUnstructuredSearchLib.getSourceIdSearchOnly();
-		
+
 		//to cater for RMS with zeros in front
 		ptsmt = conn.prepareStatement(sFinalResult);
 		ptsmt.setString(1, sSourceIdinQueryRMS);
 		rs = ptsmt.executeQuery();
 		let oPreResult1 = rs._rows;
-		
+
 		//to cater for TMR non pre-appended zeros.
 		let ptsmt2 = conn.prepareStatement(sFinalResult);
 		ptsmt2.setString(1, sSourceIdinQueryTMR);
 		rs = ptsmt2.executeQuery();
 		let oPreResult2 = rs._rows;
-			
-		//combine the 2 array together. 
+
+		//combine all array together. 
 		Array.prototype.push.apply(oPreResult1, oPreResult2);
-		
+
 		//once all results together, transform the result in the case there's
 		//duplicate coming from different RMS / TMR
 		oPreResult1 = oUnstructuredSearchLib.transformResults(oPreResult1);
-		
+
+		//serve the final array to the front.
+		oFinalResultToReturn = JSON.stringify(oPreResult1);
+	} else if (sScvId !== "") {
+		//just to search for SCV ID only. 
+		sFinalResult = oUnstructuredSearchLib.getScvIdSearchOnly();
+		ptsmt = conn.prepareStatement(sFinalResult);
+		ptsmt.setString(1, sScvId);
+		rs = ptsmt.executeQuery();
+		let oPreResult1 = rs._rows;
+		oPreResult1 = oUnstructuredSearchLib.transformResults(oPreResult1);
+
 		//serve the final array to the front.
 		oFinalResultToReturn = JSON.stringify(oPreResult1);
 	} else {
