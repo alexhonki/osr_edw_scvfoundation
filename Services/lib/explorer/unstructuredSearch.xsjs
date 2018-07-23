@@ -70,10 +70,6 @@ try {
 		rs = ptsmt2.executeQuery();
 		let oPreResult2 = rs._rows;
 
-		//to search scv id
-		// sFinalResult = oUnstructuredSearchLib.getScvIdSearchOnly();
-		// let ptsmt
-
 		//combine all array together. 
 		Array.prototype.push.apply(oPreResult1, oPreResult2);
 
