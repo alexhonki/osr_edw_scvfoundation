@@ -215,7 +215,7 @@ sap.ui.define([
 			let oController = this;
 			oController.getModel("scvExplorerModel").read("/personParameters(IP_SCV_ID='" + sScvId + "')/Results", {
 				urlParameters: {
-					"$orderby": "SOURCE desc,VALID_TO desc"
+					"$orderby": "SOURCE desc,UPDATED_AT desc, VALID_TO desc"
 				},
 				success: function(data) {
 
