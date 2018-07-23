@@ -110,6 +110,7 @@ BEGIN
 	                s.POLICY_NAME,
 	                d.STRATEGY,
 	                d.ACTION,
+	                dr.ACTION "ACTION_RES_BR",
 	                m.RMS_DUPLICATES,
 	                COALESCE(r.MATCH_PERSON_FN, t.MATCH_PERSON_FN) "MATCH_PERSON_FN",
 	                m.SHOW_IN_REVIEW,
@@ -152,6 +153,32 @@ BEGIN
                 -- Accepts
                 LEFT OUTER JOIN :lt_accept_groups as gr_acc
                 ON m.GROUP_ID = gr_acc.GROUP_ID
+                -- Match strategy resolved
+                LEFT OUTER JOIN (
+	                SELECT GROUP_ID, STRATEGY, CASE WHEN LOCATE("ACTION", 'Accept') > 0 AND LOCATE(ACTION, 'Reject') > 1 THEN 'Split' 
+											  WHEN LOCATE(ACTION, 'Accept') > 0 AND LOCATE(ACTION, 'Reject') = 0 THEN 'Accept' 
+											  WHEN LOCATE(ACTION, 'Accept') = 0 AND LOCATE(ACTION, 'Reject') > 0 THEN 'Reject' 
+											  ELSE '' END AS ACTION
+						FROM (
+							SELECT m.GROUP_ID, d.STRATEGY, STRING_AGG(d.ACTION) AS ACTION FROM "osr.scv.foundation.db.data::MatchResults.MatchResults" m
+							LEFT OUTER JOIN (
+	                                 SELECT a.ENTITY_ID, a.STRATEGY, a.ACTION, a.MATCH_ROW
+	                                 FROM "osr.scv.foundation.db.data::MatchResultsReview.Assessments" AS a
+	                                 INNER JOIN (
+	                                             -- Latest strategy
+	                                             SELECT ENTITY_ID, MAX(TIMESTAMP) as MAX_TIMESTAMP 
+	                                             FROM "osr.scv.foundation.db.data::MatchResultsReview.Assessments" 
+	                                             GROUP BY ENTITY_ID
+	                                            ) AS b
+	                                 ON a.ENTITY_ID = b.ENTITY_ID
+	                                	AND a.TIMESTAMP = b.MAX_TIMESTAMP
+	                                ) AS d
+	                		ON d."ENTITY_ID" = m."ENTITY_ID" AND d.MATCH_ROW = m."Match_ROW_ID"
+	                		WHERE GROUP_ID = 767069
+	                		GROUP BY m.GROUP_ID, d.STRATEGY
+						)                		
+				) as dr
+				ON m.GROUP_ID = dr.GROUP_ID
                 -- Match strategy user overrides
                 LEFT OUTER JOIN (
                                  SELECT a.ENTITY_ID, a.STRATEGY, a.ACTION, a.MATCH_ROW
@@ -237,12 +264,14 @@ BEGIN
 						WHEN STRATEGY_BR_EXCLUDE = 'X' THEN 'System Exclude'
 						WHEN STRATEGY_IDENTICAL = 'X' THEN 'Identical'
 						WHEN STRATEGY_BR_REVIEW = 'X' THEN 'Review'
+						WHEN STRATEGY_BR_REVIEW = 'X' AND LENGTH(ACTION_RES_BR) > 0 THEN 'Accept'
 						ELSE 'System Accept'
 					  END AS STRATEGY_RESOLVED,
 					  CASE 
 						WHEN STRATEGY_BR_EXCLUDE = 'X' THEN 'Error'
 						WHEN STRATEGY_IDENTICAL = 'X' THEN 'Success'
 						WHEN STRATEGY_BR_REVIEW = 'X' THEN 'Error'
+						WHEN STRATEGY_BR_REVIEW = 'X' AND LENGTH(ACTION_RES_BR) > 0 THEN 'Success'
 						ELSE 'Success'
 					  END AS STRATEGY_RESOLVED_STATUS,
 					  '' AS PROMOTED_TO_SCV,
@@ -250,10 +279,11 @@ BEGIN
 	                  '' AS PROMOTED_BY,
 	                  RMS_DUPLICATES,
 	                  ACTION,
+	                  ACTION_RES_BR,
 					  CASE 
 						WHEN STRATEGY_BR_EXCLUDE = 'X' THEN 'No Promotion'
 						WHEN STRATEGY_IDENTICAL = 'X' THEN 'Auto-Promotion'
-						WHEN STRATEGY_BR_REVIEW = 'X' THEN ''
+						WHEN STRATEGY_BR_REVIEW = 'X' THEN ACTION_RES_BR
 						ELSE 'Auto-Promotion'
 					  END AS ACTION_RESOLVED,
 					  MATCH_PERSON_FN,
