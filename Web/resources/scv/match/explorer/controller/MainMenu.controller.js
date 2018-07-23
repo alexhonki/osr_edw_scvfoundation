@@ -72,7 +72,7 @@ sap.ui.define([
 		},
 
 		/**
-		 * Upon clicking advance filter dialog criteria, it will 
+		 * Upon clicking advance filter dialog criteria, it will trigger this and process the query 
 		 */
 		processAdvanceFilter: function() {
 			let oAdditionalFilter = this.getModel("searchParameters").getData();
@@ -181,18 +181,27 @@ sap.ui.define([
 				success: function(data) {
 
 					oController.getView().byId("searchapi-table").setBusy(false);
-					oController.oSearchControlHolder.setBusy(false);
+					
+					//set search bar to not busy if there's any holding
+					if (typeof oController.oSearchControlHolder !== "undefined") {
+						oController.oSearchControlHolder.setBusy(false);
+					}
+
 					oController.getModel("searchResult").setData(data, false);
 				},
 				error: function(error) {
 					//check for http error and serve accordingly.
-					if(error.status === 403){
+					if (error.status === 403) {
 						oController.sendMessageToast("You do not have enough authorisation please contact your system admin.");
-					}else{
+					} else {
 						oController.sendMessageToast("Something went wrong, our apologies. Please try again.");
 					}
 					oController.getView().byId("searchapi-table").setBusy(false);
-					oController.oSearchControlHolder.setBusy(false);
+					
+					//set search bar to not busy if there's any holding
+					if (typeof oController.oSearchControlHolder !== "undefined") {
+						oController.oSearchControlHolder.setBusy(false);
+					}
 
 				}
 			});

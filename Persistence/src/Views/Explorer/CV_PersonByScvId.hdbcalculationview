@@ -132,8 +132,22 @@
       <viewAttribute id="STD_PERSON_FN">
         <descriptions defaultDescription="STD_PERSON_FN"/>
       </viewAttribute>
+    
+      <viewAttribute id="VALID_FROM">
+        <descriptions defaultDescription="VALID_FROM"/>
+      </viewAttribute>
+      <viewAttribute id="VALID_TO">
+        <descriptions defaultDescription="VALID_TO"/>
+      </viewAttribute>
     </viewAttributes>
-    <calculatedViewAttributes/>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="S_VALID_FROM" datatype="VARCHAR" length="10" expressionLanguage="SQL">
+        <formula>TO_VARCHAR(&quot;VALID_FROM&quot;)</formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="S_VALID_TO" datatype="VARCHAR" length="10" expressionLanguage="SQL">
+        <formula>TO_VARCHAR(&quot;VALID_TO&quot;)</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
     <restrictedViewAttributes/>
     <input node="osr.scv.foundation.db.data::SCVFoundation.PersonTmr">
       <mapping xsi:type="Calculation:AttributeMapping" target="SCV_ID" source="SCV_ID"/>
@@ -148,6 +162,9 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="STD_PERSON_GN" source="STD_PERSON_GN"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="STD_PERSON_GN2" source="STD_PERSON_GN2"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="STD_PERSON_FN" source="STD_PERSON_FN"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="VALID_FROM" source="VALID_FROM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VALID_TO" source="VALID_TO"/>
     </input>
     <filter>(&quot;SCV_ID&quot; = '$$IP_SCV_ID$$')</filter>
   </calculationView>
@@ -225,8 +242,8 @@
       <mapping xsi:type="Calculation:ConstantAttributeMapping" target="VALID_FROM" null="true" value=""/>
       <mapping xsi:type="Calculation:ConstantAttributeMapping" target="VALID_TO" null="true" value=""/>
     
-      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="S_VALID_FROM" null="true" value=""/>
-      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="S_VALID_TO" null="true" value=""/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="S_VALID_FROM" source="S_VALID_FROM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="S_VALID_TO" source="S_VALID_TO"/>
     
       <mapping xsi:type="Calculation:ConstantAttributeMapping" target="INACTIVE" null="true" value=""/>
     </input>
@@ -325,7 +342,9 @@
   
     <attribute id="INACTIVE" order="17" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="INACTIVE"/>
+  
       <keyMapping columnObjectName="PersonUnion" columnName="INACTIVE"/>
+  
     </attribute>
   </attributes>
   <calculatedAttributes/>

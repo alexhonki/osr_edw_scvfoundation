@@ -51,7 +51,12 @@
       <Text text="{personModel>/BIRTH_DATE}" />
 
       <Label text="{i18n>current.driver_license}" />
-      <Text text="{personModel>/DRIVER_LICENSE}" />
+      <!--<Text text="{personModel>/DRIVER_LICENSE}" />-->
+      <VBox id="driver-license-number">
+      	<items>
+		<!--this is dynamically added in the controller for greater control.-->
+      	</items>
+      </VBox>
 
       <Label text="{i18n>current.rms_bp_number}" />
       <VBox id="rms-bp-number">
@@ -81,7 +86,7 @@
 				id="current-address-table"
 				selectionMode="None"
 				rows="{scvExplorerModel}"
-				visibleRowCount="5"
+				visibleRowCount="10"
 				enableCellFilter="true"
 				enableSelectAll="false"
 				enableBusyIndicator="true"
