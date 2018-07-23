@@ -32,25 +32,26 @@ FUNCTION "osr.scv.foundation.db.functions::MatchResultsReview" ( )
 BEGIN 
 /*****************************  
        SCV Review UI - Match Results Review
+       
+       Concept: Use business rules to drive how match groups are flagged in the review UI. Possible states are:
+	   Strategy (action): 
+		- Identical (auto-promotion), 
+		- System Accept (auto-promotion)
+		- System Exclude (no promotion)
+		- Review (blank action).
+   	   
+   	   Business users can change the status from review to promote (accept/reject/split)
+		
  *****************************/ 
 	
-	-- Business rules
-	-- TODO: Create a UI which allows the business to define their own business rules instead of
-	--       hard-coding them into this script
-	
-	-- Business rules concept:
-	-- Match groups of for category 3 and 4 would typically be flagged as REVIEW. This concept allows to PROMOTE these groups without
-	-- the need to review them
-	
 	-- Business rule 1: Promote all match groups which are not based on match policy Person, Address, Phone
+	-- TODO: Create UI to allow for dynamic business rule generation
 	
-	-- Group calculation
+	-- Match group calculation
 	-- Identical group: 	Category 1 + category 2 - all matches on phone policies
 	-- Review group:		Category 3 + Category 4 - identical group - exclude group
 	-- Exclude group:		TMR single entities or match groups
 	-- Accept group:		Category 2 + category 3 - review group - exclude group
-	
-	-- Calculate match group sets
 	lt_identical_groups = SELECT DISTINCT GROUP_ID, 'X' AS STRATEGY_IDENTICAL
 						  FROM "osr.scv.foundation.db.data::MatchResults.MatchResults" 
 						  WHERE GROUP_CATEGORY IN (0,1)
@@ -174,7 +175,6 @@ BEGIN
 	                                	AND a.TIMESTAMP = b.MAX_TIMESTAMP
 	                                ) AS d
 	                		ON d."ENTITY_ID" = m."ENTITY_ID" AND d.MATCH_ROW = m."Match_ROW_ID"
-	                		WHERE GROUP_ID = 767069
 	                		GROUP BY m.GROUP_ID, d.STRATEGY
 						)                		
 				) as dr
@@ -261,18 +261,28 @@ BEGIN
 					  STRATEGY_BR_REVIEW,
 					  STRATEGY,
 					  CASE 
-						WHEN STRATEGY_BR_EXCLUDE = 'X' THEN 'System Exclude'
-						WHEN STRATEGY_IDENTICAL = 'X' THEN 'Identical'
+						WHEN STRATEGY_BR_EXCLUDE = 'X' AND LENGTH(ACTION_RES_BR) = 0 THEN 'System Exclude'
+						WHEN STRATEGY_BR_EXCLUDE = 'X' AND LENGTH(ACTION_RES_BR) > 0 THEN 'Promote'
+						WHEN STRATEGY_IDENTICAL = 'X' AND LENGTH(ACTION_RES_BR) = 0 THEN 'Identical'
+						WHEN STRATEGY_IDENTICAL = 'X' AND LENGTH(ACTION_RES_BR) > 0 THEN 'Promote'
 						WHEN STRATEGY_BR_REVIEW = 'X' AND LENGTH(ACTION_RES_BR) = 0 THEN 'Review'  -- No action -> set to review
 						WHEN STRATEGY_BR_REVIEW = 'X' AND LENGTH(ACTION_RES_BR) > 0 THEN 'Promote' -- User assessment, set to promote
-						ELSE 'System Accept'
+						ELSE 
+							CASE WHEN LENGTH(ACTION_RES_BR) > 0 THEN 'Promote'
+							ELSE 'System Accept'
+							END
 					  END AS STRATEGY_RESOLVED,
 					  CASE 
-						WHEN STRATEGY_BR_EXCLUDE = 'X' THEN 'Error'
-						WHEN STRATEGY_IDENTICAL = 'X' THEN 'Success'
-						WHEN STRATEGY_BR_REVIEW = 'X' THEN 'Error'
-						WHEN STRATEGY_BR_REVIEW = 'X' AND LENGTH(ACTION_RES_BR) > 0 THEN 'Success'
-						ELSE 'Success'
+						WHEN STRATEGY_BR_EXCLUDE = 'X' AND LENGTH(ACTION_RES_BR) = 0 THEN 'Error'
+						WHEN STRATEGY_BR_EXCLUDE = 'X' AND LENGTH(ACTION_RES_BR) > 0 THEN 'Success'
+						WHEN STRATEGY_IDENTICAL = 'X' AND LENGTH(ACTION_RES_BR) = 0 THEN 'Success'
+						WHEN STRATEGY_IDENTICAL = 'X' AND LENGTH(ACTION_RES_BR) > 0 THEN 'Success'
+						WHEN STRATEGY_BR_REVIEW = 'X' AND LENGTH(ACTION_RES_BR) = 0 THEN 'Error'  -- No action -> set to review
+						WHEN STRATEGY_BR_REVIEW = 'X' AND LENGTH(ACTION_RES_BR) > 0 THEN 'Success' -- User assessment, set to promote
+						ELSE 
+							CASE WHEN LENGTH(ACTION_RES_BR) > 0 THEN 'Success'
+							ELSE 'Success'
+							END
 					  END AS STRATEGY_RESOLVED_STATUS,
 					  '' AS PROMOTED_TO_SCV,
 	            	  null AS PROMOTION_TIMESTAMP,
@@ -281,17 +291,28 @@ BEGIN
 	                  ACTION,
 	                  ACTION_RES_BR,
 					  CASE 
-						WHEN STRATEGY_BR_EXCLUDE = 'X' THEN 'No Promotion'
-						WHEN STRATEGY_IDENTICAL = 'X' THEN 'Auto-Promotion'
+						WHEN STRATEGY_BR_EXCLUDE = 'X' AND LENGTH(ACTION_RES_BR) = 0 THEN 'No Promotion'
+						WHEN STRATEGY_BR_EXCLUDE = 'X' AND LENGTH(ACTION_RES_BR) > 0 THEN ACTION_RES_BR
+						WHEN STRATEGY_IDENTICAL = 'X' AND LENGTH(ACTION_RES_BR) = 0 THEN 'Auto-Promotion'
+						WHEN STRATEGY_IDENTICAL = 'X' AND LENGTH(ACTION_RES_BR) > 0 THEN ACTION_RES_BR
 						WHEN STRATEGY_BR_REVIEW = 'X' THEN ACTION_RES_BR
-						ELSE 'Auto-Promotion'
+						ELSE 
+							CASE WHEN LENGTH(ACTION_RES_BR) > 0 THEN ACTION_RES_BR
+							ELSE 'Auto-Promotion'
+							END
 					  END AS ACTION_RESOLVED,
 					  MATCH_PERSON_FN,
 					  CASE 
-						WHEN STRATEGY_BR_EXCLUDE = 'X' THEN 'Error'
-						WHEN STRATEGY_IDENTICAL = 'X' THEN 'Success'
-						WHEN STRATEGY_BR_REVIEW = 'X' THEN 'Error'
-						ELSE 'Success'
+						WHEN STRATEGY_BR_EXCLUDE = 'X' AND LENGTH(ACTION_RES_BR) = 0 THEN 'Error'
+						WHEN STRATEGY_BR_EXCLUDE = 'X' AND LENGTH(ACTION_RES_BR) > 0 THEN 'Success'
+						WHEN STRATEGY_IDENTICAL = 'X' AND LENGTH(ACTION_RES_BR) = 0 THEN 'Success'
+						WHEN STRATEGY_IDENTICAL = 'X' AND LENGTH(ACTION_RES_BR) > 0 THEN 'Success'
+						WHEN STRATEGY_BR_REVIEW = 'X' AND LENGTH(ACTION_RES_BR) = 0 THEN 'Error'  -- No action -> set to review
+						WHEN STRATEGY_BR_REVIEW = 'X' AND LENGTH(ACTION_RES_BR) > 0 THEN 'Success' -- User assessment, set to promote
+						ELSE 
+							CASE WHEN LENGTH(ACTION_RES_BR) > 0 THEN ACTION_RES_BR
+							ELSE 'Success'
+							END
 					  END AS ACTION_RESOLVED_STATUS,
 					  SHOW_IN_REVIEW
 			FROM :lt_overview
