@@ -45,9 +45,10 @@ BEGIN
 	-- Business rule 1: Promote all match groups which are not based on match policy Person, Address, Phone
 	
 	-- Group calculation
-	-- Identicals: cat 1 + cat 2 - all matches on phone policies
-	-- Reviews: cat 3 + cat 4 - business rules accepts
-	-- 
+	-- Identical group: 	Category 1 + category 2 - all matches on phone policies
+	-- Review group:		Category 3 + Category 4 - identical group - exclude group
+	-- Exclude group:		TMR single entities or match groups
+	-- Accept group:		Category 2 + category 3 - review group - exclude group
 	
 	-- Calculate match group sets
 	lt_identical_groups = SELECT DISTINCT GROUP_ID, 'X' AS STRATEGY_IDENTICAL
@@ -84,7 +85,8 @@ BEGIN
 					   FROM "osr.scv.foundation.db.data::MatchResults.MatchResults" 
 					   WHERE GROUP_CATEGORY IN (2,3)
 						AND GROUP_ID NOT IN (SELECT GROUP_ID FROM :lt_review_groups)
-						AND GROUP_ID NOT IN (SELECT GROUP_ID FROM :lt_exclude_groups);
+						AND GROUP_ID NOT IN (SELECT GROUP_ID FROM :lt_exclude_groups)
+						AND GROUP_ID NOT IN (SELECT GROUP_ID FROM :lt_identical_groups);
 	
 	lt_overview =
 	
