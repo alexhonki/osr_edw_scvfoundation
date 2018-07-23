@@ -26,7 +26,7 @@ sap.ui.define([
 			this.setModel(new JSONModel(), "personModel");
 			this.setModel(new JSONModel(), "postalModel");
 			this.setModel(new JSONModel(), "timelineModel");
-
+			
 			this.getRouter().getRoute("objectdetail").attachPatternMatched(this._onRouteMatched, this);
 
 		},
@@ -47,7 +47,7 @@ sap.ui.define([
 
 			//reset all JSON model used. 
 			oController.getModel("personModel").setData({}, false);
-			
+
 			//do data read whenever route change. 
 			oController._readCurrentPersonData(oController.oPageParam.scvId); //current tab
 			oController._readScvContactData(oController.oPageParam.scvId); //current tab for their current contact
@@ -263,11 +263,11 @@ sap.ui.define([
 				oResult.BIRTH_DATE = moment(oData[0].BIRTH_DATE).format("DD/MM/YYYY");
 				oResult.DRIVER_LICENSE = "";
 				oResult.BP_NUMBER = "";
-				
+
 				//dynamic adding of license number box.
 				let oDriverLicenseBox = oController.getView().byId("driver-license-number");
 				oDriverLicenseBox.destroyItems();
-				
+
 				let oRmsVbox = oController.getView().byId("rms-bp-number");
 				oRmsVbox.destroyItems();
 				let oText;
@@ -287,18 +287,18 @@ sap.ui.define([
 							oText.addStyleClass("rmsBPActive");
 						}
 						oRmsVbox.addItem(oText);
-					} else if(oData[i].SOURCE === "TMR"){
-						
+					} else if (oData[i].SOURCE === "TMR") {
+
 						//add for multiple license number.
 						oText = new Text({
 							text: oData[i].SOURCE_ID
 						});
 						oDriverLicenseBox.addItem(oText);
-						
+
 						// if(oResult.DRIVER_LICENSE === ""){
 						// 	oResult.DRIVER_LICENSE = oData[i].SOURCE_ID;
 						// }
-						
+
 					}
 
 				}
