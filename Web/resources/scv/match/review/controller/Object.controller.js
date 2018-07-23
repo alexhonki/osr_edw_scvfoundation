@@ -205,7 +205,7 @@ sap.ui.define([
 					},
 					success: function(oData) {
 						// Adjust selection for checkboxes
-						if (oData.length > 0) {
+						if (oData.results.length > 0) {
 							that._selectRows(oData);
 						}
 					}
@@ -339,7 +339,7 @@ sap.ui.define([
 			this.fOnDataReceived2 = function(oData) {
 
 				//set busy state for matching rows table. 
-				this.getView().byId("detailsTable1").setBusy(false);
+				that.getView().byId("detailsTable1").setBusy(false);
 
 				var tableLength = oData.getSource().iLength;
 				if (tableLength === 0) {
