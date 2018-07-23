@@ -134,7 +134,7 @@
 											<t:Column id="navigation" width="3rem">
 												<Label text=""/>
 												<t:template>
-													<Button icon="sap-icon://drill-down" press="onPress2"/>
+													<Button icon="sap-icon://target-group" press="onPress2"/>
 												</t:template>
 											</t:Column>
 										</t:columns>
