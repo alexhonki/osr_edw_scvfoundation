@@ -44,12 +44,23 @@ BEGIN
 	
 	-- Business rule 1: Promote all match groups which are not based on match policy Person, Address, Phone
 	
-	-- Identicals: cat 1 + cat 2
+	-- Group calculation
+	-- Identicals: cat 1 + cat 2 - all matches on phone policies
 	-- Reviews: cat 3 + cat 4 - business rules accepts
 	-- 
 	
 	-- Calculate match group sets
-	lt_identical_groups = SELECT DISTINCT GROUP_ID, 'X' AS STRATEGY_IDENTICAL FROM "osr.scv.foundation.db.data::MatchResults.MatchResults" WHERE GROUP_CATEGORY IN (0,1);
+	lt_identical_groups = SELECT DISTINCT GROUP_ID, 'X' AS STRATEGY_IDENTICAL
+						  FROM "osr.scv.foundation.db.data::MatchResults.MatchResults" 
+						  WHERE GROUP_CATEGORY IN (0,1)
+							AND GROUP_ID NOT IN (
+												SELECT DISTINCT GROUP_ID 
+												FROM "osr.scv.foundation.db.data::MatchResults.MatchResults" a 
+												LEFT OUTER JOIN "osr.scv.foundation.db.data::MatchResults.MatchTracing" b
+												ON a."Match_ROW_ID" = b.ROW_ID
+												WHERE b.POLICY_NAME LIKE '%Phone%'
+											  )
+	;
 	
 	lt_exclude_groups = SELECT DISTINCT GROUP_ID, 'X' AS STRATEGY_BR_EXCLUDE
 						FROM "osr.scv.foundation.db.data::MatchResults.MatchResults"
