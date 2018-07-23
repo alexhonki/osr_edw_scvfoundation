@@ -205,7 +205,9 @@ sap.ui.define([
 					},
 					success: function(oData) {
 						// Adjust selection for checkboxes
-						that._selectRows(oData);
+						if (oData.length > 0) {
+							that._selectRows(oData);
+						}
 					}
 				});
 
