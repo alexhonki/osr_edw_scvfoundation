@@ -263,8 +263,8 @@ BEGIN
 					  CASE 
 						WHEN STRATEGY_BR_EXCLUDE = 'X' THEN 'System Exclude'
 						WHEN STRATEGY_IDENTICAL = 'X' THEN 'Identical'
-						WHEN STRATEGY_BR_REVIEW = 'X' THEN 'Review'
-						WHEN STRATEGY_BR_REVIEW = 'X' AND LENGTH(ACTION_RES_BR) > 0 THEN 'Accept'
+						WHEN STRATEGY_BR_REVIEW = 'X' AND LENGTH(ACTION_RES_BR) = 0 THEN 'Review'  -- No action -> set to review
+						WHEN STRATEGY_BR_REVIEW = 'X' AND LENGTH(ACTION_RES_BR) > 0 THEN 'Promote' -- User assessment, set to promote
 						ELSE 'System Accept'
 					  END AS STRATEGY_RESOLVED,
 					  CASE 
