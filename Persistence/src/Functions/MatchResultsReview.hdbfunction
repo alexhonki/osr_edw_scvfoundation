@@ -163,16 +163,19 @@ BEGIN
 						FROM (
 							SELECT m.GROUP_ID, d.STRATEGY, STRING_AGG(d.ACTION) AS ACTION FROM "osr.scv.foundation.db.data::MatchResults.MatchResults" m
 							LEFT OUTER JOIN (
+	                                 -- Get latest action for every match row
 	                                 SELECT a.ENTITY_ID, a.STRATEGY, a.ACTION, a.MATCH_ROW
 	                                 FROM "osr.scv.foundation.db.data::MatchResultsReview.Assessments" AS a
 	                                 INNER JOIN (
 	                                             -- Latest strategy
-	                                             SELECT ENTITY_ID, MAX(TIMESTAMP) as MAX_TIMESTAMP 
+	                                             SELECT MATCH_ROW, MAX(TIMESTAMP) as MAX_TIMESTAMP 
 	                                             FROM "osr.scv.foundation.db.data::MatchResultsReview.Assessments" 
-	                                             GROUP BY ENTITY_ID
+	                                             WHERE ENTITY_ID = '473217'
+	                                             GROUP BY MATCH_ROW
 	                                            ) AS b
-	                                 ON a.ENTITY_ID = b.ENTITY_ID
-	                                	AND a.TIMESTAMP = b.MAX_TIMESTAMP
+	                                 ON a.MATCH_ROW = b.MATCH_ROW
+	                                	AND a."TIMESTAMP" = b.MAX_TIMESTAMP
+	                                WHERE a.ENTITY_ID = 473217
 	                                ) AS d
 	                		ON d."ENTITY_ID" = m."ENTITY_ID" AND d.MATCH_ROW = m."Match_ROW_ID"
 	                		GROUP BY m.GROUP_ID, d.STRATEGY
