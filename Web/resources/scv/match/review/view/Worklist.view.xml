@@ -8,6 +8,8 @@
 					<items>
 						<SegmentedButtonItem id="rmsDuplicates" text="RMS Duplicates" key="rmsDuplicates" press="handleToggleDuplicateViewButtonPress"/>
 						<SegmentedButtonItem id="allDuplicates" text="All Duplicates" key="allDuplicates" press="handleToggleDuplicateViewButtonPress"/>
+						<SegmentedButtonItem id="reviewGroups" text="Entities for Review" key="reviewGroups" press="handleToggleDuplicateViewButtonPress"/>
+						<SegmentedButtonItem id="promoteGroups" text="Entities for Promotion" key="promoteGroups" press="handleToggleDuplicateViewButtonPress"/>
 					</items>
 				</SegmentedButton>
 				<ToolbarSpacer/>
@@ -115,13 +117,13 @@
 										</t:template>
 									</t:Column>
 									<t:Column id="strategyResolved" width="10rem" filterProperty="STRATEGY_RESOLVED" sortProperty= "STRATEGY_RESOLVED">
-										<Label text="Strategy Resolved"/>
+										<Label text="Strategy"/>
 										<t:template>
 											<ObjectStatus text="{STRATEGY_RESOLVED}" state="{ path: 'STRATEGY_RESOLVED', formatter: '.formatter.strategyState' }" wrapping="false"/>
 										</t:template>
 									</t:Column>
 									<t:Column id="actionResolved" width="8rem" filterProperty="ACTION_RESOLVED" sortProperty= "ACTION_RESOLVED">
-										<Label text="Action Resolved"/>
+										<Label text="Action"/>
 										<t:template>
 											<ObjectStatus text="{ACTION_RESOLVED}" state="{ path: 'ACTION_RESOLVED', formatter: '.formatter.actionState' }"/>
 										</t:template>

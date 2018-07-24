@@ -75,11 +75,11 @@ sap.ui.define([
 		 */
 		onAfterDetailsTableRendering: function() {
 
-			var oTable = this.byId("detailsTable");
+			/*var oTable = this.byId("detailsTable");
 			var oItems = oTable.getItems();
 			if (oItems && oItems.length > 0) {
 				oItems[0].setSelected(true);
-			}
+			}*/
 
 			/*
 			var oTable = this.getView().byId("detailsTable");
@@ -196,6 +196,21 @@ sap.ui.define([
 			this.fOnDataReceived = function(oData) {
 				that.getView().byId("table").setVisibleRowCount(oData.getSource().iLength);
 				//that._updateTableTitle(oData.getSource().iLength, that);
+
+				// Read assessments and set initial selection
+				that.getModel().read(sObjectPath + "/matchAssessments", {
+
+					urlParameters: {
+						"$orderby": "TIMESTAMP desc"
+					},
+					success: function(oData) {
+						// Adjust selection for checkboxes
+						if (oData.results.length > 0) {
+							that._selectRows(oData);
+						}
+					}
+				});
+
 			};
 			var oBinding = this._oTable.getBinding("rows");
 			oBinding.attachDataReceived(this.fOnDataReceived);
@@ -213,6 +228,38 @@ sap.ui.define([
 			};
 			var oBinding2 = this._oDetailTable.getBinding("rows");
 			oBinding2.attachDataReceived(this.fOnDataReceived2);
+
+		},
+
+		_selectRows: function(oData) {
+			var that = this;
+			var oTable = that.byId("table");
+			oTable.detachRowSelectionChange(that.boxTickedEvent, that);
+
+			// Get rows
+			var oRows = oTable.getRows();
+			var currentMatchRow;
+			var oDataMatchRow;
+
+			for (var i = 0; i < oRows.length; i++) {
+
+				currentMatchRow = that.getModel().getProperty(oRows[i].getBindingContext().getPath() + "/MATCH_ROW");
+
+				for (var ix = 0; ix < oRows.length; ix++) {
+					oDataMatchRow = oData.results[ix].MATCH_ROW;
+					if (currentMatchRow === oDataMatchRow) {
+						if (oData.results[ix].ACTION === 'Accept') {
+							oTable.addSelectionInterval(i, i);
+						}
+						break;
+					}
+				}
+			}
+
+			//oTable.addSelectionInterval(1, 1);
+			//oTable.addSelectionInterval(3, 3);
+
+			oTable.attachRowSelectionChange(that.boxTickedEvent, that);
 		},
 
 		/**
@@ -290,10 +337,10 @@ sap.ui.define([
 			});
 			var that = this;
 			this.fOnDataReceived2 = function(oData) {
-				
+
 				//set busy state for matching rows table. 
-				this.getView().byId("detailsTable1").setBusy(false);
-				
+				that.getView().byId("detailsTable1").setBusy(false);
+
 				var tableLength = oData.getSource().iLength;
 				if (tableLength === 0) {
 					that.getView().byId("detailsTable1").setVisibleRowCount(1);
@@ -1018,7 +1065,7 @@ sap.ui.define([
 		},
 		/*Open dialog based on switches in the table*/
 		onOpenAcceptDialog2: function() {
-			if (this.checkSwitchTick()>0) {
+			if (this.checkSwitchTick() > 0) {
 				this._oDialog = sap.ui.xmlfragment("osr.scv.match.review.view.AcceptDialog", this);
 			} else {
 				this._oDialog = sap.ui.xmlfragment("osr.scv.match.review.view.RejectDialog", this);
@@ -1050,7 +1097,7 @@ sap.ui.define([
 			var oRows = this.byId("table").getRows();
 			var that = this;
 			var oRow, oSwitch, i;
-			var countAccept =0;
+			var countAccept = 0;
 			for (i = 0; i < oRows.length; i++) {
 				oRow = that.byId("table").getRows()[i];
 				oSwitch = oRow.getCells()[0];

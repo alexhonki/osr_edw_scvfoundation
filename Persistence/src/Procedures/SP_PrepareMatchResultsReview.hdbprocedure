@@ -5,6 +5,7 @@ PROCEDURE "osr.scv.foundation.db.Procedures::SP_PrepareMatchResultsReview" ( )
    --READS SQL DATA 
    AS
 BEGIN
+   
    /*************************************
        Prepare match results review 
    *************************************/
@@ -44,8 +45,8 @@ BEGIN
 								AND GROUP_ID IS NOT NULL 
 								AND SOURCE_SYSTEM = 'RMS';
 								
+	-- Set RMS Duplicates flag
 	UPDATE "osr.scv.foundation.db.data::MatchResults.MatchResults" SET RMS_DUPLICATES = 0;
-   
     UPDATE "osr.scv.foundation.db.data::MatchResults.MatchResults" a SET a.RMS_DUPLICATES = 1 
     FROM "osr.scv.foundation.db.data::MatchResults.MatchResults" a, :lt_rms_duplicate_groups b
     WHERE a.GROUP_ID = b.GROUP_ID;							
@@ -61,63 +62,16 @@ BEGIN
 								 WHERE s.POLICY_NAME NOT LIKE '%CustSourceSystem%' OR s.POLICY_NAME IS NULL
 								 GROUP BY GROUP_ID
 								 ;
-								 
+
    UPDATE "osr.scv.foundation.db.data::MatchResults.MatchResults" SET AVERAGE_SCORE = NULL;
-   
    UPDATE "osr.scv.foundation.db.data::MatchResults.MatchResults" a SET a.AVERAGE_SCORE = b.AVG_SCORE 
    FROM "osr.scv.foundation.db.data::MatchResults.MatchResults" a, :lt_average_group_score b
    WHERE a.GROUP_ID = b.GROUP_ID;
    
-/*   Start of new code
-   -- Identify survivor record per match group to be displayed in review UI start screen
-   lt_survivor_match_records =
-								SELECT  *, CASE WHEN GROUP_ROW_COUNT = 1 AND GROUP_ROW_COUNT_POLICY = 1 THEN 'X' ELSE '' END AS SHOW_IN_REVIEW FROM (
-							
-								SELECT f1."Match_ROW_ID", GROUP_ROW_COUNT , f2.GROUP_ROW_COUNT_POLICY FROM (
-														   SELECT 
-												    		"Match_ROW_ID",
-								                        	ROW_NUMBER() OVER (PARTITION BY GROUP_ID ORDER BY SOURCE_SYSTEM DESC, SYSTEM_ID DESC) AS GROUP_ROW_COUNT
-							                               FROM "osr.scv.foundation.db.data::MatchResults.MatchResults"
-														  ) AS f1
-								LEFT OUTER JOIN (
-												SELECT 
-												"Match_ROW_ID",
-												ROW_NUMBER() OVER (PARTITION BY GROUP_ID ORDER BY SOURCE_SYSTEM DESC, SYSTEM_ID DESC) AS GROUP_ROW_COUNT_POLICY
-											    FROM "osr.scv.foundation.db.data::MatchResults.MatchResults" a
-											    WHERE ENTITY_ID IN (
-											                        SELECT 
-																	c.ENTITY_ID
-																	FROM   "osr.scv.foundation.db.data::MatchResults.MatchResults"  c
-																	LEFT OUTER JOIN (SELECT * 
-																				     FROM   "osr.scv.foundation.db.data::MatchResults.MatchTracing" 
-																				      ) AS b1
-																				      ON c."Match_ROW_ID" = b1.ROW_ID 
-																				      WHERE POLICY_NAME = 'Person, Address, Phone'
-											            			)
-												) AS f2 
-								ON f1."Match_ROW_ID" = f2."Match_ROW_ID")
-								;
- */ --End of New Code  
-/*   lt_survivor_match_records =
-								SELECT *, CASE WHEN GROUP_ROW_COUNT = 1 THEN 'X' ELSE '' END AS SHOW_IN_REVIEW FROM (
-								SELECT "Match_ROW_ID", GROUP_ROW_COUNT FROM (
-																		   SELECT 
-																    		"Match_ROW_ID",
-												                        	ROW_NUMBER() OVER (PARTITION BY GROUP_ID ORDER BY SOURCE_SYSTEM DESC, SYSTEM_ID DESC) AS GROUP_ROW_COUNT
-											                                FROM "osr.scv.foundation.db.data::MatchResults.MatchResults" 
-											                            	WHERE ENTITY_ID IN (
-											                            						SELECT 
-																								a.ENTITY_ID
-																				                FROM   "osr.scv.foundation.db.data::MatchResults.MatchResults" AS a 
-																				                LEFT OUTER JOIN (SELECT * 
-																				                                 FROM   "osr.scv.foundation.db.data::MatchResults.MatchTracing" 
-																				                                ) AS b1
-																				                 ON a."Match_ROW_ID" = b1.ROW_ID 
-																				                 WHERE POLICY_NAME = 'Person, Address, Phone'
-											                            						)
-																			) 
-							   );
-*/
+   -- Adjust average score for category 0
+   UPDATE "osr.scv.foundation.db.data::MatchResults.MatchResults" SET AVERAGE_SCORE = 100 WHERE GROUP_CATEGORY = 0;
+   
+   -- Set a representative from each match group to be displayed in the match review UI
    lt_survivor_match_records = 
 								SELECT *, CASE WHEN GROUP_ROW_COUNT = 1 THEN 'X' ELSE '' END AS SHOW_IN_REVIEW FROM (
 								SELECT "Match_ROW_ID", GROUP_ROW_COUNT FROM (
@@ -131,7 +85,7 @@ BEGIN
 							   );
   
    UPDATE "osr.scv.foundation.db.data::MatchResults.MatchResults" SET SHOW_IN_REVIEW = NULL;
---   UPDATE "osr.scv.foundation.db.data::MatchResults.MatchResults" SET SHOW_IN_REVIEW = 'X' WHERE GROUP_ID IS NULL;
+   -- UPDATE "osr.scv.foundation.db.data::MatchResults.MatchResults" SET SHOW_IN_REVIEW = 'X' WHERE GROUP_ID IS NULL;
    
    UPDATE "osr.scv.foundation.db.data::MatchResults.MatchResults" a
    SET a.SHOW_IN_REVIEW = b.SHOW_IN_REVIEW, a.GROUP_ROW_INDEX = b.GROUP_ROW_COUNT
@@ -155,6 +109,7 @@ BEGIN
 					    AND MIN(SOURCE_SYSTEM) = 'RMS' 
 						AND MAX(SOURCE_SYSTEM) = 'RMS' 
 					    AND GROUP_ID IS NOT NULL;
+   
    UPDATE "osr.scv.foundation.db.data::MatchResults.MatchResults" a
 	SET a.GROUP_CATEGORY = b.GROUP_CATEGORY 
    FROM "osr.scv.foundation.db.data::MatchResults.MatchResults" a, :lt_group_override b
@@ -163,6 +118,5 @@ BEGIN
    -- Fill match results review table
    TRUNCATE TABLE "osr.scv.foundation.db.data::MatchResultsReview.Review";
    INSERT INTO "osr.scv.foundation.db.data::MatchResultsReview.Review" (SELECT * FROM "osr.scv.foundation.db.functions::MatchResultsReview"());
-
    
 END

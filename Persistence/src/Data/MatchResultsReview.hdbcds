@@ -38,7 +38,7 @@ context MatchResultsReview {
             SCORE                    : Integer;
             AVG_SCORE                : Integer;
             STRATEGY                 : String(10);
-            STRATEGY_RESOLVED        : String(10);
+            STRATEGY_RESOLVED        : String(20);
             STRATEGY_RESOLVED_STATUS : String(10);
             PROMOTED_TO_SCV          : String(1);
             PROMOTION_TIMESTAMP      : UTCTimestamp;

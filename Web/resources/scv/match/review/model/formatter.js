@@ -86,7 +86,7 @@ sap.ui.define([
 			},
 			
 			actionState: function(iValue) {
-				if (iValue === 'Reject' || !iValue) {
+				if (iValue === 'No Promotion' || iValue === 'Reject' || !iValue) {
 					return ValueState.Error;
 				} else {
 					if (iValue === 'Split' || !iValue) {	
@@ -98,7 +98,7 @@ sap.ui.define([
 			},
 			
 			strategyState: function(iValue) {
-				if (iValue === 'Review' || !iValue) {
+				if (iValue === 'System Exclude' || iValue === 'Review' || !iValue) {
 					return ValueState.Error;
 				} else {
 					return ValueState.Success;

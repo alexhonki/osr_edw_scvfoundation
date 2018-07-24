@@ -1,4 +1,4 @@
-FUNCTION "osr.scv.foundation.db.functions::MatchResultsReview" ( )
+FUNCTION "osr.scv.foundation.db.functions::MatchResultsReviewFullOutput" ( )
        RETURNS TABLE (	
     					MATCH_ROW					INTEGER,
     					SOURCE_SYSTEM				NVARCHAR(10),
@@ -24,9 +24,14 @@ FUNCTION "osr.scv.foundation.db.functions::MatchResultsReview" ( )
             			RMS_DUPLICATES				INTEGER,
             			ACTION						NVARCHAR(20),
         				ACTION_RESOLVED 			NVARCHAR(20),
+        				ACTION_RES_BR	 			NVARCHAR(20),
         				MATCH_PERSON_FN 			NVARCHAR(50),
         				ACTION_RESOLVED_STATUS		NVARCHAR(10),
-        				SHOW_IN_REVIEW				NVARCHAR(1)
+        				SHOW_IN_REVIEW				NVARCHAR(1),
+        				STRATEGY_IDENTICAL			NVARCHAR(1),
+        				STRATEGY_BR_REVIEW			NVARCHAR(1),
+	                	STRATEGY_BR_EXCLUDE			NVARCHAR(1),
+	                	STRATEGY_BR_ACCEPT			NVARCHAR(1)
         			  )
        SQL SECURITY INVOKER AS 
 BEGIN 
@@ -193,9 +198,7 @@ BEGIN
                                 	AND a.TIMESTAMP = b.MAX_TIMESTAMP
                                 ) AS d
                 ON d."ENTITY_ID" = m."ENTITY_ID" AND d.MATCH_ROW = m."Match_ROW_ID"                                        
-                
-                WHERE m.SHOW_IN_REVIEW = 'X'
-				/*
+--                WHERE m.SHOW_IN_REVIEW = 'X'
 					AND (
 						 -- Unique records from RMS
 						 m."Match_ROW_ID" IN (SELECT "Match_ROW_ID" FROM "osr.scv.foundation.db.data::MatchResults.MatchResults" WHERE GROUP_ID IS NULL AND SOURCE_SYSTEM = 'RMS')
@@ -205,7 +208,6 @@ BEGIN
 						)
 						
                 	--AND (s.POLICY_NAME NOT LIKE '%CustSourceSystem%' OR s.POLICY_NAME IS NULL)
-                	*/
 		)
 		;
 	
@@ -237,9 +239,14 @@ BEGIN
                   RMS_DUPLICATES,
                   ACTION,
 				  ACTION_RESOLVED,
+				  ACTION_RES_BR,
 				  MATCH_PERSON_FN,
 				  ACTION_RESOLVED_STATUS,
-				  SHOW_IN_REVIEW
+				  SHOW_IN_REVIEW,
+				  STRATEGY_IDENTICAL,
+				  STRATEGY_BR_REVIEW,
+	              STRATEGY_BR_EXCLUDE,
+	              STRATEGY_BR_ACCEPT
 		FROM (		  
 		
 			SELECT 

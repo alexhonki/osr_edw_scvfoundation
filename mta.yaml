@@ -26,7 +26,7 @@ modules:
     path: Services
     build-parameters:
       builder: grunt
-      timeout: 10m
+      timeout: 15m
     provides:
       - name: Services_api
         properties:
@@ -53,7 +53,7 @@ modules:
     type: dwf
     path: DWF
     requires:
-      #- name: OSR_SCV_FOUNDATION_DWF-uaa
+      - name: OSR_SCV_FOUNDATION_DWF-uaa
       - name: OSR_SCV_FOUNDATION-dws
   - name: OSR_SCV_FOUNDATION-Backend
     type: nodejs
@@ -63,12 +63,13 @@ modules:
        properties:
           url: ${default-url}
     requires:
-      #- name: OSR_SCV_FOUNDATION_DWF-uaa
+      - name: OSR_SCV_FOUNDATION_DWF-uaa
       - name: OsrScvFoundationContainer
       - name: OSR_SCV_FOUNDATION-dws
-    #properties:
-    # API_END_POINT: "${xs-api-url}"
-    # SAP_JWT_TRUST_ACL: "[{\"clientid\":\"*\",\"identityzone\":\"*\"}]"
+    properties:
+      API_END_POINT: "${xs-api-url}"
+      SAP_JWT_TRUST_ACL: "[{\"clientid\":\"*\",\"identityzone\":\"*\"}]"
+
 resources:
   - name: OsrScvFoundationContainer
     properties:
