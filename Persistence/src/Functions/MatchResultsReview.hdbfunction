@@ -314,7 +314,10 @@ BEGIN
 						WHEN STRATEGY_BR_REVIEW = 'X' AND LENGTH(ACTION_RES_BR) = 0 THEN 'Error'  -- No action -> set to review
 						WHEN STRATEGY_BR_REVIEW = 'X' AND LENGTH(ACTION_RES_BR) > 0 THEN 'Success' -- User assessment, set to promote
 						ELSE 
-							CASE WHEN LENGTH(ACTION_RES_BR) > 0 THEN ACTION_RES_BR
+							CASE 
+								WHEN ACTION_RES_BR = 'Split' THEN 'Success'
+								WHEN ACTION_RES_BR = 'Accept' THEN 'Success'
+								WHEN ACTION_RES_BR = 'Reject' THEN 'Success'
 							ELSE 'Success'
 							END
 					  END AS ACTION_RESOLVED_STATUS,
