@@ -193,7 +193,9 @@ BEGIN
                                 	AND a.TIMESTAMP = b.MAX_TIMESTAMP
                                 ) AS d
                 ON d."ENTITY_ID" = m."ENTITY_ID" AND d.MATCH_ROW = m."Match_ROW_ID"                                        
---                WHERE m.SHOW_IN_REVIEW = 'X'
+                
+                WHERE m.SHOW_IN_REVIEW = 'X'
+				/*
 					AND (
 						 -- Unique records from RMS
 						 m."Match_ROW_ID" IN (SELECT "Match_ROW_ID" FROM "osr.scv.foundation.db.data::MatchResults.MatchResults" WHERE GROUP_ID IS NULL AND SOURCE_SYSTEM = 'RMS')
@@ -203,6 +205,7 @@ BEGIN
 						)
 						
                 	--AND (s.POLICY_NAME NOT LIKE '%CustSourceSystem%' OR s.POLICY_NAME IS NULL)
+                	*/
 		)
 		;
 	
