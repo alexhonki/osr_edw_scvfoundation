@@ -30,7 +30,7 @@
 		"technology": "UI5",
 		"icons": {
 			"icon": "sap-icon://task",
-			"favIcon": "",
+			"favIcon": "favicon.ico",
 			"phone": "",
 			"phone@2": "",
 			"tablet": "",
