@@ -170,12 +170,10 @@ BEGIN
 	                                             -- Latest strategy
 	                                             SELECT MATCH_ROW, MAX(TIMESTAMP) as MAX_TIMESTAMP 
 	                                             FROM "osr.scv.foundation.db.data::MatchResultsReview.Assessments" 
-	                                             WHERE ENTITY_ID = '473217'
 	                                             GROUP BY MATCH_ROW
 	                                            ) AS b
 	                                 ON a.MATCH_ROW = b.MATCH_ROW
 	                                	AND a."TIMESTAMP" = b.MAX_TIMESTAMP
-	                                WHERE a.ENTITY_ID = 473217
 	                                ) AS d
 	                		ON d."ENTITY_ID" = m."ENTITY_ID" AND d.MATCH_ROW = m."Match_ROW_ID"
 	                		GROUP BY m.GROUP_ID, d.STRATEGY
