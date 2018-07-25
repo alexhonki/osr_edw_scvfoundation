@@ -156,24 +156,20 @@ sap.ui.define([
 		 * @private
 		 */
 		_onObjectMatched: function(oEvent) {
+
 			//var sObjectPath = "/matchResultsReview('" + oEvent.getParameter("arguments").objectId + "')/matchResults";
 			var sObjectPath = "/matchResultsReview('" + oEvent.getParameter("arguments").objectId.split("|")[0] + "')";
 			this._bindView(sObjectPath);
 
+			// Set header for match details table and get data
 			var matchRow = oEvent.getParameter("arguments").objectId.split("|")[1];
 			this.currentMatchRow = matchRow;
 			this.getView().byId("tableDetails1Header").setText("Matches for Row " + matchRow);
-
-			// Related match rows
 			var sObjectPathRelated = "/matchResultsDetailsRelatedParameters(I_MATCH_ROW='" + matchRow + "')/Results";
 			this.byId("detailsTable1").bindRows({
 				path: sObjectPathRelated,
 				template: this.byId("detailsTable1").getBindingInfo("rows").template
 			});
-			//zTable.bindItems({path: "/itemstit", template:this.byId("detailsTable").getBindingInfo("items").template});
-
-			// Pre-select first line
-			//this.byId("detailsTable").getItems()[0].setSelected(true);
 
 			// Disable change log tab?
 			// Read the change log count for current entity
@@ -234,7 +230,7 @@ sap.ui.define([
 			oBinding2.attachDataReceived(this.fOnDataReceived2);
 
 		},
-		
+
 		_enableAllButtons: function() {
 			var that = this;
 			var oTable = that.byId("table");
@@ -245,7 +241,7 @@ sap.ui.define([
 				oRows[i].getCells()[10].setEnabled(true);
 			}
 		},
-		
+
 		_disableFirstButton: function(oData) {
 			var that = this;
 			var oTable = that.byId("table");
@@ -351,10 +347,10 @@ sap.ui.define([
 			//set busy state for matching rows table. 
 			this.getView().byId("detailsTable1").setBusy(true);
 			// Enable all buttons and disable source
-			
+
 			this._enableAllButtons();
 			oEvent.getSource().setEnabled(false);
-			
+
 			// The source is the list item that got pressed
 			var newMatchRow = oEvent.getSource().getBindingContext().getProperty("MATCH_ROW_STR");
 			var sObjectPathRelated = "/matchResultsDetailsRelatedParameters(I_MATCH_ROW='" + newMatchRow + "')/Results";
@@ -377,11 +373,11 @@ sap.ui.define([
 				}
 				// Set new title for details table
 				that.getView().byId("tableDetails1Header").setText("Matches for Row " + newMatchRow);
-				
+
 				that.getView().byId(this.currentMatchRow).setEnabled(true);
 				that.getView().byId(newMatchRow).setEnabled(false);
 				this.currentMatchRow = newMatchRow;
-				
+
 			};
 			var oBinding2 = this._oDetailTable.getBinding("rows");
 			oBinding2.attachDataReceived(this.fOnDataReceived2);
