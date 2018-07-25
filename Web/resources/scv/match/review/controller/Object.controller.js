@@ -21,6 +21,7 @@ sap.ui.define([
 	return BaseController.extend("osr.scv.match.review.controller.Object", {
 
 		formatter: formatter,
+		currentMatchRow: null,
 
 		/* =========================================================== */
 		/* lifecycle methods                                           */
@@ -160,6 +161,8 @@ sap.ui.define([
 			this._bindView(sObjectPath);
 
 			var matchRow = oEvent.getParameter("arguments").objectId.split("|")[1];
+			this.currentMatchRow = matchRow;
+			this.getView().byId("tableDetails1Header").setText("Matches for Row " + matchRow);
 
 			// Related match rows
 			var sObjectPathRelated = "/matchResultsDetailsRelatedParameters(I_MATCH_ROW='" + matchRow + "')/Results";
@@ -197,6 +200,7 @@ sap.ui.define([
 				that.getView().byId("table").setVisibleRowCount(oData.getSource().iLength);
 				//that._updateTableTitle(oData.getSource().iLength, that);
 
+				that._disableFirstButton(oData);
 				// Read assessments and set initial selection
 				that.getModel().read(sObjectPath + "/matchAssessments", {
 
@@ -229,6 +233,24 @@ sap.ui.define([
 			var oBinding2 = this._oDetailTable.getBinding("rows");
 			oBinding2.attachDataReceived(this.fOnDataReceived2);
 
+		},
+		
+		_enableAllButtons: function() {
+			var that = this;
+			var oTable = that.byId("table");
+
+			// Get rows
+			var oRows = oTable.getRows();
+			for (var i = 0; i < oRows.length; i++) {
+				oRows[i].getCells()[10].setEnabled(true);
+			}
+		},
+		
+		_disableFirstButton: function(oData) {
+			var that = this;
+			var oTable = that.byId("table");
+			var firstRow = oTable.getRows()[0];
+			var firstButton = firstRow.getCells()[10].setEnabled(false);
 		},
 
 		_selectRows: function(oData) {
@@ -285,7 +307,7 @@ sap.ui.define([
 							oViewModel.setProperty("/busy", true);
 						});
 					},
-					dataReceived: function() {
+					dataReceived: function(oData) {
 						oViewModel.setProperty("/busy", false);
 					}
 				}
@@ -328,6 +350,11 @@ sap.ui.define([
 		onPress2: function(oEvent) {
 			//set busy state for matching rows table. 
 			this.getView().byId("detailsTable1").setBusy(true);
+			// Enable all buttons and disable source
+			
+			this._enableAllButtons();
+			oEvent.getSource().setEnabled(false);
+			
 			// The source is the list item that got pressed
 			var newMatchRow = oEvent.getSource().getBindingContext().getProperty("MATCH_ROW_STR");
 			var sObjectPathRelated = "/matchResultsDetailsRelatedParameters(I_MATCH_ROW='" + newMatchRow + "')/Results";
@@ -348,7 +375,13 @@ sap.ui.define([
 					that.getView().byId("detailsTable1").setVisibleRowCount(tableLength);
 
 				}
-				//that._updateTableTitle(oData.getSource().iLength, that);
+				// Set new title for details table
+				that.getView().byId("tableDetails1Header").setText("Matches for Row " + newMatchRow);
+				
+				that.getView().byId(this.currentMatchRow).setEnabled(true);
+				that.getView().byId(newMatchRow).setEnabled(false);
+				this.currentMatchRow = newMatchRow;
+				
 			};
 			var oBinding2 = this._oDetailTable.getBinding("rows");
 			oBinding2.attachDataReceived(this.fOnDataReceived2);
