@@ -38,8 +38,7 @@ BEGIN
 		SELECT ENTITY_ID, STRATEGY_RESOLVED, ACTION_RESOLVED 
 		FROM "osr.scv.foundation.db.data::MatchResultsReview.Review"
 		WHERE STRATEGY_RESOLVED IN ('Identical', 'System Accept', 'Promote');
-		
-		
+
 	INSERT INTO "osr.scv.foundation.db.data::MatchResults.MatchResultsShadow"
 	(
 		SELECT m.* FROM "osr.scv.foundation.db.data::MatchResults.MatchResults" m
