@@ -100,6 +100,7 @@ function transformResults(oResultRows) {
 			let aSplitResult = oResultRows[i].SEARCH_STRING_CLEANSED.split("|");
 			
 			//determine to check whether it is 3 names or not.
+			//the entity contain a middle name or not. 
 			if (aSplitResult.length === 10) {
 				oResultRows[i].FIRST_NAME = aSplitResult[0];
 				oResultRows[i].LAST_NAME = aSplitResult[1];
