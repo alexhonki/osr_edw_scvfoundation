@@ -19,7 +19,7 @@ modules:
         group: SERVICE_REPLACEMENTS
         properties:
           key: logical-OSR-EDW-SOURCE-TMR-grantor
-          service: '~{OSR-EDW-SOURCE-TMR-grantor-service}'      
+          service: '~{OSR-EDW-SOURCE-TMR-grantor-service}'
       - name: scv-ext-access-grantor
   - name: OSR_SCV_FOUNDATION-Services
     type: nodejs
@@ -34,6 +34,8 @@ modules:
     requires:
       - name: OsrScvFoundationContainer
       - name: OSR_SCV_FOUNDATION-uaa
+    properties:
+      timeout: 30m
   - name: OSR_SCV_FOUNDATION-Web
     type: html5
     path: Web
@@ -49,6 +51,8 @@ modules:
       - name: ui5-lib
         properties:
           ui5liburl: '~{url}'
+    properties:
+      timeout: 29m
   - name: OSR_SCV_FOUNDATION-DWF
     type: dwf
     path: DWF
@@ -59,17 +63,16 @@ modules:
     type: nodejs
     path: Backend
     provides:
-     - name: Backend_api
-       properties:
-          url: ${default-url}
+      - name: Backend_api
+        properties:
+          url: '${default-url}'
     requires:
       - name: OSR_SCV_FOUNDATION_DWF-uaa
       - name: OsrScvFoundationContainer
       - name: OSR_SCV_FOUNDATION-dws
     properties:
-      API_END_POINT: "${xs-api-url}"
-      SAP_JWT_TRUST_ACL: "[{\"clientid\":\"*\",\"identityzone\":\"*\"}]"
-
+      API_END_POINT: '${xs-api-url}'
+      SAP_JWT_TRUST_ACL: '[{"clientid":"*","identityzone":"*"}]'
 resources:
   - name: OsrScvFoundationContainer
     properties:
@@ -87,8 +90,6 @@ resources:
     parameters:
       service-name: OSR_EDW_SOURCE_TMR-deploy
     type: org.cloudfoundry.existing-service
-
-
   - name: scv-ext-access-grantor
     type: org.cloudfoundry.existing-service
     description: scv-ext-access-grantor
@@ -106,16 +107,16 @@ resources:
       version: =1.44.30
   - name: OSR_SCV_FOUNDATION-dws
     properties:
-       dwf-edw-client-name: '${service-name}'
+      dwf-edw-client-name: '${service-name}'
     type: com.sap.xs.dwf-edw-client
   - name: OSR_SCV_FOUNDATION_DWF-uaa
     type: com.sap.xs.uaa
     parameters:
-     service-name: OSR_SCV_FOUNDATION_DWF-uaa
-     service-plan: space
-     config:
-         xsappname: OSR_SCV_FOUNDATION_DWF
-         scopes:
+      service-name: OSR_SCV_FOUNDATION_DWF-uaa
+      service-plan: space
+      config:
+        xsappname: OSR_SCV_FOUNDATION_DWF
+        scopes:
           - name: $XSAPPNAME.TOE
             description: access for TOE
             grant-as-authority-to-apps:
@@ -124,13 +125,11 @@ resources:
             granted-apps:
               - dwf-toe
               - dwf-runtime
-         authorities:
-           - $ACCEPT_GRANTED_AUTHORITIES
-         role-templates:
-           - name: User
-             description: Access API
-             scope-references:
-               - $XSAPPNAME.TOE
-               - cloud_controller.read
-
-
+        authorities:
+          - $ACCEPT_GRANTED_AUTHORITIES
+        role-templates:
+          - name: User
+            description: Access API
+            scope-references:
+              - $XSAPPNAME.TOE
+              - cloud_controller.read
