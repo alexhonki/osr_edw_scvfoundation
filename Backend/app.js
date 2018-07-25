@@ -32,6 +32,7 @@ module.exports = app; // for testing
       app.use(passport.initialize());
       app.use(passport.authenticate('JWT', { session: false }));
   }
+ 
 app.use(bodyParser.json());
 app.use((err1, req, resp, next) => {
 	if (err1) {
