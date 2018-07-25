@@ -35,7 +35,7 @@ modules:
       - name: OsrScvFoundationContainer
       - name: OSR_SCV_FOUNDATION-uaa
     properties:
-      timeout: 30m
+      timeout: 600m
   - name: OSR_SCV_FOUNDATION-Web
     type: html5
     path: Web
@@ -47,12 +47,12 @@ modules:
           name: Services_url
           url: '~{url}'
           forwardAuthToken: true
-          timeout: 1800000
+          timeout: 240000
       - name: ui5-lib
         properties:
           ui5liburl: '~{url}'
     properties:
-      timeout: 29m
+      timeout: 480m
   - name: OSR_SCV_FOUNDATION-DWF
     type: dwf
     path: DWF
@@ -133,4 +133,3 @@ resources:
             scope-references:
               - $XSAPPNAME.TOE
               - cloud_controller.read
-

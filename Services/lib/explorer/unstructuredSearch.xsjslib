@@ -23,7 +23,7 @@ function getFinalLoadForExecution(sScvId, sSource, sSourceId) {
 	// 	"FROM \"osr.scv.foundation.db.data::SCVFoundation.Search\" WHERE ";
 
 	// let sEndingQuery = "CONTAINS (SEARCH_STRING, ?, FUZZY (?)) ORDER BY SCORE DESC, \"SCV_ID\" ASC";
-	
+
 	//NOT NULL is used for fail safe in case there's NULL happening in the table itself.
 	let sFrontQuery =
 		"SELECT DISTINCT \"SCV_ID\", \"SEARCH_STRING_CLEANSED\", SCORE() as \"SCORE\" " +
@@ -90,16 +90,17 @@ function transformResults(oResultRows) {
 	//transform the data according to the results. 
 	for (let i = 0; i < oResultRows.length; i++) {
 
+		//pre-process the result and split base on "|"
+		let aSplitResult = oResultRows[i].SEARCH_STRING_CLEANSED.split("|");
+
 		//if it does not exist add it into the result.
 		if (aIdChecker.indexOf(oResultRows[i].SCV_ID) === -1) {
 
 			//push this SCV ID into the array for checking next.
 			aIdChecker.push(oResultRows[i].SCV_ID);
 
-			//pre-process the result and split base on "|"
-			let aSplitResult = oResultRows[i].SEARCH_STRING_CLEANSED.split("|");
-			
 			//determine to check whether it is 3 names or not.
+			//the entity contain a middle name or not. 
 			if (aSplitResult.length === 10) {
 				oResultRows[i].FIRST_NAME = aSplitResult[0];
 				oResultRows[i].LAST_NAME = aSplitResult[1];
@@ -116,11 +117,50 @@ function transformResults(oResultRows) {
 
 			oFinalData.push(oResultRows[i]);
 
+			//if this is done and its empty, remove the last inserted
+			// if (oResultRows[i].CITY === "" || oResultRows[i].POSTAL_CODE === "") {
+			// 	oFinalData.pop();
+			// 	aIdChecker.pop();
+			// } else {
+			// 	oFinalData.push(oResultRows[i]);
+			// }
+
+		} else if (aIdChecker.indexOf(oResultRows[i].SCV_ID) !== -1) { //an entity id already exist
+			//check that the entity id address oFinalData is not empty
+
+			if (aSplitResult.length === 10) {
+
+				this._checkAddressIsNotEmpty(oFinalData, aSplitResult.length, aSplitResult[3], aSplitResult[4], oResultRows[i].SCV_ID);
+				// oResultRows[i].CITY = aSplitResult[3];
+				// oResultRows[i].POSTAL_CODE = aSplitResult[4];
+
+			} else if (aSplitResult.length === 11) {
+
+				this._checkAddressIsNotEmpty(oFinalData, aSplitResult.length, aSplitResult[4], aSplitResult[5], oResultRows[i].SCV_ID);
+				// oResultRows[i].CITY = aSplitResult[4];
+				// oResultRows[i].POSTAL_CODE = aSplitResult[5];
+
+			}
+
 		}
 
 	}
 
 	return oFinalData;
+}
+
+//check the particular scv id contains an address 
+//or empty string.
+function _checkAddressIsNotEmpty(oFinalData, iResultLength, sCity, sPostalCode, sCurrentScvId) {
+	for (let i = 0; i < oFinalData.length; i++) {
+		if (oFinalData[i].SCV_ID === sCurrentScvId) {
+			if (oFinalData[i].CITY === "" || oFinalData[i].POSTAL_CODE === "") {
+				oFinalData[i].CITY = sCity;
+				oFinalData[i].POSTAL_CODE = sPostalCode;
+				break;
+			}
+		}
+	}
 }
 
 /**

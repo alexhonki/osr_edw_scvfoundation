@@ -67,7 +67,6 @@ sap.ui.define([
 			};
 			//set the data and replace everything that is inside. 
 			this.getModel("searchParameters").setData(oSourceType, false);
-			//this.getModel("searchParameters").setProperty("/searchString", "");
 
 		},
 
@@ -194,7 +193,7 @@ sap.ui.define([
 					if (error.status === 403) {
 						oController.sendMessageToast("You do not have enough authorisation please contact your system admin.");
 					} else {
-						oController.sendMessageToast("Something went wrong, our apologies. Please try again.");
+						oController.sendMessageToast("Something went wrong, our apologies. Please close the browser and try again.");
 					}
 					oController.getView().byId("searchapi-table").setBusy(false);
 					

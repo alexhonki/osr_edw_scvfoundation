@@ -144,7 +144,7 @@ sap.ui.define([
      */
     sendMessageToast: function (sMessage) {
       MessageToast.show(sMessage, {
-        duration: 1500
+        duration: 3000
       });
     },
 
