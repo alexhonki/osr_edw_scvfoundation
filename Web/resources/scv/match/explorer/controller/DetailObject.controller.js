@@ -12,7 +12,7 @@ sap.ui.define([
 	"use strict";
 
 	let DetailObject = SuperController.extend("osr.scv.match.explorer.controller.DetailObject", {
-
+	//this is a test
 		Formatters: Formatters,
 		/**
 		 * Run on initialize
