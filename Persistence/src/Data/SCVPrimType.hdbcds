@@ -3,6 +3,7 @@ namespace osr.scv.foundation.db.data;
 context SCVPrimType {
 
     /*@@layout{"layoutInfo":{"x":-625,"y":-315}}*/
+    //
     entity AddrType {
         Key ADDR_IDX : Integer not null;
         ADDR_TYPE : String(40) not null; 

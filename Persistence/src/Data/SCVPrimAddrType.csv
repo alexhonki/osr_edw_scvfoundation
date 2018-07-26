@@ -1,4 +1,4 @@
-﻿ADDR_IDX,ADDR_TYPE,STD_ADDR_PRIM_TYPE
+ADDR_IDX,ADDR_TYPE,STD_ADDR_PRIM_TYPE
 1,Accs,Access
 2,Ally,Alley
 3,Alwy,Alleyway
@@ -598,3 +598,4 @@
 597,al,Alley
 598,Bnd,Bend
 599,Is,Island
+
