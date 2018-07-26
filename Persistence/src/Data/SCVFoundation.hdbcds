@@ -3,6 +3,26 @@ namespace osr.scv.foundation.db.data;
 context SCVFoundation {
 
     /*@@layout{"layoutInfo":{}}*/
+    entity EntityMappingHistory {
+        SCV_LOAD_ID        : Integer not null;
+        SCV_ID_SEQ_CONTROL : String(10);
+        SCV_ID             : Integer;
+        ENTITY_ID          : String(20);
+        MATCH_ROW_ID       : Integer;
+    };
+
+    /*@@layout{"layoutInfo":{}}*/
+    entity LoadHistory {
+        key SCV_LOAD_ID        : Integer not null;
+            LOAD_DATE          : UTCTimestamp;
+            LOAD_USER          : String(64);
+            DURATION           : Double;
+            STATUS             : String(20);
+            NO_SCV_IDS_CREATED : Integer;
+            NO_SCV_IDS_UPDATED : Integer;
+    };
+
+    /*@@layout{"layoutInfo":{}}*/
     entity Master {
         key SCV_ID     : Integer not null;
             CREATED_AT : LocalDate;
@@ -32,6 +52,7 @@ context SCVFoundation {
             STD_PERSON_FN  : String(50);
             STD_CHECKSUM   : Binary(32);
             INACTIVE       : String(1); /* Input e.g 'X' or '' coming from RMS System */
+            SCV_LOAD_ID    : Integer;
     }
     technical configuration {
         fuzzy search index on (LAST_NAME);
@@ -59,6 +80,7 @@ context SCVFoundation {
             STD_PERSON_GN2 : String(50);
             STD_PERSON_FN  : String(50);
             STD_CHECKSUM   : Binary(32);
+            SCV_LOAD_ID    : Integer;
     }
     technical configuration {
         fuzzy search index on (LAST_NAME);
@@ -103,6 +125,7 @@ context SCVFoundation {
             ADDR_LATITUDE             : BinaryFloat default 0.00;
             ADDR_LONGITUDE            : BinaryFloat default 0.00;
             STD_CHECKSUM              : Binary(32);
+            SCV_LOAD_ID               : Integer;
     };
 
     /*@@layout{"layoutInfo":{}}*/
@@ -146,7 +169,7 @@ context SCVFoundation {
             ADDR_LONGITUDE             : BinaryFloat default 0.00;
             STD_CHECKSUM               : Binary(32);
             LAST_CONTACT_DATE          : LocalDate; /* either when source DB get updated OR when a user update the date*/
-
+            SCV_LOAD_ID                : Integer;
     };
 
     /*@@layout{"layoutInfo":{}}*/
@@ -163,6 +186,7 @@ context SCVFoundation {
             NUMBER_DESC    : String(256);
             CHECKSUM       : Binary(32);
             LAST_UPDATED   : LocalDate;
+            SCV_LOAD_ID    : Integer;
     };
 
     /*@@layout{"layoutInfo":{}}*/
@@ -180,6 +204,7 @@ context SCVFoundation {
             STD_EMAIL        : String(100);
             STD_CHECKSUM     : Binary(32);
             LAST_UPDATED     : LocalDate;
+            SCV_LOAD_ID      : Integer;
     };
 
     /*@@layout{"layoutInfo":{"x":-630,"y":2.5}}*/
