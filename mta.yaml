@@ -35,7 +35,7 @@ modules:
       - name: OsrScvFoundationContainer
       - name: OSR_SCV_FOUNDATION-uaa
     properties:
-      timeout: 600m
+      timeout: 30m
   - name: OSR_SCV_FOUNDATION-Web
     type: html5
     path: Web
@@ -52,7 +52,7 @@ modules:
         properties:
           ui5liburl: '~{url}'
     properties:
-      timeout: 480m
+      timeout: 29m
   - name: OSR_SCV_FOUNDATION-DWF
     type: dwf
     path: DWF
