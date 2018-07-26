@@ -22,12 +22,15 @@ PROCEDURE "osr.scv.foundation.db.Procedures::SP_MoveRowsToScvFoundation" (
 BEGIN
 
 	DECLARE l_number_entities int default 0;
+	DECLARE l_load_id int;
+	DECLARE l_num_scv_created int default 0;
+	DECLARE l_num_scv_updated int default 0;
 	
 	-- Declare exception hander for all SQL exceptions. 
 	DECLARE EXIT HANDLER FOR SQLEXCEPTION
 	BEGIN
 		
-		DROP TABLE #lt_entity_mappingss;
+		DROP TABLE #lt_entity_mapping;
 		DROP TABLE #lt_scv_counters;
 		
 --		o_return_code :=  'ERROR';
@@ -35,7 +38,7 @@ BEGIN
 	END;
 	
 	-- Temporary table to hold the SCV ID to Entity ID mapping
-	CREATE LOCAL TEMPORARY TABLE #lt_entity_mappingss (
+	CREATE LOCAL TEMPORARY TABLE #lt_entity_mapping (
             SCV_ID_SEQ_CONTROL NVARCHAR(10),
             SCV_ID INTEGER,
             ENTITY_ID NVARCHAR(20),
@@ -47,12 +50,23 @@ BEGIN
             SCV_ID_SEQ_CONTROL NVARCHAR(10),
             SCV_ID INTEGER
     );
+    
+    -- ### SCV Statistics ##########################################################################################################
+    
+    -- Get the latest load ID from history
+    SELECT MAX(SCV_LOAD_ID) into l_load_id FROM "osr.scv.foundation.db.data::SCVFoundation.LoadHistory";
+    IF :l_load_id is null OR :l_load_id <= 0 THEN
+    	-- Nothing loaded, ID is 1
+    	l_load_id = 1;
+    ELSE
+    	-- History exists, get new load ID
+    	l_load_id = :l_load_id + 1;
+    END IF;
 
 	-- ### SCV master ##############################################################################################################
 	BEGIN
 		
 		-- Auto promotions
-		-- With rejects i can group by System ID instead of Entity ID!!!---
 		lt_auto_entity_ids =	SELECT ENTITY_ID, "osr.scv.foundation.db.data::SEQ_ScvMaster".NEXTVAL as SCV_ID 
 								FROM (
 									SELECT s.ENTITY_ID,  s."Match_ROW_ID" 
@@ -77,7 +91,7 @@ BEGIN
 								ON a.ENTITY_ID = b.ENTITY_ID;						  
 	
 		-- Insert into mapping table
-		INSERT INTO #lt_entity_mappingss (SELECT * FROM :lt_auto_entity_ids_detail);
+		INSERT INTO #lt_entity_mapping (SELECT * FROM :lt_auto_entity_ids_detail);
 		
 		lt_reject_scv_ids = SELECT  "STD_PERSON_GN",  "STD_PERSON_GN2", "STD_PERSON_FN", "osr.scv.foundation.db.data::SEQ_ScvMaster".NEXTVAL as SCV_ID FROM (
 						SELECT s.SYSTEM_ID,  s."Match_ROW_ID" ,
@@ -115,7 +129,7 @@ BEGIN
 								a."STD_PERSON_FN" = b."STD_PERSON_FN";
 
 		-- Insert into mapping table
-		INSERT INTO #lt_entity_mappingss (SELECT * FROM :lt_reject_scv_ids_detail);
+		INSERT INTO #lt_entity_mapping (SELECT * FROM :lt_reject_scv_ids_detail);
 
 		lt_accept_scv_ids = SELECT ENTITY_ID, "osr.scv.foundation.db.data::SEQ_ScvMaster".NEXTVAL as SCV_ID FROM (
 							SELECT s.ENTITY_ID,  s."Match_ROW_ID" 
@@ -138,12 +152,12 @@ BEGIN
 									ON a.ENTITY_ID = b.ENTITY_ID;
 									
 		-- Insert into mapping table
-		INSERT INTO #lt_entity_mappingss (SELECT * FROM :lt_accept_scv_ids_detail_zero);
+		INSERT INTO #lt_entity_mapping (SELECT * FROM :lt_accept_scv_ids_detail_zero);
 		
 		-- Fill auto-promotions, rejects and accepts into SCV master table
 		INSERT INTO "osr.scv.foundation.db.data::SCVFoundation.Master" (
 				SELECT DISTINCT SCV_ID, CURRENT_DATE, null,CURRENT_USER, null, null, null FROM (
-				SELECT a.SCV_ID FROM #lt_entity_mappingss a
+				SELECT a.SCV_ID FROM #lt_entity_mapping a
 				LEFT OUTER JOIN (SELECT MATCH_ROW_ID, ACTION_RMS FROM "osr.scv.foundation.db.data::MatchResults.MatchDelta") md
 				ON a.MATCH_ROW_ID = md.MATCH_ROW_ID
 				WHERE md.ACTION_RMS = 'Add'
@@ -158,7 +172,7 @@ BEGIN
 									and md.SCV_ID > 0;
 		
 		-- Insert into mapping table
-		INSERT INTO #lt_entity_mappingss (SELECT * FROM :lt_accept_scv_ids_detail);
+		INSERT INTO #lt_entity_mapping (SELECT * FROM :lt_accept_scv_ids_detail);
 		
 		lt_auto_scv_ids_detail =	SELECT 'ACCEPT', md.SCV_ID, s.ENTITY_ID, md.MATCH_ROW_ID 
 									FROM "osr.scv.foundation.db.data::MatchResults.MatchResultsShadow" s
@@ -169,7 +183,7 @@ BEGIN
 									WHERE (a.Action = 'Auto-Promotion') AND md.SCV_ID > 0 
 									ORDER BY s.ENTITY_ID ASC, s.SOURCE_SYSTEM ASC, s.SYSTEM_ID ASC, s."Match_ROW_ID" ASC;	
 					
-		INSERT INTO #lt_entity_mappingss (SELECT * FROM :lt_auto_scv_ids_detail);
+		INSERT INTO #lt_entity_mapping (SELECT * FROM :lt_auto_scv_ids_detail);
 		
 	END;
 	
@@ -200,7 +214,7 @@ BEGIN
 								ORDER BY a.ENTITY_ID
 							) mr
 							-- Add SCV ID
-							INNER JOIN (SELECT SCV_ID, ENTITY_ID AS ENTITY_ID1, MATCH_ROW_ID FROM #lt_entity_mappingss) ma
+							INNER JOIN (SELECT SCV_ID, ENTITY_ID AS ENTITY_ID1, MATCH_ROW_ID FROM #lt_entity_mapping) ma
 							ON mr.ENTITY_ID = ma.ENTITY_ID1 AND mr."Match_ROW_ID" = ma.MATCH_ROW_ID 
 							-- Only adds a new record if it does not exist in the SCV group
 							WHERE mr.CHECKSUM NOT IN (SELECT "CHECKSUM"
@@ -215,7 +229,7 @@ BEGIN
 							STD_CHECKSUM
 						 ;
 						 
-	INSERT INTO "osr.scv.foundation.db.data::SCVFoundation.PersonRms" (SELECT SCV_ID, SOURCE_SYSTEM, SYSTEM_ID, VALID_FROM, VALID_TO,Z_RUN_SEQ_ID, SCV_NAME_LAST, SCV_NAME_MIDDLE, SCV_NAME_FIRST, BIRTH_DATE, DEATH_DATE, CHECKSUM, STD_PERSON_GN, STD_PERSON_GN2, STD_PERSON_FN, STD_CHECKSUM, XBLCK--XDELE 
+	INSERT INTO "osr.scv.foundation.db.data::SCVFoundation.PersonRms" (SELECT SCV_ID, SOURCE_SYSTEM, SYSTEM_ID, VALID_FROM, VALID_TO,Z_RUN_SEQ_ID, SCV_NAME_LAST, SCV_NAME_MIDDLE, SCV_NAME_FIRST, BIRTH_DATE, DEATH_DATE, CHECKSUM, STD_PERSON_GN, STD_PERSON_GN2, STD_PERSON_FN, STD_CHECKSUM, XBLCK, :l_load_id--XDELE 
 	FROM :lt_person_entities_rms);
 
 	lt_person_entities_rms_update = 
@@ -242,7 +256,7 @@ BEGIN
 								ORDER BY a.ENTITY_ID
 							) mr
 							-- Add SCV ID
-							INNER JOIN (SELECT SCV_ID, ENTITY_ID AS ENTITY_ID1, MATCH_ROW_ID FROM #lt_entity_mappingss) ma
+							INNER JOIN (SELECT SCV_ID, ENTITY_ID AS ENTITY_ID1, MATCH_ROW_ID FROM #lt_entity_mapping) ma
 							ON mr.ENTITY_ID = ma.ENTITY_ID1 AND mr."Match_ROW_ID" = ma.MATCH_ROW_ID 
 							) 
 							GROUP BY
@@ -324,14 +338,14 @@ BEGIN
 							
 								
 									-- Add SCV ID
-									INNER JOIN #lt_entity_mappingss ma
+									INNER JOIN #lt_entity_mapping ma
 									ON mr.ENTITY_ID = ma.ENTITY_ID AND mr.MATCH_ROW_ID  = ma.MATCH_ROW_ID
 									WHERE mr.CHECKSUM NOT IN (SELECT "CHECKSUM"
 															FROM "osr.scv.foundation.db.data::SCVFoundation.PersonTmr"
 															WHERE SCV_ID = ma.SCV_ID)
 								 ;
 
-INSERT INTO "osr.scv.foundation.db.data::SCVFoundation.PersonTmr" (SELECT SCV_ID, SOURCE_SYSTEM, SYSTEM_ID, UPDATED_FROM, UPDATED_TO ,Z_RUN_SEQ_ID, UPDATED_AT, SCV_NAME_LAST, SCV_NAME_MIDDLE, SCV_NAME_FIRST, BIRTH_DATE, DEATH_DATE, CHECKSUM, STD_PERSON_GN, STD_PERSON_GN2, STD_PERSON_FN, STD_CHECKSUM FROM :lt_person_entities_tmr
+INSERT INTO "osr.scv.foundation.db.data::SCVFoundation.PersonTmr" (SELECT SCV_ID, SOURCE_SYSTEM, SYSTEM_ID, UPDATED_FROM, UPDATED_TO ,Z_RUN_SEQ_ID, UPDATED_AT, SCV_NAME_LAST, SCV_NAME_MIDDLE, SCV_NAME_FIRST, BIRTH_DATE, DEATH_DATE, CHECKSUM, STD_PERSON_GN, STD_PERSON_GN2, STD_PERSON_FN, STD_CHECKSUM, :l_load_id FROM :lt_person_entities_tmr
 	GROUP BY Z_RUN_SEQ_ID, SCV_ID, SOURCE_SYSTEM, SYSTEM_ID, UPDATED_FROM ,UPDATED_TO ,UPDATED_AT, SCV_NAME_LAST, SCV_NAME_MIDDLE, SCV_NAME_FIRST, BIRTH_DATE, DEATH_DATE, CHECKSUM, STD_PERSON_GN, STD_PERSON_GN2, STD_PERSON_FN, STD_CHECKSUM);						 
 
 
@@ -453,7 +467,7 @@ lt_person_entities_date_tmr =
 								--	WHERE a.SOURCE_SYSTEM = 'RMS'
 								) mr
 							-- Add SCV ID
-							INNER JOIN (SELECT SCV_ID, ENTITY_ID AS ENTITY_ID1, MATCH_ROW_ID FROM #lt_entity_mappingss) ma
+							INNER JOIN (SELECT SCV_ID, ENTITY_ID AS ENTITY_ID1, MATCH_ROW_ID FROM #lt_entity_mapping) ma
 							ON mr.ENTITY_ID = ma.ENTITY_ID1 AND mr."Match_ROW_ID" = ma.MATCH_ROW_ID
 							WHERE mr.CHECKSUM NOT IN (SELECT "CHECKSUM"
 															FROM "osr.scv.foundation.db.data::SCVFoundation.AddressRms"
@@ -471,7 +485,7 @@ lt_person_entities_date_tmr =
 	INSERT INTO "osr.scv.foundation.db.data::SCVFoundation.AddressRms" (
 																		SELECT  SCV_ID, SOURCE_SYSTEM, SYSTEM_ID, ADDRNUMBER, ADR_KIND, VALID_FROM, VALID_TO, ADDRESS_RMS_ID, CITY1, POST_CODE1, STREET, HOUSE_NUM1, COUNTRY, REGION, PERS_ADDR, MC_CITY1, MC_STREET, TIME_ZONE, ADRC_UUID, CHECKSUM, 
 																		        STD_ADDR_COUNTRY_2CHAR, STD_ADDR_COUNTRY_NAME, STD_ADDR_BUILDING_NAME, STD_ADDR_ADDRESS_DELIVERY, STD_ADDR_PRIM_ADDRESS, STD_ADDR_PRIM_NAME_FULL, STD_ADDR_PRIM_NAME, STD_ADDR_PRIM_TYPE, 
-																		        STD_ADDR_PRIM_NUMBER, STD_ADDR_LOCALITY, STD_ADDR_REGION, STD_ADDR_POSTCODE1, ADDR_LATITUDE, ADDR_LONGITUDE, STD_CHECKSUM
+																		        STD_ADDR_PRIM_NUMBER, STD_ADDR_LOCALITY, STD_ADDR_REGION, STD_ADDR_POSTCODE1, ADDR_LATITUDE, ADDR_LONGITUDE, STD_CHECKSUM, :l_load_id
 																		FROM :lt_address_entities_rms
 																	  )
 	;	
@@ -581,7 +595,7 @@ lt_person_entities_date_tmr =
 									ON zdate."Z_RUN_SEQ_ID" = ms."Cleanse_ROW_ID_TMR" 
 							) mr
 									-- Add SCV ID
-									INNER JOIN #lt_entity_mappingss ma
+									INNER JOIN #lt_entity_mapping ma
 									ON mr.ENTITY_ID = ma.ENTITY_ID AND mr.MATCH_ROW_ID  = ma.MATCH_ROW_ID
 									-- Only adds a new record if it does not exist in the SCV group
 									WHERE mr.CHECKSUM NOT IN (SELECT "CHECKSUM"
@@ -592,7 +606,7 @@ lt_person_entities_date_tmr =
 	 	INSERT INTO "osr.scv.foundation.db.data::SCVFoundation.AddressTmr" (SELECT SCV_ID, SOURCE_SYSTEM, SYSTEM_ID, '', UPDATED_FROM, UPDATED_TO, Z_RUN_SEQ_ID, FLOOR, UNIT, BUILDING_NAME, STREET_NO, STREET_NAME, STREET_TYPE , STREET_SUFFIX, SUBURB, POSTCODE, STATE, COUNTRY, '','','','', CHECKSUM,
                                                    STD_ADDR_COUNTRY_2CHAR, STD_ADDR_COUNTRY_NAME, STD_ADDR_BUILDING_NAME, STD_ADDR_ADDRESS_DELIVERY, STD_ADDR_PRIM_ADDRESS, STD_ADDR_PRIM_NAME_FULL,
 				                                   STD_ADDR_PRIM_NAME, STD_ADDR_PRIM_TYPE, STD_ADDR_PRIM_NUMBER, STD_ADDR_LOCALITY, STD_ADDR_REGION, STD_ADDR_POSTCODE1,
-				                                   ADDR_LATITUDE, ADDR_LONGITUDE, STD_CHECKSUM, UPDATED_AT
+				                                   ADDR_LATITUDE, ADDR_LONGITUDE, STD_CHECKSUM, UPDATED_AT, :l_load_id
 											FROM :lt_address_entities_tmr
 											GROUP BY Z_RUN_SEQ_ID,SCV_ID, SOURCE_SYSTEM, SYSTEM_ID, '', UPDATED_FROM, UPDATED_TO, FLOOR, UNIT, BUILDING_NAME, STREET_NO, STREET_NAME, STREET_TYPE , STREET_SUFFIX, SUBURB, POSTCODE, STATE, COUNTRY, '','','','', CHECKSUM,
                                                    STD_ADDR_COUNTRY_2CHAR, STD_ADDR_COUNTRY_NAME, STD_ADDR_BUILDING_NAME, STD_ADDR_ADDRESS_DELIVERY, STD_ADDR_PRIM_ADDRESS, STD_ADDR_PRIM_NAME_FULL,
@@ -746,7 +760,7 @@ lt_address_entities_date_tmr =
 									) u
 								) mr
 								-- Add SCV ID
-								INNER JOIN (SELECT SCV_ID, ENTITY_ID AS ENTITY_ID1, MATCH_ROW_ID FROM #lt_entity_mappingss) ma
+								INNER JOIN (SELECT SCV_ID, ENTITY_ID AS ENTITY_ID1, MATCH_ROW_ID FROM #lt_entity_mapping) ma
 								ON mr.ENTITY_ID = ma.ENTITY_ID1 AND mr."Match_ROW_ID" = ma.MATCH_ROW_ID
 								-- Only adds a new record if it does not exist in the SCV group
 									WHERE mr.CHECKSUM NOT IN (SELECT "CHECKSUM"
@@ -758,7 +772,7 @@ lt_address_entities_date_tmr =
 									       CHECKSUM
 							 ;
 	
-	INSERT INTO "osr.scv.foundation.db.data::SCVFoundation.ContactNumber" (SELECT SCV_ID, SOURCE_SYSTEM, SYSTEM_ID, VALID_FROM, VALID_TO, CONTACT_ID, CONTACT_NUMBER, NUMBER_EXT, NUMBER_TYPE, '', CHECKSUM, ''
+	INSERT INTO "osr.scv.foundation.db.data::SCVFoundation.ContactNumber" (SELECT SCV_ID, SOURCE_SYSTEM, SYSTEM_ID, VALID_FROM, VALID_TO, CONTACT_ID, CONTACT_NUMBER, NUMBER_EXT, NUMBER_TYPE, '', CHECKSUM, '', :l_load_id
 																		   FROM :lt_contact_entities_rms_number
 																		   );						 
 	
@@ -797,7 +811,7 @@ lt_address_entities_date_tmr =
 								ON CASE WHEN (LOCATE(mr."Cleanse_ROW_ID_TMR",'|') < 1) THEN mr."Cleanse_ROW_ID_TMR" ELSE SUBSTRING(mr."Cleanse_ROW_ID_TMR",1,LOCATE(mr."Cleanse_ROW_ID_TMR",'|')-1) END  = md."Z_RUN_SEQ_ID"			
 							) mr
 							-- Add SCV ID
-							INNER JOIN (SELECT SCV_ID, ENTITY_ID AS ENTITY_ID1, MATCH_ROW_ID FROM #lt_entity_mappingss) ma
+							INNER JOIN (SELECT SCV_ID, ENTITY_ID AS ENTITY_ID1, MATCH_ROW_ID FROM #lt_entity_mapping) ma
 							ON mr.ENTITY_ID = ma.ENTITY_ID1 AND mr."Match_ROW_ID" = ma.MATCH_ROW_ID
 							-- Only adds a new record if it does not exist in the SCV group
 							WHERE mr.CHECKSUM NOT IN (SELECT "CHECKSUM"
@@ -826,7 +840,7 @@ lt_address_entities_date_tmr =
 												WHERE SOURCE_SYSTEM = 'TMR' and LENGTH (b.SMS_CONTACT_NUMBER) >= 8
 											) mr	
 											-- Add SCV ID
-											INNER JOIN (SELECT SCV_ID, ENTITY_ID AS ENTITY_ID1, MATCH_ROW_ID FROM #lt_entity_mappingss) ma
+											INNER JOIN (SELECT SCV_ID, ENTITY_ID AS ENTITY_ID1, MATCH_ROW_ID FROM #lt_entity_mapping) ma
 											ON mr.ENTITY_ID = ma.ENTITY_ID1 AND mr."Match_ROW_ID" = ma.MATCH_ROW_ID
 											-- Only adds a new record if it does not exist in the SCV group
 											WHERE mr.CHECKSUM NOT IN (SELECT "CHECKSUM"
@@ -840,7 +854,7 @@ lt_address_entities_date_tmr =
 	
 	
 	INSERT INTO "osr.scv.foundation.db.data::SCVFoundation.ContactNumber" (
-																			SELECT SCV_ID, SOURCE_SYSTEM, SYSTEM_ID, '', '',CONTACT_ID, CONTACT_PHONE_NO, '', NUMBER_TYPE, DESC, CHECKSUM, UPDATED_AT 
+																			SELECT SCV_ID, SOURCE_SYSTEM, SYSTEM_ID, '', '',CONTACT_ID, CONTACT_PHONE_NO, '', NUMBER_TYPE, DESC, CHECKSUM, UPDATED_AT, :l_load_id 
 																			FROM (
 																				SELECT DISTINCT CONTACT_ID, SCV_ID, SOURCE_SYSTEM, SYSTEM_ID, UPDATED_AT, CONTACT_PHONE_NO, '',NUMBER_TYPE,  '' as DESC, CHECKSUM
 																				FROM :lt_contact_entities_tmr_custMain_number
@@ -867,7 +881,7 @@ lt_address_entities_date_tmr =
 												WHERE SOURCE_SYSTEM = 'TMR' and LENGTH(b.EMAIL_ADDRESS) > 5
 											) mr	
 											-- Add SCV ID
-											INNER JOIN (SELECT SCV_ID, ENTITY_ID AS ENTITY_ID1, MATCH_ROW_ID FROM #lt_entity_mappingss) ma
+											INNER JOIN (SELECT SCV_ID, ENTITY_ID AS ENTITY_ID1, MATCH_ROW_ID FROM #lt_entity_mapping) ma
 											ON mr.ENTITY_ID = ma.ENTITY_ID1 AND mr."Match_ROW_ID" = ma.MATCH_ROW_ID
 											-- Only adds a new record if it does not exist in the SCV group
 											WHERE mr.CHECKSUM NOT IN (SELECT "CHECKSUM"
@@ -878,15 +892,25 @@ lt_address_entities_date_tmr =
 	;
 						 
 	INSERT INTO "osr.scv.foundation.db.data::SCVFoundation.ContactEmail" (
-																		  SELECT SCV_ID, SOURCE_SYSTEM, SYSTEM_ID, '', '', CONTACT_EMAIL_ID, EMAIL_ADDRESS, '', 'TMR: Customer main table', CHECKSUM, STD_EMAIL, STD_CHECKSUM, UPDATED_AT
+																		  SELECT SCV_ID, SOURCE_SYSTEM, SYSTEM_ID, '', '', CONTACT_EMAIL_ID, EMAIL_ADDRESS, '', 'TMR: Customer main table', CHECKSUM, STD_EMAIL, STD_CHECKSUM, UPDATED_AT, :l_load_id
 																		  FROM :lt_contact_entities_tmr_custContact_email
 																		  GROUP BY CONTACT_EMAIL_ID, SCV_ID, SOURCE_SYSTEM, SYSTEM_ID,'','', EMAIL_ADDRESS, '', 'TMR: Customer main table', CHECKSUM, STD_EMAIL, STD_CHECKSUM, UPDATED_AT
 																		 )
-	;		
+	;
 	
+	lt_entity_mapping = SELECT * FROM #lt_entity_mapping;
+	
+	/*
+		TODO: Curtis to provide table for SCV load details
+			- Number of SCV IDs created (new records for non-existing SCV IDs)
+			- Number of SCV IDs updated (new records for existing SCV IDs)
+	*/
+	
+	-- ### Write statistics ######################################################################################################
+	CALL "osr.scv.foundation.db.Procedures::SP_WriteScvLoadStatistics"(:l_load_id, :l_num_scv_created, :l_num_scv_created, :lt_entity_mapping);
 	
 	-- ### Clean-up ##############################################################################################################
-	DROP TABLE #lt_entity_mappingss;
+	DROP TABLE #lt_entity_mapping;
 	DROP TABLE #lt_scv_counters;
 	
 	-- o_return_code := 'SUCCESS';
