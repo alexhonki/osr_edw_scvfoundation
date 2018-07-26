@@ -1,0 +1,26 @@
+PROCEDURE "osr.scv.foundation.db.Procedures::SP_TransformMatchAssessments" ( )
+	LANGUAGE SQLSCRIPT
+	SQL SECURITY INVOKER
+    --DEFAULT SCHEMA <default_schema_name>
+   AS
+BEGIN
+	/*************************************
+		Transforms match assessments to reflect new structure
+	*************************************/
+   
+	lt_before = SELECT * FROM "osr.scv.foundation.db.data::MatchResultsReview.Assessments";
+	
+	lt_after = 
+		SELECT a.*, TO_INTEGER(a.ENTITY_ID) AS GROUP_ID, b."Match_ROW_ID" AS MATCH_ROW FROM :lt_before a
+		LEFT OUTER JOIN "osr.scv.foundation.db.data::MatchResults.MatchResults" b
+		ON a.GROUP_ID = b.GROUP_ID;
+	
+	INSERT INTO "osr.scv.foundation.db.data::MatchResultsReview.Assessments" 
+	(
+		SELECT ENTITY_ID, "TIMESTAMP", MATCH_ROW, STRATEGY, ACTION, CODE, COMMENT, "USER" FROM :lt_after
+	);
+	
+	-- Remove old records
+	DELETE FROM "osr.scv.foundation.db.data::MatchResultsReview.Assessments"  WHERE MATCH_ROW IS NULL;
+	
+END
