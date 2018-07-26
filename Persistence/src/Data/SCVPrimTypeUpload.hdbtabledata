@@ -1,0 +1,20 @@
+{
+    "format_version": 1,
+    "imports": [
+        {
+            "target_table": "osr.scv.foundation.db.data::SCVPrimType.AddrType",
+            "source_data": {
+                "data_type": "CSV",
+                "file_name": "osr.scv.foundation.db.data::SCVPrimAddrType.csv",
+                "has_header": true
+            },
+            "import_settings": {
+                "import_columns": [
+                    "ADDR_IDX",
+                    "ADDR_TYPE",
+					"STD_ADDR_PRIM_TYPE"
+                ]
+            }
+        }
+    ]
+}
