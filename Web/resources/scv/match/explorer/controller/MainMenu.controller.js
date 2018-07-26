@@ -156,6 +156,9 @@ sap.ui.define([
 
 			//determine whether we are going to 
 			let oFlag = oController._determineSearchAction(oPayload.sQuery);
+			
+			//reset the model so that its clean and less load.
+			oController.getModel("searchResult").setData({}, false);
 
 			//add result from oFlag
 			if (typeof oFlag !== "undefined") {
