@@ -42,8 +42,15 @@ BEGIN
 	INSERT INTO "osr.scv.foundation.db.data::MatchResults.MatchResultsShadow"
 	(
 		SELECT m.* FROM "osr.scv.foundation.db.data::MatchResults.MatchResults" m
-		INNER JOIN (SELECT * FROM :lt_entities) r
+		INNER JOIN (
+					SELECT * FROM :lt_entities
+				   ) r
 		ON m.ENTITY_ID = r.ENTITY_ID
+		INNER JOIN (
+					SELECT * FROM "osr.scv.foundation.db.data::MatchResults.MatchDelta"
+				   ) d
+		ON m."Match_ROW_ID" = d.MATCH_ROW_ID
+		WHERE d.ACTION = 'Add'
 	);
 	
 	-- TODO: Remove comments to activate deletion of moved records from match results and match review table
