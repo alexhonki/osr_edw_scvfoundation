@@ -33,7 +33,7 @@ BEGIN
 		-- o_message:=  'ERROR: ' || ::SQL_ERROR_CODE || ' ' || ::SQL_ERROR_MESSAGE;
 	END;
 
-	-- Move match groups with strategies Identical, Business Rule Accept and Accept into the shadow table
+	-- Move match groups with strategies Identical, System Accept and Promote into the shadow table
 	lt_entities = 
 		SELECT ENTITY_ID, STRATEGY_RESOLVED, ACTION_RESOLVED 
 		FROM "osr.scv.foundation.db.data::MatchResultsReview.Review"
