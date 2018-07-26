@@ -127,7 +127,7 @@
 											<t:Column id="navigation" width="3rem">
 												<Label text=""/>
 												<t:template>
-													<Button icon="sap-icon://target-group" press="onPress2"/>
+													<Button icon="sap-icon://target-group" press="onPress2" tooltip="Show Matches for Row {MATCH_ROW}" />
 												</t:template>
 											</t:Column>
 										</t:columns>
