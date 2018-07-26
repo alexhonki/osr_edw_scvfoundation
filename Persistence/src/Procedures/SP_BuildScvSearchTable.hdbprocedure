@@ -8,6 +8,13 @@ BEGIN
 	Fill the index table for fuzzy text search
 	*************************************/
    
+   	-- Truncate the AddrType 
+ -- TRUNCATE TABLE "osr.scv.foundation.db.data::SCVPrimType.AddrType";
+   
+   -- Import Prim Address Type Mapping data into AddrType Table
+   --EXEC 'IMPORT FROM 
+   --"osr.scv.foundation.db.data::SCVPrimAddrType.csv" INTO "osr.scv.foundation.db.data::SCVPrimType.AddrType" WITH RECORD DELIMITED BY '\n' FIELD DELIMITED BY ','COLUMN LIST ("ADDR_IDX", "ADDR_TYPE", "STD_ADDR_PRIM_TYPE")";
+   
 	-- Replace with delta mechanism instead of deleting whole table
 	TRUNCATE TABLE "osr.scv.foundation.db.data::SCVFoundation.Search";
 	
