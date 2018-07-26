@@ -131,7 +131,7 @@
 									<t:Column id="navigation" width="3rem">
 										<Label text=""/>
 										<t:template>
-											<Button icon="sap-icon://feeder-arrow" press="onPress"/>
+											<Button icon="sap-icon://feeder-arrow" press="onPress" tooltip="Show Group Details"/> 
 										</t:template>
 									</t:Column>
 								</t:columns>
