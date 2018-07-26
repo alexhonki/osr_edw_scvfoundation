@@ -4,8 +4,8 @@
 <localVariables/>
 <variableMappings/>
 <dataSources>
-  <DataSource id="osr.scv.foundation.db.synonyms::BUT000">
-    <resourceUri>osr.scv.foundation.db.synonyms::BUT000</resourceUri>
+  <DataSource id="osr.scv.foundation.db.functions::BUT000Aggregation" type="TABLE_FUNCTION">
+    <resourceUri>osr.scv.foundation.db.functions::BUT000Aggregation</resourceUri>
   </DataSource>
   <DataSource id="osr.scv.foundation.db.synonyms::BUT021_FS">
     <resourceUri>osr.scv.foundation.db.synonyms::BUT021_FS</resourceUri>
@@ -142,7 +142,7 @@
       </calculatedViewAttribute>
     </calculatedViewAttributes>
     <restrictedViewAttributes/>
-    <input node="osr.scv.foundation.db.synonyms::BUT000">
+    <input node="osr.scv.foundation.db.functions::BUT000Aggregation">
       <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="TYPE" source="TYPE"/>
@@ -2434,7 +2434,7 @@
     </shape>
     <shape modelObjectName="P_BusinessPartners" modelObjectNameSpace="J_BPsWithTimeDependendAddresses" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="20" y="30"/>
-      <rectangleSize width="263"/>
+      <rectangleSize width="263.4501953125"/>
     </shape>
     <shape modelObjectName="P_TimedependendAddressUsage" modelObjectNameSpace="J_BPsWithTimeDependendAddresses" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="320" y="30"/>
