@@ -67,7 +67,7 @@ BEGIN
 		(
 	       SELECT * FROM :LT_STD_ADDR_PRIM_TYPE
 		) T2 
-		on  T2."ADDR_TYPE" = T1."STD_ADDR_PRIM_TYPE" 
+		on  T2."STD_ADDR_PRIM_TYPE_1" = T1."STD_ADDR_PRIM_TYPE" 
 	)
    )
 );
@@ -107,7 +107,7 @@ BEGIN
 		(
          SELECT * FROM :LT_STD_ADDR_PRIM_TYPE
 		) T2 
-		on  T2."ADDR_TYPE" = T1."STD_ADDR_PRIM_TYPE" 
+		on  T2."STD_ADDR_PRIM_TYPE_1" = T1."STD_ADDR_PRIM_TYPE" 
 	)
    )
 	);
