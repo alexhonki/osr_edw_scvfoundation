@@ -25,7 +25,7 @@ BEGIN
 	DECLARE l_load_id int;
 	DECLARE l_num_scv_created int default 0;
 	DECLARE l_num_scv_updated int default 0;
-	
+
 	-- Declare exception hander for all SQL exceptions. 
 	DECLARE EXIT HANDLER FOR SQLEXCEPTION
 	BEGIN
@@ -907,6 +907,7 @@ lt_address_entities_date_tmr =
 	*/
 	
 	-- ### Write statistics ######################################################################################################
+
 	CALL "osr.scv.foundation.db.Procedures::SP_WriteScvLoadStatistics"(:l_load_id, :l_num_scv_created, :l_num_scv_created, :lt_entity_mapping);
 	
 	-- ### Clean-up ##############################################################################################################
