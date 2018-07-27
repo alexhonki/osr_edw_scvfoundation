@@ -15,7 +15,7 @@ context SCVFoundation {
     entity LoadHistory {
         key SCV_LOAD_ID        : Integer not null;
             LOAD_DATE          : UTCTimestamp;
-            LOAD_USER          : String(64);
+            LOAD_USER          : String(256);
             DURATION           : Double;
             STATUS             : String(20);
             NO_SCV_IDS_CREATED : Integer;
