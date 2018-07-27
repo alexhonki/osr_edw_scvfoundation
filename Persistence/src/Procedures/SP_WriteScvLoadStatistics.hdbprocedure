@@ -3,6 +3,8 @@
 */
 PROCEDURE "osr.scv.foundation.db.Procedures::SP_WriteScvLoadStatistics" ( 
 	IN i_load_id INTEGER,
+	IN i_num_scv_created INTEGER DEFAULT 0,
+	IN i_num_scv_updated INTEGER DEFAULT 0,
 	IN i_t_entity_mapping TABLE ( SCV_ID_SEQ_CONTROL NVARCHAR(10),SCV_ID INTEGER,ENTITY_ID NVARCHAR(20),MATCH_ROW_ID INTEGER)
 )
 	LANGUAGE SQLSCRIPT
@@ -22,7 +24,8 @@ BEGIN
    
 	-- 1. SCV load history
 	INSERT INTO "osr.scv.foundation.db.data::SCVFoundation.LoadHistory" 
-	VALUES (:i_load_id, NOW(), CURRENT_USER, 1, 'OK', 0, 0);
+	VALUES (:i_load_id, NOW(), CURRENT_USER, 1, 'OK', :i_num_scv_created, :i_num_scv_updated);
+
 	
 	-- 2. Promotions history
 	INSERT INTO "osr.scv.foundation.db.data::MatchResultsReview.PromotionsHistory" 
