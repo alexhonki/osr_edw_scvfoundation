@@ -6,6 +6,18 @@
           {
               "names" : [ "admin" ]
           }
-      ]
+      ],
+      "object_privileges" : [
+      {
+          "name" : "osr.scv.foundation.db.Procedures::SP_MoveEntityToShadowTable",
+          "type" : "PROCEDURE",
+          "privileges" : [ "EXECUTE", "DEBUG" ]
+      },
+      {
+          "name" : "osr.scv.foundation.db.Procedures::SP_MoveRowsToScvFoundation",
+          "type" : "PROCEDURE",
+          "privileges" : [ "EXECUTE", "DEBUG" ]
+      }
+    ]
   }
 }
