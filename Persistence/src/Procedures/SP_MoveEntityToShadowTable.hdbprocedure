@@ -62,7 +62,7 @@ BEGIN
 	-- DELETE FROM "osr.scv.foundation.db.data::MatchResultsReview.Review" WHERE ENTITY_ID IN (SELECT ENTITY_ID FROM :lt_entities);
 	
 	-- Update statistics
-	INSERT INTO  "osr.scv.foundation.db.data::MatchResultsReview.Promotions" (SELECT e.ENTITY_ID, :i_timestamp, :i_user, e.STRATEGY_RESOLVED AS STRATEGY, e.ACTION_RESOLVED as ACTION  
+	INSERT INTO  "osr.scv.foundation.db.data::MatchResultsReview.Promotions" (SELECT e.ENTITY_ID, :i_timestamp, :i_user, e.ACTION_RESOLVED as ACTION, e.STRATEGY_RESOLVED AS STRATEGY  
 																			  FROM :lt_entities e
 																			  INNER JOIN (
 																							SELECT DISTINCT ENTITY_ID FROM "osr.scv.foundation.db.data::MatchResults.MatchResultsShadow"
