@@ -7,13 +7,27 @@ BEGIN
 	/**************************************
 	Fill the index table for fuzzy text search
 	*************************************/
-   
-   	-- Truncate the AddrType 
- -- TRUNCATE TABLE "osr.scv.foundation.db.data::SCVPrimType.AddrType";
-   
-   -- Import Prim Address Type Mapping data into AddrType Table
-   --EXEC 'IMPORT FROM 
-   --"osr.scv.foundation.db.data::SCVPrimAddrType.csv" INTO "osr.scv.foundation.db.data::SCVPrimType.AddrType" WITH RECORD DELIMITED BY '\n' FIELD DELIMITED BY ','COLUMN LIST ("ADDR_IDX", "ADDR_TYPE", "STD_ADDR_PRIM_TYPE")";
+ -- Build OF lookuptable for STD PRIM ADDR TYPE with unique mappings--
+ LT_STD_ADDR_PRIM_TYPE = select * from
+  (
+	 select "ADDR_TYPE","STD_ADDR_PRIM_TYPE_1",
+	        "ADDR_TYPE_LOWER",
+	        RANK() OVER (PARTITION BY "ADDR_TYPE_LOWER" ORDER BY "ADDR_TYPE" ASC) AS "RANK_ADDR_LOWER"
+	 from --"ADDR_TYPE",STD_ADDR_PRIM_TYPE_1 from
+	 (
+		SELECT
+			"ADDR_TYPE" as "ADDR_TYPE",
+			STD_ADDR_PRIM_TYPE as "STD_ADDR_PRIM_TYPE_1",
+			LOWER("STD_ADDR_PRIM_TYPE") as "ADDR_TYPE_LOWER"
+        FROM "osr.scv.foundation.db.data::SCVPrimType.AddrType"
+        UNION
+        SELECT
+			"STD_ADDR_PRIM_TYPE" as "ADDR_TYPE",
+			"ADDR_TYPE" as "STD_ADDR_PRIM_TYPE_1", 
+			LOWER("ADDR_TYPE") as "ADDR_TYPE_LOWER"
+        FROM "osr.scv.foundation.db.data::SCVPrimType.AddrType"
+	 ) 
+  ) where "RANK_ADDR_LOWER" = 1;
    
 	-- Replace with delta mechanism instead of deleting whole table
 	TRUNCATE TABLE "osr.scv.foundation.db.data::SCVFoundation.Search";
@@ -23,9 +37,7 @@ BEGIN
 	(
 	SELECT DISTINCT * FROM (
 	   select "SCV_ID","SOURCE","SOURCE_ID","SEARCH_STRING","SEARCH_STRING_CLEANSED","ADR_CHECKSUM","ADR_STD_CHECKSUM","SEARCH_STRING_LT12",
-	   CASE 
-	   WHEN "ADDR_TYPE" IS NULL THEN "SEARCH_STRING_CLEANSED_LT12" ELSE "SEARCH_STRING_CLEANSED_LT12" || '|' || "STD_ADDR_PRIM_NAME" || ' ' || "ADDR_TYPE" END 
-	   as "SEARCH_STRING_CLEANSED_LT12"
+	   CASE WHEN ("ADDR_TYPE" IS NULL) OR ("ADDR_TYPE" = "STD_ADDR_PRIM_TYPE")THEN "SEARCH_STRING_CLEANSED_LT12" ELSE "SEARCH_STRING_CLEANSED_LT12" || '|' || "STD_ADDR_PRIM_NAME" || ' ' || "ADDR_TYPE" END as "SEARCH_STRING_CLEANSED_LT12"
 	   from 
 	   (
 		(
@@ -53,13 +65,7 @@ BEGIN
 		) T1  
 		left outer join
 		(
-		SELECT
-			"ADDR_TYPE" as "ADDR_TYPE" 
-        FROM "osr.scv.foundation.db.data::SCVPrimType.AddrType" 
-        UNION ALL  
-        SELECT
-			"STD_ADDR_PRIM_TYPE" as "ADDR_TYPE"
-        FROM "osr.scv.foundation.db.data::SCVPrimType.AddrType"
+	       SELECT * FROM :LT_STD_ADDR_PRIM_TYPE
 		) T2 
 		on  T2."ADDR_TYPE" = T1."STD_ADDR_PRIM_TYPE" 
 	)
@@ -71,9 +77,7 @@ BEGIN
 	(
 	SELECT DISTINCT * FROM (
 	   select "SCV_ID","SOURCE","SOURCE_ID","SEARCH_STRING","SEARCH_STRING_CLEANSED","ADR_CHECKSUM","ADR_STD_CHECKSUM","SEARCH_STRING_LT12",
-	   CASE 
-	   WHEN "ADDR_TYPE" IS NULL THEN "SEARCH_STRING_CLEANSED_LT12" ELSE "SEARCH_STRING_CLEANSED_LT12" || '|' || "STD_ADDR_PRIM_NAME" || ' ' || "ADDR_TYPE" END 
-	   as "SEARCH_STRING_CLEANSED_LT12"
+	   CASE WHEN ("ADDR_TYPE" IS NULL) OR ("ADDR_TYPE" = "STD_ADDR_PRIM_TYPE") THEN "SEARCH_STRING_CLEANSED_LT12" ELSE "SEARCH_STRING_CLEANSED_LT12" || '|' || "STD_ADDR_PRIM_NAME" || ' ' || "ADDR_TYPE" END 
 	   from 
 	   (
 		(
@@ -101,13 +105,7 @@ BEGIN
 		) T1  
 		left outer join
 		(
-		SELECT
-			"ADDR_TYPE" as "ADDR_TYPE" 
-        FROM "osr.scv.foundation.db.data::SCVPrimType.AddrType" 
-        UNION ALL  
-        SELECT
-			"STD_ADDR_PRIM_TYPE" as "ADDR_TYPE"
-        FROM "osr.scv.foundation.db.data::SCVPrimType.AddrType"
+         SELECT * FROM :LT_STD_ADDR_PRIM_TYPE
 		) T2 
 		on  T2."ADDR_TYPE" = T1."STD_ADDR_PRIM_TYPE" 
 	)
