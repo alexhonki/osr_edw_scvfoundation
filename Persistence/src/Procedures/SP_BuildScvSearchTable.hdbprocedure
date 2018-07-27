@@ -86,6 +86,7 @@ BEGIN
 			a.SOURCE_ID as "SOURCE_ID", 
 			b.STD_ADDR_PRIM_TYPE as "STD_ADDR_PRIM_TYPE",
 			b.STD_ADDR_PRIM_NAME as "STD_ADDR_PRIM_NAME",
+			b.STREET_TYPE as "STREET_TYPE",
 			(a.FIRST_NAME || '|' || a.MIDDLE_NAME || '|' || a.LAST_NAME || '|' || a.BIRTH_DATE || '|' ||  b.SUBURB
 			|| '|' || b.POSTCODE || '|' || b.STREET_NAME || '|' || b.STREET_NO || '|' || b.STATE || '|' || b.COUNTRY
 			) as "SEARCH_STRING",
@@ -107,7 +108,7 @@ BEGIN
 		(
          SELECT * FROM :LT_STD_ADDR_PRIM_TYPE
 		) T2 
-		on  T2."STD_ADDR_PRIM_TYPE_1" = T1."STD_ADDR_PRIM_TYPE" 
+		on  T2."STD_ADDR_PRIM_TYPE_1" = T1."STREET_TYPE" 
 	)
    )
 	);
