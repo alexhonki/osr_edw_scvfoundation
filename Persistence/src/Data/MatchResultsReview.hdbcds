@@ -18,7 +18,30 @@ context MatchResultsReview {
         key ENTITY_ID : String(10);
             TIMESTAMP : UTCTimestamp;
             USER      : String(200);
+            STRATEGY  : String(20);
             ACTION    : String(20);
+    };
+
+    /*@@layout{"layoutInfo":{}}*/
+    entity AssessmentsHistory {
+        key SCV_LOAD_ID : Integer;
+        key ENTITY_ID   : String(10);
+        key TIMESTAMP   : UTCTimestamp;
+        key MATCH_ROW   : Integer default 0;
+            STRATEGY    : String(10);
+            ACTION      : String(20);
+            CODE        : String(60);
+            COMMENT     : String(512);
+            USER        : String(200);
+    };
+
+    entity PromotionsHistory {
+        key SCV_LOAD_ID : Integer;
+        key ENTITY_ID   : String(10);
+            TIMESTAMP   : UTCTimestamp;
+            USER        : String(200);
+            STRATEGY    : String(20);
+            ACTION      : String(20);
     };
 
     entity Review {
@@ -90,7 +113,7 @@ context MatchResultsReview {
         STRING_VALUE : String(50);
     };
 
-    /*@@layout{"layoutInfo":{"x":-566,"y":-20.5}}*/
+    /*@@layout{"layoutInfo":{"x":-737,"y":-69.5}}*/
     entity AssessmentTexts {
         key CODE        : String(60);
             DESCRIPTION : String(256);

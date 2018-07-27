@@ -46,6 +46,7 @@ BEGIN
 					SELECT * FROM :lt_entities
 				   ) r
 		ON m.ENTITY_ID = r.ENTITY_ID
+		-- Only move the entities that have changed
 		INNER JOIN (
 					SELECT DISTINCT * FROM "osr.scv.foundation.db.data::MatchResults.MatchDelta"
 				   ) d
@@ -61,7 +62,13 @@ BEGIN
 	-- DELETE FROM "osr.scv.foundation.db.data::MatchResultsReview.Review" WHERE ENTITY_ID IN (SELECT ENTITY_ID FROM :lt_entities);
 	
 	-- Update statistics
-	INSERT INTO  "osr.scv.foundation.db.data::MatchResultsReview.Promotions" (SELECT ENTITY_ID, :i_timestamp, :i_user, ACTION_RESOLVED as ACTION  FROM :lt_entities);
+	INSERT INTO  "osr.scv.foundation.db.data::MatchResultsReview.Promotions" (SELECT e.ENTITY_ID, :i_timestamp, :i_user, e.STRATEGY_RESOLVED AS STRATEGY, e.ACTION_RESOLVED as ACTION  
+																			  FROM :lt_entities e
+																			  INNER JOIN (
+																							SELECT DISTINCT ENTITY_ID FROM "osr.scv.foundation.db.data::MatchResults.MatchResultsShadow"
+																					     ) d
+		ON e.ENTITY_ID = d.ENTITY_ID
+																			  );
 	
 	-- o_return_code := 'SUCCESS';
 	-- o_message := 'Entites moved successfully';
