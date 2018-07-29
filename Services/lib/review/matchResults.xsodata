@@ -20,7 +20,7 @@ service {
     
     // Service to list match results for an entity
     "osr.scv.foundation.db.views::MatchResults" as "matchResults"
-    keys ("ENTITY_ID", "MATCH_ROW_STR")
+    keys ("GROUP_ROW_COUNT", "ENTITY_ID", "MATCH_ROW_STR")
     navigates ("avpRelatedMatchesScores" as "matchResultsDetailsRelated")
     parameters via key and entity;
     

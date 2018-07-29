@@ -23,7 +23,7 @@ BEGIN
 		
 		
 		lt_entities_to_promote = 
-		SELECT MATCH_PERSON_FN_FC_SORT, MATCH_PERSON_FN_FC, STRATEGY, COUNT(*) AS COUNTER FROM (						
+		SELECT MATCH_PERSON_FN_FC_SORT, MATCH_PERSON_FN_FC, STRATEGY_RESOLVED AS STRATEGY, COUNT(*) AS COUNTER FROM (						
 						
 						SELECT 
 		            	a.GROUP_ID,
@@ -31,15 +31,16 @@ BEGIN
 		            	a.SOURCE_SYSTEM,
 		            	CASE WHEN (SUBSTRING (COALESCE(e.NAME_LAST, f.FAMILY_ORG_NAME),1,1)) LIKE_REGEXPR '[A-Z]' THEN (SUBSTRING (COALESCE(e.NAME_LAST, f.FAMILY_ORG_NAME),1,1)) ELSE 'Other' END AS MATCH_PERSON_FN_FC,
 		            	CASE WHEN (SUBSTRING (COALESCE(e.NAME_LAST, f.FAMILY_ORG_NAME),1,1)) LIKE_REGEXPR '[A-Z]' THEN (SUBSTRING (COALESCE(e.NAME_LAST, f.FAMILY_ORG_NAME),1,1)) ELSE 'ZZ' END AS MATCH_PERSON_FN_FC_SORT,
-		            	COALESCE (a1.STRATEGY,CASE WHEN a1.STRATEGY IS NULL AND (GROUP_CATEGORY = 0 OR GROUP_CATEGORY = 1) THEN 'Promote' ELSE 'Review' END) AS STRATEGY
-		                FROM   "osr.scv.foundation.db.data::MatchResults.MatchResults" AS a 
+		            	a1.STRATEGY_RESOLVED
+		                FROM  "osr.scv.foundation.db.data::MatchResults.MatchResults" AS a 
 		                LEFT OUTER JOIN ( SELECT NAME_LAST, "Cleanse_TABLE_ID", "Z_RUN_SEQ_ID", "PARTNER" FROM "osr.scv.foundation.db.synonyms::BUT000") as e
 		                ON a."Cleanse_ROW_ID_BUT" = e."Z_RUN_SEQ_ID" AND a."Cleanse_TABLE_ID_BUT" = e."Cleanse_TABLE_ID" AND a."SYSTEM_ID" = e."PARTNER" and a."SOURCE_SYSTEM" = 'RMS'
 		                LEFT OUTER JOIN ( SELECT FAMILY_ORG_NAME, "Cleanse_TABLE_ID", "Z_RUN_SEQ_ID", "CUSTOMER_REF" FROM "osr.scv.foundation.db.synonyms::TMR_CustMain") as f
 		                ON a."Cleanse_ROW_ID_TMR" = f."Z_RUN_SEQ_ID" AND a."Cleanse_TABLE_ID_TMR" = f."Cleanse_TABLE_ID" AND a."SYSTEM_ID" = f."CUSTOMER_REF" AND a."SOURCE_SYSTEM" = 'TMR'
-		                LEFT OUTER JOIN "osr.scv.foundation.db.data::MatchResultsReview.Assessments" a1
+		                LEFT OUTER JOIN "osr.scv.foundation.db.data::MatchResultsReview.Review" a1
 		                ON a.ENTITY_ID = a1.ENTITY_ID
 		                WHERE a.SHOW_IN_REVIEW = 'X' 
+		                	/*
 		                	AND RMS_DUPLICATES  >= :i_rms_duplicates
 							AND (
 									-- Unique records from RMS
@@ -48,11 +49,12 @@ BEGIN
 									-- Only match groups which contains at least one record from RMS
 									a.GROUP_ID IN (SELECT GROUP_ID FROM "osr.scv.foundation.db.data::MatchResults.MatchResults" WHERE GROUP_ID IS NOT NULL AND SOURCE_SYSTEM = 'RMS' GROUP BY GROUP_ID)	
 								)
-			) GROUP BY MATCH_PERSON_FN_FC_SORT , MATCH_PERSON_FN_FC, STRATEGY
-			HAVING STRATEGY = 'Promote';
+							*/	
+			) GROUP BY MATCH_PERSON_FN_FC_SORT , MATCH_PERSON_FN_FC, STRATEGY_RESOLVED
+			HAVING STRATEGY_RESOLVED = 'Promote';
 			
 			lt_entities_to_review = 
-			SELECT MATCH_PERSON_FN_FC_SORT, MATCH_PERSON_FN_FC, STRATEGY, COUNT(*) AS COUNTER FROM (						
+			SELECT MATCH_PERSON_FN_FC_SORT, MATCH_PERSON_FN_FC, STRATEGY_RESOLVED AS STRATEGY, COUNT(*) AS COUNTER FROM (						
 						
 						SELECT 
 		            	a.GROUP_ID,
@@ -60,15 +62,16 @@ BEGIN
 		            	a.SOURCE_SYSTEM,
 		            	CASE WHEN (SUBSTRING (COALESCE(e.NAME_LAST, f.FAMILY_ORG_NAME),1,1)) LIKE_REGEXPR '[A-Z]' THEN (SUBSTRING (COALESCE(e.NAME_LAST, f.FAMILY_ORG_NAME),1,1)) ELSE 'Other' END AS MATCH_PERSON_FN_FC,
 		            	CASE WHEN (SUBSTRING (COALESCE(e.NAME_LAST, f.FAMILY_ORG_NAME),1,1)) LIKE_REGEXPR '[A-Z]' THEN (SUBSTRING (COALESCE(e.NAME_LAST, f.FAMILY_ORG_NAME),1,1)) ELSE 'ZZ' END AS MATCH_PERSON_FN_FC_SORT,
-		            	COALESCE (a1.STRATEGY,CASE WHEN a1.STRATEGY IS NULL AND (GROUP_CATEGORY = 0 OR GROUP_CATEGORY = 1) THEN 'Promote' ELSE 'Review' END) AS STRATEGY
+		            	a1.STRATEGY_RESOLVED
 		                FROM   "osr.scv.foundation.db.data::MatchResults.MatchResults" AS a 
 		                LEFT OUTER JOIN ( SELECT NAME_LAST, "Cleanse_TABLE_ID", "Z_RUN_SEQ_ID", "PARTNER" FROM "osr.scv.foundation.db.synonyms::BUT000") as e
 		                ON a."Cleanse_ROW_ID_BUT" = e."Z_RUN_SEQ_ID" AND a."Cleanse_TABLE_ID_BUT" = e."Cleanse_TABLE_ID" AND a."SYSTEM_ID" = e."PARTNER" and a."SOURCE_SYSTEM" = 'RMS'
 		                LEFT OUTER JOIN ( SELECT FAMILY_ORG_NAME, "Cleanse_TABLE_ID", "Z_RUN_SEQ_ID", "CUSTOMER_REF" FROM "osr.scv.foundation.db.synonyms::TMR_CustMain") as f
 		                ON a."Cleanse_ROW_ID_TMR" = f."Z_RUN_SEQ_ID" AND a."Cleanse_TABLE_ID_TMR" = f."Cleanse_TABLE_ID" AND a."SYSTEM_ID" = f."CUSTOMER_REF" AND a."SOURCE_SYSTEM" = 'TMR'
-		                LEFT OUTER JOIN "osr.scv.foundation.db.data::MatchResultsReview.Assessments" a1
+		                LEFT OUTER JOIN "osr.scv.foundation.db.data::MatchResultsReview.Review" a1
 		                ON a.ENTITY_ID = a1.ENTITY_ID
 		                WHERE a.SHOW_IN_REVIEW = 'X'
+							/*
 							AND RMS_DUPLICATES  >= :i_rms_duplicates
 							AND (
 									-- Unique records from RMS
@@ -77,8 +80,9 @@ BEGIN
 									-- Only match groups which contains at least one record from RMS
 									a.GROUP_ID IN (SELECT GROUP_ID FROM "osr.scv.foundation.db.data::MatchResults.MatchResults" WHERE GROUP_ID IS NOT NULL AND SOURCE_SYSTEM = 'RMS' GROUP BY GROUP_ID)	
 								)
-			) GROUP BY MATCH_PERSON_FN_FC_SORT , MATCH_PERSON_FN_FC, STRATEGY 
-			HAVING STRATEGY != 'Promote';			    
+							*/
+			) GROUP BY MATCH_PERSON_FN_FC_SORT , MATCH_PERSON_FN_FC, STRATEGY_RESOLVED 
+			HAVING STRATEGY_RESOLVED = 'Review';			    
 
 	
 		    lt_result = SELECT * FROM :lt_entities_to_promote union all SELECT * FROM :lt_entities_to_review;	                

@@ -1,0 +1,54 @@
+/*
+	Write some statistics about the latest SCV full/delta update
+*/
+PROCEDURE "osr.scv.foundation.db.Procedures::SP_WriteScvLoadStatistics" ( 
+	IN i_load_id INTEGER,
+	IN i_num_scv_created INTEGER DEFAULT 0,
+	IN i_num_scv_updated INTEGER DEFAULT 0,
+	IN i_t_entity_mapping TABLE ( SCV_ID_SEQ_CONTROL NVARCHAR(10),SCV_ID INTEGER,ENTITY_ID NVARCHAR(20),MATCH_ROW_ID INTEGER)
+)
+	LANGUAGE SQLSCRIPT
+	SQL SECURITY INVOKER
+    --DEFAULT SCHEMA <default_schema_name>
+   AS
+BEGIN
+	
+	/*************************************
+		Write statistics for SCV update
+	*************************************/
+	   
+	-- 1. Create new load ID
+	-- 2. Move records from promotions table into promotions history
+	-- 3. Move records from assessments table into assessments history
+	-- 4. Update entity mapping
+   
+	-- 1. SCV load history
+	INSERT INTO "osr.scv.foundation.db.data::SCVFoundation.LoadHistory" 
+	VALUES (:i_load_id, NOW(), CURRENT_USER, 1, 'OK', :i_num_scv_created, :i_num_scv_updated);
+
+	
+	-- 2. Promotions history
+	INSERT INTO "osr.scv.foundation.db.data::MatchResultsReview.PromotionsHistory" 
+	(
+		SELECT :i_load_id, * 
+		FROM "osr.scv.foundation.db.data::MatchResultsReview.Promotions"
+	)
+	;
+	
+	-- 3. Assessments history
+	INSERT INTO "osr.scv.foundation.db.data::MatchResultsReview.AssessmentsHistory" 
+	(
+		SELECT :i_load_id, * 
+		FROM "osr.scv.foundation.db.data::MatchResultsReview.Assessments"
+	)
+	;
+	
+	-- 4. Entity mapping
+	INSERT INTO "osr.scv.foundation.db.data::SCVFoundation.EntityMappingHistory" 
+	(
+		SELECT :i_load_id,* 
+		FROM :i_t_entity_mapping
+	)
+	;
+	
+END
