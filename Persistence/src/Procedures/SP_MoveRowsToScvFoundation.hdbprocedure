@@ -452,7 +452,7 @@ lt_person_entities_date_tmr =
 									ON c.ADDRNUMBER = b.ADDRNUMBER
 									LEFT OUTER JOIN "osr.scv.foundation.db.data::MatchResults.MatchDelta" e
 									ON a."Match_ROW_ID" = e.MATCH_ROW_ID 
-									WHERE e.ACTION_RMS = 'Add'
+								--	WHERE e.ACTION_RMS = 'Add'
 --									WHERE a.SOURCE_SYSTEM = 'RMS' AND e.ACTION_RMS = 'Add' AND b.PARTNER = '0001639368'
 									) mk
 									LEFT OUTER JOIN 
