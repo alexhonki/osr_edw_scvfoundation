@@ -30,12 +30,18 @@ BEGIN
 					SELECT SCV_ID, "HASH"  FROM "osr.scv.foundation.db.data::HashResults.SCVRecordHashRMS"
 					) as sh
 		ON mh."HASH" = sh."HASH";
-
+/*
     lt_add_new_records = SELECT mh.ENTITY_ID, mh.MATCH_ROW_ID, 0 AS SCV_ID , 'Add' AS ACTION 
 						FROM   "osr.scv.foundation.db.data::HashResults.MatchResultsHash" as mh
 						WHERE NOT EXISTS (SELECT SCV_ID, "HASH"  FROM "osr.scv.foundation.db.data::HashResults.SCVRecordHash" as sh
                 						WHERE mh."HASH" = sh."HASH");            						
-
+*/
+	lt_add_new_records = SELECT DISTINCT "Match_ROW_ID" as MATCH_ROW_ID, SCV_ID, ACTION  FROM (SELECT mh.ENTITY_ID, mh."Match_ROW_ID", 0 AS SCV_ID , 'Add' AS ACTION 
+											FROM  "osr.scv.foundation.db.data::MatchResults.MatchResults" as mh
+											WHERE NOT EXISTS (SELECT DISTINCT MATCH_ROW_ID, SCV_ID, ACTION  FROM :lt_existing_records as sh
+											WHERE mh."Match_ROW_ID" = sh."MATCH_ROW_ID")) as a	;
+	
+	
 	lt_total_records = ( SELECT DISTINCT MATCH_ROW_ID, SCV_ID, ACTION  FROM :lt_existing_records
 							UNION ALL
 						SELECT DISTINCT MATCH_ROW_ID, SCV_ID, ACTION  FROM :lt_add_new_records);
