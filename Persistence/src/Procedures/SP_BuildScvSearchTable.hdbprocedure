@@ -15,7 +15,6 @@ BEGIN
 	lt_addr_type_lookup = SELECT STD_ADDR_PRIM_TYPE, STRING_AGG(LOWER_TYPE, ' ') FROM 
 						  (
 							SELECT STD_ADDR_PRIM_TYPE, LOWER(ADDR_TYPE) AS LOWER_TYPE FROM "osr.scv.foundation.db.data::SCVPrimType.AddrType"
-							WHERE STD_ADDR_PRIM_TYPE = 'Crescent'
 							GROUP BY STD_ADDR_PRIM_TYPE, LOWER(ADDR_TYPE)
 						   ) 
 						   GROUP BY STD_ADDR_PRIM_TYPE;
