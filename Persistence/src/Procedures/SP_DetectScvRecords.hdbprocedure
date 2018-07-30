@@ -99,7 +99,7 @@ BEGIN
 																			ON h.MATCH_ROW_ID = j.ROW_ID
 																			INNER JOIN (SELECT DISTINCT MATCH_ROW_ID, SCV_ID, ACTION  FROM :lt_add_new_records) p
 																			ON p.MATCH_ROW_ID = RELATED_ROW_ID	
-																			WHERE ENTITY_ID NOT IN (SELECT ENTITY_ID FROM :lt_more_scv_id));
+																			WHERE ENTITY_ID IN (SELECT ENTITY_ID FROM :lt_more_scv_id));
 																		
 																		
 																		
