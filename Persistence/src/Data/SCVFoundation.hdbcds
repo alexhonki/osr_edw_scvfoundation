@@ -2,6 +2,7 @@ namespace osr.scv.foundation.db.data;
 
 context SCVFoundation {
 
+
     /*@@layout{"layoutInfo":{}}*/
     entity EntityMappingHistory {
         SCV_LOAD_ID        : Integer not null;
@@ -10,7 +11,12 @@ context SCVFoundation {
         ENTITY_ID          : String(20);
         MATCH_ROW_ID       : Integer;
         MATCH_ROW_CHECKSUM : Binary(32);
+    }
+    technical configuration {
+        index IDX_MR_CHKSUM on (MATCH_ROW_CHECKSUM);
+        index IDX_SCV_ID    on (SCV_ID);
     };
+
 
     /*@@layout{"layoutInfo":{}}*/
     entity LoadHistory {
@@ -25,13 +31,14 @@ context SCVFoundation {
 
     /*@@layout{"layoutInfo":{}}*/
     entity Master {
-        key SCV_ID     : Integer not null;
-            CREATED_AT : LocalDate;
-            UPDATED_AT : LocalDate;
-            CREATED_BY : String(200);
-            CHANGED_BY : String(200);
-            LINKED_ID  : Integer;
-            IS_MASTER  : String(1);
+        key SCV_ID        : Integer not null;
+            CREATED_AT    : LocalDate;
+            UPDATED_AT    : LocalDate;
+            CREATED_BY    : String(200);
+            CHANGED_BY    : String(200);
+            MASTER_SCV_ID : Integer;
+            IS_MASTER     : String(1);
+            REJECTED_IDS  : type of ScvIds.SCV_ID;
     };
 
     /*@@layout{"layoutInfo":{}}*/
@@ -237,5 +244,20 @@ context SCVFoundation {
             token separators '|'
             text mining off
             search only on;
+    };
+
+    /*@@layout{"layoutInfo":{"x":-866,"y":-335.5}}*/
+    entity ScvAssociations {
+        SCV_ID             : Integer;
+        MATCH_ROW_CHECKSUM : Binary(32);
+    }
+    technical configuration {
+        index IDX_SCV_ID             on (SCV_ID);
+        index IDX_MATCH_ROW_CHECKSUM on (MATCH_ROW_CHECKSUM);
+    };
+
+    /*@@layout{"layoutInfo":{"x":-874,"y":-216.5}}*/
+    type ScvIds {
+        SCV_ID : Integer;
     };
 };

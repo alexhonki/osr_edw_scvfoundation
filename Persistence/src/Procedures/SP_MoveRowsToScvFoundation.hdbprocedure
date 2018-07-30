@@ -156,7 +156,7 @@ BEGIN
 		
 		-- Fill auto-promotions, rejects and accepts into SCV master table
 		INSERT INTO "osr.scv.foundation.db.data::SCVFoundation.Master" (
-				SELECT DISTINCT SCV_ID, CURRENT_DATE, null,CURRENT_USER, null, null, null FROM (
+				SELECT DISTINCT SCV_ID, CURRENT_DATE, null,CURRENT_USER, null, null, null, null FROM (
 				SELECT a.SCV_ID FROM #lt_entity_mapping a
 				LEFT OUTER JOIN (SELECT MATCH_ROW_ID, ACTION_RMS FROM "osr.scv.foundation.db.data::MatchResults.MatchDelta") md
 				ON a.MATCH_ROW_ID = md.MATCH_ROW_ID
