@@ -9,6 +9,7 @@ context SCVFoundation {
         SCV_ID             : Integer;
         ENTITY_ID          : String(20);
         MATCH_ROW_ID       : Integer;
+        MATCH_ROW_CHECKSUM : Binary(32);
     };
 
     /*@@layout{"layoutInfo":{}}*/
