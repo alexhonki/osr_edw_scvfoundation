@@ -4,8 +4,8 @@
 PROCEDURE "osr.scv.foundation.db.Procedures::SP_WriteScvLoadStatistics" ( 
 	IN i_load_id INTEGER,
 	IN i_num_scv_created INTEGER DEFAULT 0,
-	IN i_num_scv_updated INTEGER DEFAULT 0,
-	IN i_t_entity_mapping TABLE ( SCV_ID_SEQ_CONTROL NVARCHAR(10),SCV_ID INTEGER,ENTITY_ID NVARCHAR(20),MATCH_ROW_ID INTEGER, MATCH_ROW_CHECKSUM VARBINARY(32))
+	IN i_num_scv_updated INTEGER DEFAULT 0
+
 )
 	LANGUAGE SQLSCRIPT
 	SQL SECURITY INVOKER
@@ -43,12 +43,8 @@ BEGIN
 	)
 	;
 	
-	-- 4. Entity mapping
-	INSERT INTO "osr.scv.foundation.db.data::SCVFoundation.EntityMappingHistory" 
-	(
-		SELECT :i_load_id,* 
-		FROM :i_t_entity_mapping
-	)
-	;
+
+	
+
 	
 END

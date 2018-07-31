@@ -48,10 +48,12 @@ BEGIN
 	-- TODO: Create UI to allow for dynamic business rule generation
 	
 	-- Match group calculation
-	-- Identical group: 	Category 1 + category 2 - all matches on phone policies
-	-- Review group:		Category 3 + Category 4 - identical group - exclude group
-	-- Exclude group:		TMR single entities or match groups
-	-- Accept group:		Category 2 + category 3 - review group - exclude group
+		-- Identical group: 		Category 1 + category 2 - all matches on phone policies
+		-- Review group:			Category 3 + Category 4 - identical group - exclude group - system promotes
+		-- (System) exclude group:	TMR single entities or match groups
+		-- (System) accept group:	Category 2 + category 3 - review group - exclude group
+		-- (System) promote:		Category 3 + Category 4 - identical group - exclude group - match groups with no SCV ID assigned (all records show ADD)
+	
 	lt_identical_groups = SELECT DISTINCT GROUP_ID, 'X' AS STRATEGY_IDENTICAL
 						  FROM "osr.scv.foundation.db.data::MatchResults.MatchResults" 
 						  WHERE GROUP_CATEGORY IN (0,1)
@@ -73,6 +75,21 @@ BEGIN
 							AND MAX(SOURCE_SYSTEM) = 'TMR' 
 							AND MIN(SOURCE_SYSTEM) = 'TMR';
 	
+	lt_match_groups_with_delta_scv_id = SELECT TOP 10 DISTINCT GROUP_ID FROM "osr.scv.foundation.db.data::MatchResults.MatchResults" mr
+										INNER JOIN "osr.scv.foundation.db.data::MatchResults.MatchDelta" md
+										ON mr."Match_ROW_ID" = md.MATCH_ROW_ID
+										WHERE md.SCV_ID > 0;
+								
+	lt_system_promote_groups = SELECT DISTINCT m.GROUP_ID, 'X' AS STRATEGY_SYS_PROMOTE
+						FROM "osr.scv.foundation.db.data::MatchResults.MatchResults" m
+						INNER JOIN "osr.scv.foundation.db.data::MatchResults.MatchTracing" s
+						ON m."Match_ROW_ID" = s.ROW_ID
+						WHERE s.POLICY_NAME = 'Person, Address, Phone'
+							AND GROUP_ID NOT IN (SELECT GROUP_ID FROM :lt_identical_groups)
+							AND GROUP_ID NOT IN (SELECT GROUP_ID FROM :lt_exclude_groups)
+							AND GROUP_ID IN (SELECT * FROM :lt_match_groups_with_delta_scv_id)
+						;
+
 	lt_review_groups = 	SELECT DISTINCT m.GROUP_ID, 'X' AS STRATEGY_BR_REVIEW
 						FROM "osr.scv.foundation.db.data::MatchResults.MatchResults" m
 						INNER JOIN "osr.scv.foundation.db.data::MatchResults.MatchTracing" s
@@ -80,6 +97,7 @@ BEGIN
 						WHERE s.POLICY_NAME = 'Person, Address, Phone'
 							AND GROUP_ID NOT IN (SELECT GROUP_ID FROM :lt_identical_groups)
 							AND GROUP_ID NOT IN (SELECT GROUP_ID FROM :lt_exclude_groups)
+							AND GROUP_ID NOT IN (SELECT * FROM :lt_match_groups_with_delta_scv_id)
 						;
 							
 	lt_accept_groups = SELECT DISTINCT GROUP_ID, 'X' AS STRATEGY_BR_ACCEPT 
@@ -118,7 +136,8 @@ BEGIN
 	                gr_id.STRATEGY_IDENTICAL,
 	                gr_rev.STRATEGY_BR_REVIEW,
 	                gr_ex.STRATEGY_BR_EXCLUDE,
-	                gr_acc.STRATEGY_BR_ACCEPT
+	                gr_acc.STRATEGY_BR_ACCEPT,
+	                gr_sysprom.STRATEGY_SYS_PROMOTE
                 FROM "osr.scv.foundation.db.data::MatchResults.MatchResults" m
                
                 -- Master data BUT000
@@ -154,6 +173,9 @@ BEGIN
                 -- Accepts
                 LEFT OUTER JOIN :lt_accept_groups as gr_acc
                 ON m.GROUP_ID = gr_acc.GROUP_ID
+                -- System promotions
+                LEFT OUTER JOIN :lt_system_promote_groups as gr_sysprom
+                ON m.GROUP_ID = gr_sysprom.GROUP_ID
                 -- Match strategy resolved
                 LEFT OUTER JOIN (
 	                SELECT GROUP_ID, STRATEGY, CASE WHEN LOCATE("ACTION", 'Accept') > 0 AND LOCATE(ACTION, 'Reject') > 1 THEN 'Split' 
@@ -269,8 +291,10 @@ BEGIN
 						WHEN STRATEGY_BR_EXCLUDE = 'X' AND LENGTH(ACTION_RES_BR) > 0 THEN 'Promote'
 						WHEN STRATEGY_IDENTICAL = 'X' AND LENGTH(ACTION_RES_BR) = 0 THEN 'Identical'
 						WHEN STRATEGY_IDENTICAL = 'X' AND LENGTH(ACTION_RES_BR) > 0 THEN 'Promote'
-						WHEN STRATEGY_BR_REVIEW = 'X' AND LENGTH(ACTION_RES_BR) = 0 THEN 'Review'  -- No action -> set to review
-						WHEN STRATEGY_BR_REVIEW = 'X' AND LENGTH(ACTION_RES_BR) > 0 THEN 'Promote' -- User assessment, set to promote
+						WHEN STRATEGY_SYS_PROMOTE = 'X' AND LENGTH(ACTION_RES_BR) = 0 THEN 'System Promote'
+						WHEN STRATEGY_SYS_PROMOTE = 'X' AND LENGTH(ACTION_RES_BR) > 0 THEN 'Promote'
+						WHEN STRATEGY_BR_REVIEW = 'X' AND LENGTH(ACTION_RES_BR) = 0 THEN 'Review'				-- No action -> set to review
+						WHEN STRATEGY_BR_REVIEW = 'X' AND LENGTH(ACTION_RES_BR) > 0 THEN 'Promote'				-- User assessment, set to promote
 						ELSE 
 							CASE WHEN LENGTH(ACTION_RES_BR) > 0 THEN 'Promote'
 							ELSE 'System Accept'
@@ -281,8 +305,10 @@ BEGIN
 						WHEN STRATEGY_BR_EXCLUDE = 'X' AND LENGTH(ACTION_RES_BR) > 0 THEN 'Success'
 						WHEN STRATEGY_IDENTICAL = 'X' AND LENGTH(ACTION_RES_BR) = 0 THEN 'Success'
 						WHEN STRATEGY_IDENTICAL = 'X' AND LENGTH(ACTION_RES_BR) > 0 THEN 'Success'
-						WHEN STRATEGY_BR_REVIEW = 'X' AND LENGTH(ACTION_RES_BR) = 0 THEN 'Error'  -- No action -> set to review
-						WHEN STRATEGY_BR_REVIEW = 'X' AND LENGTH(ACTION_RES_BR) > 0 THEN 'Success' -- User assessment, set to promote
+						WHEN STRATEGY_SYS_PROMOTE = 'X' AND LENGTH(ACTION_RES_BR) = 0 THEN 'Success'
+						WHEN STRATEGY_SYS_PROMOTE = 'X' AND LENGTH(ACTION_RES_BR) > 0 THEN 'Success'
+						WHEN STRATEGY_BR_REVIEW = 'X' AND LENGTH(ACTION_RES_BR) = 0 THEN 'Error'				-- No action -> set to review
+						WHEN STRATEGY_BR_REVIEW = 'X' AND LENGTH(ACTION_RES_BR) > 0 THEN 'Success'				-- User assessment, set to promote
 						ELSE 
 							CASE WHEN LENGTH(ACTION_RES_BR) > 0 THEN 'Success'
 							ELSE 'Success'
@@ -299,6 +325,8 @@ BEGIN
 						WHEN STRATEGY_BR_EXCLUDE = 'X' AND LENGTH(ACTION_RES_BR) > 0 THEN ACTION_RES_BR
 						WHEN STRATEGY_IDENTICAL = 'X' AND LENGTH(ACTION_RES_BR) = 0 THEN 'Auto-Promotion'
 						WHEN STRATEGY_IDENTICAL = 'X' AND LENGTH(ACTION_RES_BR) > 0 THEN ACTION_RES_BR
+						WHEN STRATEGY_SYS_PROMOTE = 'X' AND LENGTH(ACTION_RES_BR) = 0 THEN 'Auto-Promotion'
+						WHEN STRATEGY_SYS_PROMOTE = 'X' AND LENGTH(ACTION_RES_BR) > 0 THEN ACTION_RES_BR
 						WHEN STRATEGY_BR_REVIEW = 'X' THEN ACTION_RES_BR
 						ELSE 
 							CASE WHEN LENGTH(ACTION_RES_BR) > 0 THEN ACTION_RES_BR
@@ -311,6 +339,8 @@ BEGIN
 						WHEN STRATEGY_BR_EXCLUDE = 'X' AND LENGTH(ACTION_RES_BR) > 0 THEN 'Success'
 						WHEN STRATEGY_IDENTICAL = 'X' AND LENGTH(ACTION_RES_BR) = 0 THEN 'Success'
 						WHEN STRATEGY_IDENTICAL = 'X' AND LENGTH(ACTION_RES_BR) > 0 THEN 'Success'
+						WHEN STRATEGY_SYS_PROMOTE = 'X' AND LENGTH(ACTION_RES_BR) = 0 THEN 'Success'
+						WHEN STRATEGY_SYS_PROMOTE = 'X' AND LENGTH(ACTION_RES_BR) > 0 THEN 'Success'
 						WHEN STRATEGY_BR_REVIEW = 'X' AND LENGTH(ACTION_RES_BR) = 0 THEN 'Error'  -- No action -> set to review
 						WHEN STRATEGY_BR_REVIEW = 'X' AND LENGTH(ACTION_RES_BR) > 0 THEN 'Success' -- User assessment, set to promote
 						ELSE 
