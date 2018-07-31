@@ -161,7 +161,7 @@ BEGIN
 				SELECT a.SCV_ID FROM #lt_entity_mapping a
 				LEFT OUTER JOIN (SELECT MATCH_ROW_ID, ACTION_RMS FROM "osr.scv.foundation.db.data::MatchResults.MatchDelta") md
 				ON a.MATCH_ROW_ID = md.MATCH_ROW_ID
-				WHERE md.ACTION_RMS = 'Add'
+				--WHERE md.ACTION_RMS = 'Add'
 				)
 		);
 		
@@ -210,7 +210,7 @@ BEGIN
 									ON a."Cleanse_ROW_ID_BUT" = b."Z_RUN_SEQ_ID" 
 									LEFT OUTER JOIN "osr.scv.foundation.db.data::MatchResults.MatchDelta" c
 									ON a."Match_ROW_ID" = c.MATCH_ROW_ID 
-									WHERE a.SOURCE_SYSTEM = 'RMS' AND c.ACTION_RMS = 'Add'
+									WHERE a.SOURCE_SYSTEM = 'RMS' --AND c.ACTION_RMS = 'Add'
 								--	WHERE a.SOURCE_SYSTEM = 'RMS'--AND a.SYSTEM_ID = '107249237' --AND ACTION_RMS = 'Add'
 								ORDER BY a.ENTITY_ID
 							) mr
@@ -252,7 +252,7 @@ BEGIN
 									ON a."Cleanse_ROW_ID_BUT" = b."Z_RUN_SEQ_ID" 
 									LEFT OUTER JOIN "osr.scv.foundation.db.data::MatchResults.MatchDelta" c
 									ON a."Match_ROW_ID" = c.MATCH_ROW_ID 
-									WHERE a.SOURCE_SYSTEM = 'RMS' AND c.ACTION_RMS = 'Existing'
+									WHERE a.SOURCE_SYSTEM = 'RMS' --AND c.ACTION_RMS = 'Existing'
 								--	WHERE a.SOURCE_SYSTEM = 'RMS'--AND a.SYSTEM_ID = '107249237' --AND ACTION_RMS = 'Existing'
 								ORDER BY a.ENTITY_ID
 							) mr
@@ -739,7 +739,7 @@ lt_address_entities_date_tmr =
 										ON a."Cleanse_ROW_ID_ADRC" = b."Z_RUN_SEQ_ID" 
 										LEFT OUTER JOIN "osr.scv.foundation.db.data::MatchResults.MatchDelta" c
 										ON a."Match_ROW_ID" = c.MATCH_ROW_ID 
-										WHERE a.SOURCE_SYSTEM = 'RMS' AND c.ACTION_RMS = 'Add' AND ( LENGTH(TEL_NUMBER) > 0)
+										WHERE a.SOURCE_SYSTEM = 'RMS'  AND ( LENGTH(TEL_NUMBER) > 0) --AND c.ACTION_RMS = 'Add'
 									--	WHERE SOURCE_SYSTEM = 'RMS' AND ( LENGTH(TEL_NUMBER) > 0)
 									ORDER BY a.ENTITY_ID
 	                            	)
@@ -755,7 +755,7 @@ lt_address_entities_date_tmr =
 										ON a."Cleanse_ROW_ID_ADRC" = b."Z_RUN_SEQ_ID" 
 										LEFT OUTER JOIN "osr.scv.foundation.db.data::MatchResults.MatchDelta" c
 										ON a."Match_ROW_ID" = c.MATCH_ROW_ID 
-										WHERE a.SOURCE_SYSTEM = 'RMS' AND c.ACTION_RMS = 'Add' AND ( LENGTH(FAX_NUMBER) > 0)
+										WHERE a.SOURCE_SYSTEM = 'RMS'  AND ( LENGTH(FAX_NUMBER) > 0) --AND c.ACTION_RMS = 'Add'
 								--		WHERE SOURCE_SYSTEM = 'RMS' AND ( LENGTH(FAX_NUMBER) > 0)
 									ORDER BY a.ENTITY_ID
 									) u
