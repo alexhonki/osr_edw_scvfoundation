@@ -75,7 +75,7 @@ BEGIN
 							AND MAX(SOURCE_SYSTEM) = 'TMR' 
 							AND MIN(SOURCE_SYSTEM) = 'TMR';
 	
-	lt_match_groups_with_delta_scv_id = SELECT TOP 10 DISTINCT GROUP_ID FROM "osr.scv.foundation.db.data::MatchResults.MatchResults" mr
+	lt_match_groups_with_delta_scv_id = SELECT DISTINCT GROUP_ID FROM "osr.scv.foundation.db.data::MatchResults.MatchResults" mr
 										INNER JOIN "osr.scv.foundation.db.data::MatchResults.MatchDelta" md
 										ON mr."Match_ROW_ID" = md.MATCH_ROW_ID
 										WHERE md.SCV_ID > 0;
