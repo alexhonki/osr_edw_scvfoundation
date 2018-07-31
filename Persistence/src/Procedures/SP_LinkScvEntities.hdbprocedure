@@ -1,0 +1,26 @@
+/*
+	Write some statistics about the latest SCV full/delta update
+*/
+PROCEDURE "osr.scv.foundation.db.Procedures::SP_LinkScvEntities" ( 
+	IN i_scv_links TABLE (SCV_MASTER_ID NVARCHAR(20), SCV_SLAVE_ID NVARCHAR(20)),
+	IN i_remove BOOLEAN
+)
+	LANGUAGE SQLSCRIPT
+	SQL SECURITY INVOKER
+    --DEFAULT SCHEMA <default_schema_name>
+   AS
+BEGIN
+	
+	/*************************************
+		Write statistics for SCV update
+	*************************************/
+	   
+	-- 1. Create new load ID
+	-- 2. Move records from promotions table into promotions history
+	-- 3. Move records from assessments table into assessments history
+	-- 4. Update entity mapping
+   
+	-- 1. SCV load history
+	
+	
+END
