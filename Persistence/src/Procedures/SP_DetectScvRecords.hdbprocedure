@@ -55,11 +55,11 @@ BEGIN
 											) WHERE SCV_ID > 0 GROUP BY ENTITY_ID HaVING COUNT (DISTINCT SCV_ID) = 1 ;
 											
 	-- List of entities with greater than 1 SCV ID in the group
-	lt_more_scv_id = SELECT ENTITY_ID, SCV_ID FROM (
+	lt_more_scv_id = SELECT ENTITY_ID FROM (
 											SELECT b.ENTITY_ID, b.SYSTEM_ID, MATCH_ROW_ID, SCV_ID, a.ACTION FROM :lt_total_records as a
 													INNER JOIN "osr.scv.foundation.db.data::MatchResults.MatchResults" as b
 													ON a.MATCH_ROW_ID = b."Match_ROW_ID"
-											) WHERE SCV_ID > 0 GROUP BY ENTITY_ID, SCV_ID HaVING COUNT (DISTINCT SCV_ID) > 1 ;										
+											) WHERE SCV_ID > 0 GROUP BY ENTITY_ID HaVING COUNT (DISTINCT SCV_ID) > 1 ;										
 											
 	-- List of entities that have exisitng records in the SCV
 	lt_scv_id = SELECT ENTITY_ID FROM (
@@ -93,14 +93,19 @@ BEGIN
 																		
 																		  
 	-- Process the entities with greater than 1 SCV ID in the group calculate the missing SCV ID																		                		
-	INSERT INTO "osr.scv.foundation.db.data::MatchResults.MatchDelta" (SELECT DISTINCT RELATED_ROW_ID, h.SCV_ID, p.ACTION, 'Add'  FROM :lt_total_records as  h
+	INSERT INTO "osr.scv.foundation.db.data::MatchResults.MatchDelta" (SELECT DISTINCT RELATED_ROW_ID, SCV_ID, ACTION, 'Add'  FROM (
+																			SELECT DISTINCT RELATED_ROW_ID, MAX(h.SCV_ID) as SCV_ID, p.ACTION, 'Add' , MAX(SCORE) as MAXSCORE FROM :lt_total_records as  h
 																			INNER JOIN "osr.scv.foundation.db.data::MatchResults.MatchResults" as b
 																			ON h.MATCH_ROW_ID = b."Match_ROW_ID"
-																			INNER JOIN ( SELECT ROW_ID, RELATED_ROW_ID, MAX (SCORE) from "osr.scv.foundation.db.data::MatchResults.MatchTracing" GROUP BY ROW_ID, RELATED_ROW_ID ) as j
-																			ON h.MATCH_ROW_ID = j.ROW_ID
-																			INNER JOIN (SELECT DISTINCT MATCH_ROW_ID, SCV_ID, ACTION  FROM :lt_add_new_records) p
-																			ON p.MATCH_ROW_ID = RELATED_ROW_ID	
-																			WHERE ENTITY_ID IN (SELECT ENTITY_ID FROM :lt_more_scv_id));
+																				INNER JOIN ( SELECT ROW_ID, RELATED_ROW_ID, MAX (SCORE) as SCORE from "osr.scv.foundation.db.data::MatchResults.MatchTracing" GROUP BY ROW_ID, RELATED_ROW_ID ) as j
+																				ON h.MATCH_ROW_ID = j.ROW_ID
+																					INNER JOIN (SELECT DISTINCT MATCH_ROW_ID, SCV_ID, ACTION  FROM :lt_add_new_records) p
+																					ON p.MATCH_ROW_ID = RELATED_ROW_ID	
+																			WHERE ENTITY_ID IN (SELECT ENTITY_ID FROM :lt_more_scv_id)
+																			GROUP BY RELATED_ROW_ID, p.ACTION
+																			ORDER BY MAXSCORE)
+																			)
+																			;
 																		
 																		
 																		
