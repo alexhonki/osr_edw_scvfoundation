@@ -20,22 +20,29 @@ BEGIN
 	
 	lt_existing_records = SELECT mh.ENTITY_ID, mh.MATCH_ROW_ID, sh.SCV_ID AS SCV_ID, 'Existing' AS ACTION  FROM "osr.scv.foundation.db.data::HashResults.MatchResultsHash" as mh
 		INNER JOIN (
-					SELECT SCV_ID, "HASH"  FROM "osr.scv.foundation.db.data::HashResults.SCVRecordHash"
+--					SELECT SCV_ID, "HASH"  FROM "osr.scv.foundation.db.data::HashResults.SCVRecordHash"
+					SELECT SCV_ID, "MATCH_ROW_CHECKSUM"  FROM "osr.scv.foundation.db.data::SCVFoundation.EntityMappingHistory"
 					) as sh
-		ON mh."HASH" = sh."HASH";
+		ON mh."HASH" = sh."MATCH_ROW_CHECKSUM";
 
 	-- Person RMS Hash without the xdele field	
-	lt_exisitng_RMSPerson_records = SELECT mh.ENTITY_ID, mh.MATCH_ROW_ID, sh.SCV_ID AS SCV_ID, 'Existing' AS ACTION  FROM "osr.scv.foundation.db.data::HashResults.MatchResultsHashRMS" as mh
-		INNER JOIN (
-					SELECT SCV_ID, "HASH"  FROM "osr.scv.foundation.db.data::HashResults.SCVRecordHashRMS"
-					) as sh
-		ON mh."HASH" = sh."HASH";
-
+--	lt_exisitng_RMSPerson_records = SELECT mh.ENTITY_ID, mh.MATCH_ROW_ID, sh.SCV_ID AS SCV_ID, 'Existing' AS ACTION  FROM "osr.scv.foundation.db.data::HashResults.MatchResultsHashRMS" as mh
+--		INNER JOIN (
+--					SELECT SCV_ID, "HASH"  FROM "osr.scv.foundation.db.data::HashResults.SCVRecordHashRMS"
+--					) as sh
+--		ON mh."HASH" = sh."HASH";
+/*
     lt_add_new_records = SELECT mh.ENTITY_ID, mh.MATCH_ROW_ID, 0 AS SCV_ID , 'Add' AS ACTION 
 						FROM   "osr.scv.foundation.db.data::HashResults.MatchResultsHash" as mh
 						WHERE NOT EXISTS (SELECT SCV_ID, "HASH"  FROM "osr.scv.foundation.db.data::HashResults.SCVRecordHash" as sh
                 						WHERE mh."HASH" = sh."HASH");            						
-
+*/
+	lt_add_new_records = SELECT DISTINCT "Match_ROW_ID" as MATCH_ROW_ID, SCV_ID, ACTION  FROM (SELECT mh.ENTITY_ID, mh."Match_ROW_ID", 0 AS SCV_ID , 'Add' AS ACTION 
+											FROM  "osr.scv.foundation.db.data::MatchResults.MatchResults" as mh
+											WHERE "Match_ROW_ID" NOT IN (SELECT DISTINCT MATCH_ROW_ID FROM :lt_existing_records as sh
+											WHERE mh."Match_ROW_ID" = sh."MATCH_ROW_ID")) as a	;
+	
+	
 	lt_total_records = ( SELECT DISTINCT MATCH_ROW_ID, SCV_ID, ACTION  FROM :lt_existing_records
 							UNION ALL
 						SELECT DISTINCT MATCH_ROW_ID, SCV_ID, ACTION  FROM :lt_add_new_records);
@@ -48,11 +55,11 @@ BEGIN
 											) WHERE SCV_ID > 0 GROUP BY ENTITY_ID HaVING COUNT (DISTINCT SCV_ID) = 1 ;
 											
 	-- List of entities with greater than 1 SCV ID in the group
-	lt_more_scv_id = SELECT ENTITY_ID, SCV_ID FROM (
+	lt_more_scv_id = SELECT ENTITY_ID FROM (
 											SELECT b.ENTITY_ID, b.SYSTEM_ID, MATCH_ROW_ID, SCV_ID, a.ACTION FROM :lt_total_records as a
 													INNER JOIN "osr.scv.foundation.db.data::MatchResults.MatchResults" as b
 													ON a.MATCH_ROW_ID = b."Match_ROW_ID"
-											) WHERE SCV_ID > 0 GROUP BY ENTITY_ID, SCV_ID HaVING COUNT (DISTINCT SCV_ID) > 1 ;										
+											) WHERE SCV_ID > 0 GROUP BY ENTITY_ID HaVING COUNT (DISTINCT SCV_ID) > 1 ;										
 											
 	-- List of entities that have exisitng records in the SCV
 	lt_scv_id = SELECT ENTITY_ID FROM (
@@ -86,14 +93,19 @@ BEGIN
 																		
 																		  
 	-- Process the entities with greater than 1 SCV ID in the group calculate the missing SCV ID																		                		
-	INSERT INTO "osr.scv.foundation.db.data::MatchResults.MatchDelta" (SELECT DISTINCT RELATED_ROW_ID, h.SCV_ID, p.ACTION, 'Add'  FROM :lt_total_records as  h
+	INSERT INTO "osr.scv.foundation.db.data::MatchResults.MatchDelta" (SELECT DISTINCT RELATED_ROW_ID, SCV_ID, ACTION, 'Add'  FROM (
+																			SELECT DISTINCT RELATED_ROW_ID, MAX(h.SCV_ID) as SCV_ID, p.ACTION, 'Add' , MAX(SCORE) as MAXSCORE FROM :lt_total_records as  h
 																			INNER JOIN "osr.scv.foundation.db.data::MatchResults.MatchResults" as b
 																			ON h.MATCH_ROW_ID = b."Match_ROW_ID"
-																			INNER JOIN ( SELECT ROW_ID, RELATED_ROW_ID, MAX (SCORE) from "osr.scv.foundation.db.data::MatchResults.MatchTracing" GROUP BY ROW_ID, RELATED_ROW_ID ) as j
-																			ON h.MATCH_ROW_ID = j.ROW_ID
-																			INNER JOIN (SELECT DISTINCT MATCH_ROW_ID, SCV_ID, ACTION  FROM :lt_add_new_records) p
-																			ON p.MATCH_ROW_ID = RELATED_ROW_ID	
-																			WHERE ENTITY_ID NOT IN (SELECT ENTITY_ID FROM :lt_more_scv_id));
+																				INNER JOIN ( SELECT ROW_ID, RELATED_ROW_ID, MAX (SCORE) as SCORE from "osr.scv.foundation.db.data::MatchResults.MatchTracing" GROUP BY ROW_ID, RELATED_ROW_ID ) as j
+																				ON h.MATCH_ROW_ID = j.ROW_ID
+																					INNER JOIN (SELECT DISTINCT MATCH_ROW_ID, SCV_ID, ACTION  FROM :lt_add_new_records) p
+																					ON p.MATCH_ROW_ID = RELATED_ROW_ID	
+																			WHERE ENTITY_ID IN (SELECT ENTITY_ID FROM :lt_more_scv_id)
+																			GROUP BY RELATED_ROW_ID, p.ACTION
+																			ORDER BY MAXSCORE)
+																			)
+																			;
 																		
 																		
 																		
@@ -106,9 +118,9 @@ BEGIN
 																		WHERE ENTITY_ID NOT IN (SELECT ENTITY_ID FROM :lt_scv_id)
 																		)f);
 																		
-	UPDATE "osr.scv.foundation.db.data::MatchResults.MatchDelta" a SET  a.ACTION_RMS = b.ACTION
-	FROM "osr.scv.foundation.db.data::MatchResults.MatchDelta" a , :lt_exisitng_RMSPerson_records b
-	WHERE a.MATCH_ROW_ID = b.MATCH_ROW_ID;																	
+--	UPDATE "osr.scv.foundation.db.data::MatchResults.MatchDelta" a SET  a.ACTION_RMS = b.ACTION
+--	FROM "osr.scv.foundation.db.data::MatchResults.MatchDelta" a , :lt_exisitng_RMSPerson_records b
+--	WHERE a.MATCH_ROW_ID = b.MATCH_ROW_ID;																	
 	
 	--	o_return_code := 'Success' ;
 	--	o_message := 'Entites moved successfully';
