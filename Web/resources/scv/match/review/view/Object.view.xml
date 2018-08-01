@@ -49,7 +49,7 @@
 												<t:Column width="3rem">
 												<Label text="#"/>
 												<t:template>
-													<Text text="{GROUP_INDEX}" wrapping="false"/>
+													<Text text="{GROUP_TAG}" wrapping="false"/>
 												</t:template>
 											</t:Column>
 											<t:Column width="5rem">

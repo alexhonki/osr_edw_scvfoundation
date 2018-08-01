@@ -19,12 +19,12 @@ BEGIN
 	END;
 	
 	-- Temporary table
-	CREATE LOCAL TEMPORARY TABLE #lt_sub_groups (MATCH_ROW INTEGER, GROUP_INDEX INTEGER);      
+	CREATE LOCAL TEMPORARY TABLE #lt_sub_groups (MATCH_ROW INTEGER, GROUP_TAG NVARCHAR(20));      
 	TRUNCATE TABLE "osr.scv.foundation.db.data::MatchResults.SubGroups";
 	
 	-- Step 1: RMS rows with a TMR match
 	lt_rms_rows_with_tmr_match = 
-		SELECT "Match_ROW_ID" as MATCH_ROW, GROUP_ROW_COUNT AS GROUP_INDEX FROM (
+		SELECT "Match_ROW_ID" as MATCH_ROW, SYSTEM_ID AS GROUP_TAG FROM (
 			SELECT *,
 				   ROW_NUMBER() OVER (PARTITION BY GROUP_ID, "Match_ROW_ID", SOURCE_SYSTEM, SYSTEM_ID, ROW_ID ORDER BY SCORE DESC) AS GROUP_ROW_COUNT
 			FROM (
@@ -58,10 +58,10 @@ BEGIN
 							 ON mr."Match_ROW_ID" = mt.RELATED_ROW_ID
 							 WHERE mr.SOURCE_SYSTEM = 'RMS') b
 						ON a."Match_ROW_ID" = b.ROW_ID
-		) WHERE SYSTEM_ID NOT IN (SELECT DISTINCT SYSTEM_ID FROM "osr.scv.foundation.db.data::MatchResults.MatchResults" WHERE GROUP_ID = 383336 AND SOURCE_SYSTEM = 'RMS') AND ROW_ID IS NOT NULL;
+		) WHERE SYSTEM_ID NOT IN (SELECT DISTINCT GROUP_TAG FROM :lt_rms_rows_with_tmr_match) AND ROW_ID IS NOT NULL;
 	
 	INSERT INTO #lt_sub_groups (
-								SELECT b."Match_ROW_ID", a.GROUP_INDEX FROM :lt_rms_rows_with_tmr_match a
+								SELECT b."Match_ROW_ID", a.GROUP_TAG FROM :lt_rms_rows_with_tmr_match a
 								INNER JOIN :lt_tmr_rows_with_rms_match b
 								ON a.MATCH_ROW = b.RELATED_ROW_ID
 							    )
@@ -82,10 +82,10 @@ BEGIN
 							 ON mr."Match_ROW_ID" = mt.RELATED_ROW_ID
 							 WHERE mr.SOURCE_SYSTEM = 'TMR') b
 						ON a."Match_ROW_ID" = b.ROW_ID
-		) WHERE SYSTEM_ID NOT IN (SELECT DISTINCT SYSTEM_ID FROM "osr.scv.foundation.db.data::MatchResults.MatchResults" WHERE GROUP_ID = 383336 AND SOURCE_SYSTEM = 'RMS') AND ROW_ID IS NOT NULL;
+		) WHERE SYSTEM_ID NOT IN (SELECT DISTINCT GROUP_TAG FROM #lt_sub_groups) AND ROW_ID IS NOT NULL;
 	
 	INSERT INTO #lt_sub_groups (
-								SELECT b."Match_ROW_ID", a.GROUP_INDEX FROM (SELECT MATCH_ROW, GROUP_INDEX FROM :lt_rms_rows_with_tmr_match UNION ALL SELECT "Match_ROW_ID" as MATCH_ROW, GROUP_ROW_COUNT AS GROUP_INDEX FROM :lt_tmr_rows_with_rms_match) a
+								SELECT b."Match_ROW_ID", a.GROUP_TAG FROM (SELECT MATCH_ROW, GROUP_TAG FROM :lt_rms_rows_with_tmr_match UNION ALL SELECT "Match_ROW_ID" as MATCH_ROW, SYSTEM_ID AS GROUP_TAG FROM :lt_tmr_rows_with_rms_match) a
 								INNER JOIN :lt_tmr_rows_with_tmr_match b
 								ON a.MATCH_ROW = b.RELATED_ROW_ID
 							    )
