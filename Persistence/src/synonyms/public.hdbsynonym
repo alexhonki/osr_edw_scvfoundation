@@ -1,0 +1,8 @@
+{
+  "synonyms::dummy": {
+    "target": {
+      "object": "DUMMY",
+      "schema": "SYS"
+    }
+  }
+} 

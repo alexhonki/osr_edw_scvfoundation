@@ -12,15 +12,16 @@ PROCEDURE "osr.scv.foundation.db.Procedures::SP_LinkScvEntities" (
 BEGIN
 	
 	/*************************************
-		Write statistics for SCV update
+		Link/unlink SCV entities
 	*************************************/
 	   
-	-- 1. Create new load ID
-	-- 2. Move records from promotions table into promotions history
-	-- 3. Move records from assessments table into assessments history
-	-- 4. Update entity mapping
-   
-	-- 1. SCV load history
-	
-	
+	IF :i_remove = false THEN
+		-- Create link
+		UPDATE "osr.scv.foundation.db.data::SCVFoundation.Master" SET IS_MASTER = 'X' FROM  "osr.scv.foundation.db.data::SCVFoundation.Master", :i_scv_links WHERE "osr.scv.foundation.db.data::SCVFoundation.Master".SCV_ID = :i_scv_links.SCV_MASTER_ID;
+		UPDATE "osr.scv.foundation.db.data::SCVFoundation.Master" SET MASTER_SCV_ID = :i_scv_links.SCV_MASTER_ID FROM  "osr.scv.foundation.db.data::SCVFoundation.Master", :i_scv_links WHERE "osr.scv.foundation.db.data::SCVFoundation.Master".SCV_ID = :i_scv_links.SCV_SLAVE_ID;
+	ELSE
+		-- Remove link
+		UPDATE "osr.scv.foundation.db.data::SCVFoundation.Master" SET IS_MASTER = NULL FROM  "osr.scv.foundation.db.data::SCVFoundation.Master", :i_scv_links WHERE "osr.scv.foundation.db.data::SCVFoundation.Master".SCV_ID = :i_scv_links.SCV_MASTER_ID;
+		UPDATE "osr.scv.foundation.db.data::SCVFoundation.Master" SET MASTER_SCV_ID = NULL FROM  "osr.scv.foundation.db.data::SCVFoundation.Master", :i_scv_links WHERE "osr.scv.foundation.db.data::SCVFoundation.Master".SCV_ID = :i_scv_links.SCV_SLAVE_ID;
+	END IF;
 END
