@@ -31,9 +31,9 @@
       <descriptions defaultDescription="ENTITY_ID"/>
       <keyMapping columnObjectName="MatchResults" columnName="ENTITY_ID"/>
     </attribute>
-    <attribute id="GROUP_INDEX" order="3" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="GROUP_INDEX"/>
-      <keyMapping columnObjectName="MatchResults" columnName="GROUP_INDEX"/>
+    <attribute id="GROUP_TAG" order="3" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="GROUP_TAG"/>
+      <keyMapping columnObjectName="MatchResults" columnName="GROUP_TAG"/>
     </attribute>
     <attribute id="GROUP_ROW_COUNT" order="4" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="GROUP_ROW_COUNT"/>

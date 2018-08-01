@@ -109,7 +109,7 @@ context MatchResults {
 
     /*@@layout{"layoutInfo":{"x":-247,"y":-489.5}}*/
     entity SubGroups {
-        MATCH_ROW   : Integer;
-        GROUP_INDEX : Integer;
+        MATCH_ROW : Integer;
+        GROUP_TAG : String(20);
     };
 };
