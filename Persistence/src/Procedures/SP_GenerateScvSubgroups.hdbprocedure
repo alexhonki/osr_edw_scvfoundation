@@ -96,6 +96,15 @@ BEGIN
 	
 	INSERT INTO "osr.scv.foundation.db.data::MatchResults.SubGroups" (SELECT * FROM #lt_sub_groups);
 	
+	-- Update group tags which are null -> default is to assign the system ID of the match record as the group tag
+	UPDATE #lt_sub_groups sg SET sg.GROUP_TAG = mr.SYSTEM_ID 
+	FROM #lt_sub_groups sg, "osr.scv.foundation.db.data::MatchResults.MatchResults" mr
+	WHERE sg.MATCH_ROW = mr."Match_ROW_ID"
+		AND sg.GROUP_TAG IS NULL
+	;
+	
+	
+	
 	-- ### Clean-up ##############################################################################################################
 	DROP TABLE #lt_sub_groups;
    
