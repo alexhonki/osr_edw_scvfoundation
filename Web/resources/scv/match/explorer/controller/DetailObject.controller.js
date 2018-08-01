@@ -3,6 +3,7 @@
  * Base template to start a brand new SAPUI5 App
  * 02.05.2018
  */
+ // this is a test for conflict
 sap.ui.define([
 	"osr/scv/match/explorer/controller/SuperController",
 	"sap/ui/model/json/JSONModel",
