@@ -1140,12 +1140,12 @@ sap.ui.define([
 		boxTickedEvent: function(oEvent) {
 			if (oEvent.getParameters().rowIndex > -1) {
 				var Path = oEvent.getParameters().rowContext.sPath;
-				var sysId = this.getModel().getProperty(Path + "/SYSTEM_ID");
+				var sysId = this.getModel().getProperty(Path + "/GROUP_INDEX");
 				var oRows = this.byId("table").getRows();
 				var that = this;
 				if (this.byId("table").isIndexSelected(oEvent.getParameter("rowIndex"))) {
 					for (var i = 0; i < oRows.length; i++) {
-						if (sysId === that.getModel().getProperty(oRows[i].getBindingContext().getPath() + "/SYSTEM_ID")) {
+						if (sysId === that.getModel().getProperty(oRows[i].getBindingContext().getPath() + "/GROUP_INDEX")) {
 							if (!that.byId("table").isIndexSelected(i)) {
 								that.byId("table").addSelectionInterval(i, i);
 							}
@@ -1153,7 +1153,7 @@ sap.ui.define([
 					}
 				} else {
 					for (var i = 0; i < oRows.length; i++) {
-						if (sysId === that.getModel().getProperty(oRows[i].getBindingContext().getPath() + "/SYSTEM_ID")) {
+						if (sysId === that.getModel().getProperty(oRows[i].getBindingContext().getPath() + "/GROUP_INDEX")) {
 							if (that.byId("table").isIndexSelected(i)) {
 								that.byId("table").removeSelectionInterval(i, i);
 							}
@@ -1163,14 +1163,14 @@ sap.ui.define([
 			}
 		},
 		onSwitchChange: function(oEvent) {
-			var path = oEvent.getSource().getParent().getBindingContext().getPath() + "/SYSTEM_ID";
+			var path = oEvent.getSource().getParent().getBindingContext().getPath() + "/GROUP_INDEX";
 			var sysId = this.getModel().getProperty(path);
 			var oRows = this.byId("table").getRows();
 			var that = this;
 			var oRow, oSwitch, i;
 			if (oEvent.getParameters().state) {
 				for (i = 0; i < oRows.length; i++) {
-					if (sysId === that.getModel().getProperty(oRows[i].getBindingContext().getPath() + "/SYSTEM_ID")) {
+					if (sysId === that.getModel().getProperty(oRows[i].getBindingContext().getPath() + "/GROUP_INDEX")) {
 						oRow = this.byId("table").getRows()[i];
 						oSwitch = oRow.getCells()[0];
 						if (!oSwitch.getState()) {
@@ -1180,7 +1180,7 @@ sap.ui.define([
 				}
 			} else {
 				for (i = 0; i < oRows.length; i++) {
-					if (sysId === that.getModel().getProperty(oRows[i].getBindingContext().getPath() + "/SYSTEM_ID")) {
+					if (sysId === that.getModel().getProperty(oRows[i].getBindingContext().getPath() + "/GROUP_INDEX")) {
 						oRow = this.byId("table").getRows()[i];
 						oSwitch = oRow.getCells()[0];
 						if (oSwitch.getState()) {
