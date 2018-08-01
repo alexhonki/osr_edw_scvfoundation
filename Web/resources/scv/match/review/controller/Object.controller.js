@@ -238,7 +238,7 @@ sap.ui.define([
 			// Get rows
 			var oRows = oTable.getRows();
 			for (var i = 0; i < oRows.length; i++) {
-				oRows[i].getCells()[10].setEnabled(true);
+				oRows[i].getCells()[11].setEnabled(true);
 			}
 		},
 
@@ -246,7 +246,7 @@ sap.ui.define([
 			var that = this;
 			var oTable = that.byId("table");
 			var firstRow = oTable.getRows()[0];
-			var firstButton = firstRow.getCells()[10].setEnabled(false);
+			var firstButton = firstRow.getCells()[11].setEnabled(false);
 		},
 
 		_selectRows: function(oData) {
