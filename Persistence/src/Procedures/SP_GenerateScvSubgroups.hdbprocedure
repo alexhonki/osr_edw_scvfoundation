@@ -41,7 +41,7 @@ BEGIN
 				  )
 		) WHERE GROUP_ROW_COUNT = 1;
 	
-	INSERT INTO #lt_sub_groups (SELECT * FROM :lt_rms_rows_with_tmr_match);
+	INSERT INTO #lt_sub_groups (SELECT * FROM :lt_rms_rows_with_tmr_match UNION ALL SELECT RELATED_ROW_ID AS MATCH_ROW, SYSTEM_ID AS GROUP_TAG FROM :lt_rms_rows_with_tmr_match WHERE RELATED_ROW IS NOT NULL);
 	
 	-- Step 2: TMR rows with a RMS match
 	lt_tmr_rows_with_rms_match = 
@@ -61,9 +61,10 @@ BEGIN
 		) WHERE SYSTEM_ID NOT IN (SELECT DISTINCT GROUP_TAG FROM :lt_rms_rows_with_tmr_match) AND ROW_ID IS NOT NULL;
 	
 	INSERT INTO #lt_sub_groups (
-								SELECT b."Match_ROW_ID", a.GROUP_TAG FROM :lt_rms_rows_with_tmr_match a
-								INNER JOIN :lt_tmr_rows_with_rms_match b
-								ON a.MATCH_ROW = b.RELATED_ROW_ID
+								SELECT m."Match_ROW_ID", mr.SYSTEM_ID 
+								FROM :lt_tmr_rows_with_rms_match m
+								INNER JOIN "osr.scv.foundation.db.data::MatchResults.MatchResults" mr
+								ON m.RELATED_ROW_ID = mr."Match_ROW_ID"
 							    )
 	;
 	
