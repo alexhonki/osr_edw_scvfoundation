@@ -31,81 +31,81 @@
       <descriptions defaultDescription="ENTITY_ID"/>
       <keyMapping columnObjectName="MatchResults" columnName="ENTITY_ID"/>
     </attribute>
-    <attribute id="GROUP_ROW_COUNT" order="3" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="GROUP_INDEX" order="3" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="GROUP_INDEX"/>
+      <keyMapping columnObjectName="MatchResults" columnName="GROUP_INDEX"/>
+    </attribute>
+    <attribute id="GROUP_ROW_COUNT" order="4" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="GROUP_ROW_COUNT"/>
       <keyMapping columnObjectName="MatchResults" columnName="GROUP_ROW_COUNT"/>
     </attribute>
-    <attribute id="GROUP_ID" order="4" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="GROUP_ID" order="5" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="GROUP_ID"/>
       <keyMapping columnObjectName="MatchResults" columnName="GROUP_ID"/>
     </attribute>
-    <attribute id="SOURCE_SYSTEM" order="5" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="SOURCE_SYSTEM" order="6" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="SOURCE_SYSTEM"/>
       <keyMapping columnObjectName="MatchResults" columnName="SOURCE_SYSTEM"/>
     </attribute>
-    <attribute id="FIRST_NAME" order="6" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="FIRST_NAME" order="7" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="FIRST_NAME"/>
       <keyMapping columnObjectName="MatchResults" columnName="FIRST_NAME"/>
     </attribute>
-    <attribute id="MIDDLE_NAME" order="7" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="MIDDLE_NAME" order="8" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="MIDDLE_NAME"/>
       <keyMapping columnObjectName="MatchResults" columnName="MIDDLE_NAME"/>
     </attribute>
-    <attribute id="LAST_NAME" order="8" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="LAST_NAME" order="9" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="LAST_NAME"/>
       <keyMapping columnObjectName="MatchResults" columnName="LAST_NAME"/>
     </attribute>
   
-    <attribute id="ADDRESS_PRIM_NAME" order="9" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="ADDRESS_PRIM_NAME" order="10" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="ADDRESS_PRIM_NAME"/>
   
       <keyMapping columnObjectName="MatchResults" columnName="ADDRESS_PRIM_NAME"/>
   
     </attribute>
-    <attribute id="ADDRESS_PRIM_NUMBER" order="10" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="ADDRESS_PRIM_NUMBER" order="11" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="ADDRESS_PRIM_NUMBER"/>
       <keyMapping columnObjectName="MatchResults" columnName="ADDRESS_PRIM_NUMBER"/>
     </attribute>
-    <attribute id="ADDRESS_REGION" order="11" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="ADDRESS_REGION" order="12" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="ADDRESS_REGION"/>
       <keyMapping columnObjectName="MatchResults" columnName="ADDRESS_REGION"/>
     </attribute>
-    <attribute id="ADDRESS_POSTCODE" order="12" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="ADDRESS_POSTCODE" order="13" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="ADDRESS_POSTCODE"/>
       <keyMapping columnObjectName="MatchResults" columnName="ADDRESS_POSTCODE"/>
     </attribute>
   
-    <attribute id="BIRTHDT" order="15" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="BIRTHDT" order="16" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="BIRTHDT"/>
   
       <keyMapping columnObjectName="MatchResults" columnName="BIRTHDT"/>
   
     </attribute>
-    <attribute id="ADDRNUMBER" order="16" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="ADDRNUMBER" order="17" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="ADDRNUMBER"/>
       <keyMapping columnObjectName="MatchResults" columnName="ADDRNUMBER"/>
     </attribute>
-    <attribute id="MATCH_ROW" order="17" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="MATCH_ROW" order="18" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="MATCH_ROW"/>
       <keyMapping columnObjectName="MatchResults" columnName="MATCH_ROW"/>
     </attribute>
-    <attribute id="SYSTEM_ID" order="18" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="SYSTEM_ID" order="19" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="SYSTEM_ID"/>
       <keyMapping columnObjectName="MatchResults" columnName="SYSTEM_ID"/>
     </attribute>
-    <attribute id="ADDRESS_COUNTRY" order="19" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="ADDRESS_COUNTRY" order="20" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="ADDRESS_COUNTRY"/>
       <keyMapping columnObjectName="MatchResults" columnName="ADDRESS_COUNTRY"/>
     </attribute>
-    <attribute id="ADDRESS_LOCALITY" order="20" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="ADDRESS_LOCALITY" order="21" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="ADDRESS_LOCALITY"/>
       <keyMapping columnObjectName="MatchResults" columnName="ADDRESS_LOCALITY"/>
     </attribute>
-    <attribute id="SCV_ID" order="21" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="SCV_ID"/>
-      <keyMapping columnObjectName="MatchResults" columnName="SCV_ID"/>
-    </attribute>
-    <attribute id="ACTION" order="22" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="ACTION" order="23" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="ACTION"/>
       <keyMapping columnObjectName="MatchResults" columnName="ACTION"/>
     </attribute>
@@ -118,7 +118,7 @@
       </keyCalculation>
       </calculatedAttribute>
   
-    <calculatedAttribute id="ADDRESS" order="13" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
+    <calculatedAttribute id="ADDRESS" order="14" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="ADDRESS"/>
   
       <keyCalculation datatype="NVARCHAR" expressionLanguage="SQL" length="256">
@@ -128,7 +128,7 @@
       </keyCalculation>
       </calculatedAttribute>
   
-    <calculatedAttribute id="FIRST_MIDDLE_NAME" order="14" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
+    <calculatedAttribute id="FIRST_MIDDLE_NAME" order="15" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="FIRST_MIDDLE_NAME"/>
   
       <keyCalculation datatype="NVARCHAR" expressionLanguage="SQL" length="256">
@@ -138,7 +138,7 @@
       </keyCalculation>
       </calculatedAttribute>
   
-    <calculatedAttribute id="MATCH_ROW_STR" order="21" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
+    <calculatedAttribute id="MATCH_ROW_STR" order="22" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="MATCH_ROW_STR"/>
   
       <keyCalculation datatype="NVARCHAR" expressionLanguage="SQL" length="20">
