@@ -38,7 +38,6 @@ BEGIN
 									 ON mr."Match_ROW_ID" = mt.RELATED_ROW_ID
 									 WHERE mr.SOURCE_SYSTEM = 'TMR') b
 					ON a."Match_ROW_ID" = b.ROW_ID
-					WHERE a.GROUP_ID = 383336
 				  )
 		) WHERE GROUP_ROW_COUNT = 1;
 	
