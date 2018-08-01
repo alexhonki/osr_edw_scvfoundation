@@ -243,6 +243,10 @@ sap.ui.define([
 		},
 
 		_disableFirstButton: function(oData) {
+			
+			// Enable all buttons first
+			this._enableAllButtons();
+			
 			var that = this;
 			var oTable = that.byId("table");
 			var firstRow = oTable.getRows()[0];
