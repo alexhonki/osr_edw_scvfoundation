@@ -85,11 +85,12 @@ BEGIN
 						ON a."Match_ROW_ID" = b.ROW_ID
 		) WHERE SYSTEM_ID NOT IN (SELECT DISTINCT GROUP_TAG FROM #lt_sub_groups) AND ROW_ID IS NOT NULL;
 	
+	-- Currently only 1 hop between TMR addresses supported
 	INSERT INTO #lt_sub_groups (
-								SELECT m."Match_ROW_ID", mr.SYSTEM_ID 
+								SELECT m."Match_ROW_ID", sg.GROUP_TAG 
 								FROM :lt_tmr_rows_with_tmr_match m
-								INNER JOIN "osr.scv.foundation.db.data::MatchResults.MatchResults" mr
-								ON m.RELATED_ROW_ID = mr."Match_ROW_ID"
+								INNER JOIN #lt_sub_groups sg
+								ON m.RELATED_ROW_ID = sg."MATCH_ROW"
 							    )
 	;
 	
