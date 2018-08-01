@@ -106,4 +106,10 @@ context MatchResults {
         ACTION       : String(10);
         ACTION_RMS   : String(10);
     };
+
+    /*@@layout{"layoutInfo":{"x":-247,"y":-489.5}}*/
+    entity SubGroups {
+        MATCH_ROW   : Integer;
+        GROUP_INDEX : Integer;
+    };
 };
