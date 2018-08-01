@@ -12,7 +12,7 @@ sap.ui.define([
 	"use strict";
 
 	let DetailObject = SuperController.extend("osr.scv.match.explorer.controller.DetailObject", {
-	//this is a test
+		//this is a test
 		Formatters: Formatters,
 		/**
 		 * Run on initialize
@@ -26,7 +26,7 @@ sap.ui.define([
 			this.setModel(new JSONModel(), "personModel");
 			this.setModel(new JSONModel(), "postalModel");
 			this.setModel(new JSONModel(), "timelineModel");
-			
+
 			this.getRouter().getRoute("objectdetail").attachPatternMatched(this._onRouteMatched, this);
 
 		},
@@ -217,7 +217,7 @@ sap.ui.define([
 				//both url to filter and order the result set.
 				urlParameters: {
 					"$orderby": "SOURCE desc,UPDATED_AT desc, VALID_TO desc",
-					"$filter" : "substringof('9999',S_VALID_TO)"
+					"$filter": "substringof('9999',S_VALID_TO)"
 				},
 				success: function(data) {
 
@@ -273,22 +273,29 @@ sap.ui.define([
 				let oRmsVbox = oController.getView().byId("rms-bp-number");
 				oRmsVbox.destroyItems();
 				let oText;
+
+				let aBpNumberChecker = [];
 				//loop through all the results set. 
 				for (i = 0; i < oData.length; i++) {
 					if (oData[i].SOURCE === "RMS") {
+						
+						//check whether the same RMS BP Number already exist or not. 
+						if (aBpNumberChecker.indexOf(oData[i].SOURCE_ID) === -1) {
+							aBpNumberChecker.push(oData[i].SOURCE_ID);
+							//build a text control and add it into the VBox control.
+							
+							oText = new Text({
+								text: oData[i].SOURCE_ID
+							});
 
-						//build a text control and add it into the VBox control.
-						//oResult.BP_NUMBER += oData[i].SOURCE_ID + "\n";
-						oText = new Text({
-							text: oData[i].SOURCE_ID
-						});
-
-						if (oData[i].INACTIVE === "X") { //check for flag set from the back-end
-							oText.addStyleClass("rmsBPInactive");
-						} else {
-							oText.addStyleClass("rmsBPActive");
+							if (oData[i].INACTIVE === "X") { //check for flag set from the back-end
+								oText.addStyleClass("rmsBPInactive");
+							} else {
+								oText.addStyleClass("rmsBPActive");
+							}
+							oRmsVbox.addItem(oText);
 						}
-						oRmsVbox.addItem(oText);
+
 					} else if (oData[i].SOURCE === "TMR") {
 
 						//add for multiple license number.
