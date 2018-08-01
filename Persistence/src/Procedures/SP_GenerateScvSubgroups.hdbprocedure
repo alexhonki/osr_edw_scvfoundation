@@ -41,7 +41,7 @@ BEGIN
 				  )
 		) WHERE GROUP_ROW_COUNT = 1;
 	
-	INSERT INTO #lt_sub_groups (SELECT * FROM :lt_rms_rows_with_tmr_match);
+	INSERT INTO #lt_sub_groups (SELECT * FROM :lt_rms_rows_with_tmr_match UNION ALL SELECT RELATED_ROW_ID AS MATCH_ROW, SYSTEM_ID AS GROUP_TAG FROM :lt_rms_rows_with_tmr_match WHERE RELATED_ROW IS NOT NULL);
 	
 	-- Step 2: TMR rows with a RMS match
 	lt_tmr_rows_with_rms_match = 
