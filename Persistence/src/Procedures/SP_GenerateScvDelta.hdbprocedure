@@ -24,8 +24,6 @@ BEGIN
 	-- Temporary table
 	--CREATE LOCAL TEMPORARY TABLE #lt_delta_scv_ids (MATCH_ROW INTEGER, RELATED_ROW INTEGER, POLICY_NAME NVARCHAR(256), SCORE INTEGER, SCV_ID NVARCHAR(20));      
 	
-	
-	
 	lt_master = 
 		SELECT "Match_ROW_ID", RELATED_ROW_ID, 0 as RELATED_TEMP, POLICY_NAME, SCORE, SCV_ID FROM "osr.scv.foundation.db.data::MatchResults.MatchResults" AS a
 		LEFT OUTER JOIN (SELECT * 
@@ -41,34 +39,60 @@ BEGIN
 	    ) c
 	    ON a."Match_ROW_ID" = c.MATCH_ROW_ID
 	    WHERE a.GROUP_ID = 52164;
-	    
+	
+	-- Add match rows with existing SCV IDs    
 	INSERT INTO "osr.scv.foundation.db.data::MatchResults.Delta" (SELECT * FROM :lt_master);
 	
-	lt_rows_with_missing_scv_ids = SELECT MATCH_ROW, RELATED_ROW FROM "osr.scv.foundation.db.data::MatchResults.Delta" WHERE SCV_ID is null;
-	
-	lt_first_scan = SELECT MATCH_ROW, SCV_ID FROM "osr.scv.foundation.db.data::MatchResults.Delta" WHERE MATCH_ROW IN (SELECT RELATED_ROW FROM :lt_rows_with_missing_scv_ids) AND SCV_ID IS NOT NULL;
+	-- Scan 1
+	lt_rows_with_missing_scv_ids_s1 = SELECT MATCH_ROW, RELATED_ROW FROM "osr.scv.foundation.db.data::MatchResults.Delta" WHERE SCV_ID is null;
+	lt_first_level_matches = SELECT MATCH_ROW, RELATED_ROW, SCV_ID FROM "osr.scv.foundation.db.data::MatchResults.Delta" WHERE MATCH_ROW IN (SELECT RELATED_ROW FROM :lt_rows_with_missing_scv_ids_s1) AND SCV_ID IS NOT NULL;
     
-    SELECT COUNT(*) INTO l_size FROM :lt_first_scan;
+    SELECT COUNT(*) INTO l_size FROM :lt_first_level_matches;
     
     IF :l_size > 0 THEN
-    
-    	lt_write_first_scan = SELECT m.MATCH_ROW, m.RELATED_ROW, s.SCV_ID FROM :lt_rows_with_missing_scv_ids m
-    						  INNER JOIN :lt_first_scan s
+    	
+    	-- Use match row and related row as a key in delta table
+    	lt_write_first_level_matches = SELECT m.MATCH_ROW, m.RELATED_ROW, s.SCV_ID FROM :lt_rows_with_missing_scv_ids_s1 m
+    						  INNER JOIN :lt_first_level_matches s
     						  ON m.RELATED_ROW = s.MATCH_ROW;
     	
+    	-- Update delta table with first level matches
     	UPDATE "osr.scv.foundation.db.data::MatchResults.Delta" d SET SCV_ID = w.SCV_ID 
-    	FROM "osr.scv.foundation.db.data::MatchResults.Delta" d , :lt_write_first_scan w 
+    	FROM "osr.scv.foundation.db.data::MatchResults.Delta" d , :lt_write_first_level_matches w 
     	WHERE d.MATCH_ROW = w.MATCH_ROW and d.RELATED_ROW = w.MATCH_ROW;
     
     END IF;
     
+    -- Check if there are any match rows left where SCV ID is null
+    SELECT COUNT(*) INTO l_size FROM  "osr.scv.foundation.db.data::MatchResults.Delta" WHERE SCV_ID IS NULL OR SCV_ID = 0;
+    IF ( :l_size > 0) THEN
     
+    	-- Scan 2
+    	lt_rows_with_missing_scv_ids_s2 = SELECT MATCH_ROW, RELATED_ROW FROM "osr.scv.foundation.db.data::MatchResults.Delta" WHERE SCV_ID is null;
+	
+		-- Get all related row IDs for first level matches where SCV ID is null
+		lt_join_scan_2 = SELECT b.RELATED_ROW FROM :lt_rows_with_missing_scv_ids_s2 a LEFT OUTER JOIN :lt_first_level_matches b on a.RELATED_ROW = b.MATCH_ROW;
+		
+		-- Use these IDs as a join link between 1st and 2nd level degree matches
+		lt_second_level_matches = SELECT MATCH_ROW, SCV_ID FROM "osr.scv.foundation.db.data::MatchResults.Delta" WHERE MATCH_ROW IN (SELECT RELATED_ROW FROM :lt_join_scan_2) AND SCV_ID IS NOT NULL;
+		
+		SELECT COUNT(*) INTO l_size FROM :lt_second_level_matches;
+    
+	    IF :l_size > 0 THEN
+	    
+	    	lt_write_second_level_matches = SELECT m.MATCH_ROW, m.RELATED_ROW, s.SCV_ID FROM :lt_rows_with_missing_scv_ids_s2 m
+	    						  INNER JOIN :lt_second_level_matches s
+	    						  ON m.RELATED_ROW = s.MATCH_ROW;
+	    	
+	    	UPDATE "osr.scv.foundation.db.data::MatchResults.Delta" d SET SCV_ID = w.SCV_ID 
+	    	FROM "osr.scv.foundation.db.data::MatchResults.Delta" d , :lt_write_second_level_matches w 
+	    	WHERE d.MATCH_ROW = w.MATCH_ROW and d.RELATED_ROW = w.MATCH_ROW;
+	    
+	    END IF;
+    
+    END IF;
     
     -- Check result and assign SCV ID if found
-	
-	
-	
-	
 	
 	-- ### Clean-up ##############################################################################################################
 	--DROP TABLE #lt_delta_scv_ids;
