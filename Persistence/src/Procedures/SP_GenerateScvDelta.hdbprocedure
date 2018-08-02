@@ -33,7 +33,7 @@ BEGIN
 	    INNER JOIN (
 	    SELECT DISTINCT mh.MATCH_ROW_ID, sh.SCV_ID AS SCV_ID FROM "osr.scv.foundation.db.data::HashResults.MatchResultsHash" as mh
 		LEFT OUTER JOIN (
-					SELECT SCV_ID, "MATCH_ROW_CHECKSUM"  FROM "osr.scv.foundation.db.data::SCVFoundation.EntityMappingHistory"
+					SELECT DISTINCT SCV_ID, "MATCH_ROW_CHECKSUM"  FROM "osr.scv.foundation.db.data::SCVFoundation.EntityMappingHistory"
 					) as sh
 		ON mh."HASH" = sh."MATCH_ROW_CHECKSUM"
 	    ) c
