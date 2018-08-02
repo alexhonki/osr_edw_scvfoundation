@@ -103,10 +103,10 @@ context MatchResults {
     entity Delta {
         MATCH_ROW   : Integer not null;
         RELATED_ROW : Integer;
-        RELATED_TEMP : Integer;
         POLICY_NAME : String(256);
         SCORE       : Integer;
         SCV_ID      : String(20);
+        GROUP_INDEX		: Integer;
     };
 
 
