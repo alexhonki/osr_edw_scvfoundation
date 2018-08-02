@@ -102,7 +102,8 @@ BEGIN
 		FROM "osr.scv.foundation.db.data::MatchResults.MatchResults"
 		WHERE "Match_ROW_ID" NOT IN (SELECT MATCH_ROW FROM #lt_sub_groups);
 	
-	INSERT INTO #lt_sub_groups (SELECT * FROM :lt_missing_rows);
+	INSERT INTO "osr.scv.foundation.db.data::MatchResults.SubGroups" (SELECT * FROM :lt_missing_rows);
+
 	
 	-- ### Clean-up ##############################################################################################################
 	DROP TABLE #lt_sub_groups;
