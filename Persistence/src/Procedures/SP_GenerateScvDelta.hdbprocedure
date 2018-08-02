@@ -38,7 +38,7 @@ BEGIN
 		ON mh."HASH" = sh."MATCH_ROW_CHECKSUM"
 	    ) c
 	    ON a."Match_ROW_ID" = c.MATCH_ROW_ID
-	    WHERE a.GROUP_ID = 52164;
+	    --WHERE a.GROUP_ID = 52164;
 	
 	-- Add match rows with existing SCV IDs    
 	INSERT INTO #lt_delta_scv_ids (SELECT * FROM :lt_master);
