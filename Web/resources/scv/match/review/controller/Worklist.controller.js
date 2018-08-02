@@ -453,10 +453,15 @@ sap.ui.define([
 				history.go(-1);
 			}
 		},
-
+		/**
+		 * Responsible for the universal search field.
+		 * @return {[type]}        [description]
+		 */
 		onSearch: function(oEvent) {
-			this.getView().byId("table").setBusy(true);
+			
 			if (oEvent.getParameters().refreshButtonPressed) {
+				
+				this.getView().byId("table").setBusy(true);
 				// Search field's 'refresh' button has been pressed.
 				// This is visible if you select any master list item.
 				// In this case no new search is triggered, we only
@@ -465,12 +470,17 @@ sap.ui.define([
 			} else {
 				var oTableSearchState = [];
 				var sQuery = oEvent.getParameter("query");
+				//do trim for white spaces. 
+				sQuery = sQuery.trim();
 
 				if (sQuery && sQuery.length > 0) {
+					//only enable busy if its a valid search query.
+					this.getView().byId("table").setBusy(true);
 					// Convert search string to lower case (on backend, convert column content to lowercase as well)
 					oTableSearchState = [new Filter("tolower(NAME)", FilterOperator.Contains, "'" + sQuery.toLowerCase() + "'")];
+					this._applySearch(oTableSearchState);
 				}
-				this._applySearch(oTableSearchState);
+				
 			}
 		},
 
@@ -553,7 +563,7 @@ sap.ui.define([
 			// Reset icon tab filters
 			//this.getView().byId("iconTabBar").setSelectedKey('all');
 			//this.getView().byId("subIconTabBar").setSelectedKey('all');
-			
+
 			//set busy state for the table.
 			this.getView().byId("table").setBusy(false);
 		},
@@ -581,8 +591,7 @@ sap.ui.define([
 				oViewModel.setProperty("/globalFilter", "reviewGroups");
 			} else if (sKey === 'promoteGroups') {
 				oViewModel.setProperty("/globalFilter", "promoteGroups");
-			}
-			else {
+			} else {
 				oViewModel.setProperty("/globalFilter", "allDuplicates");
 			}
 
@@ -591,7 +600,7 @@ sap.ui.define([
 
 			var oIconTabBar = this.getView().byId("iconTabBar");
 			var oEvent = new sap.ui.base.Event("customSelect", oIconTabBar, {
-				"selectedKey": oIconTabBar.getSelectedKey(), 
+				"selectedKey": oIconTabBar.getSelectedKey(),
 				"item": this.getView().byId(this.getView().byId("iconTabBar").getSelectedKey()),
 				"selectedItem": this.getView().byId(this.getView().byId("iconTabBar").getSelectedKey())
 			});
