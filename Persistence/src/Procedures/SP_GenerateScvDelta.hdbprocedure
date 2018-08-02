@@ -94,7 +94,7 @@ BEGIN
     
     -- Write into delta table
     INSERT INTO "osr.scv.foundation.db.data::MatchResults.Delta" (
-    	SELECT MATCH_ROW, RELATED_ROW, SCORE, POLICY_NAME, SCV_ID,
+    	SELECT MATCH_ROW, RELATED_ROW, POLICY_NAME, SCORE, SCV_ID,
     	ROW_NUMBER() OVER (PARTITION BY MATCH_ROW, RELATED_ROW, POLICY_NAME, SCORE ORDER BY POLICY_NAME, SCORE DESC) AS GROUP_INDEX
     	FROM #lt_delta_scv_ids
     );
