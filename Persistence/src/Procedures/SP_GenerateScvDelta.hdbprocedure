@@ -24,6 +24,8 @@ BEGIN
 	-- Temporary table
 	CREATE LOCAL TEMPORARY TABLE #lt_delta_scv_ids (MATCH_ROW INTEGER, RELATED_ROW INTEGER, POLICY_NAME NVARCHAR(256), SCORE INTEGER, SCV_ID NVARCHAR(20));      
 	
+	TRUNCATE TABLE "osr.scv.foundation.db.data::MatchResults.Delta";
+	
 	lt_master = 
 		SELECT "Match_ROW_ID", RELATED_ROW_ID, POLICY_NAME, SCORE, SCV_ID FROM "osr.scv.foundation.db.data::MatchResults.MatchResults" AS a
 		LEFT OUTER JOIN (SELECT * 
