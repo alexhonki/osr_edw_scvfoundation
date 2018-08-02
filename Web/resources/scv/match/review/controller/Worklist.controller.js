@@ -453,6 +453,8 @@ sap.ui.define([
 				history.go(-1);
 			}
 		},
+		
+		
 		/**
 		 * Responsible for the universal search field.
 		 * @return {[type]}        [description]

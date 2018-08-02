@@ -1,0 +1,76 @@
+PROCEDURE "osr.scv.foundation.db.Procedures::SP_GenerateScvDelta" (
+	OUT o_return_code		NVARCHAR(128), 															-- 0 = execution successful; 1 = execution raised exception.
+	OUT o_message			NVARCHAR(1000) 	
+)
+   LANGUAGE SQLSCRIPT
+   SQL SECURITY INVOKER
+   AS
+BEGIN
+   /*************************************
+       Write your procedure logic 
+   *************************************/
+   	
+   	DECLARE l_size INTEGER DEFAULT 0;
+   	
+   	DECLARE EXIT HANDLER FOR SQLEXCEPTION
+	BEGIN
+		
+		--DROP TABLE #lt_delta_scv_ids;
+	
+		o_return_code :=  'ERROR';
+		o_message:=  'ERROR: ' || ::SQL_ERROR_CODE || ' ' || ::SQL_ERROR_MESSAGE;
+	END;
+	
+	-- Temporary table
+	--CREATE LOCAL TEMPORARY TABLE #lt_delta_scv_ids (MATCH_ROW INTEGER, RELATED_ROW INTEGER, POLICY_NAME NVARCHAR(256), SCORE INTEGER, SCV_ID NVARCHAR(20));      
+	
+	
+	
+	lt_master = 
+		SELECT "Match_ROW_ID", RELATED_ROW_ID, 0 as RELATED_TEMP, POLICY_NAME, SCORE, SCV_ID FROM "osr.scv.foundation.db.data::MatchResults.MatchResults" AS a
+		LEFT OUTER JOIN (SELECT * 
+	    				 FROM "osr.scv.foundation.db.data::MatchResults.MatchTracing"
+	                    ) AS b
+	    ON a."Match_ROW_ID" = b.ROW_ID
+	    INNER JOIN (
+	    SELECT DISTINCT mh.MATCH_ROW_ID, sh.SCV_ID AS SCV_ID FROM "osr.scv.foundation.db.data::HashResults.MatchResultsHash" as mh
+		LEFT OUTER JOIN (
+					SELECT SCV_ID, "MATCH_ROW_CHECKSUM"  FROM "osr.scv.foundation.db.data::SCVFoundation.EntityMappingHistory"
+					) as sh
+		ON mh."HASH" = sh."MATCH_ROW_CHECKSUM"
+	    ) c
+	    ON a."Match_ROW_ID" = c.MATCH_ROW_ID
+	    WHERE a.GROUP_ID = 52164;
+	    
+	INSERT INTO "osr.scv.foundation.db.data::MatchResults.Delta" (SELECT * FROM :lt_master);
+	
+	lt_rows_with_missing_scv_ids = SELECT MATCH_ROW, RELATED_ROW FROM "osr.scv.foundation.db.data::MatchResults.Delta" WHERE SCV_ID is null;
+	
+	lt_first_scan = SELECT MATCH_ROW, SCV_ID FROM "osr.scv.foundation.db.data::MatchResults.Delta" WHERE MATCH_ROW IN (SELECT RELATED_ROW FROM :lt_rows_with_missing_scv_ids) AND SCV_ID IS NOT NULL;
+    
+    SELECT COUNT(*) INTO l_size FROM :lt_first_scan;
+    
+    IF :l_size > 0 THEN
+    
+    	lt_write_first_scan = SELECT m.MATCH_ROW, m.RELATED_ROW, s.SCV_ID FROM :lt_rows_with_missing_scv_ids m
+    						  INNER JOIN :lt_first_scan s
+    						  ON m.RELATED_ROW = s.MATCH_ROW;
+    	
+    	UPDATE "osr.scv.foundation.db.data::MatchResults.Delta" d SET SCV_ID = w.SCV_ID 
+    	FROM "osr.scv.foundation.db.data::MatchResults.Delta" d , :lt_write_first_scan w 
+    	WHERE d.MATCH_ROW = w.MATCH_ROW and d.RELATED_ROW = w.MATCH_ROW;
+    
+    END IF;
+    
+    
+    
+    -- Check result and assign SCV ID if found
+	
+	
+	
+	
+	
+	-- ### Clean-up ##############################################################################################################
+	--DROP TABLE #lt_delta_scv_ids;
+   
+END

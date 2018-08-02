@@ -99,6 +99,17 @@ context MatchResults {
             CONTACT_STD_CHECKSUM : Binary(32);
     };
 
+    /*@@layout{"layoutInfo":{}}*/
+    entity Delta {
+        MATCH_ROW   : Integer not null;
+        RELATED_ROW : Integer;
+        RELATED_TEMP : Integer;
+        POLICY_NAME : String(256);
+        SCORE       : Integer;
+        SCV_ID      : String(20);
+    };
+
+
     /*@@layout{"layoutInfo":{"x":499,"y":-225.5}}*/
     entity MatchDelta {
         MATCH_ROW_ID : Integer;
