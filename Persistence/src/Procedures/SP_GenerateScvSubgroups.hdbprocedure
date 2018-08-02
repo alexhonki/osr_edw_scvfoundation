@@ -96,6 +96,14 @@ BEGIN
 	
 	INSERT INTO "osr.scv.foundation.db.data::MatchResults.SubGroups" (SELECT * FROM #lt_sub_groups);
 	
+	-- Update group tags which are null -> default is to assign the system ID of the match record as the group tag
+	lt_missing_rows = 
+		SELECT "Match_ROW_ID", SYSTEM_ID 
+		FROM "osr.scv.foundation.db.data::MatchResults.MatchResults"
+		WHERE "Match_ROW_ID" NOT IN (SELECT MATCH_ROW FROM #lt_sub_groups);
+	
+	INSERT INTO #lt_sub_groups (SELECT * FROM :lt_missing_rows);
+	
 	-- ### Clean-up ##############################################################################################################
 	DROP TABLE #lt_sub_groups;
    
