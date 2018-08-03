@@ -109,6 +109,11 @@
       <descriptions defaultDescription="ACTION"/>
       <keyMapping columnObjectName="MatchResults" columnName="ACTION"/>
     </attribute>
+  
+    <attribute id="SCV_ID" order="24" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="SCV_ID"/>
+      <keyMapping columnObjectName="MatchResults" columnName="SCV_ID"/>
+    </attribute>
   </attributes>
   <calculatedAttributes>
     <calculatedAttribute id="NAME" order="1" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false" key="true">

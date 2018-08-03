@@ -187,8 +187,12 @@ LEFT OUTER JOIN (
 			) c
 ON 	b.GROUP_TAG = c.GROUP_TAG	) b
 
+WHERE a.SCV_ID IS NULL AND  a.MATCH_ROW_ID = b.MATCH_ROW;
+
+
+UPDATE "osr.scv.foundation.db.data::MatchResults.MatchDelta" a SET a.SCV_ID = 0
+FROM "osr.scv.foundation.db.data::MatchResults.MatchDelta" a
 WHERE a.SCV_ID IS NULL;
-			
 			
 			
 --	UPDATE "osr.scv.foundation.db.data::MatchResults.MatchDelta" a SET  a.ACTION_RMS = b.ACTION
