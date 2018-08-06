@@ -185,8 +185,7 @@ sap.ui.define([
       oBinding.attachDataReceived(this.fOnDataReceived);
       
       // For the second table
-
-      this.fOnDataReceived2 = function(oData) {
+      this.fOnDataReceivedDetailTable = function(oData) {
         var tableLength = oData.getSource().iLength;
         if (tableLength === 0) {
           that.getView().byId("detailsTable1").setVisibleRowCount(1);
@@ -199,7 +198,7 @@ sap.ui.define([
       // //attached a function call once data is received call
       //fOnDataReceived2 function
       var oBinding2 = this._oDetailTable.getBinding("rows");
-      oBinding2.attachDataReceived(this.fOnDataReceived2);
+      oBinding2.attachDataReceived(this.fOnDataReceivedDetailTable);
 
     },
 
