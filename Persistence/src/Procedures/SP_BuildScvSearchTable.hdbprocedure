@@ -37,8 +37,9 @@ BEGIN
 					(b.STREET || '|' || b.CITY1 || '|' || b.POST_CODE1
 					) AS SEARCH_STRING_LT12,
 					-- SEARCH_STRING_CLEANSED_LT12
-					(b.STD_ADDR_PRIM_NAME_FULL || '|' || b.STD_ADDR_LOCALITY || '|' || b.STD_ADDR_POSTCODE1 || '|' || b. STD_ADDR_PRIM_NAME || ' ' || c.ADDR_TYPE_ADD
-					) AS SEARCH_STRING_CLEANSED_LT12
+					CASE WHEN c.ADDR_TYPE_ADD is NULL THEN (b.STD_ADDR_PRIM_NAME_FULL || '|' || b.STD_ADDR_LOCALITY || '|' || b.STD_ADDR_POSTCODE1 || '|' || b.STD_ADDR_PRIM_NAME)
+					ELSE (b.STD_ADDR_PRIM_NAME_FULL || '|' || b.STD_ADDR_LOCALITY || '|' || b.STD_ADDR_POSTCODE1 || '|' || b.STD_ADDR_PRIM_NAME || ' ' || c.ADDR_TYPE_ADD) END
+					AS "SEARCH_STRING_CLEANSED_LT12"
 					FROM "osr.scv.foundation.db.data::SCVFoundation.PersonRms" a
 					INNER JOIN
 					"osr.scv.foundation.db.data::SCVFoundation.AddressRms" b
@@ -72,8 +73,9 @@ BEGIN
 			(b.STREET_NAME || '|' || b.SUBURB || '|' || b.POSTCODE
 			) AS SEARCH_STRING_LT12,
 			-- SEARCH_STRING_CLEANSED_LT12
-			(b.STD_ADDR_PRIM_NAME_FULL || '|' || b.STD_ADDR_LOCALITY || '|' || b.STD_ADDR_POSTCODE1 || '|' || b. STD_ADDR_PRIM_NAME || ' ' || c.ADDR_TYPE_ADD
-			) AS SEARCH_STRING_CLEANSED_LT12
+			CASE WHEN c.ADDR_TYPE_ADD is NULL THEN (b.STD_ADDR_PRIM_NAME_FULL || '|' || b.STD_ADDR_LOCALITY || '|' || b.STD_ADDR_POSTCODE1 || '|' || b.STD_ADDR_PRIM_NAME || ' ' || c.ADDR_TYPE_ADD)
+			ELSE (b.STD_ADDR_PRIM_NAME_FULL || '|' || b.STD_ADDR_LOCALITY || '|' || b.STD_ADDR_POSTCODE1 || '|' || b.STD_ADDR_PRIM_NAME) END
+			AS SEARCH_STRING_CLEANSED_LT12
 			FROM "osr.scv.foundation.db.data::SCVFoundation.PersonTmr" a
 			INNER JOIN
 			"osr.scv.foundation.db.data::SCVFoundation.AddressTmr" b
