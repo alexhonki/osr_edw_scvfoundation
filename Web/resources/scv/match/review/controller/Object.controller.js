@@ -156,10 +156,10 @@ sap.ui.define([
 					path: sObjectPathRelated,
 					template: oController.byId("detailsTable1").getBindingInfo("rows").template
 				});
-				
+
 				//disable the very first button on the main table.
 				oController._disableFirstButton();
-				
+
 				oController.getView().byId("table").setVisibleRowCount(oData.getSource().iLength);
 
 				// Read assessments and set initial selection
@@ -601,12 +601,15 @@ sap.ui.define([
 		},
 
 		boxTickedEvent: function(oEvent) {
-			if (oEvent.getParameters().rowIndex > -1) {
-				var Path = oEvent.getParameters().rowContext.sPath;
-				var sysId = this.getModel().getProperty(Path + "/GROUP_TAG");
-				var oRows = this.byId("table").getRows();
-				var that = this;
-				if (this.byId("table").isIndexSelected(oEvent.getParameter("rowIndex"))) {
+
+			var that = this;
+			
+			if (typeof oEvent.getParameters().rowContext !== "undefined" && oEvent.getParameters().rowContext !== null) {
+				var path = oEvent.getParameters().rowContext.sPath;
+				var sysId = that.getModel().getProperty(path + "/GROUP_TAG");
+				var oRows = that.byId("table").getRows();
+
+				if (that.byId("table").isIndexSelected(oEvent.getParameter("rowIndex"))) {
 					for (var i = 0; i < oRows.length; i++) {
 						if (sysId === that.getModel().getProperty(oRows[i].getBindingContext().getPath() + "/GROUP_TAG")) {
 							if (!that.byId("table").isIndexSelected(i)) {
@@ -615,6 +618,12 @@ sap.ui.define([
 						}
 					}
 				} else {
+
+					//allow a single item to be unticked 
+					//that.byId("table").removeSelectionInterval(oEvent.getParameters().rowIndex, oEvent.getParameters().rowIndex);
+
+					// in case we want to disable all the ticked base on their grouping. 
+
 					for (var i = 0; i < oRows.length; i++) {
 						if (sysId === that.getModel().getProperty(oRows[i].getBindingContext().getPath() + "/GROUP_TAG")) {
 							if (that.byId("table").isIndexSelected(i)) {
@@ -624,6 +633,7 @@ sap.ui.define([
 					}
 				}
 			}
+
 		},
 		onSwitchChange: function(oEvent) {
 			var path = oEvent.getSource().getParent().getBindingContext().getPath() + "/GROUP_TAG";
