@@ -40,7 +40,10 @@ sap.ui.define([
 					busy: true,
 					delay: 0
 				});
+
+			//on route matched, call _onObjectMatched func
 			this.getRouter().getRoute("object").attachPatternMatched(this._onObjectMatched, this);
+
 			// Store original busy indicator delay, so it can be restored later on
 			iOriginalBusyDelay = this.getView().getBusyIndicatorDelay();
 			this.setModel(oViewModel, "objectView");
@@ -48,11 +51,10 @@ sap.ui.define([
 				// Restore original busy indicator delay for the object view
 				oViewModel.setProperty("/delay", iOriginalBusyDelay);
 			});
-			var oTable = this.byId("table");
-			this._oTable = oTable;
 
-			var oDetailTable = this.byId("detailsTable1");
-			this._oDetailTable = oDetailTable;
+			//assigning to global variable. 
+			this._oTable = this.byId("table");
+			this._oDetailTable = this.byId("detailsTable1");
 
 		},
 
@@ -120,16 +122,6 @@ sap.ui.define([
 			var sObjectPath = "/matchResultsReview('" + oEvent.getParameter("arguments").objectId.split("|")[0] + "')";
 			this._bindView(sObjectPath);
 
-			// Set header for match details table and get data
-			var matchRow = oEvent.getParameter("arguments").objectId.split("|")[1];
-			this.currentMatchRow = matchRow;
-			this.getView().byId("tableDetails1Header").setText("Matches for Row " + matchRow);
-			var sObjectPathRelated = "/matchResultsDetailsRelatedParameters(I_MATCH_ROW='" + matchRow + "')/Results";
-			this.byId("detailsTable1").bindRows({
-				path: sObjectPathRelated,
-				template: this.byId("detailsTable1").getBindingInfo("rows").template
-			});
-
 			// Disable change log tab?
 			// Read the change log count for current entity
 			var that = this;
@@ -151,13 +143,27 @@ sap.ui.define([
 				}
 			});
 
+			let oController = this;
 			this.fOnDataReceived = function(oData) {
-				that.getView().byId("table").setVisibleRowCount(oData.getSource().iLength);
-				//that._updateTableTitle(oData.getSource().iLength, that);
 
-				that._disableFirstButton(oData);
+				// once data is recieved, details table get binding with the very first 
+				// result of the data set, ensuring the first row is always loaded and selected.
+				let matchRow = oData.getParameters().data.results[0].MATCH_ROW;
+				oController.currentMatchRow = matchRow;
+				oController.getView().byId("tableDetails1Header").setText("Matches for Row " + matchRow);
+				let sObjectPathRelated = "/matchResultsDetailsRelatedParameters(I_MATCH_ROW='" + matchRow + "')/Results";
+				oController.byId("detailsTable1").bindRows({
+					path: sObjectPathRelated,
+					template: oController.byId("detailsTable1").getBindingInfo("rows").template
+				});
+				
+				//disable the very first button on the main table.
+				oController._disableFirstButton();
+				
+				oController.getView().byId("table").setVisibleRowCount(oData.getSource().iLength);
+
 				// Read assessments and set initial selection
-				that.getModel().read(sObjectPath + "/matchAssessments", {
+				oController.getModel().read(sObjectPath + "/matchAssessments", {
 
 					urlParameters: {
 						"$orderby": "TIMESTAMP desc"
@@ -165,12 +171,13 @@ sap.ui.define([
 					success: function(oData) {
 						// Adjust selection for checkboxes
 						if (oData.results.length > 0) {
-							that._selectRows(oData);
+							oController._selectRows(oData);
 						}
 					}
 				});
 
 			};
+
 			var oBinding = this._oTable.getBinding("rows");
 			oBinding.attachDataReceived(this.fOnDataReceived);
 			// For the second table
@@ -211,7 +218,7 @@ sap.ui.define([
 		 * current id of the table "table"
 		 * @return {[type]}        [description]
 		 */
-		_disableFirstButton: function(oData) {
+		_disableFirstButton: function() {
 
 			var that = this;
 			// Enable all buttons first
