@@ -145,11 +145,6 @@ sap.ui.define([
 
       let oController = this;
 
-      //attached a function call once data is received call
-      //fOnDataReceived function
-      var oBinding = this._oTable.getBinding("rows");
-      oBinding.attachDataReceived(this.fOnDataReceived);
-
       this.fOnDataReceived = function(oData) {
 
         // once data is recieved, details table get binding with the very first
@@ -184,13 +179,12 @@ sap.ui.define([
 
       };
 
-
+      //attached a function call once data is received call
+      //fOnDataReceived function
+      var oBinding = this._oTable.getBinding("rows");
+      oBinding.attachDataReceived(this.fOnDataReceived);
+      
       // For the second table
-
-      // //attached a function call once data is received call
-      //fOnDataReceived2 function
-      var oBinding2 = this._oDetailTable.getBinding("rows");
-      oBinding2.attachDataReceived(this.fOnDataReceived2);
 
       this.fOnDataReceived2 = function(oData) {
         var tableLength = oData.getSource().iLength;
@@ -201,7 +195,11 @@ sap.ui.define([
 
         }
       };
-
+      
+      // //attached a function call once data is received call
+      //fOnDataReceived2 function
+      var oBinding2 = this._oDetailTable.getBinding("rows");
+      oBinding2.attachDataReceived(this.fOnDataReceived2);
 
     },
 
