@@ -128,10 +128,10 @@ BEGIN
 								WHERE m."RELATED_ROW_ID" NOT IN (SELECT "MATCH_ROW" FROM "osr.scv.foundation.db.data::MatchResults.SubGroups")
 							    )
 	;		
-	
+	*/
 
 	INSERT INTO "osr.scv.foundation.db.data::MatchResults.SubGroups" (SELECT * FROM #lt_sub_groups);									
-	*/
+	
 	
 	-- Update group tags which are null -> default is to assign the system ID of the match record as the group tag
 	lt_missing_rows = 
