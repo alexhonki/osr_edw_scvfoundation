@@ -361,6 +361,9 @@ sap.ui.define([
 			var oBinding2 = oController._oDetailTable.getBinding("rows");
 			oBinding2.attachDataReceived(oController.fOnDataReceived2);
 
+			// Set new title for details table
+			oController.getView().byId("tableDetails1Header").setText("Matches for Row " + newMatchRow);
+
 			oController.fOnDataReceived2 = function(oData) {
 
 				//set busy state for matching rows table.
@@ -373,8 +376,6 @@ sap.ui.define([
 					oController.getView().byId("detailsTable1").setVisibleRowCount(tableLength);
 
 				}
-				// Set new title for details table
-				oController.getView().byId("tableDetails1Header").setText("Matches for Row " + newMatchRow);
 
 			};
 
@@ -635,17 +636,17 @@ sap.ui.define([
 				} else {
 
 					//allow a single item to be unticked
-					//that.byId("table").removeSelectionInterval(oEvent.getParameters().rowIndex, oEvent.getParameters().rowIndex);
+					that.byId("table").removeSelectionInterval(oEvent.getParameters().rowIndex, oEvent.getParameters().rowIndex);
 
 					// in case we want to disable all the ticked base on their grouping.
 
-					for (var i = 0; i < oRows.length; i++) {
-						if (sysId === that.getModel().getProperty(oRows[i].getBindingContext().getPath() + "/GROUP_TAG")) {
-							if (that.byId("table").isIndexSelected(i)) {
-								that.byId("table").removeSelectionInterval(i, i);
-							}
-						}
-					}
+					// for (var i = 0; i < oRows.length; i++) {
+					// 	if (sysId === that.getModel().getProperty(oRows[i].getBindingContext().getPath() + "/GROUP_TAG")) {
+					// 		if (that.byId("table").isIndexSelected(i)) {
+					// 			that.byId("table").removeSelectionInterval(i, i);
+					// 		}
+					// 	}
+					// }
 				}
 			}
 
