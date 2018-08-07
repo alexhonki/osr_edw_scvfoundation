@@ -127,17 +127,34 @@ context MatchResults {
     };
 
 
-    /*@@layout{"layoutInfo":{"x":499,"y":-225.5}}*/
+    /*@@layout{"layoutInfo":{}}*/
+    
+    /*
     entity MatchDelta {
         MATCH_ROW_ID : Integer;
         SCV_ID       : Integer;
         ACTION       : String(10);
         ACTION_RMS   : String(10);
     };
+    */
+    
 
-    /*@@layout{"layoutInfo":{"x":-247,"y":-489.5}}*/
+    /*@@layout{"layoutInfo":{}}*/
     entity SubGroups {
         MATCH_ROW : Integer;
         GROUP_TAG : String(20);
     };
+
+    /*@@layout{"layoutInfo":{"x":-98,"y":163.5,"inner":{"unconnected":[{"type":"SimpleDS","id":"osr.scv.foundation.db.data::MatchResults.View_1.Delta","x":-91,"y":-205}]}}}*/
+    view MatchDelta as
+        select from Delta
+        {
+            MATCH_ROW    as MATCH_ROW_ID,
+            SCV_ID,
+            DELTA_STATUS as ACTION
+        }
+        group by
+            MATCH_ROW,
+            SCV_ID,
+            DELTA_STATUS;
 };

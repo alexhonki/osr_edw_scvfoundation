@@ -10,7 +10,7 @@ BEGIN
    *************************************/
 	Truncate Table "osr.scv.foundation.db.data::MatchResults.MatchResultsShadow";	
 	Truncate Table "osr.scv.foundation.db.data::MatchResultsReview.ReviewShadow";	
-	Truncate Table "osr.scv.foundation.db.data::MatchResults.MatchDelta";	
+	--Truncate Table "osr.scv.foundation.db.data::MatchResults.MatchDelta";	
 	Truncate Table "osr.scv.foundation.db.data::MatchResults.MatchResults";	
 	Truncate Table "osr.scv.foundation.db.data::MatchResultsReview.Assessments";	
 	Truncate Table "osr.scv.foundation.db.data::MatchResultsReview.Promotions";	
