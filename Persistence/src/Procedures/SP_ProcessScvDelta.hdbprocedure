@@ -1,0 +1,57 @@
+PROCEDURE "osr.scv.foundation.db.Procedures::SP_ProcessScvDelta" (
+ 	
+)
+   LANGUAGE SQLSCRIPT
+   SQL SECURITY INVOKER
+   --DEFAULT SCHEMA <default_schema_name>
+   AS
+BEGIN
+   
+   /*************************************
+       Process SCV Delta in multiple iterations
+   *************************************/
+  
+	--CALL "osr.scv.foundation.db.Procedures::SP_GenerateScvDelta"(0, ?,?);
+	
+	DECLARE O_RETURN_CODE NVARCHAR(128);
+	DECLARE O_MESSAGE NVARCHAR(1000);
+	
+	BEGIN
+		-- 1st iteration
+		CALL "osr.scv.foundation.db.Procedures::SP_GenerateScvDelta"(
+			I_READ_MODE => 0,
+			O_RETURN_CODE => :O_RETURN_CODE,
+			O_MESSAGE => :O_MESSAGE
+		);
+	END;
+	
+	BEGIN
+		-- 2nd iteration
+		CALL "osr.scv.foundation.db.Procedures::SP_GenerateScvDelta"(
+			I_READ_MODE => 1,
+			O_RETURN_CODE => :O_RETURN_CODE,
+			O_MESSAGE => :O_MESSAGE
+		);
+	END;
+	
+	BEGIN
+		-- 3rd iteration
+		CALL "osr.scv.foundation.db.Procedures::SP_GenerateScvDelta"(
+			I_READ_MODE => 2,
+			O_RETURN_CODE => :O_RETURN_CODE,
+			O_MESSAGE => :O_MESSAGE
+		);
+	END;
+	
+	BEGIN
+		-- 4th iteration
+		CALL "osr.scv.foundation.db.Procedures::SP_GenerateScvDelta"(
+			I_READ_MODE => 3,
+			O_RETURN_CODE => :O_RETURN_CODE,
+			O_MESSAGE => :O_MESSAGE
+		);
+	END;
+	
+   
+   
+END

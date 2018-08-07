@@ -82,6 +82,22 @@ context MatchResults {
     };
 
     /*@@layout{"layoutInfo":{}}*/
+    entity MatchTracingRows {
+        key MATCH_ROW : Integer not null;
+    };
+
+    /*@@layout{"layoutInfo":{}}*/
+    entity MatchTracingRelationships {
+        key ID          : Integer not null;
+            MATCH_ROW   : Integer not null;
+            RELATED_ROW : Integer not null;
+            POLICY_NAME : String(256);
+            RULE_NAME   : String(256);
+            SCORE       : Integer;
+    };
+
+
+    /*@@layout{"layoutInfo":{}}*/
     entity MatchGroupInfo {
         key GROUP_ID    : Integer;
             GROUP_COUNT : Integer;
@@ -106,7 +122,7 @@ context MatchResults {
         POLICY_NAME : String(256);
         SCORE       : Integer;
         SCV_ID      : String(20);
-        GROUP_INDEX		: Integer;
+        GROUP_INDEX : Integer not null;
     };
 
 
