@@ -16,31 +16,20 @@ BEGIN
    	DECLARE EXIT HANDLER FOR SQLEXCEPTION
 	BEGIN
 		
-		DROP TABLE #lt_delta_scv_ids;
-	
 		o_return_code :=  'ERROR';
 		o_message:=  'ERROR: ' || ::SQL_ERROR_CODE || ' ' || ::SQL_ERROR_MESSAGE;
 	END;
 	
-	-- Temporary table
-	CREATE LOCAL TEMPORARY TABLE #lt_delta_scv_ids (MATCH_ROW INTEGER, RELATED_ROW INTEGER, POLICY_NAME NVARCHAR(256), SCORE INTEGER, SCV_ID NVARCHAR(20));      
-	
-	INSERT INTO #lt_delta_scv_ids VALUES (1,null,null,null,null);
-	INSERT INTO #lt_delta_scv_ids VALUES (2,1,'P1',100,'S1');
-	INSERT INTO #lt_delta_scv_ids VALUES (3,1,'P2',90,null);
-	INSERT INTO #lt_delta_scv_ids VALUES (4,2,'P1',95,null);
-	INSERT INTO #lt_delta_scv_ids VALUES (5,4,'P3',90,null);
-	
 	IF :i_read_mode = 0 THEN
 		TRUNCATE TABLE "osr.scv.foundation.db.data::MatchResults.Delta";
 		lt_master = 
-		SELECT "Match_ROW_ID" as MATCH_ROW, RELATED_ROW_ID as RELATED_ROW, POLICY_NAME, SCORE, SCV_ID, 0 AS GROUP_INDEX FROM "osr.scv.foundation.db.data::MatchResults.MatchResults" AS a
+		SELECT "Match_ROW_ID" as MATCH_ROW, RELATED_ROW_ID as RELATED_ROW, POLICY_NAME, SCORE, SCV_ID, 0 AS GROUP_INDEX, DELTA_STATUS FROM "osr.scv.foundation.db.data::MatchResults.MatchResults" AS a
 		LEFT OUTER JOIN (SELECT * 
 	    				 FROM "osr.scv.foundation.db.data::MatchResults.MatchTracing"
 	                    ) AS b
 	    ON a."Match_ROW_ID" = b.ROW_ID
 	    INNER JOIN (
-	    SELECT DISTINCT mh.MATCH_ROW_ID, sh.SCV_ID AS SCV_ID FROM "osr.scv.foundation.db.data::HashResults.MatchResultsHash" as mh
+	    SELECT DISTINCT mh.MATCH_ROW_ID, CASE WHEN sh.SCV_ID IS NULL THEN '0' ELSE sh.SCV_ID END AS SCV_ID, CASE WHEN sh.SCV_ID IS NULL THEN 'New' ELSE 'Existing' END AS DELTA_STATUS FROM "osr.scv.foundation.db.data::HashResults.MatchResultsHash" as mh
 		LEFT OUTER JOIN (
 					SELECT DISTINCT SCV_ID, "MATCH_ROW_CHECKSUM"  FROM "osr.scv.foundation.db.data::SCVFoundation.EntityMappingHistory"
 					) as sh
@@ -53,11 +42,9 @@ BEGIN
 		lt_master = SELECT * FROM "osr.scv.foundation.db.data::MatchResults.Delta";
 	END IF;
 	
-	--lt_master = SELECT * FROM #lt_delta_scv_ids;
-	
 	-- Resolve SCV ID level 1
 	lt_master = 
-		SELECT m0.MATCH_ROW, m0.RELATED_ROW, m0.POLICY_NAME, m0.SCORE, COALESCE(m0.SCV_ID, m1.SCV_ID) as SCV_ID,  m0.GROUP_INDEX
+		SELECT m0.MATCH_ROW, m0.RELATED_ROW, m0.POLICY_NAME, m0.SCORE, COALESCE(m0.SCV_ID, m1.SCV_ID) as SCV_ID,  m0.GROUP_INDEX, m0.DELTA_STATUS
 		FROM :lt_master m0
 		LEFT OUTER JOIN (SELECT DISTINCT MATCH_ROW, SCV_ID FROM :lt_master) m1 
 		ON m0.RELATED_ROW = m1.MATCH_ROW;
@@ -77,14 +64,14 @@ BEGIN
 		
 	-- Perform lookup
 	lt_master = 
-		SELECT m0.MATCH_ROW, m0.RELATED_ROW, m0.POLICY_NAME, m0.SCORE,COALESCE(m0.SCV_ID, m1.SCV_ID) as SCV_ID,  m0.GROUP_INDEX
+		SELECT m0.MATCH_ROW, m0.RELATED_ROW, m0.POLICY_NAME, m0.SCORE,COALESCE(m0.SCV_ID, m1.SCV_ID) as SCV_ID,  m0.GROUP_INDEX, m0.DELTA_STATUS
 		FROM :lt_master m0
 		LEFT OUTER JOIN :lt_final_lookup_for_rows_with_no_relation m1
 		ON m0.MATCH_ROW = m1.RELATED_ROW;	
 		
 	-- Resolve final missing dependencies
 	lt_master = 
-		SELECT m0.MATCH_ROW, m0.RELATED_ROW, m0.POLICY_NAME, m0.SCORE,COALESCE(m0.SCV_ID, m1.SCV_ID) as SCV_ID,  m0.GROUP_INDEX
+		SELECT m0.MATCH_ROW, m0.RELATED_ROW, m0.POLICY_NAME, m0.SCORE,COALESCE(m0.SCV_ID, m1.SCV_ID) as SCV_ID,  m0.GROUP_INDEX, m0.DELTA_STATUS
 		FROM :lt_master m0
 		LEFT OUTER JOIN (SELECT DISTINCT MATCH_ROW, SCV_ID FROM :lt_master) m1 
 		ON m0.RELATED_ROW = m1.MATCH_ROW;
@@ -99,12 +86,4 @@ BEGIN
 		INSERT INTO "osr.scv.foundation.db.data::MatchResults.Delta" (SELECT * FROM :lt_master);
 	END IF;
 	
-	
-	
-	
-	
-	
-	-- ### Clean-up ##############################################################################################################
-	DROP TABLE #lt_delta_scv_ids;
-   
 END
