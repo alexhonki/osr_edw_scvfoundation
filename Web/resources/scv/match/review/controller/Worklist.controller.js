@@ -453,16 +453,15 @@ sap.ui.define([
 				history.go(-1);
 			}
 		},
-		
-		
+
 		/**
 		 * Responsible for the universal search field.
 		 * @return {[type]}        [description]
 		 */
 		onSearch: function(oEvent) {
-			
+			var oViewModel = this.getView().getModel("worklistView");
 			if (oEvent.getParameters().refreshButtonPressed) {
-				
+
 				this.getView().byId("table").setBusy(true);
 				// Search field's 'refresh' button has been pressed.
 				// This is visible if you select any master list item.
@@ -479,10 +478,13 @@ sap.ui.define([
 					//only enable busy if its a valid search query.
 					this.getView().byId("table").setBusy(true);
 					// Convert search string to lower case (on backend, convert column content to lowercase as well)
-					oTableSearchState = [new Filter("tolower(NAME)", FilterOperator.Contains, "'" + sQuery.toLowerCase() + "'")];
+
+					oTableSearchState = [new Filter("tolower(NAME)", FilterOperator.Contains, "'" + sQuery.toLowerCase() + "'"),
+						this._mGlobalFilters[oViewModel.getProperty("/globalFilter")]
+					];
 					this._applySearch(oTableSearchState);
 				}
-				
+
 			}
 		},
 
@@ -529,32 +531,32 @@ sap.ui.define([
 				filter = oTableSearchState;
 			} else if (catFilter === "all" && letterFilter !== "all") {
 				filter = new sap.ui.model.Filter([
-					oFilter,
-					//this._mFiltersNames[this.getView().byId("subIconTabBar").getSelectedKey()],
-					oTableSearchState[0]
+					oFilter
 				], true);
+
 			} else if (catFilter !== "all" && letterFilter === "all") {
 				filter = new sap.ui.model.Filter([
-					this._mFilters[this.getView().byId("iconTabBar").getSelectedKey()],
-					oTableSearchState[0]
+					this._mFilters[this.getView().byId("iconTabBar").getSelectedKey()]
 				], true);
 			} else {
 				if (oTableSearchState.length !== 0) {
 					filter = new sap.ui.model.Filter([
 						oFilter,
-						//this._mFiltersNames[this.getView().byId("subIconTabBar").getSelectedKey()],
-						this._mFilters[this.getView().byId("iconTabBar").getSelectedKey()],
-						oTableSearchState[0]
+						this._mFilters[this.getView().byId("iconTabBar").getSelectedKey()]
 					], true);
 				} else {
 					filter = new sap.ui.model.Filter([
 						oFilter,
-						//this._mFiltersNames[this.getView().byId("subIconTabBar").getSelectedKey()],
 						this._mFilters[this.getView().byId("iconTabBar").getSelectedKey()]
 					], true);
 				}
 			}
 
+			//add more filters from oTableSearchState if there's any. 
+			for (let i = 0; i < oTableSearchState.length; i++) {
+				filter.aFilters.push(oTableSearchState[i]);
+			}
+			
 			this._oTable.getBinding("rows").filter(filter, "Application");
 			//this._oTable.getBinding("items").filter(oTableSearchState, "Application");
 			// changes the noDataText of the list in case there are no filter results
@@ -703,7 +705,7 @@ sap.ui.define([
 				oFilter = this.getLetterFilter(this.getView().byId("subIconTabBar").getSelectedKey());
 
 			if (oEvent.oSource.sId.indexOf("subIconTabBar") > 0) {
-				// Letter filter tab
+				// Letter filter tabf
 				oViewModel.setProperty("/worklistLetterFilter", oEvent.getParameter("selectedItem").getText());
 				if (sKey === 'all') {
 
@@ -1128,7 +1130,8 @@ sap.ui.define([
 				success: function(oData) {
 					oViewModel.setProperty("/identicalMatchEntitiesCount", oData);
 					oViewModel.setProperty("/identicalMatchEntitiesCountStr", formatter.localePresentation(parseInt(oData)));
-					oViewModel.setProperty("/identicalMatchEntitiesCountPercent", ((oData / oViewModel.getProperty("/countAll")) * 100).toFixed(1) +
+					oViewModel.setProperty("/identicalMatchEntitiesCountPercent", ((oData / oViewModel.getProperty("/countAll")) * 100).toFixed(
+							1) +
 						'%');
 				},
 				filters: [this.getCategoryFilters('identicalMatchEntities')]
