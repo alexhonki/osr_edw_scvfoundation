@@ -73,7 +73,7 @@ BEGIN
 	;
 	
 	-- Step 3: TMR rows with a TMR match
-	/*
+	
 	lt_tmr_rows_with_tmr_match = 
 		SELECT *,
 		ROW_NUMBER() OVER (PARTITION BY GROUP_ID, "Match_ROW_ID", SOURCE_SYSTEM, SYSTEM_ID, ROW_ID ORDER BY SCORE DESC) AS GROUP_ROW_COUNT
@@ -102,7 +102,7 @@ BEGIN
 	;
 	
 	INSERT INTO "osr.scv.foundation.db.data::MatchResults.SubGroups" (SELECT * FROM #lt_sub_groups);
-	*/
+	
 	
 	/*
 	--Step 4: Rms to Rms
