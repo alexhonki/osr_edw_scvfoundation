@@ -29,7 +29,7 @@ BEGIN
 	                    ) AS b
 	    ON a."Match_ROW_ID" = b.ROW_ID
 	    INNER JOIN (
-	    SELECT DISTINCT mh.MATCH_ROW_ID, CASE WHEN sh.SCV_ID IS NULL THEN '0' ELSE sh.SCV_ID END AS SCV_ID, CASE WHEN sh.SCV_ID IS NULL THEN 'New' ELSE 'Existing' END AS DELTA_STATUS FROM "osr.scv.foundation.db.data::HashResults.MatchResultsHash" as mh
+	    SELECT DISTINCT mh.MATCH_ROW_ID, sh.SCV_ID AS SCV_ID, CASE WHEN sh.SCV_ID IS NULL THEN 'New' ELSE 'Existing' END AS DELTA_STATUS FROM "osr.scv.foundation.db.data::HashResults.MatchResultsHash" as mh
 		LEFT OUTER JOIN (
 					SELECT DISTINCT SCV_ID, "MATCH_ROW_CHECKSUM"  FROM "osr.scv.foundation.db.data::SCVFoundation.EntityMappingHistory"
 					) as sh
