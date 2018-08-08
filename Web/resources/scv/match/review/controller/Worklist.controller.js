@@ -30,121 +30,6 @@ sap.ui.define([
 		 */
 		onInit: function() {
 
-			/*var oIconTabBar = this.getView().byId("subIconTabBar");
-			oIconTabBar.addItem(new IconTabFilter({
-				key: 'all',
-				text: 'All'
-			}));
-			oIconTabBar.addItem(new IconTabSeparator({}));
-			oIconTabBar.addItem(new IconTabFilter({
-				key: 'a',
-				text: 'A'
-			}));
-			oIconTabBar.addItem(new IconTabFilter({
-				key: 'b',
-				text: 'B'
-			}));
-			oIconTabBar.addItem(new IconTabFilter({
-				key: 'c',
-				text: 'C'
-			}));
-			oIconTabBar.addItem(new IconTabFilter({
-				key: 'd',
-				text: 'D'
-			}));
-			oIconTabBar.addItem(new IconTabFilter({
-				key: 'e',
-				text: 'E'
-			}));
-			oIconTabBar.addItem(new IconTabFilter({
-				key: 'f',
-				text: 'F'
-			}));
-			oIconTabBar.addItem(new IconTabFilter({
-				key: 'g',
-				text: 'G'
-			}));
-			oIconTabBar.addItem(new IconTabFilter({
-				key: 'h',
-				text: 'H'
-			}));
-			oIconTabBar.addItem(new IconTabFilter({
-				key: 'i',
-				text: 'I'
-			}));
-			oIconTabBar.addItem(new IconTabFilter({
-				key: 'j',
-				text: 'J'
-			}));
-			oIconTabBar.addItem(new IconTabFilter({
-				key: 'k',
-				text: 'K'
-			}));
-			oIconTabBar.addItem(new IconTabFilter({
-				key: 'l',
-				text: 'L'
-			}));
-			oIconTabBar.addItem(new IconTabFilter({
-				key: 'm',
-				text: 'M'
-			}));
-			oIconTabBar.addItem(new IconTabFilter({
-				key: 'n',
-				text: 'N'
-			}));
-			oIconTabBar.addItem(new IconTabFilter({
-				key: 'o',
-				text: 'O'
-			}));
-			oIconTabBar.addItem(new IconTabFilter({
-				key: 'p',
-				text: 'P'
-			}));
-			oIconTabBar.addItem(new IconTabFilter({
-				key: 'q',
-				text: 'Q'
-			}));
-			oIconTabBar.addItem(new IconTabFilter({
-				key: 'r',
-				text: 'R'
-			}));
-			oIconTabBar.addItem(new IconTabFilter({
-				key: 's',
-				text: 'S'
-			}));
-			oIconTabBar.addItem(new IconTabFilter({
-				key: 't',
-				text: 'T'
-			}));
-			oIconTabBar.addItem(new IconTabFilter({
-				key: 'u',
-				text: 'U'
-			}));
-			oIconTabBar.addItem(new IconTabFilter({
-				key: 'v',
-				text: 'V'
-			}));
-			oIconTabBar.addItem(new IconTabFilter({
-				key: 'w',
-				text: 'W'
-			}));
-			oIconTabBar.addItem(new IconTabFilter({
-				key: 'x',
-				text: 'X'
-			}));
-			oIconTabBar.addItem(new IconTabFilter({
-				key: 'y',
-				text: 'Y'
-			}));
-			oIconTabBar.addItem(new IconTabFilter({
-				key: 'z',
-				text: 'Z'
-			}));
-			oIconTabBar.addItem(new IconTabFilter({
-				key: 'other',
-				text: 'Other'
-			}));*/
-
 			var oViewModel,
 				iOriginalBusyDelay,
 				oTable = this.byId("table");
@@ -194,41 +79,10 @@ sap.ui.define([
 			this.setModel(oViewModel, "worklistView");
 
 			// Prepare filters
-			var uniqueMatchEntitiesFilter = new sap.ui.model.Filter("GROUP_CATEGORY", sap.ui.model.FilterOperator.EQ, "0");
-			var identicalMatchEntitiesFilters = new sap.ui.model.Filter("GROUP_CATEGORY", sap.ui.model.FilterOperator.EQ, "1");
-			var nearIdenticalMatchEntitiesFilters = new sap.ui.model.Filter("GROUP_CATEGORY", sap.ui.model.FilterOperator.EQ, "2");
-			var similarMatchEntitiesFilters = new sap.ui.model.Filter("GROUP_CATEGORY", sap.ui.model.FilterOperator.EQ, "3");
-			/*	var aSurnameFilter = new sap.ui.model.Filter("LAST_NAME", sap.ui.model.FilterOperator.StartsWith, "A");
-				var bSurnameFilter = new sap.ui.model.Filter("LAST_NAME", sap.ui.model.FilterOperator.StartsWith, "B");
-				var cSurnameFilter = new sap.ui.model.Filter("LAST_NAME", sap.ui.model.FilterOperator.StartsWith, "C");
-				var dSurnameFilter = new sap.ui.model.Filter("LAST_NAME", sap.ui.model.FilterOperator.StartsWith, "D");
-				var eSurnameFilter = new sap.ui.model.Filter("LAST_NAME", sap.ui.model.FilterOperator.StartsWith, "E");
-				var fSurnameFilter = new sap.ui.model.Filter("LAST_NAME", sap.ui.model.FilterOperator.StartsWith, "F");
-				var gSurnameFilter = new sap.ui.model.Filter("LAST_NAME", sap.ui.model.FilterOperator.StartsWith, "G");
-				var hSurnameFilter = new sap.ui.model.Filter("LAST_NAME", sap.ui.model.FilterOperator.StartsWith, "H");
-				var iSurnameFilter = new sap.ui.model.Filter("LAST_NAME", sap.ui.model.FilterOperator.StartsWith, "I");
-				var jSurnameFilter = new sap.ui.model.Filter("LAST_NAME", sap.ui.model.FilterOperator.StartsWith, "J");
-				var kSurnameFilter = new sap.ui.model.Filter("LAST_NAME", sap.ui.model.FilterOperator.StartsWith, "K");
-				var lSurnameFilter = new sap.ui.model.Filter("LAST_NAME", sap.ui.model.FilterOperator.StartsWith, "L");
-				var mSurnameFilter = new sap.ui.model.Filter("LAST_NAME", sap.ui.model.FilterOperator.StartsWith, "M");
-				var nSurnameFilter = new sap.ui.model.Filter("LAST_NAME", sap.ui.model.FilterOperator.StartsWith, "N");
-				var oSurnameFilter = new sap.ui.model.Filter("LAST_NAME", sap.ui.model.FilterOperator.StartsWith, "O");
-				var pSurnameFilter = new sap.ui.model.Filter("LAST_NAME", sap.ui.model.FilterOperator.StartsWith, "P");
-				var qSurnameFilter = new sap.ui.model.Filter("LAST_NAME", sap.ui.model.FilterOperator.StartsWith, "Q");
-				var rSurnameFilter = new sap.ui.model.Filter("LAST_NAME", sap.ui.model.FilterOperator.StartsWith, "R");
-				var sSurnameFilter = new sap.ui.model.Filter("LAST_NAME", sap.ui.model.FilterOperator.StartsWith, "S");
-				var tSurnameFilter = new sap.ui.model.Filter("LAST_NAME", sap.ui.model.FilterOperator.StartsWith, "T");
-				var uSurnameFilter = new sap.ui.model.Filter("LAST_NAME", sap.ui.model.FilterOperator.StartsWith, "U");
-				var vSurnameFilter = new sap.ui.model.Filter("LAST_NAME", sap.ui.model.FilterOperator.StartsWith, "V");
-				var wSurnameFilter = new sap.ui.model.Filter("LAST_NAME", sap.ui.model.FilterOperator.StartsWith, "W");
-				var xSurnameFilter = new sap.ui.model.Filter("LAST_NAME", sap.ui.model.FilterOperator.StartsWith, "X");
-				var ySurnameFilter = new sap.ui.model.Filter("LAST_NAME", sap.ui.model.FilterOperator.StartsWith, "Y");
-				var zSurnameFilter = new sap.ui.model.Filter("LAST_NAME", sap.ui.model.FilterOperator.StartsWith, "Z");
-				var otherSurnameFilter = new sap.ui.model.Filter([
-					new sap.ui.model.Filter("LAST_NAME", sap.ui.model.FilterOperator.BT, "", "@"),
-					new sap.ui.model.Filter("LAST_NAME", sap.ui.model.FilterOperator.BT, "[", "~")
-				], false);
-				*/
+			var uniqueMatchEntitiesFilter = new Filter("GROUP_CATEGORY", sap.ui.model.FilterOperator.EQ, "0");
+			var identicalMatchEntitiesFilters = new Filter("GROUP_CATEGORY", sap.ui.model.FilterOperator.EQ, "1");
+			var nearIdenticalMatchEntitiesFilters = new Filter("GROUP_CATEGORY", sap.ui.model.FilterOperator.EQ, "2");
+			var similarMatchEntitiesFilters = new Filter("GROUP_CATEGORY", sap.ui.model.FilterOperator.EQ, "3");
 
 			// Create an object of filters
 			this._mFilters = {
@@ -239,42 +93,11 @@ sap.ui.define([
 				"all": []
 			};
 
-			/*this._mFiltersNames = {
-				"a": aSurnameFilter,
-				"b": bSurnameFilter,
-				"c": cSurnameFilter,
-				"d": dSurnameFilter,
-				"e": eSurnameFilter,
-				"f": fSurnameFilter,
-				"g": gSurnameFilter,
-				"h": hSurnameFilter,
-				"i": iSurnameFilter,
-				"j": jSurnameFilter,
-				"k": kSurnameFilter,
-				"l": lSurnameFilter,
-				"m": mSurnameFilter,
-				"n": nSurnameFilter,
-				"o": oSurnameFilter,
-				"p": pSurnameFilter,
-				"q": qSurnameFilter,
-				"r": rSurnameFilter,
-				"s": sSurnameFilter,
-				"t": tSurnameFilter,
-				"u": uSurnameFilter,
-				"v": vSurnameFilter,
-				"w": wSurnameFilter,
-				"x": xSurnameFilter,
-				"y": ySurnameFilter,
-				"z": zSurnameFilter,
-				"other": otherSurnameFilter,
-				"all": []
-			};*/
-
 			// Global filters
-			var rmsDuplicatesFilter = new sap.ui.model.Filter("RMS_DUPLICATES", sap.ui.model.FilterOperator.EQ, 1);
-			var rmsAllDuplicatesFilter = new sap.ui.model.Filter("RMS_DUPLICATES", sap.ui.model.FilterOperator.NE, -1);
-			var reviewGroupsFilter = new sap.ui.model.Filter("STRATEGY_RESOLVED", sap.ui.model.FilterOperator.EQ, 'Review');
-			var promoteGroupsFilter = new sap.ui.model.Filter("STRATEGY_RESOLVED", sap.ui.model.FilterOperator.EQ, 'Promote');
+			var rmsDuplicatesFilter = new Filter("RMS_DUPLICATES", sap.ui.model.FilterOperator.EQ, 1);
+			var rmsAllDuplicatesFilter = new Filter("RMS_DUPLICATES", sap.ui.model.FilterOperator.NE, -1);
+			var reviewGroupsFilter = new Filter("STRATEGY_RESOLVED", sap.ui.model.FilterOperator.EQ, 'Review');
+			var promoteGroupsFilter = new Filter("STRATEGY_RESOLVED", sap.ui.model.FilterOperator.EQ, 'Promote');
 
 			this._mGlobalFilters = {
 				"rmsDuplicates": rmsDuplicatesFilter,
@@ -367,7 +190,6 @@ sap.ui.define([
 						oViewModel.setProperty("/countAllStr", formatter.localePresentation(parseInt(oData)));
 					},
 					filters: [this.getCategoryFilters('all')]
-						//filters: []
 				});
 
 				// read the count for the high confidence matches
@@ -379,8 +201,6 @@ sap.ui.define([
 							'%');
 					},
 					filters: [this.getCategoryFilters('uniqueMatchEntities')]
-						//filters: [this._mFilters.uniqueMatchEntities]
-						//filters: [currentFilters]
 
 				});
 
@@ -419,8 +239,6 @@ sap.ui.define([
 							'%');
 					},
 					filters: [this.getCategoryFilters('similarMatchEntities')]
-						//filters: [this._mFilters.similarMatchEntities]
-						//this._mFiltersNames[sKey]
 				});
 
 			} else {
@@ -471,7 +289,7 @@ sap.ui.define([
 			} else {
 				var oTableSearchState = [];
 				var sQuery = oEvent.getParameter("query");
-				//do trim for white spaces. 
+				//do trim for white spaces.
 				sQuery = sQuery.trim();
 
 				if (sQuery && sQuery.length > 0) {
@@ -530,43 +348,39 @@ sap.ui.define([
 			if (catFilter === "all" && letterFilter === "all") {
 				filter = oTableSearchState;
 			} else if (catFilter === "all" && letterFilter !== "all") {
-				filter = new sap.ui.model.Filter([
+				filter = new Filter([
 					oFilter
 				], true);
 
 			} else if (catFilter !== "all" && letterFilter === "all") {
-				filter = new sap.ui.model.Filter([
+				filter = new Filter([
 					this._mFilters[this.getView().byId("iconTabBar").getSelectedKey()]
 				], true);
 			} else {
 				if (oTableSearchState.length !== 0) {
-					filter = new sap.ui.model.Filter([
+					filter = new Filter([
 						oFilter,
 						this._mFilters[this.getView().byId("iconTabBar").getSelectedKey()]
 					], true);
 				} else {
-					filter = new sap.ui.model.Filter([
+					filter = new Filter([
 						oFilter,
 						this._mFilters[this.getView().byId("iconTabBar").getSelectedKey()]
 					], true);
 				}
 			}
 
-			//add more filters from oTableSearchState if there's any. 
+			//add more filters from oTableSearchState if there's any.
 			for (let i = 0; i < oTableSearchState.length; i++) {
 				filter.aFilters.push(oTableSearchState[i]);
 			}
-			
+
 			this._oTable.getBinding("rows").filter(filter, "Application");
 			//this._oTable.getBinding("items").filter(oTableSearchState, "Application");
 			// changes the noDataText of the list in case there are no filter results
 			if (oTableSearchState.length !== 0) {
 				oViewModel.setProperty("/tableNoDataText", this.getResourceBundle().getText("worklistNoDataWithSearchText"));
 			}
-
-			// Reset icon tab filters
-			//this.getView().byId("iconTabBar").setSelectedKey('all');
-			//this.getView().byId("subIconTabBar").setSelectedKey('all');
 
 			//set busy state for the table.
 			this.getView().byId("table").setBusy(false);
@@ -599,9 +413,6 @@ sap.ui.define([
 				oViewModel.setProperty("/globalFilter", "allDuplicates");
 			}
 
-			// Get selected category and trigger click event
-			//this.getView().byId(this.getView().byId("iconTabBar").getSelectedKey()).click();
-
 			var oIconTabBar = this.getView().byId("iconTabBar");
 			var oEvent = new sap.ui.base.Event("customSelect", oIconTabBar, {
 				"selectedKey": oIconTabBar.getSelectedKey(),
@@ -610,15 +421,10 @@ sap.ui.define([
 			});
 			this.onQuickFilter(oEvent);
 
-			// Trigger refresh
-			//var oBinding = this._oTable.getBinding("items");
-			//oBinding.filter(new sap.ui.model.Filter([this._mGlobalFilters.rmsDuplicates], true), sap.ui.model.FilterType.Application);
 		},
 
 		/**
 		 * Gets the filters set by the current UI state for a given category
-		 * 
-		 * 
 		 */
 		getCategoryFilters: function(sCategory) {
 
@@ -629,27 +435,26 @@ sap.ui.define([
 
 			if (sCategory === 'all') {
 				if (this.getView().byId("subIconTabBar").getSelectedKey() !== 'all') {
-					return new sap.ui.model.Filter([
+					return new Filter([
 						this._mGlobalFilters[oViewModel.getProperty("/globalFilter")],
 						oFilter
 						//this._mFiltersNames[this.getView().byId("subIconTabBar").getSelectedKey()]
 					], true);
 				} else {
 					// Return empty array
-					//return this._mFilters.all;
 					return this._mGlobalFilters[oViewModel.getProperty("/globalFilter")];
 				}
 			} else {
 
 				if (this.getView().byId("subIconTabBar").getSelectedKey() !== 'all') {
-					return new sap.ui.model.Filter([
+					return new Filter([
 						this._mGlobalFilters[oViewModel.getProperty("/globalFilter")],
 						oFilter,
 						//this._mFiltersNames[this.getView().byId("subIconTabBar").getSelectedKey()],
 						this._mFilters[sCategory]
 					], true);
 				} else {
-					return new sap.ui.model.Filter([
+					return new Filter([
 						this._mGlobalFilters[oViewModel.getProperty("/globalFilter")],
 						this._mFilters[sCategory]
 					], true);
@@ -685,9 +490,9 @@ sap.ui.define([
 
 		/**
 		 * Event handler when a filter tab gets pressed.
-		 * 
+		 *
 		 * Note: This method handles event from both fiter bars!
-		 * 
+		 *
 		 * @param {sap.ui.base.Event} oEvent the filter tab event
 		 * @public
 		 */
@@ -710,11 +515,11 @@ sap.ui.define([
 				if (sKey === 'all') {
 
 					if (this.getView().byId("iconTabBar").getSelectedKey() === 'all') {
-						oBinding.filter(new sap.ui.model.Filter([this._mGlobalFilters[oViewModel.getProperty("/globalFilter")]], true), sap.ui.model.FilterType
+						oBinding.filter(new Filter([this._mGlobalFilters[oViewModel.getProperty("/globalFilter")]], true), sap.ui.model.FilterType
 							.Application);
 					} else {
 						//oBinding.filter(this._mFilters[this.getView().byId("iconTabBar").getSelectedKey()], sap.ui.model.FilterType.Application);
-						oBinding.filter(new sap.ui.model.Filter([this._mGlobalFilters[oViewModel.getProperty("/globalFilter")], this._mFilters[this.getView()
+						oBinding.filter(new Filter([this._mGlobalFilters[oViewModel.getProperty("/globalFilter")], this._mFilters[this.getView()
 							.byId("iconTabBar").getSelectedKey()]], true), sap.ui.model.FilterType.Application);
 					}
 
@@ -723,12 +528,12 @@ sap.ui.define([
 					// Filter for a specific letter is set, now check if category filter
 					if (this.getView().byId("iconTabBar").getSelectedKey() === 'all') {
 						//oBinding.filter(this._mFiltersNames[sKey], sap.ui.model.FilterType.Application);
-						oBinding.filter(new sap.ui.model.Filter([this._mGlobalFilters[oViewModel.getProperty("/globalFilter")], oFilter],
+						oBinding.filter(new Filter([this._mGlobalFilters[oViewModel.getProperty("/globalFilter")], oFilter],
 							true), sap.ui.model.FilterType.Application);
 					} else {
 						// Set new filter for letter and combine with current filter selection for group category
 						oBinding.filter(
-							new sap.ui.model.Filter([
+							new Filter([
 								this._mGlobalFilters[oViewModel.getProperty("/globalFilter")],
 								this._mFilters[this.getView().byId("iconTabBar").getSelectedKey()],
 								oFilter
@@ -745,10 +550,10 @@ sap.ui.define([
 					// All categories, set filter for letter selection only
 					//oBinding.filter(this._mFiltersNames[this.getView().byId("subIconTabBar").getSelectedKey()], sap.ui.model.FilterType.Application
 					if (this.getView().byId("subIconTabBar").getSelectedKey() === 'all') {
-						oBinding.filter(new sap.ui.model.Filter([this._mGlobalFilters[oViewModel.getProperty("/globalFilter")]], true), sap.ui.model.FilterType
+						oBinding.filter(new Filter([this._mGlobalFilters[oViewModel.getProperty("/globalFilter")]], true), sap.ui.model.FilterType
 							.Application);
 					} else {
-						oBinding.filter(new sap.ui.model.Filter([this._mGlobalFilters[oViewModel.getProperty("/globalFilter")],
+						oBinding.filter(new Filter([this._mGlobalFilters[oViewModel.getProperty("/globalFilter")],
 							oFilter
 							//this._mFiltersNames[this.getView().byId("subIconTabBar").getSelectedKey()]
 						], true), sap.ui.model.FilterType.Application);
@@ -760,13 +565,13 @@ sap.ui.define([
 					if (this.getView().byId("subIconTabBar").getSelectedKey() === 'all') {
 						// Letter selection is all, only one filter for category required
 						//oBinding.filter(this._mFilters[this.getView().byId("iconTabBar").getSelectedKey()], sap.ui.model.FilterType.Application);
-						oBinding.filter(new sap.ui.model.Filter([this._mGlobalFilters[oViewModel.getProperty("/globalFilter")], this._mFilters[this.getView()
+						oBinding.filter(new Filter([this._mGlobalFilters[oViewModel.getProperty("/globalFilter")], this._mFilters[this.getView()
 							.byId("iconTabBar").getSelectedKey()]], true), sap.ui.model.FilterType.Application);
 					} else {
 
 						// Set new filter for group category and combine with current filter selection for letter
 						oBinding.filter(
-							new sap.ui.model.Filter([
+							new Filter([
 								this._mGlobalFilters[oViewModel.getProperty("/globalFilter")],
 								oFilter,
 								//this._mFiltersNames[this.getView().byId("subIconTabBar").getSelectedKey()],
@@ -876,7 +681,6 @@ sap.ui.define([
 
 			function refresh() {
 				wait(1000);
-				//that.getView().getModel().loadData(this.getView().getBindingContext().getPath());
 				that.byId("table").getModel().refresh(true);
 			}
 
@@ -907,11 +711,6 @@ sap.ui.define([
 								oEntityId = oEntity.getBindingContext().getProperty("ENTITY_ID");
 								obj.ENTITY_ID = oEntityId;
 								entities.push(obj);
-								//sPath = oProduct.getBindingContextPath();
-								//this.getModel().remove(sPath, {
-								//	success : this._handleUnlistActionResult.bind(this, oProductId, true, i + 1, aSelectedEntities.length),
-								//	error : this._handleUnlistActionResult.bind(this, oProductId, false, i + 1, aSelectedEntities.length)
-								//});
 							}
 
 							payload.entities = entities;
@@ -974,57 +773,6 @@ sap.ui.define([
 				});
 
 				dialog.open();
-
-				/*dialog = new Dialog({
-					title: 'Confirm',
-					type: 'Message',
-					content: new Text({
-						text: 'Promote all entities to SCV layer? Note: This will move all entities with status \'Promote\' to the SCV foundation layer.'
-					}),
-					beginButton: new Button({
-						text: 'Promote',
-						press: function() {
-
-							var payload = {};
-							payload.entities = aSelectedEntities;
-							var data = JSON.stringify(payload);
-
-							$.ajax({
-								type: "POST",
-								url: "/webapp/xs/scv/moveEntitiesToShadowTable.xsjs",
-								contentType: "application/json",
-								data: data,
-								dataType: "json",
-								crossDomain: true,
-
-								success: function(data) {
-									// Refresh model
-									//sap.ui.getCore().byId("table").getModel().refresh(true);
-									refresh();
-									MessageToast.show('All Entities promoted!');
-								},
-								error: function(data) {
-									var message = JSON.stringify(data);
-									alert(message);
-								}
-							});
-
-							dialog.close();
-						}
-					}),
-					endButton: new Button({
-						text: 'Cancel',
-						press: function() {
-							dialog.close();
-						}
-					}),
-					afterClose: function() {
-						dialog.destroy();
-					}
-				});
-
-				dialog.open();*/
-
 			}
 		},
 
@@ -1147,8 +895,6 @@ sap.ui.define([
 						1) + '%');
 				},
 				filters: [this.getCategoryFilters('recommendedMatchEntities')]
-					//filters: [this._mFilters.recommendedMatchEntities]
-					//this._mFiltersNames[sKey]
 
 			});
 
@@ -1161,8 +907,6 @@ sap.ui.define([
 						'%');
 				},
 				filters: [this.getCategoryFilters('similarMatchEntities')]
-					//filters: [this._mFilters.similarMatchEntities]
-					//this._mFiltersNames[sKey]
 			});
 		},
 
@@ -1171,8 +915,8 @@ sap.ui.define([
 
 			if (sKey === "Other") {
 				oFilter = new Filter([
-					new sap.ui.model.Filter("LAST_NAME", FilterOperator.BT, "", "@"),
-					new sap.ui.model.Filter("LAST_NAME", FilterOperator.BT, "[", "~")
+					new Filter("LAST_NAME", FilterOperator.BT, "", "@"),
+					new Filter("LAST_NAME", FilterOperator.BT, "[", "~")
 				], false);
 			} else if (sKey === "All") {
 				oFilter = new Filter("LAST_NAME", FilterOperator.StartsWith, []);
