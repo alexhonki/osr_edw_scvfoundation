@@ -56,10 +56,11 @@ BEGIN
 	lt_lookup_for_rows_with_no_relation = SELECT * FROM :lt_master WHERE RELATED_ROW IN (SELECT * FROM :lt_rows_with_no_relation) AND SCV_ID IS NOT NULL;
 	
 	-- Aggregate on match policy and score for multi-matches, take the top 1 per match row
+	-- TO DO: Replace with business rule
 	lt_final_lookup_for_rows_with_no_relation = 
 		SELECT RELATED_ROW, SCV_ID FROM (
 			SELECT *,
-				   ROW_NUMBER() OVER (PARTITION BY MATCH_ROW ORDER BY POLICY_NAME, SCORE DESC) AS GROUP_ROW_COUNT
+				   ROW_NUMBER() OVER (PARTITION BY RELATED_ROW ORDER BY POLICY_NAME, SCORE DESC) AS GROUP_ROW_COUNT
 			FROM :lt_lookup_for_rows_with_no_relation
 		) WHERE GROUP_ROW_COUNT = 1;
 		
