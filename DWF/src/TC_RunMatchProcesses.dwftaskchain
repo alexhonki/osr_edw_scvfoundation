@@ -25,7 +25,7 @@
       },
       "preconditions": [
         {
-          "from": "5",
+          "from": "4",
           "status": "OK"
         }
       ]
@@ -53,25 +53,6 @@
       "inline": {
         "type": "SUB",
         "taskGroup": "com.sap.dwf.toe.executionControl",
-        "description": "Delta Detection",
-        "parameterValues": [
-          {
-            "id": "taskChainId",
-            "value": "src#TC_DeltaDetect"
-          }
-        ]
-      },
-      "preconditions": [
-        {
-          "from": "6",
-          "status": "OK"
-        }
-      ]
-    },
-    "5": {
-      "inline": {
-        "type": "SUB",
-        "taskGroup": "com.sap.dwf.toe.executionControl",
         "description": "Reset Match Tables",
         "parameterValues": [
           {
@@ -87,15 +68,15 @@
         }
       ]
     },
-    "6": {
+    "5": {
       "inline": {
-        "type": "executeProcedure",
-        "taskGroup": "hanaNative",
+        "type": "SUB",
+        "taskGroup": "com.sap.dwf.toe.executionControl",
         "description": "Generate SubGroups",
         "parameterValues": [
           {
-            "id": "procName",
-            "value": "osr.scv.foundation.db.Procedures::SP_GenerateScvSubgroups"
+            "id": "taskChainId",
+            "value": "src#TC_SubGroups"
           }
         ]
       },
@@ -106,15 +87,34 @@
         }
       ]
     },
+    "6": {
+      "inline": {
+        "type": "SUB",
+        "taskGroup": "com.sap.dwf.toe.executionControl",
+        "description": "Process SCV Delta",
+        "parameterValues": [
+          {
+            "id": "taskChainId",
+            "value": "src#TC_ProcessSCVDelta"
+          }
+        ]
+      },
+      "preconditions": [
+        {
+          "from": "5",
+          "status": "OK"
+        }
+      ]
+    },
     "7": {
       "inline": {
-        "type": "executeProcedure",
-        "taskGroup": "hanaNative",
+        "type": "SUB",
+        "taskGroup": "com.sap.dwf.toe.executionControl",
         "description": "Prepare Review Table",
         "parameterValues": [
           {
-            "id": "procName",
-            "value": "osr.scv.foundation.db.Procedures::SP_PrepareMatchResultsReview"
+            "id": "taskChainId",
+            "value": "src#TC_PrepareReview"
           }
         ]
       },
