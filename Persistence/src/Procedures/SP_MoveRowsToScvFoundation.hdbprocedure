@@ -85,7 +85,7 @@ BEGIN
 									ON s.ENTITY_ID = a.ENTITY_ID
 									INNER JOIN "osr.scv.foundation.db.data::MatchResults.MatchDelta" md
 									ON s."Match_ROW_ID" = md.MATCH_ROW_ID
-									WHERE (a.Action = 'Auto-Promotion') AND md.SCV_ID = 0 
+									WHERE (a.Action = 'Auto-Promotion') AND md.SCV_ID IS NULL 
 									ORDER BY s.ENTITY_ID ASC, s.SOURCE_SYSTEM ASC, s.SYSTEM_ID ASC, s."Match_ROW_ID" ASC
 								) a
 								LEFT OUTER JOIN :lt_auto_entity_ids b
@@ -174,7 +174,7 @@ BEGIN
 									FROM "osr.scv.foundation.db.data::MatchResultsReview.Assessments" s
 									INNER JOIN "osr.scv.foundation.db.data::MatchResults.MatchDelta" md
 									ON s.MATCH_ROW = md.MATCH_ROW_ID
-									WHERE md.ACTION = 'Add' and s.ACTION = 'Accept' and md.SCV_ID = 0
+									WHERE md.ACTION = 'New' and s.ACTION = 'Accept' and md.SCV_ID IS NULL
 									) a
 									INNER JOIN :lt_accept_scv_ids b
 									ON a.ENTITY_ID = b.ENTITY_ID;
@@ -196,7 +196,7 @@ BEGIN
 									FROM "osr.scv.foundation.db.data::MatchResultsReview.Assessments" s
 									INNER JOIN "osr.scv.foundation.db.data::MatchResults.MatchDelta" md
 									ON s.MATCH_ROW = md.MATCH_ROW_ID
-									WHERE md.ACTION = 'Add' and s.ACTION = 'Accept' 
+									WHERE md.ACTION = 'New' and s.ACTION = 'Accept' 
 									and md.SCV_ID > 0;
 		
 		-- Insert into mapping table

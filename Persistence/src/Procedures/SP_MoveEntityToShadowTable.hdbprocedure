@@ -33,6 +33,9 @@ BEGIN
 		-- o_message:=  'ERROR: ' || ::SQL_ERROR_CODE || ' ' || ::SQL_ERROR_MESSAGE;
 	END;
 
+	TRUNCATE TABLE "osr.scv.foundation.db.data::MatchResults.MatchResultsShadow";
+	TRUNCATE TABLE "osr.scv.foundation.db.data::MatchResultsReview.Promotions";
+
 	-- Move match groups with strategies Identical, System Accept and Promote into the shadow table
 	lt_entities = 
 		SELECT ENTITY_ID, STRATEGY_RESOLVED, ACTION_RESOLVED 
@@ -51,7 +54,7 @@ BEGIN
 					SELECT DISTINCT * FROM "osr.scv.foundation.db.data::MatchResults.MatchDelta"
 				   ) d
 		ON m."Match_ROW_ID" = d.MATCH_ROW_ID
-		WHERE d.ACTION = 'Add'
+		WHERE d.ACTION = 'New'
 	);
 	
 	-- TODO: Remove comments to activate deletion of moved records from match results and match review table
