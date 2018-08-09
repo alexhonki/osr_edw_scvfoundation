@@ -290,7 +290,7 @@ sap.ui.define([
 				var oTableSearchState = [];
 				var sQuery = oEvent.getParameter("query");
 				//do trim for white spaces.
-				sQuery = sQuery.trim();
+				sQuery = encodeURI(sQuery.trim());
 
 				if (sQuery && sQuery.length > 0) {
 					//only enable busy if its a valid search query.
