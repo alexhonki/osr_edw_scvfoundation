@@ -636,8 +636,6 @@ sap.ui.define([
         } else {
 
           //grab the info about the deselected row.
-          //oEvent.getParameters().rowContext.getObject().SYSTEM_ID
-          //oEvent.getParameters().rowContext.getObject().SOURCE_SYSTEM
           let sSelectedRowSourceSystem = oEvent.getParameters().rowContext.getObject().SOURCE_SYSTEM;
           let sSelectedRowSourceId = oEvent.getParameters().rowContext.getObject().SYSTEM_ID;
           //grab the each row details
@@ -647,13 +645,14 @@ sap.ui.define([
             // loop through the rows of the table.
             let sCurrentRowSourceSystem = oTable.getRows()[i].getCells()[3].getText(); //SOURCE_SYSTEM field
             let sCurrentRowSystemId = oTable.getRows()[i].getCells()[4].getText(); //SYSTEM_ID field
+						//if they both contain the same system and have the same system id then deselect them as well
             if (sSelectedRowSourceSystem === sCurrentRowSourceSystem && sSelectedRowSourceId === sCurrentRowSystemId) {
               oController.byId("table").removeSelectionInterval(i, i);
             }
           }
 
-          //allow a single item to be unticked
-          oController.byId("table").removeSelectionInterval(oEvent.getParameters().rowIndex, oEvent.getParameters().rowIndex);
+          //deselect the current row itself.
+          //oController.byId("table").removeSelectionInterval(oEvent.getParameters().rowIndex, oEvent.getParameters().rowIndex);
 
           // in case we want to disable all the ticked base on their grouping.
 
