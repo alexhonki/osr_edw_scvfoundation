@@ -35,7 +35,7 @@ sap.ui.define([
       // Model used to manipulate control states. The chosen values make sure,
       // detail page is busy indication immediately so there is no break in
       // between the busy indication for loading the view's meta data
-      var iOriginalBusyDelay,
+      let iOriginalBusyDelay,
         oViewModel = new JSONModel({
           busy: true,
           delay: 0
@@ -79,9 +79,9 @@ sap.ui.define([
      */
     onNavBack: function() {
 
-      var oHistory = History.getInstance();
-      var sPreviousHash = oHistory.getPreviousHash();
-      var tableLength = this.byId("table").getRows().length;
+      let oHistory = History.getInstance();
+      let sPreviousHash = oHistory.getPreviousHash();
+      let tableLength = this.byId("table").getRows().length;
       this.byId("table").removeSelectionInterval(0, tableLength);
 
       this.getView().unbindElement();
@@ -91,7 +91,7 @@ sap.ui.define([
         history.go(-1);
       } else {
         // Otherwise we go backwards with a forward history
-        var bReplace = true;
+        let bReplace = true;
         this.getRouter().navTo("worklist", {}, bReplace);
       }
     },
@@ -118,16 +118,16 @@ sap.ui.define([
      */
     _onObjectMatched: function(oEvent) {
 
-      //var sObjectPath = "/matchResultsReview('" + oEvent.getParameter("arguments").objectId + "')/matchResults";
-      var sObjectPath = "/matchResultsReview('" + oEvent.getParameter("arguments").objectId.split("|")[0] + "')";
+      //let sObjectPath = "/matchResultsReview('" + oEvent.getParameter("arguments").objectId + "')/matchResults";
+      let sObjectPath = "/matchResultsReview('" + oEvent.getParameter("arguments").objectId.split("|")[0] + "')";
       this._bindView(sObjectPath);
 
       // Disable change log tab?
       // Read the change log count for current entity
-      var that = this;
+      let that = this;
       this.getModel().read(sObjectPath + "/matchAssessments/$count", {
         success: function(oData) {
-          var oRowCount = parseInt(oData),
+          let oRowCount = parseInt(oData),
             maxRowCount = 17;
           if (oRowCount < maxRowCount) {
             that.getView().byId("changeLogTable").setVisibleRowCount(oRowCount);
@@ -160,7 +160,7 @@ sap.ui.define([
 
         //attached a function call once data is received call
         //fOnDataReceivedDetailTable function
-        var oBinding2 = oController._oDetailTable.getBinding("rows");
+        let oBinding2 = oController._oDetailTable.getBinding("rows");
         oBinding2.attachDataReceived(oController.fOnDataReceivedDetailTable);
 
         //disable the very first button on the main table.
@@ -186,12 +186,12 @@ sap.ui.define([
 
       //attached a function call once data is received call
       //fOnDataReceived function
-      var oBinding = this._oTable.getBinding("rows");
+      let oBinding = this._oTable.getBinding("rows");
       oBinding.attachDataReceived(this.fOnDataReceived);
 
       // For the second table
       this.fOnDataReceivedDetailTable = function(oData) {
-        var tableLength = oData.getSource().iLength;
+        let tableLength = oData.getSource().iLength;
         if (tableLength === 0) {
           that.getView().byId("detailsTable1").setVisibleRowCount(1);
         } else {
@@ -208,12 +208,12 @@ sap.ui.define([
      * @return {[type]}        [description]
      */
     _enableAllButtons: function() {
-      var that = this;
-      var oTable = that.byId("table");
+      let that = this;
+      let oTable = that.byId("table");
 
       // Get rows
-      var oRows = oTable.getRows();
-      for (var i = 0; i < oRows.length; i++) {
+      let oRows = oTable.getRows();
+      for (let i = 0; i < oRows.length; i++) {
         oRows[i].getCells()[10].setEnabled(true);
       }
     },
@@ -225,12 +225,12 @@ sap.ui.define([
      */
     _disableFirstButton: function() {
 
-      var that = this;
+      let that = this;
       // Enable all buttons first
       that._enableAllButtons();
 
-      var oTable = that.byId("table");
-      var firstRow = oTable.getRows()[0];
+      let oTable = that.byId("table");
+      let firstRow = oTable.getRows()[0];
       firstRow.getCells()[10].setEnabled(false);
     },
 
@@ -241,20 +241,20 @@ sap.ui.define([
      * @return {[type]}        [description]
      */
     _selectRows: function(oData) {
-      var that = this;
-      var oTable = that.byId("table");
+      let that = this;
+      let oTable = that.byId("table");
       oTable.detachRowSelectionChange(that.boxTickedEvent, that);
 
       // Get rows
-      var oRows = oTable.getRows();
-      var currentMatchRow;
-      var oDataMatchRow;
+      let oRows = oTable.getRows();
+      let currentMatchRow;
+      let oDataMatchRow;
 
-      for (var i = 0; i < oRows.length; i++) {
+      for (let i = 0; i < oRows.length; i++) {
 
         currentMatchRow = that.getModel().getProperty(oRows[i].getBindingContext().getPath() + "/MATCH_ROW");
 
-        for (var ix = 0; ix < oRows.length; ix++) {
+        for (let ix = 0; ix < oRows.length; ix++) {
           oDataMatchRow = oData.results[ix].MATCH_ROW;
           if (currentMatchRow === oDataMatchRow) {
             if (oData.results[ix].ACTION === 'Accept') {
@@ -275,7 +275,7 @@ sap.ui.define([
      * @private
      */
     _bindView: function(sObjectPath) {
-      var oViewModel = this.getModel("objectView"),
+      let oViewModel = this.getModel("objectView"),
         oDataModel = this.getModel();
 
       this.getView().bindElement({
@@ -304,7 +304,7 @@ sap.ui.define([
      * @return {[type]}        [description]
      */
     _onBindingChange: function(oEvent) {
-      var oView = this.getView(),
+      let oView = this.getView(),
         oViewModel = this.getModel("objectView");
 
       // No data for the binding
@@ -313,7 +313,7 @@ sap.ui.define([
         return;
       }
 
-      var oResourceBundle = this.getResourceBundle(),
+      let oResourceBundle = this.getResourceBundle(),
         oObject = oView.getBindingContext().getObject(),
         sObjectId = oObject.ENTITY_ID,
         sObjectName = oObject.NAME;
@@ -328,7 +328,7 @@ sap.ui.define([
     },
 
     handleStrategyChangeLogLinkPress: function(oEvent) {
-      var domRef = oEvent.getParameter("domRef");
+      let domRef = oEvent.getParameter("domRef");
       this._getPopover().openBy(domRef);
     },
 
@@ -348,9 +348,9 @@ sap.ui.define([
       oEvent.getSource().setEnabled(false);
 
       // The source is the list item that got pressed
-      var newMatchRow = oEvent.getSource().getBindingContext().getProperty("MATCH_ROW_STR");
-      var sObjectPathRelated = "/matchResultsDetailsRelatedParameters(I_MATCH_ROW='" + newMatchRow + "')/Results";
-      var oController = this;
+      let newMatchRow = oEvent.getSource().getBindingContext().getProperty("MATCH_ROW_STR");
+      let sObjectPathRelated = "/matchResultsDetailsRelatedParameters(I_MATCH_ROW='" + newMatchRow + "')/Results";
+      let oController = this;
 
       oController.byId("detailsTable1").bindRows({
         path: sObjectPathRelated,
@@ -358,7 +358,7 @@ sap.ui.define([
       });
 
       //attached binding to the function after it load finished
-      var oBinding2 = oController._oDetailTable.getBinding("rows");
+      let oBinding2 = oController._oDetailTable.getBinding("rows");
       oBinding2.attachDataReceived(oController.fOnDataReceived2);
 
       // Set new title for details table
@@ -369,7 +369,7 @@ sap.ui.define([
         //set busy state for matching rows table.
         oController.getView().byId("detailsTable1").setBusy(false);
 
-        var tableLength = oData.getSource().iLength;
+        let tableLength = oData.getSource().iLength;
         if (tableLength === 0) {
           oController.getView().byId("detailsTable1").setVisibleRowCount(1);
         } else {
@@ -382,8 +382,8 @@ sap.ui.define([
     },
 
     _showObject: function(oItem) {
-      var newMatchRow = oItem.getBindingContext().getProperty("MATCH_ROW_STR");
-      var sObjectPathRelated = "/matchResultsDetailsRelatedParameters(I_MATCH_ROW='" + newMatchRow + "')/Results";
+      let newMatchRow = oItem.getBindingContext().getProperty("MATCH_ROW_STR");
+      let sObjectPathRelated = "/matchResultsDetailsRelatedParameters(I_MATCH_ROW='" + newMatchRow + "')/Results";
       this.byId("detailsTable1").bindRows({
         path: sObjectPathRelated,
         template: this.byId("detailsTable1").getBindingInfo("rows").template
@@ -396,13 +396,13 @@ sap.ui.define([
      * @param {sap.ui.base.Event} oEvent object of the user input
      */
     onPost: function(oEvent) {
-      var oFormat = DateFormat.getDateTimeInstance({
+      let oFormat = DateFormat.getDateTimeInstance({
         style: "medium"
       });
-      var sDate = oFormat.format(new Date());
-      var oObject = this.getView().getBindingContext().getObject();
-      var sValue = oEvent.getParameter("value");
-      var oEntry = {
+      let sDate = oFormat.format(new Date());
+      let oObject = this.getView().getBindingContext().getObject();
+      let sValue = oEvent.getParameter("value");
+      let oEntry = {
         groupID: oObject.GROUP_ID,
         type: "Comment",
         date: sDate,
@@ -410,8 +410,8 @@ sap.ui.define([
       };
 
       // update model
-      var oFeedbackModel = this.getModel("productFeedback");
-      var aEntries = oFeedbackModel.getData().productComments;
+      let oFeedbackModel = this.getModel("productFeedback");
+      let aEntries = oFeedbackModel.getData().productComments;
       aEntries.push(oEntry);
       oFeedbackModel.setData({
         productComments: aEntries
@@ -422,9 +422,9 @@ sap.ui.define([
      *  Accepts a matching group to be promoted into the SCV layer
      */
     onAccept: function() {
-      var rowIndices = this.byId("table").getSelectedIndices();
+      let rowIndices = this.byId("table").getSelectedIndices();
 
-      var entityId = this.getView().getBindingContext().getObject().ENTITY_ID,
+      let entityId = this.getView().getBindingContext().getObject().ENTITY_ID,
         acceptComment = sap.ui.getCore().byId("acceptComment").getValue(),
         acceptComboBoxKey = sap.ui.getCore().byId("acceptComboBox").getSelectedKey(),
         rowTable = this.byId("table").getRows(),
@@ -434,9 +434,9 @@ sap.ui.define([
         allTicked = true;
       }
       this.onCloseDialog();
-      for (var i = 0; i < rowTable.length; i++) {
+      for (let i = 0; i < rowTable.length; i++) {
         if (that.byId("table").isIndexSelected(i)) {
-          var payload = {};
+          let payload = {};
           payload.ENTITY_ID = entityId;
           payload.STRATEGY = 'Promote';
           payload.ACTION = 'Accept';
@@ -462,12 +462,12 @@ sap.ui.define([
               MessageToast.show('Data saved...');
             },
             error: function(data) {
-              var message = JSON.stringify(data);
+              let message = JSON.stringify(data);
               alert(message);
             }
           });
         } else {
-          var payload = {};
+          let payload = {};
           payload.ENTITY_ID = entityId;
           payload.STRATEGY = 'Promote';
           payload.ACTION = 'Reject';
@@ -493,7 +493,7 @@ sap.ui.define([
               MessageToast.show('Data saved...');
             },
             error: function(data) {
-              var message = JSON.stringify(data);
+              let message = JSON.stringify(data);
               alert(message);
             }
           });
@@ -508,7 +508,7 @@ sap.ui.define([
      * @return {[type]} [description]
      */
     onReject: function() {
-      var
+      let
         //rowIndices = this.byId("table").getSelectedIndices(),
         entityId = this.getView().getBindingContext().getObject().ENTITY_ID,
         rejectComment = sap.ui.getCore().byId("rejectComment").getValue(),
@@ -519,8 +519,8 @@ sap.ui.define([
       	allTicked = true;
       }*/
       this.onCloseDialog();
-      for (var i = 0; i < rowTable.length; i++) {
-        var payload = {};
+      for (let i = 0; i < rowTable.length; i++) {
+        let payload = {};
         payload.ENTITY_ID = entityId;
         payload.STRATEGY = 'Promote';
         payload.ACTION = 'Reject';
@@ -542,7 +542,7 @@ sap.ui.define([
             MessageToast.show('Data saved...');
           },
           error: function(data) {
-            var message = JSON.stringify(data);
+            let message = JSON.stringify(data);
             alert(message);
           }
         });
@@ -562,7 +562,7 @@ sap.ui.define([
         this._oDialog = sap.ui.xmlfragment("osr.scv.match.review.view.RejectDialog", this);
       }
       this.getView().addDependent(this._oDialog);
-      var dialog = this._oDialog;
+      let dialog = this._oDialog;
       dialog.open();
     },
 
@@ -587,27 +587,12 @@ sap.ui.define([
     },
 
     checkTableTick: function() {
-      var rowIndices = this.byId("table").getSelectedIndices();
+      let rowIndices = this.byId("table").getSelectedIndices();
       if (rowIndices.length === 0) {
         return (false);
       } else {
         return (true);
       }
-    },
-
-    checkSwitchTick: function() {
-      var oRows = this.byId("table").getRows();
-      var that = this;
-      var oRow, oSwitch, i;
-      var countAccept = 0;
-      for (i = 0; i < oRows.length; i++) {
-        oRow = that.byId("table").getRows()[i];
-        oSwitch = oRow.getCells()[0];
-        if (oSwitch.getState()) {
-          countAccept++;
-        }
-      }
-      return (countAccept);
     },
 
     /**
@@ -618,15 +603,15 @@ sap.ui.define([
      */
     boxTickedEvent: function(oEvent) {
 
-      var oController = this;
+      let oController = this;
 
       if (typeof oEvent.getParameters().rowContext !== "undefined" && oEvent.getParameters().rowContext !== null) {
-        var path = oEvent.getParameters().rowContext.sPath;
-        var sysId = oController.getModel().getProperty(path + "/GROUP_TAG");
-        var oRows = oController.byId("table").getRows();
+        let path = oEvent.getParameters().rowContext.sPath;
+        let sysId = oController.getModel().getProperty(path + "/GROUP_TAG");
+        let oRows = oController.byId("table").getRows();
 
         if (oController.byId("table").isIndexSelected(oEvent.getParameter("rowIndex"))) {
-          for (var i = 0; i < oRows.length; i++) {
+          for (let i = 0; i < oRows.length; i++) {
             if (sysId === oController.getModel().getProperty(oRows[i].getBindingContext().getPath() + "/GROUP_TAG")) {
               if (!oController.byId("table").isIndexSelected(i)) {
                 oController.byId("table").addSelectionInterval(i, i);
@@ -634,65 +619,25 @@ sap.ui.define([
             }
           }
         } else {
-
+          //this is for deselection logic.
           //grab the info about the deselected row.
           let sSelectedRowSourceSystem = oEvent.getParameters().rowContext.getObject().SOURCE_SYSTEM;
           let sSelectedRowSourceId = oEvent.getParameters().rowContext.getObject().SYSTEM_ID;
-          //grab the each row details
-          //grab all rows of a table.
+          //grab all rows of a table and its details
           let oTable = this.getView().byId("table");
           for (let i = 0; i < oTable.getRows().length; i++) {
             // loop through the rows of the table.
             let sCurrentRowSourceSystem = oTable.getRows()[i].getCells()[3].getText(); //SOURCE_SYSTEM field
             let sCurrentRowSystemId = oTable.getRows()[i].getCells()[4].getText(); //SYSTEM_ID field
-						//if they both contain the same system and have the same system id then deselect them as well
+            //if they both contain the same system and have the same system id then deselect them as well
             if (sSelectedRowSourceSystem === sCurrentRowSourceSystem && sSelectedRowSourceId === sCurrentRowSystemId) {
               oController.byId("table").removeSelectionInterval(i, i);
             }
           }
 
-          //deselect the current row itself.
-          //oController.byId("table").removeSelectionInterval(oEvent.getParameters().rowIndex, oEvent.getParameters().rowIndex);
-
-          // in case we want to disable all the ticked base on their grouping.
-
-          // for (var i = 0; i < oRows.length; i++) {
-          // 	if (sysId === that.getModel().getProperty(oRows[i].getBindingContext().getPath() + "/GROUP_TAG")) {
-          // 		if (that.byId("table").isIndexSelected(i)) {
-          // 			that.byId("table").removeSelectionInterval(i, i);
-          // 		}
-          // 	}
-          // }
         }
       }
 
-    },
-
-    onSwitchChange: function(oEvent) {
-      var path = oEvent.getSource().getParent().getBindingContext().getPath() + "/GROUP_TAG";
-      var sysId = this.getModel().getProperty(path);
-      var oRows = this.byId("table").getRows();
-      var that = this;
-      var oRow, oSwitch, i;
-      if (oEvent.getParameters().state) {
-        for (i = 0; i < oRows.length; i++) {
-          oRow = this.byId("table").getRows()[i];
-          oSwitch = oRow.getCells()[0];
-          if (!oSwitch.getState()) {
-            oSwitch.setState(true);
-          }
-        }
-      } else {
-        for (i = 0; i < oRows.length; i++) {
-          if (sysId === that.getModel().getProperty(oRows[i].getBindingContext().getPath() + "/GROUP_TAG")) {
-            oRow = this.byId("table").getRows()[i];
-            oSwitch = oRow.getCells()[0];
-            if (oSwitch.getState()) {
-              oSwitch.setState(false);
-            }
-          }
-        }
-      }
     }
   });
 
