@@ -618,25 +618,43 @@ sap.ui.define([
 		 */
 		boxTickedEvent: function(oEvent) {
 
-			var that = this;
+			var oController = this;
 
 			if (typeof oEvent.getParameters().rowContext !== "undefined" && oEvent.getParameters().rowContext !== null) {
 				var path = oEvent.getParameters().rowContext.sPath;
-				var sysId = that.getModel().getProperty(path + "/GROUP_TAG");
-				var oRows = that.byId("table").getRows();
+				var sysId = oController.getModel().getProperty(path + "/GROUP_TAG");
+				var oRows = oController.byId("table").getRows();
 
-				if (that.byId("table").isIndexSelected(oEvent.getParameter("rowIndex"))) {
+				if (oController.byId("table").isIndexSelected(oEvent.getParameter("rowIndex"))) {
 					for (var i = 0; i < oRows.length; i++) {
-						if (sysId === that.getModel().getProperty(oRows[i].getBindingContext().getPath() + "/GROUP_TAG")) {
-							if (!that.byId("table").isIndexSelected(i)) {
-								that.byId("table").addSelectionInterval(i, i);
+						if (sysId === oController.getModel().getProperty(oRows[i].getBindingContext().getPath() + "/GROUP_TAG")) {
+							if (!oController.byId("table").isIndexSelected(i)) {
+								oController.byId("table").addSelectionInterval(i, i);
 							}
 						}
 					}
 				} else {
 
+					//grab the info about the deselected row.
+					//oEvent.getParameters().rowContext.getObject().SYSTEM_ID
+					//oEvent.getParameters().rowContext.getObject().SOURCE_SYSTEM
+
+					let sSelectedRowSourceSystem = oEvent.getParameters().rowContext.getObject().SOURCE_SYSTEM;
+					let sSelectedRowSourceId = oEvent.getParameters().rowContext.getObject().SOURCE_ID;
+					//grab the each row details
+					//grab all rows of a table.
+					let oTable = this.getView().byId("table");
+					(for let i=0; i<oTable.getRows().length; i++){
+						// loop through the rows of the table.
+						let sCurrentRowSourceSystem = oTable.getRows()[i].getCells()[3].getText(); //SOURCE_SYSTEM field
+						let sCurrentRowSystemId = oTable.getRows()[i].getCells()[4].getText(); //SYSTEM_ID field
+						if(sSelectedRowSourceSystem === sCurrentRowSourceSystem && sSelectedRowSourceId === sCurrentRowSystemId){
+								oController.byId("table").removeSelectionInterval(i, i);
+						}
+					}
+
 					//allow a single item to be unticked
-					that.byId("table").removeSelectionInterval(oEvent.getParameters().rowIndex, oEvent.getParameters().rowIndex);
+					oController.byId("table").removeSelectionInterval(oEvent.getParameters().rowIndex, oEvent.getParameters().rowIndex);
 
 					// in case we want to disable all the ticked base on their grouping.
 
