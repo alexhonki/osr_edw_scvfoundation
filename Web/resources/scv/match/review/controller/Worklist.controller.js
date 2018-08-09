@@ -291,7 +291,7 @@ sap.ui.define([
 				var sQuery = oEvent.getParameter("query");
 				//do trim for white spaces.
 				sQuery = sQuery.trim();
-
+				sQuery = sQuery.replace(/'/g, "''");
 				if (sQuery && sQuery.length > 0) {
 					//only enable busy if its a valid search query.
 					this.getView().byId("table").setBusy(true);
@@ -397,11 +397,19 @@ sap.ui.define([
 			});
 		},
 
+/**
+ * Responsible for the top 4 buttons.
+ * RMS Duplicates, All Duplicates, Entities for Review, Entities for Promotion
+ * @param  {[type]} oEvent [button object that is being triggered]
+ * @return {[type]}        [description]
+ */
 		handleToggleDuplicateViewButtonPress: function(oEvent) {
 
 			var oViewModel = this.getModel("worklistView");
 			var sKey = oEvent.getSource().getKey();
 
+			//depending on the key that is selected, will set global filter
+			//accordingly.
 			if (sKey === 'rmsDuplicates') {
 				// Show RMS duplicates only
 				oViewModel.setProperty("/globalFilter", "rmsDuplicates");
@@ -413,12 +421,15 @@ sap.ui.define([
 				oViewModel.setProperty("/globalFilter", "allDuplicates");
 			}
 
+			//these belongs to the 4 buttons next to the entities number
+			//"Unique", "Identical", "Recommended", "Similar"
 			var oIconTabBar = this.getView().byId("iconTabBar");
 			var oEvent = new sap.ui.base.Event("customSelect", oIconTabBar, {
 				"selectedKey": oIconTabBar.getSelectedKey(),
 				"item": this.getView().byId(this.getView().byId("iconTabBar").getSelectedKey()),
 				"selectedItem": this.getView().byId(this.getView().byId("iconTabBar").getSelectedKey())
 			});
+			//apply the filter.
 			this.onQuickFilter(oEvent);
 
 		},
