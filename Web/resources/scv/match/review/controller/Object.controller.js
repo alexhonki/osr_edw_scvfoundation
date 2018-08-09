@@ -638,9 +638,8 @@ sap.ui.define([
           //grab the info about the deselected row.
           //oEvent.getParameters().rowContext.getObject().SYSTEM_ID
           //oEvent.getParameters().rowContext.getObject().SOURCE_SYSTEM
-
           let sSelectedRowSourceSystem = oEvent.getParameters().rowContext.getObject().SOURCE_SYSTEM;
-          let sSelectedRowSourceId = oEvent.getParameters().rowContext.getObject().SOURCE_ID;
+          let sSelectedRowSourceId = oEvent.getParameters().rowContext.getObject().SYSTEM_ID;
           //grab the each row details
           //grab all rows of a table.
           let oTable = this.getView().byId("table");
