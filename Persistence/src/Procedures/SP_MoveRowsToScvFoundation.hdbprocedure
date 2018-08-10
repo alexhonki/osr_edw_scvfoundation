@@ -31,7 +31,7 @@ BEGIN
 	BEGIN
 		
 		DROP TABLE #lt_entity_mapping;
-		DROP TABLE #lt_scv_counters;
+		DROP TABLE #lt_existing_entity_mapping;
 		
 --		o_return_code :=  'ERROR';
 --		o_message:=  'ERROR: ' || ::SQL_ERROR_CODE || ' ' || ::SQL_ERROR_MESSAGE;
@@ -42,14 +42,16 @@ BEGIN
             SCV_ID_SEQ_CONTROL NVARCHAR(10),
             SCV_ID INTEGER,
             ENTITY_ID NVARCHAR(20),
-            MATCH_ROW_ID INTEGER
-            --ACTION_RMS NVARCHAR(10)
+            MATCH_ROW_ID INTEGER,
+            SOURCE_SYSTEM NVARCHAR(20)
     );
     
-
-    CREATE LOCAL TEMPORARY TABLE #lt_scv_counters (
+    CREATE LOCAL TEMPORARY TABLE #lt_existing_entity_mapping (
             SCV_ID_SEQ_CONTROL NVARCHAR(10),
-            SCV_ID INTEGER
+            SCV_ID INTEGER,
+            ENTITY_ID NVARCHAR(20),
+            MATCH_ROW_ID INTEGER,
+            SOURCE_SYSTEM NVARCHAR(20)
     );
     
     -- ### SCV Statistics ##########################################################################################################
@@ -78,8 +80,8 @@ BEGIN
 									ORDER BY s.ENTITY_ID ASC, s.SOURCE_SYSTEM ASC, s.SYSTEM_ID ASC, s."Match_ROW_ID" ASC
 								) GROUP BY ENTITY_ID;
 						  
-    	lt_auto_entity_ids_detail = SELECT 'AUTO', b.SCV_ID, a.ENTITY_ID, a."Match_ROW_ID" FROM (
-    								SELECT s.ENTITY_ID,  s."Match_ROW_ID" , md.SCV_ID
+    	lt_auto_entity_ids_detail = SELECT 'AUTO', b.SCV_ID, a.ENTITY_ID, a."Match_ROW_ID", a.SOURCE_SYSTEM FROM (
+    								SELECT s.ENTITY_ID,  s."Match_ROW_ID" , md.SCV_ID, s.SOURCE_SYSTEM
 									FROM "osr.scv.foundation.db.data::MatchResults.MatchResultsShadow" s
 									INNER JOIN "osr.scv.foundation.db.data::MatchResultsReview.Promotions" a
 									ON s.ENTITY_ID = a.ENTITY_ID
@@ -131,21 +133,29 @@ BEGIN
 								a."STD_PERSON_FN" = b."STD_PERSON_FN";
 	*/
 	
-	lt_reject_scv_ids = SELECT   "osr.scv.foundation.db.data::SEQ_ScvMaster".NEXTVAL as SCV_ID, "GROUP_TAG" FROM (
-						SELECT s.SYSTEM_ID,  s."Match_ROW_ID" , "GROUP_TAG" 
+	lt_reject_scv_ids = SELECT  ENTITY_ID, "osr.scv.foundation.db.data::SEQ_ScvMaster".NEXTVAL as SCV_ID, "GROUP_TAG" FROM (
+						SELECT s.SYSTEM_ID,  s."Match_ROW_ID" , "GROUP_TAG", s.ENTITY_ID 
 						FROM "osr.scv.foundation.db.data::MatchResults.MatchResultsShadow" s
-						INNER JOIN "osr.scv.foundation.db.data::MatchResultsReview.Assessments" a
+						INNER JOIN (SELECT a.MATCH_ROW, a.ACTION, a."TIMESTAMP" FROM "osr.scv.foundation.db.data::MatchResultsReview.Assessments" a
+									INNER JOIN (SELECT MATCH_ROW, MAX("TIMESTAMP") as "TIMESTAMP"  FROM "osr.scv.foundation.db.data::MatchResultsReview.Assessments" 
+												GROUP BY MATCH_ROW
+												) b
+									ON a.MATCH_ROW = b.MATCH_ROW and a."TIMESTAMP" = b."TIMESTAMP") a
 						ON s."Match_ROW_ID" = a.MATCH_ROW
 						LEFT OUTER JOIN "osr.scv.foundation.db.data::MatchResults.SubGroups" sg
 						ON sg.MATCH_ROW = s."Match_ROW_ID" 
 						WHERE a.Action = 'Reject'
-				  ) GROUP BY  "GROUP_TAG";
+				  ) GROUP BY  "GROUP_TAG",ENTITY_ID;
 				  
 				  
-	lt_reject_scv_ids_detail = SELECT 'REJECT', b.SCV_ID, a.ENTITY_ID, a."Match_ROW_ID" FROM (
-									SELECT s.ENTITY_ID, s.SYSTEM_ID,  s."Match_ROW_ID", "GROUP_TAG" 
+	lt_reject_scv_ids_detail = SELECT 'REJECT', b.SCV_ID, a.ENTITY_ID, a."Match_ROW_ID", a.SOURCE_SYSTEM FROM (
+									SELECT s.ENTITY_ID, s.SYSTEM_ID,  s."Match_ROW_ID", "GROUP_TAG", s.SOURCE_SYSTEM 
 									FROM "osr.scv.foundation.db.data::MatchResults.MatchResultsShadow" s
-									INNER JOIN "osr.scv.foundation.db.data::MatchResultsReview.Assessments" a
+									INNER JOIN (SELECT a.MATCH_ROW, a.ACTION, a."TIMESTAMP" FROM "osr.scv.foundation.db.data::MatchResultsReview.Assessments" a
+												INNER JOIN (SELECT MATCH_ROW, MAX("TIMESTAMP") as "TIMESTAMP"  FROM "osr.scv.foundation.db.data::MatchResultsReview.Assessments" 
+															GROUP BY MATCH_ROW
+															) b
+												ON a.MATCH_ROW = b.MATCH_ROW and a."TIMESTAMP" = b."TIMESTAMP") a
 									ON s."Match_ROW_ID" = a.MATCH_ROW
 										LEFT OUTER JOIN "osr.scv.foundation.db.data::MatchResults.SubGroups" sg
 										ON sg.MATCH_ROW = s."Match_ROW_ID" 							
@@ -153,28 +163,38 @@ BEGIN
 									ORDER BY s.ENTITY_ID ASC, s.SOURCE_SYSTEM ASC, s.SYSTEM_ID ASC, s."Match_ROW_ID" ASC
 								) a
 								LEFT OUTER JOIN :lt_reject_scv_ids b
-								ON a."GROUP_TAG" = b."GROUP_TAG" ;		  
-				  
-				  
+								ON a."GROUP_TAG" = b."GROUP_TAG" ;	
+								
+
 		-- Insert into mapping table
 		INSERT INTO #lt_entity_mapping (SELECT * FROM :lt_reject_scv_ids_detail);
 
 		lt_accept_scv_ids = SELECT ENTITY_ID, "osr.scv.foundation.db.data::SEQ_ScvMaster".NEXTVAL as SCV_ID FROM (
 							SELECT s.ENTITY_ID,  s."Match_ROW_ID" 
 							FROM "osr.scv.foundation.db.data::MatchResults.MatchResultsShadow" s
-							INNER JOIN "osr.scv.foundation.db.data::MatchResultsReview.Assessments" a
+							INNER JOIN (SELECT a.MATCH_ROW, a.ACTION, a."TIMESTAMP" FROM "osr.scv.foundation.db.data::MatchResultsReview.Assessments" a
+										INNER JOIN (SELECT MATCH_ROW, MAX("TIMESTAMP") as "TIMESTAMP"  FROM "osr.scv.foundation.db.data::MatchResultsReview.Assessments" 
+													GROUP BY MATCH_ROW
+													) b
+										ON a.MATCH_ROW = b.MATCH_ROW and a."TIMESTAMP" = b."TIMESTAMP") a
 							ON s."Match_ROW_ID" = a.MATCH_ROW
 							WHERE a.Action = 'Accept'
 							ORDER BY s.ENTITY_ID ASC, s.SOURCE_SYSTEM ASC, s.SYSTEM_ID ASC, s."Match_ROW_ID" ASC
 						  ) GROUP BY ENTITY_ID;
 
-		lt_accept_scv_ids_detail_zero = SELECT 'ACCEPT', b.SCV_ID, a.ENTITY_ID, a.MATCH_ROW_ID FROM (
-									--SELECT 'ACCEPT', md.SCV_ID, s.ENTITY_ID, md.MATCH_ROW_ID 
-									SELECT DISTINCT md.SCV_ID, ENTITY_ID, MATCH_ROW_ID
-									FROM "osr.scv.foundation.db.data::MatchResultsReview.Assessments" s
+		lt_accept_scv_ids_detail_zero = SELECT 'ACCEPT', b.SCV_ID, a.ENTITY_ID, a.MATCH_ROW_ID, a.SOURCE_SYSTEM FROM (
+									SELECT md.SCV_ID, s.ENTITY_ID, s.SOURCE_SYSTEM,  s."Match_ROW_ID" as MATCH_ROW_ID
+									FROM "osr.scv.foundation.db.data::MatchResults.MatchResultsShadow" s
+									INNER JOIN (SELECT a.MATCH_ROW, a.ACTION, a."TIMESTAMP", ENTITY_ID FROM "osr.scv.foundation.db.data::MatchResultsReview.Assessments" a
+														INNER JOIN (SELECT MATCH_ROW, MAX("TIMESTAMP") as "TIMESTAMP"  FROM "osr.scv.foundation.db.data::MatchResultsReview.Assessments" 
+														GROUP BY MATCH_ROW
+																	) b
+												ON a.MATCH_ROW = b.MATCH_ROW and a."TIMESTAMP" = b."TIMESTAMP"
+												) am
+									ON s."Match_ROW_ID" = am.MATCH_ROW			
 									INNER JOIN "osr.scv.foundation.db.data::MatchResults.MatchDelta" md
-									ON s.MATCH_ROW = md.MATCH_ROW_ID
-									WHERE md.ACTION = 'New' and s.ACTION = 'Accept' and md.SCV_ID IS NULL
+									ON am.MATCH_ROW = md.MATCH_ROW_ID
+									WHERE md.ACTION = 'New' and am.ACTION = 'Accept' and md.SCV_ID IS NULL
 									) a
 									INNER JOIN :lt_accept_scv_ids b
 									ON a.ENTITY_ID = b.ENTITY_ID;
@@ -182,27 +202,58 @@ BEGIN
 		-- Insert into mapping table
 		INSERT INTO #lt_entity_mapping (SELECT * FROM :lt_accept_scv_ids_detail_zero);
 		
-		-- Fill auto-promotions, rejects and accepts into SCV master table
+		
+-- Generates the rejected SCV id's in an entity group. 		
+			lt_accepts_reject_master_scvids = 	SELECT ENTITY_ID, SCV_ID , 'Reject' as Action FROM :lt_reject_scv_ids
+												UNION ALL
+												SELECT ENTITY_ID, SCV_ID , 'Action' as Action FROM :lt_accept_scv_ids;
+
+			lt_reject_master_scv_ids =	SELECT a.SCV_ID, CASE WHEN a.ACTION = 'Reject' THEN STRING_AGG(b.SCV_ID,'|' ORDER BY b.SCV_ID DESC) ELSE '' END as REJECTED_IDS  FROM :lt_accepts_reject_master_scvids a
+										LEFT OUTER JOIN (SELECT DISTINCT SCV_ID, ENTITY_ID FROM :lt_accepts_reject_master_scvids) b
+										ON a.ENTITY_ID = b.ENTITY_ID
+										WHERE a.SCV_ID != b.SCV_ID
+										GROUP BY a.SCV_ID, a.ACTION
+										;
+
+-- Filter out any SCV_ID's that only contain TMR records.
+		DELETE FROM #lt_entity_mapping WHERE SCV_ID NOT IN (SELECT DISTINCT SCV_ID FROM #lt_entity_mapping
+										WHERE SOURCE_SYSTEM = 'RMS');
+										
+										
+										
+		-- Fill auto-promotions, rejects and accepts into SCV master table. Only where records do not have an SCV_ID automatically assigned. An example is when a brand new entity is formed. 
 		INSERT INTO "osr.scv.foundation.db.data::SCVFoundation.Master" (
-				SELECT DISTINCT SCV_ID, CURRENT_DATE, null,CURRENT_USER, null, null, null, null FROM (
-				SELECT a.SCV_ID FROM #lt_entity_mapping a
+				SELECT DISTINCT SCV_ID, CURRENT_DATE, null,CURRENT_USER, null, null, null, REJECTED_IDS  FROM (
+				SELECT a.SCV_ID, b.REJECTED_IDS FROM #lt_entity_mapping a
+				LEFT OUTER JOIN :lt_reject_master_scv_ids b
+				ON a.SCV_ID = b.SCV_ID
 				--LEFT OUTER JOIN (SELECT MATCH_ROW_ID, ACTION_RMS FROM "osr.scv.foundation.db.data::MatchResults.MatchDelta") md
 				--ON a.MATCH_ROW_ID = md.MATCH_ROW_ID
 				--WHERE md.ACTION_RMS = 'Add'
 				)
 		);
 		
-		lt_accept_scv_ids_detail = SELECT 'ACCEPT', md.SCV_ID, s.ENTITY_ID, md.MATCH_ROW_ID 
-									FROM "osr.scv.foundation.db.data::MatchResultsReview.Assessments" s
+		
+		lt_accept_scv_ids_detail = SELECT 'ACCEPT', SCV_ID, ENTITY_ID, MATCH_ROW_ID, SOURCE_SYSTEM FROM ( 
+									SELECT md.SCV_ID, s.ENTITY_ID, s.SOURCE_SYSTEM,  s."Match_ROW_ID" as MATCH_ROW_ID
+									FROM "osr.scv.foundation.db.data::MatchResults.MatchResultsShadow" s
+									INNER JOIN (SELECT a.MATCH_ROW, a.ACTION, a."TIMESTAMP", ENTITY_ID FROM "osr.scv.foundation.db.data::MatchResultsReview.Assessments" a
+													INNER JOIN (SELECT MATCH_ROW, MAX("TIMESTAMP") as "TIMESTAMP"  FROM "osr.scv.foundation.db.data::MatchResultsReview.Assessments" 
+													GROUP BY MATCH_ROW
+																) b
+													ON a.MATCH_ROW = b.MATCH_ROW and a."TIMESTAMP" = b."TIMESTAMP"
+												) a
+									ON s."Match_ROW_ID" = a.MATCH_ROW			
 									INNER JOIN "osr.scv.foundation.db.data::MatchResults.MatchDelta" md
-									ON s.MATCH_ROW = md.MATCH_ROW_ID
-									WHERE md.ACTION = 'New' and s.ACTION = 'Accept' 
-									and md.SCV_ID > 0;
+									ON a.MATCH_ROW = md.MATCH_ROW_ID
+									WHERE md.ACTION = 'New' and a.ACTION = 'Accept' 
+									and md.SCV_ID > 0
+									);
 		
 		-- Insert into mapping table
-		INSERT INTO #lt_entity_mapping (SELECT * FROM :lt_accept_scv_ids_detail);
+		INSERT INTO #lt_existing_entity_mapping (SELECT * FROM :lt_accept_scv_ids_detail);
 		
-		lt_auto_scv_ids_detail =	SELECT 'ACCEPT', md.SCV_ID, s.ENTITY_ID, md.MATCH_ROW_ID 
+		lt_auto_scv_ids_detail =	SELECT 'ACCEPT', md.SCV_ID, s.ENTITY_ID, md.MATCH_ROW_ID, s.SOURCE_SYSTEM 
 									FROM "osr.scv.foundation.db.data::MatchResults.MatchResultsShadow" s
 									INNER JOIN "osr.scv.foundation.db.data::MatchResultsReview.Promotions" a
 									ON s.ENTITY_ID = a.ENTITY_ID
@@ -211,7 +262,17 @@ BEGIN
 									WHERE (a.Action = 'Auto-Promotion') AND md.SCV_ID > 0 
 									ORDER BY s.ENTITY_ID ASC, s.SOURCE_SYSTEM ASC, s.SYSTEM_ID ASC, s."Match_ROW_ID" ASC;	
 					
-		INSERT INTO #lt_entity_mapping (SELECT * FROM :lt_auto_scv_ids_detail);
+		INSERT INTO #lt_existing_entity_mapping (SELECT * FROM :lt_auto_scv_ids_detail);
+		
+		UPDATE "osr.scv.foundation.db.data::SCVFoundation.Master" a SET  a.UPDATED_AT = CURRENT_DATE , a.CHANGED_BY = CURRENT_USER
+		FROM "osr.scv.foundation.db.data::SCVFoundation.Master" a , #lt_existing_entity_mapping b
+		WHERE a.SCV_ID = b.SCV_ID;
+		
+		
+		INSERT INTO #lt_entity_mapping (SELECT * FROM #lt_existing_entity_mapping);
+		
+	
+
 		
 	END;
 	
@@ -936,10 +997,11 @@ lt_address_entities_date_tmr =
 	
 
 	INSERT INTO "osr.scv.foundation.db.data::SCVFoundation.EntityMappingHistory" ( 
-																					SELECT :l_load_id, a.*, b."HASH" FROM #lt_entity_mapping as a
+																					SELECT :l_load_id, a.SCV_ID_SEQ_CONTROL, a.SCV_ID, a.ENTITY_ID, a.MATCH_ROW_ID , b."HASH" FROM #lt_entity_mapping as a
 																					LEFT OUTER JOIN "osr.scv.foundation.db.data::HashResults.MatchResultsHash" b
 																					ON a.MATCH_ROW_ID = b.MATCH_ROW_ID
-																				);					
+																				);	
+																				
 	
 	/*
 		TODO: Curtis to provide table for SCV load details
@@ -953,7 +1015,7 @@ lt_address_entities_date_tmr =
 	
 	-- ### Clean-up ##############################################################################################################
 	DROP TABLE #lt_entity_mapping;
-	DROP TABLE #lt_scv_counters;
+	DROP TABLE #lt_existing_entity_mapping;
 	
 	-- o_return_code := 'SUCCESS';
 	-- o_message := 'Entites moved successfully';
