@@ -77,12 +77,6 @@
 										<Title id="tableHeader" text="{worklistView>/worklistTableTitle}"/>
 										<ToolbarSpacer/>
 										<SearchField id="searchField" search="onSearch" tooltip="{i18n>worklistSearchTooltip}" width="auto"/>
-										<!--<SearchField
-											id="searchField"
-											placeholder="Filter"
-											value="{ui>/globalFilter}"
-											search="filterGlobally"
-											width="auto"/>-->
 									</Toolbar>
 								</t:toolbar>
 								<t:columns>

@@ -405,6 +405,8 @@ sap.ui.define([
      */
     handleToggleDuplicateViewButtonPress: function(oEvent) {
 
+			this._clearSearchField();
+
       let oViewModel = this.getModel("worklistView");
       let sKey = oEvent.getSource().getKey();
 
@@ -936,7 +938,16 @@ sap.ui.define([
       }
 
       return oFilter;
-    }
+    },
+
+		/**
+		 * To clear the text set on the search field,
+		 * to make sure the ui make sense.
+		 * @return {[type]} [NA]
+		 */
+		_clearSearchField: function(){
+			this.getView().byId("searchField").setValue("");
+		}
 
   });
 });
