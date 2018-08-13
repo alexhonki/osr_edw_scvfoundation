@@ -1,0 +1,72 @@
+/*
+	Write some statistics about the latest SCV full/delta update
+*/
+PROCEDURE "osr.scv.foundation.db.Procedures::SP_UpdateAddressSCVRecords" (
+	IN l_load_id INTEGER
+)
+	LANGUAGE SQLSCRIPT
+	SQL SECURITY INVOKER
+    --DEFAULT SCHEMA <default_schema_name>
+   AS
+BEGIN
+	
+	/*************************************************
+		Update SCV Address Records - ADDRESS KIND
+	*************************************************/
+	
+	-- Find the address numbers where the Address kind has not been included in the SCV. 
+	-- Return: Address number and Address Kind
+	lt_different_addr = SELECT a.ADDRNUMBER, a.ADR_KIND FROM "osr.scv.foundation.db.synonyms::BUT021_FS" a
+						WHERE a.ADDRNUMBER IN (SELECT ADDRNUMBER FROM "osr.scv.foundation.db.data::SCVFoundation.AddressRms")
+						EXCEPT 
+						SELECT b.ADDRNUMBER, b.ADR_KIND FROM "osr.scv.foundation.db.data::SCVFoundation.AddressRms" b
+						;
+
+	-- Attach the Master data to the address numbers that need to be inserted into the SCV
+	lt_address_record = SELECT DISTINCT ma.SCV_ID, mr.* FROM 
+								(
+									SELECT mk.*, lt.ADDR_LATITUDE, lt.ADDR_LONGITUDE FROM 
+													(SELECT DISTINCT  b.Z_RUN_SEQ_ID||'|'||c.Z_RUN_SEQ_ID as ADDRESS_RMS_ID, a.ENTITY_ID, a.SOURCE_SYSTEM, a.SYSTEM_ID, b.ADDRNUMBER, b.ADR_KIND, CASE WHEN SUBSTRING(to_nvarchar(b.VALID_FROM),1,4) < 1900 THEN DATS_TO_DATE('19000101') ELSE DATS_TO_DATE(SUBSTRING(to_nvarchar(b.VALID_FROM),1,8)) END  AS VALID_FROM, CASE WHEN SUBSTRING(to_nvarchar(b.VALID_TO),1,4) < 1900 THEN DATS_TO_DATE('19000101') ELSE DATS_TO_DATE(SUBSTRING(to_nvarchar(b.VALID_TO),1,8)) END  AS VALID_TO, c.CITY1, c.POST_CODE1, c.STREET, c.HOUSE_NUM1, c.COUNTRY, c.REGION, c.PERS_ADDR, c.MC_CITY1, c.MC_STREET, c.TIME_ZONE, c.ADRC_UUID, 
+	                							    -- Create checksum for RMS MD fields for domain ADDRESS
+    												HASH_SHA256(TO_BINARY(TO_VARCHAR(c.CITY1)), TO_BINARY(TO_VARCHAR(c.POST_CODE1)), TO_BINARY(TO_VARCHAR(c.STREET)), TO_BINARY(TO_VARCHAR(c.HOUSE_NUM1)), TO_BINARY(TO_VARCHAR(c.COUNTRY)),
+    												TO_BINARY(TO_VARCHAR(c.REGION)), TO_BINARY(TO_VARCHAR(c.PERS_ADDR)), TO_BINARY(TO_VARCHAR(c.MC_CITY1)), TO_BINARY(TO_VARCHAR(c.STREET)), TO_BINARY(TO_VARCHAR(c.TIME_ZONE)), TO_BINARY(TO_VARCHAR(c.ADRC_UUID))) as CHECKSUM,
+	                							    STD_ADDR_COUNTRY_2CHAR, STD_ADDR_COUNTRY_NAME, STD_ADDR_BUILDING_NAME, STD_ADDR_ADDRESS_DELIVERY, STD_ADDR_PRIM_ADDRESS,
+	                								STD_ADDR_PRIM_NAME_FULL, STD_ADDR_PRIM_NAME, STD_ADDR_PRIM_TYPE, STD_ADDR_PRIM_NUMBER, STD_ADDR_LOCALITY, STD_ADDR_REGION, STD_ADDR_POSTCODE1,
+	                								--ADDR_LATITUDE, ADDR_LONGITUDE,  
+	                								-- Create checksum for RMS STD MD fields for domain ADDRESS
+	                								HASH_SHA256(TO_BINARY(TO_VARCHAR(c.STD_ADDR_COUNTRY_2CHAR)), TO_BINARY(TO_VARCHAR(c.STD_ADDR_COUNTRY_NAME)), TO_BINARY(TO_VARCHAR(c.STD_ADDR_BUILDING_NAME)), TO_BINARY(TO_VARCHAR(c.STD_ADDR_ADDRESS_DELIVERY)), TO_BINARY(TO_VARCHAR(c.STD_ADDR_PRIM_ADDRESS)),
+    												TO_BINARY(TO_VARCHAR(c.STD_ADDR_PRIM_NAME_FULL)), TO_BINARY(TO_VARCHAR(c.STD_ADDR_PRIM_NAME)), TO_BINARY(TO_VARCHAR(c.STD_ADDR_PRIM_TYPE)), TO_BINARY(TO_VARCHAR(c.STD_ADDR_PRIM_NUMBER)), TO_BINARY(TO_VARCHAR(c.STD_ADDR_REGION)), TO_BINARY(TO_VARCHAR(c.STD_ADDR_POSTCODE1))) as STD_CHECKSUM,
+    												"Match_ROW_ID"
+									FROM "osr.scv.foundation.db.data::MatchResults.MatchResultsShadow" a
+									LEFT OUTER JOIN "osr.scv.foundation.db.synonyms::ADRC" c
+									ON a."Cleanse_ROW_ID_ADRC" = c.Z_RUN_SEQ_ID
+									LEFT OUTER JOIN "osr.scv.foundation.db.synonyms::BUT021_FS" b
+									ON c.ADDRNUMBER = b.ADDRNUMBER
+									INNER JOIN :lt_different_addr da
+									ON da.ADDRNUMBER = b.ADDRNUMBER and da.ADR_KIND = b.ADR_KIND
+								--	WHERE b.ADDRNUMBER = '0017194078' and ADR_KIND = 'XXDEFAULT'
+									) mk
+									LEFT OUTER JOIN 
+													(SELECT ADDRNUMBER, 
+															(SELECT ADDR_LATITUDE FROM "osr.scv.foundation.db.synonyms::ADRC" WHERE MAX(c.Z_RUN_SEQ_ID) = Z_RUN_SEQ_ID) as ADDR_LATITUDE,
+															(SELECT ADDR_LONGITUDE FROM "osr.scv.foundation.db.synonyms::ADRC" WHERE MAX(c.Z_RUN_SEQ_ID) = Z_RUN_SEQ_ID) as ADDR_LONGITUDE 
+													FROM "osr.scv.foundation.db.synonyms::ADRC" c
+													GROUP BY ADDRNUMBER) lt
+									ON	mk.ADDRNUMBER = lt.ADDRNUMBER			
+									WHERE mk.SOURCE_SYSTEM = 'RMS'  
+								) mr
+							-- Add SCV ID
+							INNER JOIN (SELECT SCV_ID, ADDRNUMBER FROM "osr.scv.foundation.db.data::SCVFoundation.AddressRms") ma
+							ON mr.ADDRNUMBER = ma.ADDRNUMBER
+							;
+							
+	--Insert the new records into the SCV
+	INSERT INTO "osr.scv.foundation.db.data::SCVFoundation.AddressRms" (
+																		SELECT  SCV_ID, SOURCE_SYSTEM, SYSTEM_ID, ADDRNUMBER, ADR_KIND, VALID_FROM, VALID_TO, ADDRESS_RMS_ID, CITY1, POST_CODE1, STREET, HOUSE_NUM1, COUNTRY, REGION, PERS_ADDR, MC_CITY1, MC_STREET, TIME_ZONE, ADRC_UUID, CHECKSUM, 
+																		        STD_ADDR_COUNTRY_2CHAR, STD_ADDR_COUNTRY_NAME, STD_ADDR_BUILDING_NAME, STD_ADDR_ADDRESS_DELIVERY, STD_ADDR_PRIM_ADDRESS, STD_ADDR_PRIM_NAME_FULL, STD_ADDR_PRIM_NAME, STD_ADDR_PRIM_TYPE, 
+																		        STD_ADDR_PRIM_NUMBER, STD_ADDR_LOCALITY, STD_ADDR_REGION, STD_ADDR_POSTCODE1, ADDR_LATITUDE, ADDR_LONGITUDE, STD_CHECKSUM, :l_load_id
+																		FROM :lt_address_record
+																	  )
+																	  ;
+
+END
