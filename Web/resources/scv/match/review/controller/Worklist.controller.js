@@ -424,13 +424,13 @@ sap.ui.define([
       //these belongs to the 4 buttons next to the entities number
       //"Unique", "Identical", "Recommended", "Similar"
       let oIconTabBar = this.getView().byId("iconTabBar");
-      let oEvent = new sap.ui.base.Event("customSelect", oIconTabBar, {
+      let oCustomEvent = new sap.ui.base.Event("customSelect", oIconTabBar, {
         "selectedKey": oIconTabBar.getSelectedKey(),
         "item": this.getView().byId(this.getView().byId("iconTabBar").getSelectedKey()),
         "selectedItem": this.getView().byId(this.getView().byId("iconTabBar").getSelectedKey())
       });
       //apply the filter.
-      this.onQuickFilter(oEvent);
+      this.onQuickFilter(oCustomEvent);
 
     },
 
