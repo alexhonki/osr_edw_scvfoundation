@@ -14,13 +14,14 @@
 	                         showNavButton="true"
 	                         title="{i18n>objectTitle} { path: 'ENTITY_ID' }">
 		<semantic:content>
-			<ObjectHeader fullScreenOptimized="true"
+			<ObjectHeader fullScreenOptimized="false"
 			              id="objectHeader"
 			              responsive="true"
 			              title="{NAME}"
 			              numberUnit="%"
 			              numberState="{ path: 'AVG_SCORE', formatter: '.formatter.scoreState' }"
-			              number="{AVG_SCORE}">
+			              number="{AVG_SCORE}"
+										class="reviewDetailObject">
 				<attributes>
 					<ObjectAttribute id="oaEntityId"
 					                 title="Entity ID"

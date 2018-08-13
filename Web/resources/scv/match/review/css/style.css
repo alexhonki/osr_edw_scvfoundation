@@ -26,3 +26,13 @@ html[dir="rtl"] .myAppDemoWT .myCustomButton.sapMBtn {
 .fadeMatchPolicy {
 	color: Gainsboro !important;
 }
+
+
+
+.reviewDetailObject .sapMOHRTitleNumberDiv{
+  max-width : 100%;
+}
+
+.reviewDetailObject .sapMOHRStates{
+  max-width : 100%;
+}
