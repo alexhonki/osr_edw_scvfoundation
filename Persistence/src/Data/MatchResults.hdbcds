@@ -128,21 +128,21 @@ context MatchResults {
 
 
     /*@@layout{"layoutInfo":{}}*/
-    
-    /*
-    entity MatchDelta {
-        MATCH_ROW_ID : Integer;
-        SCV_ID       : Integer;
-        ACTION       : String(10);
-        ACTION_RMS   : String(10);
-    };
-    */
-    
 
-    /*@@layout{"layoutInfo":{}}*/
+/*
+entity MatchDelta {
+    MATCH_ROW_ID : Integer;
+    SCV_ID       : Integer;
+    ACTION       : String(10);
+    ACTION_RMS   : String(10);
+};
+*/
+
+
+/*@@layout{"layoutInfo":{}}*/
     entity SubGroups {
-        MATCH_ROW : Integer;
-        GROUP_TAG : String(20);
+        key MATCH_ROW : Integer;
+            GROUP_TAG : String(20);
     };
 
     /*@@layout{"layoutInfo":{"x":-98,"y":163.5,"inner":{"unconnected":[{"type":"SimpleDS","id":"osr.scv.foundation.db.data::MatchResults.View_1.Delta","x":-91,"y":-205}]}}}*/
