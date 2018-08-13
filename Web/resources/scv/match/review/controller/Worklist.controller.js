@@ -511,6 +511,8 @@ sap.ui.define([
      */
     onQuickFilter: function(oEvent) {
 
+			this._clearSearchField();
+
       let oViewModel = this.getModel("worklistView");
       let oSearch = this.getView().byId("searchField");
       let icon = oSearch.$().find('.sapUiSearchFieldIco');
