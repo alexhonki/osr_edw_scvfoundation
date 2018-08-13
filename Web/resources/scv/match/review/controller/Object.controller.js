@@ -123,7 +123,7 @@ sap.ui.define([
 
 			//enable busy indicator for the main table
 			this._setBusyIndicatorForMainTable(true);
-			this.getView().byId("detailsTable1").unbindRows();
+			//this.getView().byId("detailsTable1").unbindRows();
 
 			//clean table binding
 
