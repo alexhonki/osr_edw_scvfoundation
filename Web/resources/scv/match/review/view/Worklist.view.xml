@@ -1,6 +1,6 @@
 <mvc:View controllerName="osr.scv.match.review.controller.Worklist" xmlns:mvc="sap.ui.core.mvc" xmlns:semantic="sap.m.semantic"
 	xmlns="sap.m" xmlns:t="sap.ui.table">
-	<semantic:FullscreenPage id="page" navButtonPress="onNavBack" showNavButton="true" title="{i18n>worklistViewTitle}">
+	<semantic:FullscreenPage id="page" navButtonPress="onNavBack" showNavButton="false" title="{i18n>worklistViewTitle}">
 		<semantic:subHeader>
 			<Toolbar>
 				<ToolbarSpacer/>
@@ -131,7 +131,7 @@
 									<t:Column id="navigation" width="3rem">
 										<Label text=""/>
 										<t:template>
-											<Button icon="sap-icon://feeder-arrow" press="onPress" tooltip="Show Group Details"/> 
+											<Button icon="sap-icon://feeder-arrow" press="onPress" tooltip="Show Group Details"/>
 										</t:template>
 									</t:Column>
 								</t:columns>
