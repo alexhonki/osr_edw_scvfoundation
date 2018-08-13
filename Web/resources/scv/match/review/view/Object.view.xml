@@ -1,222 +1,307 @@
-<mvc:View controllerName="osr.scv.match.review.controller.Object" xmlns:mvc="sap.ui.core.mvc" xmlns:semantic="sap.m.semantic" xmlns:form="sap.ui.layout.form" xmlns="sap.m" xmlns:core="sap.ui.core" xmlns:l="sap.ui.layout" xmlns:t="sap.ui.table">
-	<semantic:FullscreenPage showFooter="false" id="page" busy="{objectView>/busy}" busyIndicatorDelay="{objectView>/delay}" navButtonPress="onNavBack" showNavButton="true" title="{i18n>objectTitle} { path: 'ENTITY_ID' }">
+<mvc:View controllerName="osr.scv.match.review.controller.Object"
+          xmlns:mvc="sap.ui.core.mvc"
+          xmlns:semantic="sap.m.semantic"
+          xmlns:form="sap.ui.layout.form"
+          xmlns="sap.m"
+          xmlns:core="sap.ui.core"
+          xmlns:l="sap.ui.layout"
+          xmlns:t="sap.ui.table">
+	<semantic:FullscreenPage showFooter="false"
+	                         id="page"
+	                         busy="{objectView>/busy}"
+	                         busyIndicatorDelay="{objectView>/delay}"
+	                         navButtonPress="onNavBack"
+	                         showNavButton="true"
+	                         title="{i18n>objectTitle} { path: 'ENTITY_ID' }">
 		<semantic:content>
-			<ObjectHeader fullScreenOptimized="false" id="objectHeader" responsive="true" title="{NAME}" numberUnit="%" numberState="{ path: 'AVG_SCORE', formatter: '.formatter.scoreState' }" number="{AVG_SCORE}">
+			<ObjectHeader fullScreenOptimized="false"
+			              id="objectHeader"
+			              responsive="true"
+			              title="{NAME}"
+			              numberUnit="%"
+			              numberState="{ path: 'AVG_SCORE', formatter: '.formatter.scoreState' }"
+			              number="{AVG_SCORE}"
+										class="reviewDetailObject">
 				<attributes>
-					<ObjectAttribute id="oaEntityId" title="Entity ID" text="{ path: 'ENTITY_ID' }"/>
-					<ObjectAttribute title="Source System" text="{ path: 'SOURCE_SYSTEM'}"/>
+					<ObjectAttribute id="oaEntityId"
+					                 title="Entity ID"
+					                 text="{ path: 'ENTITY_ID' }" />
+					<ObjectAttribute title="Source System"
+					                 text="{ path: 'SOURCE_SYSTEM'}" />
 				</attributes>
 				<statuses>
-					<ObjectStatus title="Strategy" text="{= ${STRATEGY_RESOLVED} }" state="{= ${STRATEGY_RESOLVED_STATUS} }" visible="true"/>
-					<ObjectStatus id="actionObjectStatus" title="Action" text="{= ${ACTION_RESOLVED} }" state="{= ${ACTION_RESOLVED_STATUS} }" visible="true"/>
+					<ObjectStatus title="Strategy"
+					              text="{= ${STRATEGY_RESOLVED} }"
+					              state="{= ${STRATEGY_RESOLVED_STATUS} }"
+					              visible="true" />
+					<ObjectStatus id="actionObjectStatus"
+					              title="Action"
+					              text="{= ${ACTION_RESOLVED} }"
+					              state="{= ${ACTION_RESOLVED_STATUS} }"
+					              visible="true" />
 				</statuses>
 				<headerContainer>
-					<IconTabBar id="itb1" selectedKey="key1" upperCase="true" expandable="false" class="sapUiResponsiveContentPadding">
+					<IconTabBar id="itb1"
+					            selectedKey="key1"
+					            upperCase="true"
+					            expandable="false"
+					            class="sapUiResponsiveContentPadding">
 						<items>
-							<IconTabFilter text="Entity Info" key="key1">
+							<IconTabFilter text="Entity Info"
+							               key="key1">
 								<content>
-									<t:Table id="table" rows="{ path: 'matchResults', sorter: { path: 'GROUP_ROW_COUNT', descending: false}}" ariaLabelledBy="title" selectionMode="MultiToggle" rowSelectionChange="boxTickedEvent" enableBusyIndicator="true" busyIndicatorDelay="50">
+									<t:Table id="table"
+									         rows="{ path: 'matchResults', sorter: { path: 'GROUP_ROW_COUNT', descending: false}}"
+									         ariaLabelledBy="title"
+									         selectionMode="MultiToggle"
+									         rowSelectionChange="boxTickedEvent"
+									         enableBusyIndicator="true"
+									         busyIndicatorDelay="50">
 										<t:toolbar>
 											<Toolbar>
-												<Title id="tableDetailsHeader" text="Match Group Details"/>
+												<Title id="tableDetailsHeader"
+												       text="Match Group Details" />
 												<ToolbarSpacer/>
-												<Button id="acceptButton" type="Default" tooltip="Save Selection" press="onOpenAcceptDialog" icon="sap-icon://save" enabled="{= ${STRATEGY_RESOLVED} !== 'System Exclude'}"/>
+												<Button id="acceptButton"
+												        type="Default"
+												        tooltip="Save Selection"
+												        press="onOpenAcceptDialog"
+												        icon="sap-icon://save"
+												        enabled="{= ${STRATEGY_RESOLVED} !== 'System Exclude'}" />
 											</Toolbar>
 										</t:toolbar>
 										<t:columns>
 											<t:Column width="3rem">
-												<Label text="#"/>
+												<Label text="#" />
 												<t:template>
-													<Text text="{GROUP_ROW_COUNT}" wrapping="false"/>
+													<Text text="{GROUP_ROW_COUNT}"
+													      wrapping="false" />
 												</t:template>
 											</t:Column>
 											<t:Column width="5rem">
-												<Label text="Status"/>
+												<Label text="Status" />
 												<t:template>
-													<Text text="{ACTION}" wrapping="false"/>
+													<Text text="{ACTION}"
+													      wrapping="false" />
 												</t:template>
 											</t:Column>
 											<t:Column width="5rem">
-												<Label text="SCV ID"/>
+												<Label text="SCV ID" />
 												<t:template>
-													<Text text="{SCV_ID}" wrapping="false"/>
+													<Text text="{SCV_ID}"
+													      wrapping="false" />
 												</t:template>
 											</t:Column>
 											<t:Column width="8rem">
-												<Label text="System"/>
+												<Label text="System" />
 												<t:template>
-													<Text text="{SOURCE_SYSTEM}" wrapping="false"/>
+													<Text text="{SOURCE_SYSTEM}"
+													      wrapping="false" />
 												</t:template>
 											</t:Column>
 											<t:Column width="8rem">
-												<Label text="System ID"/>
+												<Label text="System ID" />
 												<t:template>
-													<Text text="{SYSTEM_ID}" wrapping="false"/>
+													<Text text="{SYSTEM_ID}"
+													      wrapping="false" />
 												</t:template>
 											</t:Column>
 											<t:Column width="8rem">
-												<Label text="Date of Birth"/>
+												<Label text="Date of Birth" />
 												<t:template>
-													<Text text="{BIRTHDT}" wrapping="false"/>
+													<Text text="{BIRTHDT}"
+													      wrapping="false" />
 												</t:template>
 											</t:Column>
 											<t:Column width="12rem">
-												<Label text="Last Name"/>
+												<Label text="Last Name" />
 												<t:template>
-													<Text text="{LAST_NAME}" wrapping="false"/>
+													<Text text="{LAST_NAME}"
+													      wrapping="false" />
 												</t:template>
 											</t:Column>
 											<t:Column width="18rem">
-												<Label text="First Middle Name"/>
+												<Label text="First Middle Name" />
 												<t:template>
-													<Text text="{FIRST_MIDDLE_NAME}" wrapping="false"/>
+													<Text text="{FIRST_MIDDLE_NAME}"
+													      wrapping="false" />
 												</t:template>
 											</t:Column>
 											<t:Column width="auto">
-												<Label text="Address"/>
+												<Label text="Address" />
 												<t:template>
-													<Text text="{ADDRESS}" wrapping="false"/>
+													<Text text="{ADDRESS}"
+													      wrapping="false" />
 												</t:template>
 											</t:Column>
 
 											<t:Column width="8rem">
-												<Label text="Match Row"/>
+												<Label text="Match Row" />
 												<t:template>
-													<Text text="{MATCH_ROW}" wrapping="false"/>
+													<Text text="{MATCH_ROW}"
+													      wrapping="false" />
 												</t:template>
 											</t:Column>
-											<t:Column id="navigation" width="3rem">
-												<Label text=""/>
+											<t:Column id="navigation"
+											          width="3rem">
+												<Label text="" />
 												<t:template>
-													<Button icon="sap-icon://target-group" press="onPress2" tooltip="Show Matches for Row {MATCH_ROW}"/>
+													<Button icon="sap-icon://target-group"
+													        press="onPress2"
+													        tooltip="Show Matches for Row {MATCH_ROW}" />
 												</t:template>
 											</t:Column>
 										</t:columns>
 									</t:Table>
-									<l:VerticalLayout class="sapUiContentPadding" width="100%">
+									<l:VerticalLayout class="sapUiContentPadding"
+									                  width="100%">
 										<l:content>
 											<core:HTML content='&lt;div class=&quot;content&quot;&gt;&lt;h4&gt;&lt;/a&gt;&lt;/div&gt;'></core:HTML>
 										</l:content>
 									</l:VerticalLayout>
-									<t:Table
-										id="detailsTable1"
-										rows="{ path: '/matchResultsDetailsRelatedParameters(I_MATCH_ROW=\'1\')/Results', sorter: [{ path: 'POLICY_NAME', descending: true },{ path: 'SCORE', descending: false }]}"
-										ariaLabelledBy="title"
-										selectionMode="None"
-										enableBusyIndicator="true"
-										busyIndicatorDelay="50">
+									<t:Table id="detailsTable1"
+									         rows="{ path: '/matchResultsDetailsRelatedParameters(I_MATCH_ROW=\'1\')/Results', sorter: [{ path: 'POLICY_NAME', descending: true },{ path: 'SCORE', descending: false }]}"
+									         ariaLabelledBy="title"
+									         selectionMode="None"
+									         enableBusyIndicator="true"
+									         busyIndicatorDelay="50">
 										<t:toolbar>
 											<Toolbar>
-												<Title id="tableDetails1Header" text="Matches for Row "/>
+												<Title id="tableDetails1Header"
+												       text="Matches for Row " />
 												<ToolbarSpacer/>
 											</Toolbar>
 										</t:toolbar>
 										<t:columns>
 											<t:Column width="18rem">
-												<Label text="Policy Name"/>
+												<Label text="Policy Name" />
 												<t:template>
-													<Text text="{POLICY_NAME}" wrapping="false"/>
+													<Text text="{POLICY_NAME}"
+													      wrapping="false" />
 												</t:template>
 											</t:Column>
 											<t:Column width="4rem">
-												<Label text="Score"/>
+												<Label text="Score" />
 												<t:template>
-													<ObjectNumber number="{SCORE}" state="{ path: 'SCORE', formatter: '.formatter.matchState' }"/>
+													<ObjectNumber number="{SCORE}"
+													              state="{ path: 'SCORE', formatter: '.formatter.matchState' }" />
 												</t:template>
 											</t:Column>
 											<t:Column width="8rem">
-												<Label text="System"/>
+												<Label text="System" />
 												<t:template>
-													<Text text="{SOURCE_SYSTEM}" wrapping="false"/>
+													<Text text="{SOURCE_SYSTEM}"
+													      wrapping="false" />
 												</t:template>
 											</t:Column>
 											<t:Column width="8rem">
-												<Label text="System ID"/>
+												<Label text="System ID" />
 												<t:template>
-													<Text text="{SYSTEM_ID}" wrapping="false"/>
+													<Text text="{SYSTEM_ID}"
+													      wrapping="false" />
 												</t:template>
 											</t:Column>
 											<t:Column width="8rem">
-												<Label text="Date of Birth"/>
+												<Label text="Date of Birth" />
 												<t:template>
-													<Text text="{BIRTHDT}" wrapping="false"/>
+													<Text text="{BIRTHDT}"
+													      wrapping="false" />
 												</t:template>
 											</t:Column>
 											<t:Column width="12rem">
-												<Label text="Last Name"/>
+												<Label text="Last Name" />
 												<t:template>
-													<Text text="{LAST_NAME}" wrapping="false"/>
+													<Text text="{LAST_NAME}"
+													      wrapping="false" />
 												</t:template>
 											</t:Column>
 											<t:Column width="18rem">
-												<Label text="First Middle Name"/>
+												<Label text="First Middle Name" />
 												<t:template>
-													<Text text="{FIRST_MIDDLE_NAME}" wrapping="false"/>
+													<Text text="{FIRST_MIDDLE_NAME}"
+													      wrapping="false" />
 												</t:template>
 											</t:Column>
 											<t:Column width="auto">
-												<Label text="Address"/>
+												<Label text="Address" />
 												<t:template>
-													<Text text="{ADDRESS}" wrapping="false"/>
+													<Text text="{ADDRESS}"
+													      wrapping="false" />
 												</t:template>
 											</t:Column>
 
 											<t:Column width="8rem">
-												<Label text="Match Row"/>
+												<Label text="Match Row" />
 												<t:template>
-													<Text text="{MATCH_ROW}" wrapping="false"/>
+													<Text text="{MATCH_ROW}"
+													      wrapping="false" />
 												</t:template>
 											</t:Column>
 										</t:columns>
 									</t:Table>
 								</content>
 							</IconTabFilter>
-							<IconTabFilter text="Change Log" key="key2" visible="false">
+							<IconTabFilter text="Change Log"
+							               key="key2"
+							               visible="false">
 								<content>
-									<l:VerticalLayout class="sapUiContentPadding" width="100%">
+									<l:VerticalLayout class="sapUiContentPadding"
+									                  width="100%">
 										<l:content>
-											<t:Table id="changeLogTable" rows="{ path: 'matchAssessments', sorter: { path: 'TIMESTAMP', descending: true }}" ariaLabelledBy="title" selectionMode="None" enableGrouping="true">
+											<t:Table id="changeLogTable"
+											         rows="{ path: 'matchAssessments', sorter: { path: 'TIMESTAMP', descending: true }}"
+											         ariaLabelledBy="title"
+											         selectionMode="None"
+											         enableGrouping="true">
 												<t:columns>
 													<t:Column width="10rem">
-														<Label text="Strategy"/>
+														<Label text="Strategy" />
 														<t:template>
-															<Text text="{STRATEGY}" wrapping="false"/>
+															<Text text="{STRATEGY}"
+															      wrapping="false" />
 														</t:template>
 													</t:Column>
 													<t:Column width="10rem">
-														<Label text="User ID"/>
+														<Label text="User ID" />
 														<t:template>
-															<Text text="{USER}" wrapping="false"/>
+															<Text text="{USER}"
+															      wrapping="false" />
 														</t:template>
 													</t:Column>
 													<t:Column width="15rem">
-														<Label text="Timestamp"/>
+														<Label text="Timestamp" />
 														<t:template>
-															<Text text="{path: 'TIMESTAMP', type: 'sap.ui.model.type.DateTime'}" wrapping="false"/>
+															<Text text="{path: 'TIMESTAMP', type: 'sap.ui.model.type.DateTime'}"
+															      wrapping="false" />
 														</t:template>
 													</t:Column>
 													<t:Column width="12rem">
-														<Label text="Match Row"/>
+														<Label text="Match Row" />
 														<t:template>
-															<Text text="{MATCH_ROW}" wrapping="false"/>
+															<Text text="{MATCH_ROW}"
+															      wrapping="false" />
 														</t:template>
 													</t:Column>
 													<t:Column width="10rem">
-														<Label text="Action"/>
+														<Label text="Action" />
 														<t:template>
-															<ObjectStatus text="{ACTION}" state="{ path: 'ACTION', formatter: '.formatter.actionState' }" wrapping="false"/>
+															<ObjectStatus text="{ACTION}"
+															              state="{ path: 'ACTION', formatter: '.formatter.actionState' }"
+															              wrapping="false" />
 														</t:template>
 													</t:Column>
 													<t:Column width="18rem">
-														<Label text="Code"/>
+														<Label text="Code" />
 														<t:template>
-															<Text text="{CODE}" wrapping="false"/>
+															<Text text="{CODE}"
+															      wrapping="false" />
 														</t:template>
 													</t:Column>
 													<t:Column width="auto">
-														<Label text="Comment"/>
+														<Label text="Comment" />
 														<t:template>
-															<Text text="{COMMENT}" wrapping="false"/>
+															<Text text="{COMMENT}"
+															      wrapping="false" />
 														</t:template>
 													</t:Column>
 												</t:columns>
