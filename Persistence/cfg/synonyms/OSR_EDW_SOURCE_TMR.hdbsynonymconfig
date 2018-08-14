@@ -1,17 +1,17 @@
 {
-	"osr.scv.foundation.db.synonyms::TMR_CustContact_DEL": {
+	"osr.scv.foundation.db.synonyms::TMR_CustContact": {
 		"target": {
 			"object": "osr.edw.propagation.md.tmr::CDS_CUSTOMER.CUSTCONTACT.active_data",
 			"schema.configure": "logical-OSR-EDW-SOURCE-TMR-grantor/schema"
 		}
 	},
-	"osr.scv.foundation.db.synonyms::TMR_CustMain_DEL": {
+	"osr.scv.foundation.db.synonyms::TMR_CustMain": {
 		"target": {
 			"object": "osr.edw.propagation.md.tmr::CDS_CUSTOMER.CUSTMAIN.active_data",
 			"schema.configure": "logical-OSR-EDW-SOURCE-TMR-grantor/schema"
 		}
 	},
-	"osr.scv.foundation.db.synonyms::TMR_CustMain_ChangeLog_DEL": {
+	"osr.scv.foundation.db.synonyms::TMR_CustMain_ChangeLog": {
 		"target": {
 			"object": "osr.edw.propagation.md.tmr::CDS_CUSTOMER.CUSTMAIN.change_log",
 			"schema.configure": "logical-OSR-EDW-SOURCE-TMR-grantor/schema"

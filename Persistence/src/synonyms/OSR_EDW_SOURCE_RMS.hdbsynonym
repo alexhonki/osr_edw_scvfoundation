@@ -1,5 +1,5 @@
 {
-  "osr.scv.foundation.db.synonyms::BUT000_DEL": {},
-  "osr.scv.foundation.db.synonyms::BUT021_FS_DEL":{},
-  "osr.scv.foundation.db.synonyms::ADRC_DEL":{}
+  "osr.scv.foundation.db.synonyms::BUT000": {},
+  "osr.scv.foundation.db.synonyms::BUT021_FS":{},
+  "osr.scv.foundation.db.synonyms::ADRC":{}
 }
