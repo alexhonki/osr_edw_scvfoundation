@@ -43,6 +43,7 @@ BEGIN SEQUENTIAL EXECUTION
 						SELECT * FROM (
 										SELECT DISTINCT mr.GROUP_ID, mr."Match_ROW_ID", mr.SOURCE_SYSTEM, mr.SYSTEM_ID 
 										FROM "osr.scv.foundation.db.data::MatchResults.MatchResults" mr
+										--WHERE mr.GROUP_ID = 1899805
 						) a
 						-- Add tracing information
 						LEFT OUTER JOIN (SELECT DISTINCT mt.ROW_ID, mt.RELATED_ROW_ID, mr.SYSTEM_ID as RELATED_SYSTEM_ID, mr.SOURCE_SYSTEM as RELATED_SOURCE_SYSTEM, mt.SCORE, mt.POLICY_NAME from "osr.scv.foundation.db.data::MatchResults.MatchResults" mr
@@ -56,26 +57,42 @@ BEGIN SEQUENTIAL EXECUTION
 	
 	-- Change baseline for RMS records refering to other RMS records
 	lt_set_rms_rms_person_address_dob_match = 
-		SELECT RELATED_ROW , SYSTEM_ID 
+		SELECT DISTINCT RELATED_ROW , SYSTEM_ID, RELATED_SYSTEM_ID 
 		FROM #lt_sub_groups_mapping 
 		WHERE SOURCE_SYSTEM = 'RMS' 
 			AND RELATED_SYSTEM = 'RMS' 
 			AND MATCH_POLICY = 'Person, Address, Date'
 			AND SYSTEM_ID != RELATED_SYSTEM_ID
 		;
+		
+	lt_additional_records = SELECT b.MATCH_ROW, a.SYSTEM_ID AS RSYS
+							FROM :lt_set_rms_rms_person_address_dob_match a
+							INNER JOIN #lt_sub_groups_mapping b
+							ON a.RELATED_SYSTEM_ID = b.SYSTEM_ID;
+
+	lt_update = SELECT DISTINCT * FROM (SELECT RELATED_ROW, SYSTEM_ID FROM :lt_set_rms_rms_person_address_dob_match UNION ALL SELECT MATCH_ROW AS RELATED_ROW, RSYS AS SYSTEM_ID FROM :lt_additional_records);							
+	
+	lt_mapping_before = SELECT * FROM #lt_sub_groups_mapping;
+					        
+	-- Update related system IDs
+	UPDATE #lt_sub_groups_mapping sgm SET sgm.RELATED_SYSTEM_ID = d.SYSTEM_ID
+	FROM #lt_sub_groups_mapping sgm, :lt_update d
+	WHERE sgm.RELATED_ROW = d.RELATED_ROW;
 			
 	-- Adjust system IDs
-	UPDATE #lt_sub_groups_mapping sgm SET sgm.SYSTEM_ID = d.SYSTEM_ID
-	FROM #lt_sub_groups_mapping sgm, :lt_set_rms_rms_person_address_dob_match d
+	UPDATE #lt_sub_groups_mapping sgm SET sgm.GROUP_TAG = d.SYSTEM_ID
+	FROM #lt_sub_groups_mapping sgm, :lt_update d
 	WHERE sgm.MATCH_ROW = d.RELATED_ROW;
 	
+	lt_mapping_after = SELECT * FROM #lt_sub_groups_mapping;
+	
 	-- Initial assignment
-	lt_set_mr_initial = SELECT DISTINCT MATCH_ROW, SYSTEM_ID FROM #lt_sub_groups_mapping;
-	INSERT INTO #lt_sub_groups (SELECT MATCH_ROW, SYSTEM_ID FROM :lt_set_mr_initial);
+	lt_set_mr_initial = SELECT DISTINCT MATCH_ROW, GROUP_TAG FROM #lt_sub_groups_mapping;
+	INSERT INTO #lt_sub_groups (SELECT MATCH_ROW, GROUP_TAG FROM :lt_set_mr_initial);
 	
 	-- RMS to TMR matches
 	lt_set_b = 
-		SELECT MATCH_ROW, SYSTEM_ID AS GROUP_TAG, RELATED_ROW, SCORE FROM 
+		SELECT MATCH_ROW, GROUP_TAG, RELATED_ROW, SCORE FROM 
 		(
 			SELECT 
 				*,
@@ -116,10 +133,15 @@ BEGIN SEQUENTIAL EXECUTION
 	UPDATE #lt_sub_groups sg SET sg.MATCH_ROW = d.MATCH_ROW, sg.GROUP_TAG = d.GROUP_TAG
 	FROM #lt_sub_groups sg, :lt_tmr_updates_for_set_b d
 	WHERE sg.MATCH_ROW = d.MATCH_ROW;
+	
+	-- Update group tags
+	UPDATE #lt_sub_groups_mapping sgm SET sgm.GROUP_TAG = d.GROUP_TAG
+	FROM #lt_sub_groups_mapping sgm, #lt_sub_groups d
+	WHERE sgm.MATCH_ROW = d.MATCH_ROW;
 
 	-- TMR to RMS matches
 	lt_set_c = 
-			SELECT MATCH_ROW, SYSTEM_ID AS GROUP_TAG, RELATED_ROW, RELATED_SYSTEM_ID,SCORE FROM 
+			SELECT MATCH_ROW, GROUP_TAG, RELATED_ROW, RELATED_SYSTEM_ID,SCORE FROM 
 		(
 			SELECT 
 				*,
@@ -131,17 +153,6 @@ BEGIN SEQUENTIAL EXECUTION
 		) WHERE GROUP_ROW_COUNT = 1 								-- Only 1 row per related row match
 			AND RELATED_ROW IS NOT NULL								-- Rows with null reference are being added in the initial step
 		;
-	
-	lt_whot1 = SELECT *, ROW_NUMBER() OVER (PARTITION BY MATCH_ROW, RELATED_ROW ORDER BY SCORE DESC) AS GROUP_ROW_COUNT 
-				FROM (
-				    	SELECT a.*, b.GROUP_TAG as GROUP_TAG1 FROM (
-				    		SELECT b.* FROM :lt_set_c a
-				    		INNER JOIN #lt_sub_groups_mapping b
-				    		ON a.RELATED_ROW = b.MATCH_ROW
-				    	) a
-				    	INNER JOIN :lt_set_c b
-				    	ON a.MATCH_ROW = b.RELATED_ROW
-			         );
 	
 	lt_tmr_updates_for_set_c = 
 		SELECT * FROM 
@@ -170,6 +181,58 @@ BEGIN SEQUENTIAL EXECUTION
 	-- Update main group table
 	UPDATE #lt_sub_groups sg SET sg.MATCH_ROW = d.MATCH_ROW, sg.GROUP_TAG = d.GROUP_TAG
 	FROM #lt_sub_groups sg, :lt_tmr_updates_for_set_c d
+	WHERE sg.MATCH_ROW = d.MATCH_ROW;
+	
+	-- Update group tags
+	UPDATE #lt_sub_groups_mapping sgm SET sgm.GROUP_TAG = d.GROUP_TAG
+	FROM #lt_sub_groups_mapping sgm, #lt_sub_groups d
+	WHERE sgm.MATCH_ROW = d.MATCH_ROW;
+	
+	lt_mapping = SELECT * FROM #lt_sub_groups_mapping;
+	
+	-- Collect orphan TMR-TMR matches
+	lt_set_d = 
+		SELECT MATCH_ROW, GROUP_TAG, RELATED_ROW, RELATED_SYSTEM_ID,SCORE FROM 
+		(
+			SELECT 
+				*,
+				-- Add row number, sort by score 
+				ROW_NUMBER() OVER (PARTITION BY RELATED_ROW ORDER BY SCORE DESC) AS GROUP_ROW_COUNT
+			FROM #lt_sub_groups_mapping
+			WHERE SOURCE_SYSTEM = 'TMR'
+				AND RELATED_SYSTEM = 'TMR'
+		) WHERE GROUP_ROW_COUNT = 1 								-- Only 1 row per related row match
+			AND RELATED_ROW IS NOT NULL								-- Rows with null reference are being added in the initial step
+		;
+	
+	lt_tmr_tmr_orphan_record_set_d = 
+		SELECT * FROM 
+		(
+			SELECT DISTINCT MATCH_ROW, GROUP_TAG 
+        	FROM :lt_set_d 
+        	WHERE RELATED_ROW IS NOT NULL
+			UNION ALL 
+			-- Union TMR records found using system ID from match source (RMS)
+			SELECT MATCH_ROW, GROUP_TAG 
+			FROM (									
+				SELECT *, ROW_NUMBER() OVER (PARTITION BY MATCH_ROW, RELATED_ROW ORDER BY SCORE DESC) AS GROUP_ROW_COUNT 
+				FROM (
+				    	
+				    		SELECT * FROM (
+				    		SELECT b.MATCH_ROW, a.GROUP_TAG, b.RELATED_ROW, b.SCORE FROM :lt_set_d a
+				    		INNER JOIN #lt_sub_groups_mapping b
+				    		ON a.RELATED_ROW = b.MATCH_ROW
+				    		) WHERE MATCH_ROW NOT IN (SELECT RELATED_ROW FROM  #lt_sub_groups_mapping WHERE SOURCE_SYSTEM = 'RMS')
+				    		
+				    	
+			         )
+			) WHERE GROUP_ROW_COUNT = 1
+		) 
+		;
+	
+	-- Update main group table
+	UPDATE #lt_sub_groups sg SET sg.GROUP_TAG = d.GROUP_TAG
+	FROM #lt_sub_groups sg, :lt_tmr_tmr_orphan_record_set_d d
 	WHERE sg.MATCH_ROW = d.MATCH_ROW;
 	
 	-- Write to table
