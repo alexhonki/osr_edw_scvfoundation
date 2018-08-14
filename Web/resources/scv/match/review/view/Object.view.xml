@@ -147,7 +147,7 @@
 												<Label text="" />
 												<t:template>
 													<Button icon="sap-icon://target-group"
-													        press="onPress2"
+													        press="onDetailPressed"
 													        tooltip="Show Matches for Row {MATCH_ROW}" />
 												</t:template>
 											</t:Column>

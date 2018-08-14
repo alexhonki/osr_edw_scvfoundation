@@ -58,14 +58,6 @@ sap.ui.define([
 
     },
 
-    /**
-     * Called when the table is rendered.
-     * @public
-     */
-    onAfterDetailsTableRendering: function() {
-
-    },
-
     /* =========================================================== */
     /* event handlers                                              */
     /* =========================================================== */
@@ -118,37 +110,36 @@ sap.ui.define([
      */
     _onObjectMatched: function(oEvent) {
 
-      let sObjectPath = "/matchResultsReview('" + oEvent.getParameter("arguments").objectId.split("|")[0] + "')";
-      this._bindView(sObjectPath);
+      let oController = this;
+      oController.sObjectPath = "/matchResultsReview('" + oEvent.getParameter("arguments").objectId.split("|")[0] + "')";
+      oController._bindView(oController.sObjectPath);
 
       //enable busy indicator for the main table
-      this._setBusyIndicatorForMainTable(true);
-      this._setBusyIndicatorForDetailTable(true);
-      this.getView().byId("tableDetails1Header").setText("Matches for Row ");
+      oController._setBusyIndicatorForMainTable(true);
+      oController._setBusyIndicatorForDetailTable(true);
+      oController.getView().byId("tableDetails1Header").setText("Matches for Row ");
 
 
       // Disable change log tab?
       // Read the change log count for current entity
-      let that = this;
-      this.getModel().read(sObjectPath + "/matchAssessments/$count", {
+      oController.getModel().read(oController.sObjectPath + "/matchAssessments/$count", {
         success: function(oData) {
           let oRowCount = parseInt(oData),
             maxRowCount = 17;
           if (oRowCount < maxRowCount) {
-            that.getView().byId("changeLogTable").setVisibleRowCount(oRowCount);
+            oController.getView().byId("changeLogTable").setVisibleRowCount(oRowCount);
           } else {
-            that.getView().byId("changeLogTable").setVisibleRowCount(maxRowCount);
+            oController.getView().byId("changeLogTable").setVisibleRowCount(maxRowCount);
           }
           //Hide change log tab?
           if (oRowCount === 0) {
-            that.byId("itb1").getItems()[1].setVisible(false);
+            oController.byId("itb1").getItems()[1].setVisible(false);
           } else {
-            that.byId("itb1").getItems()[1].setVisible(true);
+            oController.byId("itb1").getItems()[1].setVisible(true);
           }
         }
       });
 
-      let oController = this;
 
       this.fOnDataReceived = function(oData) {
 
@@ -196,22 +187,52 @@ sap.ui.define([
       //attached a function call once data is received call
       //fOnDataReceived function
       let oBinding = this._oTable.getBinding("rows");
-      oBinding.attachDataReceived(this.fOnDataReceived);
-
-      // For the second table
-      this.fOnDataReceivedDetailTable = function(oData) {
-        //set the text for the detail table.
-        oController.getView().byId("tableDetails1Header").setText("Matches for Row " + oController.currentMatchRow);
-        let tableLength = oData.getSource().iLength;
-        if (tableLength === 0) {
-          that.getView().byId("detailsTable1").setVisibleRowCount(1);
-        } else {
-          that.getView().byId("detailsTable1").setVisibleRowCount(tableLength);
-
-        }
-      };
+      oBinding.attachDataReceived(this._onMainTableDataReceived, this);
 
     },
+
+		_onMainTableDataReceived: function(oEvent){
+
+			let oController = this;
+			//disable busy once data is received.
+			oController._setBusyIndicatorForMainTable(false);
+
+			// once data is recieved, details table get binding with the very first
+			// result of the data set, ensuring the first row is always loaded and selected.
+			let matchRow = oEvent.getParameters().data.results[0].MATCH_ROW;
+			oController.currentMatchRow = matchRow;
+
+
+			let sObjectPathRelated = "/matchResultsDetailsRelatedParameters(I_MATCH_ROW='" + matchRow + "')/Results";
+			oController.byId("detailsTable1").bindRows({
+				path: sObjectPathRelated,
+				template: oController.byId("detailsTable1").getBindingInfo("rows").template
+			});
+
+			//attached a function call once data is received call
+			//fOnDataReceivedDetailTable function
+			let oBinding2 = oController._oDetailTable.getBinding("rows");
+			oBinding2.attachDataReceived(oController._onDataReceivedOnDetailTable, this);
+
+			//disable the very first button on the main table.
+			oController._disableFirstButton();
+
+			oController.getView().byId("table").setVisibleRowCount(oEvent.getSource().iLength);
+
+			// Read assessments and set initial selection
+			oController.getModel().read(oController.sObjectPath + "/matchAssessments", {
+
+				urlParameters: {
+					"$orderby": "TIMESTAMP desc"
+				},
+				success: function(oData) {
+					// Adjust selection for checkboxes
+					if (oData.results.length > 0) {
+						oController._selectRows(oData);
+					}
+				}
+			});
+		},
 
     /**
      * Enable all the buttons on the first table
@@ -310,7 +331,6 @@ sap.ui.define([
     },
 
     /**
-     * [description]
      * @param  {[type]} oEvent [description]
      * @return {[type]}        [description]
      */
@@ -349,7 +369,7 @@ sap.ui.define([
      * @param  {[type]} oEvent [description]
      * @return {[type]}        [description]
      */
-    onPress2: function(oEvent) {
+    onDetailPressed: function(oEvent) {
 
       let oController = this;
 
@@ -364,10 +384,6 @@ sap.ui.define([
       let newMatchRow = oEvent.getSource().getBindingContext().getProperty("MATCH_ROW_STR");
       let sObjectPathRelated = "/matchResultsDetailsRelatedParameters(I_MATCH_ROW='" + newMatchRow + "')/Results";
 
-      //attached binding to the function after it load finished
-      // let oBinding2 = oController._oDetailTable.getBinding("rows");
-      // oBinding2.attachDataReceived(oController.fOnDataReceived2);
-
       oController.byId("detailsTable1").bindRows({
         path: sObjectPathRelated,
         template: oController.byId("detailsTable1").getBindingInfo("rows").template
@@ -376,30 +392,18 @@ sap.ui.define([
       // Set new title for details table
       oController.getView().byId("tableDetails1Header").setText("Matches for Row " + newMatchRow);
 
-      //START OF ASYNC CALL BACK.
-      // oController.fOnDataReceived2 = function(oData) {
-			//
-      //   //set busy state for matching rows table.
-      //   oController.getView().byId("detailsTable1").setBusy(false);
-			//
-      //   let tableLength = oData.getSource().iLength;
-      //   if (tableLength === 0) {
-      //     oController.getView().byId("detailsTable1").setVisibleRowCount(1);
-      //   } else {
-      //     oController.getView().byId("detailsTable1").setVisibleRowCount(tableLength);
-			//
-      //   }
-			//
-      // };
+      //attached binding to the function after it load finished
+      let oBinding2 = oController._oDetailTable.getBinding("rows");
+      oBinding2.attachDataReceived(oController._onDataReceivedOnDetailTable, this);
 
     },
 
-    fOnDataReceived2: function(oEvent) {
+    _onDataReceivedOnDetailTable: function(oEvent) {
       let oController = this;
       //set busy state for matching rows table.
       oController.getView().byId("detailsTable1").setBusy(false);
 
-      let tableLength = oData.getSource().iLength;
+      let tableLength = oEvent.getParameter("data").results.length;
       if (tableLength === 0) {
         oController.getView().byId("detailsTable1").setVisibleRowCount(1);
       } else {
@@ -667,13 +671,24 @@ sap.ui.define([
 
     },
 
+    /**
+     * Helper function to set busy status of the main table
+     * @param  {[Boolean]} bEnable [boolean flag]
+     * @return {[type]}         [description]
+     */
     _setBusyIndicatorForMainTable: function(bEnable) {
       this.getView().byId("table").setBusy(bEnable);
     },
 
+    /**
+     * Helper function to set busy status of the detail table
+     * @param  {[Boolean]} bEnable [boolean flag]
+     * @return {[type]}         [description]
+     */
     _setBusyIndicatorForDetailTable: function(bEnable) {
       this.getView().byId("detailsTable1").setBusy(bEnable);
     }
+
   });
 
 });
