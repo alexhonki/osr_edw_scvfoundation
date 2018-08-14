@@ -101,7 +101,7 @@
       },
       "preconditions": [
         {
-          "from": "5",
+          "from": "3",
           "status": "OK"
         }
       ]
@@ -120,7 +120,7 @@
       },
       "preconditions": [
         {
-          "from": "3",
+          "from": "6",
           "status": "OK"
         }
       ]
