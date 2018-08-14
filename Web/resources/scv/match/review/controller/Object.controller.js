@@ -111,8 +111,8 @@ sap.ui.define([
     _onObjectMatched: function(oEvent) {
 
       let oController = this;
-      let sObjectPath = "/matchResultsReview('" + oEvent.getParameter("arguments").objectId.split("|")[0] + "')";
-      oController._bindView(sObjectPath);
+      oController.sObjectPath = "/matchResultsReview('" + oEvent.getParameter("arguments").objectId.split("|")[0] + "')";
+      oController._bindView(oController.sObjectPath);
 
       //enable busy indicator for the main table
       oController._setBusyIndicatorForMainTable(true);
@@ -122,7 +122,7 @@ sap.ui.define([
 
       // Disable change log tab?
       // Read the change log count for current entity
-      oController.getModel().read(sObjectPath + "/matchAssessments/$count", {
+      oController.getModel().read(oController.sObjectPath + "/matchAssessments/$count", {
         success: function(oData) {
           let oRowCount = parseInt(oData),
             maxRowCount = 17;
@@ -220,7 +220,7 @@ sap.ui.define([
 			oController.getView().byId("table").setVisibleRowCount(oEvent.getSource().iLength);
 
 			// Read assessments and set initial selection
-			oController.getModel().read(sObjectPath + "/matchAssessments", {
+			oController.getModel().read(oController.sObjectPath + "/matchAssessments", {
 
 				urlParameters: {
 					"$orderby": "TIMESTAMP desc"
