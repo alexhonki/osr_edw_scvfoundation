@@ -58,14 +58,6 @@ sap.ui.define([
 
     },
 
-    /**
-     * Called when the table is rendered.
-     * @public
-     */
-    onAfterDetailsTableRendering: function() {
-
-    },
-
     /* =========================================================== */
     /* event handlers                                              */
     /* =========================================================== */
@@ -117,39 +109,38 @@ sap.ui.define([
      * @private
      */
     _onObjectMatched: function(oEvent) {
-
+		
+	let oController = this;
       let sObjectPath = "/matchResultsReview('" + oEvent.getParameter("arguments").objectId.split("|")[0] + "')";
-      this._bindView(sObjectPath);
+      oController._bindView(sObjectPath);
 
       //enable busy indicator for the main table
-      this._setBusyIndicatorForMainTable(true);
-      this._setBusyIndicatorForDetailTable(true);
-      this.getView().byId("tableDetails1Header").setText("Matches for Row ");
+      oController._setBusyIndicatorForMainTable(true);
+      oController._setBusyIndicatorForDetailTable(true);
+      oController.getView().byId("tableDetails1Header").setText("Matches for Row ");
 
 
       // Disable change log tab?
       // Read the change log count for current entity
-      let that = this;
-      this.getModel().read(sObjectPath + "/matchAssessments/$count", {
+      oController.getModel().read(sObjectPath + "/matchAssessments/$count", {
         success: function(oData) {
           let oRowCount = parseInt(oData),
             maxRowCount = 17;
           if (oRowCount < maxRowCount) {
-            that.getView().byId("changeLogTable").setVisibleRowCount(oRowCount);
+            oController.getView().byId("changeLogTable").setVisibleRowCount(oRowCount);
           } else {
-            that.getView().byId("changeLogTable").setVisibleRowCount(maxRowCount);
+            oController.getView().byId("changeLogTable").setVisibleRowCount(maxRowCount);
           }
           //Hide change log tab?
           if (oRowCount === 0) {
-            that.byId("itb1").getItems()[1].setVisible(false);
+            oController.byId("itb1").getItems()[1].setVisible(false);
           } else {
-            that.byId("itb1").getItems()[1].setVisible(true);
+            oController.byId("itb1").getItems()[1].setVisible(true);
           }
         }
       });
 
-      let oController = this;
-
+     
       this.fOnDataReceived = function(oData) {
 
         //disable busy once data is received.
@@ -204,9 +195,9 @@ sap.ui.define([
         oController.getView().byId("tableDetails1Header").setText("Matches for Row " + oController.currentMatchRow);
         let tableLength = oData.getSource().iLength;
         if (tableLength === 0) {
-          that.getView().byId("detailsTable1").setVisibleRowCount(1);
+          oController.getView().byId("detailsTable1").setVisibleRowCount(1);
         } else {
-          that.getView().byId("detailsTable1").setVisibleRowCount(tableLength);
+          oController.getView().byId("detailsTable1").setVisibleRowCount(tableLength);
 
         }
       };
@@ -310,7 +301,6 @@ sap.ui.define([
     },
 
     /**
-     * [description]
      * @param  {[type]} oEvent [description]
      * @return {[type]}        [description]
      */
@@ -349,7 +339,7 @@ sap.ui.define([
      * @param  {[type]} oEvent [description]
      * @return {[type]}        [description]
      */
-    onPress2: function(oEvent) {
+    onDetailPressed: function(oEvent) {
 
       let oController = this;
 
@@ -364,10 +354,6 @@ sap.ui.define([
       let newMatchRow = oEvent.getSource().getBindingContext().getProperty("MATCH_ROW_STR");
       let sObjectPathRelated = "/matchResultsDetailsRelatedParameters(I_MATCH_ROW='" + newMatchRow + "')/Results";
 
-      //attached binding to the function after it load finished
-      // let oBinding2 = oController._oDetailTable.getBinding("rows");
-      // oBinding2.attachDataReceived(oController.fOnDataReceived2);
-
       oController.byId("detailsTable1").bindRows({
         path: sObjectPathRelated,
         template: oController.byId("detailsTable1").getBindingInfo("rows").template
@@ -376,30 +362,18 @@ sap.ui.define([
       // Set new title for details table
       oController.getView().byId("tableDetails1Header").setText("Matches for Row " + newMatchRow);
 
-      //START OF ASYNC CALL BACK.
-      // oController.fOnDataReceived2 = function(oData) {
-			//
-      //   //set busy state for matching rows table.
-      //   oController.getView().byId("detailsTable1").setBusy(false);
-			//
-      //   let tableLength = oData.getSource().iLength;
-      //   if (tableLength === 0) {
-      //     oController.getView().byId("detailsTable1").setVisibleRowCount(1);
-      //   } else {
-      //     oController.getView().byId("detailsTable1").setVisibleRowCount(tableLength);
-			//
-      //   }
-			//
-      // };
+       //attached binding to the function after it load finished
+       let oBinding2 = oController._oDetailTable.getBinding("rows");
+       oBinding2.attachDataReceived(oController._onDataReceivedOnDetailTable, this);
 
     },
-
-    fOnDataReceived2: function(oEvent) {
+	
+    _onDataReceivedOnDetailTable: function(oEvent) {
       let oController = this;
       //set busy state for matching rows table.
       oController.getView().byId("detailsTable1").setBusy(false);
 
-      let tableLength = oData.getSource().iLength;
+      let tableLength = oEvent.getParameter("data").results.length;
       if (tableLength === 0) {
         oController.getView().byId("detailsTable1").setVisibleRowCount(1);
       } else {
