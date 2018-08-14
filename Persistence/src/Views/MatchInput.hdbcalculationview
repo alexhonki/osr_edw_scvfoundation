@@ -184,13 +184,14 @@
     
       <mapping xsi:type="Calculation:AttributeMapping" target="Z_RUN_SEQ_ID" source="Z_RUN_SEQ_ID"/>
     </input>
-    <filter>((lower(&quot;NAME_LAST&quot;) NOT LIKE '%duplicat%' AND &quot;NAME_LAST&quot; NOT LIKE '%&amp;%' AND lower(&quot;NAME_LAST&quot;) NOT LIKE '%trust%' AND lower(&quot;NAME_LAST&quot;) NOT LIKE '%executor%' AND lower(&quot;NAME_LAST&quot;) NOT LIKE '%copy%' AND (&quot;NAME_LAST&quot; NOT LIKE  '%0%') AND (&quot;NAME_LAST&quot; NOT LIKE  '%1%')AND (&quot;NAME_LAST&quot; NOT LIKE  '%2%')AND (&quot;NAME_LAST&quot; NOT LIKE  '%3%')AND (&quot;NAME_LAST&quot; NOT LIKE  '%4%')AND (&quot;NAME_LAST&quot; NOT LIKE  '%5%')AND (&quot;NAME_LAST&quot; NOT LIKE  '%6%')AND (&quot;NAME_LAST&quot; NOT LIKE  '%7%')AND (&quot;NAME_LAST&quot; NOT LIKE  '%8%')AND (&quot;NAME_LAST&quot; NOT LIKE  '%9%') AND (&quot;NAME_LAST&quot; NOT LIKE '% and %'))
+    <filter>((lower(&quot;NAME_LAST&quot;) NOT LIKE '%duplicat%' AND &quot;NAME_LAST&quot; NOT LIKE '%&amp;%' AND lower(&quot;NAME_LAST&quot;) NOT LIKE '%trust%' AND lower(&quot;NAME_LAST&quot;) NOT LIKE '%executor%' AND lower(&quot;NAME_LAST&quot;) NOT LIKE '%copy%' AND (&quot;NAME_LAST&quot; NOT LIKE  '%0%') AND (&quot;NAME_LAST&quot; NOT LIKE  '%1%')AND (&quot;NAME_LAST&quot; NOT LIKE  '%2%')AND (&quot;NAME_LAST&quot; NOT LIKE  '%3%')AND (&quot;NAME_LAST&quot; NOT LIKE  '%4%')AND (&quot;NAME_LAST&quot; NOT LIKE  '%5%')AND (&quot;NAME_LAST&quot; NOT LIKE  '%6%')AND (&quot;NAME_LAST&quot; NOT LIKE  '%7%')AND (&quot;NAME_LAST&quot; NOT LIKE  '%8%')AND (&quot;NAME_LAST&quot; NOT LIKE  '%9%') AND (&quot;NAME_LAST&quot; NOT LIKE '% and %') AND (&quot;NAME_LAST&quot; NOT LIKE '% and') AND (&quot;NAME_LAST&quot; NOT LIKE 'and %'))
     AND
-(lower(&quot;NAME_FIRST&quot;) NOT LIKE '%duplicat%' AND &quot;NAME_FIRST&quot; NOT LIKE '%&amp;%' AND lower(&quot;NAME_FIRST&quot;) NOT LIKE '%trust%' AND lower(&quot;NAME_FIRST&quot;) NOT LIKE '%executor%' AND lower(&quot;NAME_FIRST&quot;) NOT LIKE '%copy%' AND (&quot;NAME_FIRST&quot; NOT LIKE  '%0%') AND (&quot;NAME_FIRST&quot; NOT LIKE  '%1%')AND (&quot;NAME_FIRST&quot; NOT LIKE  '%2%')AND (&quot;NAME_FIRST&quot; NOT LIKE  '%3%')AND (&quot;NAME_FIRST&quot; NOT LIKE  '%4%')AND (&quot;NAME_FIRST&quot; NOT LIKE  '%5%')AND (&quot;NAME_FIRST&quot; NOT LIKE  '%6%')AND (&quot;NAME_FIRST&quot; NOT LIKE  '%7%')AND (&quot;NAME_FIRST&quot; NOT LIKE  '%8%')AND (&quot;NAME_FIRST&quot; NOT LIKE  '%9%') AND (&quot;NAME_FIRST&quot; NOT LIKE '% and %'))
+(lower(&quot;NAME_FIRST&quot;) NOT LIKE '%duplicat%' AND &quot;NAME_FIRST&quot; NOT LIKE '%&amp;%' AND lower(&quot;NAME_FIRST&quot;) NOT LIKE '%trust%' AND lower(&quot;NAME_FIRST&quot;) NOT LIKE '%executor%' AND lower(&quot;NAME_FIRST&quot;) NOT LIKE '%copy%' AND (&quot;NAME_FIRST&quot; NOT LIKE  '%0%') AND (&quot;NAME_FIRST&quot; NOT LIKE  '%1%')AND (&quot;NAME_FIRST&quot; NOT LIKE  '%2%')AND (&quot;NAME_FIRST&quot; NOT LIKE  '%3%')AND (&quot;NAME_FIRST&quot; NOT LIKE  '%4%')AND (&quot;NAME_FIRST&quot; NOT LIKE  '%5%')AND (&quot;NAME_FIRST&quot; NOT LIKE  '%6%')AND (&quot;NAME_FIRST&quot; NOT LIKE  '%7%')AND (&quot;NAME_FIRST&quot; NOT LIKE  '%8%')AND (&quot;NAME_FIRST&quot; NOT LIKE  '%9%') AND (&quot;NAME_FIRST&quot; NOT LIKE '% and %') AND (&quot;NAME_FIRST&quot; NOT LIKE '% and') AND (&quot;NAME_FIRST&quot; NOT LIKE 'and %'))
     AND
-(lower(&quot;NAMEMIDDLE&quot;) NOT LIKE '%duplicat%' AND &quot;NAMEMIDDLE&quot; NOT LIKE '%&amp;%' AND lower(&quot;NAMEMIDDLE&quot;) NOT LIKE '%trust%' AND lower(&quot;NAMEMIDDLE&quot;) NOT LIKE '%executor%' AND lower(&quot;NAMEMIDDLE&quot;) NOT LIKE '%copy%' AND (&quot;NAMEMIDDLE&quot; NOT LIKE  '%0%') AND (&quot;NAMEMIDDLE&quot; NOT LIKE  '%1%')AND (&quot;NAMEMIDDLE&quot; NOT LIKE  '%2%')AND (&quot;NAMEMIDDLE&quot; NOT LIKE  '%3%')AND (&quot;NAMEMIDDLE&quot; NOT LIKE  '%4%')AND (&quot;NAMEMIDDLE&quot; NOT LIKE  '%5%')AND (&quot;NAMEMIDDLE&quot; NOT LIKE  '%6%')AND (&quot;NAMEMIDDLE&quot; NOT LIKE  '%7%')AND (&quot;NAMEMIDDLE&quot; NOT LIKE  '%8%')AND (&quot;NAMEMIDDLE&quot; NOT LIKE  '%9%') AND (&quot;NAMEMIDDLE&quot; NOT LIKE '% and %'))
+(lower(&quot;NAMEMIDDLE&quot;) NOT LIKE '%duplicat%' AND &quot;NAMEMIDDLE&quot; NOT LIKE '%&amp;%' AND lower(&quot;NAMEMIDDLE&quot;) NOT LIKE '%trust%' AND lower(&quot;NAMEMIDDLE&quot;) NOT LIKE '%executor%' AND lower(&quot;NAMEMIDDLE&quot;) NOT LIKE '%copy%' AND (&quot;NAMEMIDDLE&quot; NOT LIKE  '%0%') AND (&quot;NAMEMIDDLE&quot; NOT LIKE  '%1%')AND (&quot;NAMEMIDDLE&quot; NOT LIKE  '%2%')AND (&quot;NAMEMIDDLE&quot; NOT LIKE  '%3%')AND (&quot;NAMEMIDDLE&quot; NOT LIKE  '%4%')AND (&quot;NAMEMIDDLE&quot; NOT LIKE  '%5%')AND (&quot;NAMEMIDDLE&quot; NOT LIKE  '%6%')AND (&quot;NAMEMIDDLE&quot; NOT LIKE  '%7%')AND (&quot;NAMEMIDDLE&quot; NOT LIKE  '%8%')AND (&quot;NAMEMIDDLE&quot; NOT LIKE  '%9%') AND (&quot;NAMEMIDDLE&quot; NOT LIKE '% and %') AND (&quot;NAMEMIDDLE&quot; NOT LIKE '% and') AND (&quot;NAMEMIDDLE&quot; NOT LIKE 'and %'))
+
 )
- OR ((&quot;NAME_LAST&quot; LIKE '%BlaDedupped - same as %' ) )
+ OR ((&quot;NAME_FIRST&quot; LIKE 'De-duplicated - same as BP%' ) )
  </filter>
   </calculationView>
   <calculationView xsi:type="Calculation:ProjectionView" id="P_TimedependendAddressUsage">
@@ -2147,7 +2148,9 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_LOCALITY2" source="MATCH_ADDR_LOCALITY2"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_PRIM_NUMBER" source="MATCH_ADDR_PRIM_NUMBER"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_ADDRESS_DELIVERY" source="STD_ADDR_ADDRESS_DELIVERY"/>
-    </input></calculationView>
+    </input>
+    <filter>CUSTOMER_REF = '29568500' </filter>
+  </calculationView>
 </calculationViews>
 <logicalModel id="U_AllMatchFields">
   <attributes>
@@ -2434,7 +2437,7 @@
     </shape>
     <shape modelObjectName="P_BusinessPartners" modelObjectNameSpace="J_BPsWithTimeDependendAddresses" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="20" y="30"/>
-      <rectangleSize width="263.4501953125"/>
+      <rectangleSize width="263"/>
     </shape>
     <shape modelObjectName="P_TimedependendAddressUsage" modelObjectNameSpace="J_BPsWithTimeDependendAddresses" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="320" y="30"/>
