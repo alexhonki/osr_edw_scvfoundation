@@ -159,8 +159,8 @@ sap.ui.define([
         // result of the data set, ensuring the first row is always loaded and selected.
         let matchRow = oData.getParameters().data.results[0].MATCH_ROW;
         oController.currentMatchRow = matchRow;
-        
-        
+
+
         let sObjectPathRelated = "/matchResultsDetailsRelatedParameters(I_MATCH_ROW='" + matchRow + "')/Results";
         oController.byId("detailsTable1").bindRows({
           path: sObjectPathRelated,
@@ -351,30 +351,32 @@ sap.ui.define([
      */
     onPress2: function(oEvent) {
 
+			let oController = this;
+
       //set busy state for matching rows table.
-      this.getView().byId("detailsTable1").setBusy(true);
+      oController.getView().byId("detailsTable1").setBusy(true);
 
       // Enable all buttons and disable source
-      this._enableAllButtons();
+      oController._enableAllButtons();
       oEvent.getSource().setEnabled(false);
 
       // The source is the list item that got pressed
       let newMatchRow = oEvent.getSource().getBindingContext().getProperty("MATCH_ROW_STR");
       let sObjectPathRelated = "/matchResultsDetailsRelatedParameters(I_MATCH_ROW='" + newMatchRow + "')/Results";
-      let oController = this;
+
+			//attached binding to the function after it load finished
+      let oBinding2 = oController._oDetailTable.getBinding("rows");
+      oBinding2.attachDataReceived(oController.fOnDataReceived2);
 
       oController.byId("detailsTable1").bindRows({
         path: sObjectPathRelated,
         template: oController.byId("detailsTable1").getBindingInfo("rows").template
       });
 
-      //attached binding to the function after it load finished
-      let oBinding2 = oController._oDetailTable.getBinding("rows");
-      oBinding2.attachDataReceived(oController.fOnDataReceived2);
-
       // Set new title for details table
       oController.getView().byId("tableDetails1Header").setText("Matches for Row " + newMatchRow);
 
+			//START OF ASYNC CALL BACK.
       oController.fOnDataReceived2 = function(oData) {
 
         //set busy state for matching rows table.
