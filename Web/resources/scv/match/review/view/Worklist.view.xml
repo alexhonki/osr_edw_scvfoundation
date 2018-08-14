@@ -1,198 +1,255 @@
-<mvc:View controllerName="osr.scv.match.review.controller.Worklist" xmlns:mvc="sap.ui.core.mvc" xmlns:semantic="sap.m.semantic"
-	xmlns="sap.m" xmlns:t="sap.ui.table">
-	<semantic:FullscreenPage id="page" navButtonPress="onNavBack" showNavButton="false" title="{i18n>worklistViewTitle}">
+<mvc:View controllerName="osr.scv.match.review.controller.Worklist"
+          xmlns:mvc="sap.ui.core.mvc"
+          xmlns:semantic="sap.m.semantic"
+          xmlns="sap.m"
+          xmlns:t="sap.ui.table">
+	<semantic:FullscreenPage id="page"
+	                         navButtonPress="onNavBack"
+	                         showNavButton="false"
+	                         title="{i18n>worklistViewTitle}">
 		<semantic:subHeader>
 			<Toolbar>
 				<ToolbarSpacer/>
-				<SegmentedButton id="segmentedButton" selectedKey="rmsDuplicates">
+				<SegmentedButton id="segmentedButton"
+				                 selectedKey="rmsDuplicates">
 					<items>
-						<SegmentedButtonItem id="rmsDuplicates" text="RMS Duplicates" key="rmsDuplicates" press="handleToggleDuplicateViewButtonPress"/>
-						<SegmentedButtonItem id="allDuplicates" text="All Duplicates" key="allDuplicates" press="handleToggleDuplicateViewButtonPress"/>
-						<SegmentedButtonItem id="reviewGroups" text="Entities for Review" key="reviewGroups" press="handleToggleDuplicateViewButtonPress"/>
-						<SegmentedButtonItem id="promoteGroups" text="Entities for Promotion" key="promoteGroups" press="handleToggleDuplicateViewButtonPress"/>
+						<SegmentedButtonItem id="rmsDuplicates"
+						                     text="RMS Duplicates"
+						                     key="rmsDuplicates"
+						                     press="handleToggleDuplicateViewButtonPress" />
+						<SegmentedButtonItem id="allDuplicates"
+						                     text="All Duplicates"
+						                     key="allDuplicates"
+						                     press="handleToggleDuplicateViewButtonPress" />
+						<SegmentedButtonItem id="reviewGroups"
+						                     text="Entities for Review"
+						                     key="reviewGroups"
+						                     press="handleToggleDuplicateViewButtonPress" />
+						<SegmentedButtonItem id="promoteGroups"
+						                     text="Entities for Promotion"
+						                     key="promoteGroups"
+						                     press="handleToggleDuplicateViewButtonPress" />
 					</items>
 				</SegmentedButton>
 				<ToolbarSpacer/>
 			</Toolbar>
 		</semantic:subHeader>
 		<semantic:content>
-			<IconTabBar id="iconTabBar" select="onQuickFilter" expandable="false" applyContentPadding="false">
+			<IconTabBar id="iconTabBar"
+			            select="onQuickFilter"
+			            expandable="false"
+			            applyContentPadding="false">
 				<items>
-					<IconTabFilter id="all" design="Horizontal" key="all" showAll="true" count="{worklistView>/countAllStr}"
-						text="{i18n>WorklistFilterAllEntities}" formatter=".formatter.numberUnit"/>
+					<IconTabFilter id="all"
+					               design="Horizontal"
+					               key="all"
+					               showAll="true"
+					               count="{worklistView>/countAllStr}"
+					               text="{i18n>WorklistFilterAllEntities}"
+					               formatter=".formatter.numberUnit" />
 					<IconTabSeparator/>
-					<IconTabFilter id="uniqueMatchEntities" design="Horizontal" key="uniqueMatchEntities" icon="sap-icon://message-information"
-						count="{worklistView>/uniqueMatchEntitiesCountStr} ({worklistView>/uniqueMatchEntitiesCountPercent})" text="Unique"/>
-					<IconTabSeparator icon="sap-icon://media-pause"/>
-					<IconTabFilter id="identicalMatchEntities" design="Horizontal" key="identicalMatchEntities" icon="sap-icon://message-success"
-						iconColor="Positive" count="{worklistView>/identicalMatchEntitiesCountStr} ({worklistView>/identicalMatchEntitiesCountPercent})"
-						text="Identical"/>
-					<IconTabSeparator icon="sap-icon://media-pause"/>
-					<IconTabFilter id="recommendedMatchEntities" design="Horizontal" key="recommendedMatchEntities" icon="sap-icon://message-warning"
-						iconColor="Critical" count="{worklistView>/recommendedMatchEntitiesCountStr} ({worklistView>/recommendedMatchEntitiesCountPercent})"
-						text="Recommended"/>
-					<IconTabSeparator icon="sap-icon://media-pause"/>
-					<IconTabFilter id="similarMatchEntities" design="Horizontal" key="similarMatchEntities" icon="sap-icon://message-error" iconColor="Negative"
-						count="{worklistView>/similarMatchEntitiesCountStr} ({worklistView>/similarMatchEntitiesCountPercent})" text="Similar"/>
+					<IconTabFilter id="uniqueMatchEntities"
+					               design="Horizontal"
+					               key="uniqueMatchEntities"
+					               icon="sap-icon://message-information"
+					               count="{worklistView>/uniqueMatchEntitiesCountStr} ({worklistView>/uniqueMatchEntitiesCountPercent})"
+					               text="Unique" />
+					<IconTabSeparator icon="sap-icon://media-pause" />
+					<IconTabFilter id="identicalMatchEntities"
+					               design="Horizontal"
+					               key="identicalMatchEntities"
+					               icon="sap-icon://message-success"
+					               iconColor="Positive"
+					               count="{worklistView>/identicalMatchEntitiesCountStr} ({worklistView>/identicalMatchEntitiesCountPercent})"
+					               text="Identical" />
+					<IconTabSeparator icon="sap-icon://media-pause" />
+					<IconTabFilter id="recommendedMatchEntities"
+					               design="Horizontal"
+					               key="recommendedMatchEntities"
+					               icon="sap-icon://message-warning"
+					               iconColor="Critical"
+					               count="{worklistView>/recommendedMatchEntitiesCountStr} ({worklistView>/recommendedMatchEntitiesCountPercent})"
+					               text="Recommended" />
+					<IconTabSeparator icon="sap-icon://media-pause" />
+					<IconTabFilter id="similarMatchEntities"
+					               design="Horizontal"
+					               key="similarMatchEntities"
+					               icon="sap-icon://message-error"
+					               iconColor="Negative"
+					               count="{worklistView>/similarMatchEntitiesCountStr} ({worklistView>/similarMatchEntitiesCountPercent})"
+					               text="Similar" />
 				</items>
 				<content>
-					<IconTabBar id="subIconTabBar" select="onQuickFilter" showOverflowSelectList="true" class="sapUiResponsiveContentPadding" expandable="false">
+					<IconTabBar id="subIconTabBar"
+					            select="onQuickFilter"
+					            showOverflowSelectList="true"
+					            class="sapUiResponsiveContentPadding"
+					            expandable="false">
 						<items>
-							<IconTabFilter key="All" text="All"/>
+							<IconTabFilter key="All"
+							               text="All" />
 							<IconTabSeparator />
-							<IconTabFilter key="A" text="A"/>
-							<IconTabFilter key="B" text="B"/>
-							<IconTabFilter key="C" text="C"/>
-							<IconTabFilter key="D" text="D"/>
-							<IconTabFilter key="E" text="E"/>
-							<IconTabFilter key="F" text="F"/>
-							<IconTabFilter key="G" text="G"/>
-							<IconTabFilter key="H" text="H"/>
-							<IconTabFilter key="I" text="I"/>
-							<IconTabFilter key="J" text="J"/>
-							<IconTabFilter key="K" text="K"/>
-							<IconTabFilter key="L" text="L"/>
-							<IconTabFilter key="M" text="M"/>
-							<IconTabFilter key="N" text="N"/>
-							<IconTabFilter key="O" text="O"/>
-							<IconTabFilter key="P" text="P"/>
-							<IconTabFilter key="Q" text="Q"/>
-							<IconTabFilter key="R" text="R"/>
-							<IconTabFilter key="S" text="S"/>
-							<IconTabFilter key="T" text="T"/>
-							<IconTabFilter key="U" text="U"/>
-							<IconTabFilter key="V" text="V"/>
-							<IconTabFilter key="W" text="W"/>
-							<IconTabFilter key="X" text="X"/>
-							<IconTabFilter key="Y" text="Y"/>
-							<IconTabFilter key="Z" text="Z"/>
-							<IconTabFilter key="Other" text="Other"/>
+							<IconTabFilter key="A"
+							               text="A" />
+							<IconTabFilter key="B"
+							               text="B" />
+							<IconTabFilter key="C"
+							               text="C" />
+							<IconTabFilter key="D"
+							               text="D" />
+							<IconTabFilter key="E"
+							               text="E" />
+							<IconTabFilter key="F"
+							               text="F" />
+							<IconTabFilter key="G"
+							               text="G" />
+							<IconTabFilter key="H"
+							               text="H" />
+							<IconTabFilter key="I"
+							               text="I" />
+							<IconTabFilter key="J"
+							               text="J" />
+							<IconTabFilter key="K"
+							               text="K" />
+							<IconTabFilter key="L"
+							               text="L" />
+							<IconTabFilter key="M"
+							               text="M" />
+							<IconTabFilter key="N"
+							               text="N" />
+							<IconTabFilter key="O"
+							               text="O" />
+							<IconTabFilter key="P"
+							               text="P" />
+							<IconTabFilter key="Q"
+							               text="Q" />
+							<IconTabFilter key="R"
+							               text="R" />
+							<IconTabFilter key="S"
+							               text="S" />
+							<IconTabFilter key="T"
+							               text="T" />
+							<IconTabFilter key="U"
+							               text="U" />
+							<IconTabFilter key="V"
+							               text="V" />
+							<IconTabFilter key="W"
+							               text="W" />
+							<IconTabFilter key="X"
+							               text="X" />
+							<IconTabFilter key="Y"
+							               text="Y" />
+							<IconTabFilter key="Z"
+							               text="Z" />
+							<IconTabFilter key="Other"
+							               text="Other" />
 						</items>
 						<content>
 							<t:Table id="table"
-								rows="{ path: '/matchResultsReview', sorter: { path: 'GROUP_ID', descending: false }, filters : [{ path : 'RMS_DUPLICATES', operator : 'EQ', value1 : 1 }]}"
-								ariaLabelledBy="title" visibleRowCount='17' selectionMode="None" enableBusyIndicator="true" busyIndicatorDelay="100">
+							         rows="{ path: '/matchResultsReview', sorter: { path: 'GROUP_ID', descending: false }, filters : [{ path : 'RMS_DUPLICATES', operator : 'EQ', value1 : 1 }]}"
+							         ariaLabelledBy="title"
+							         visibleRowCount='17'
+							         selectionMode="None"
+							         enableBusyIndicator="true"
+							         busyIndicatorDelay="100">
 								<t:toolbar>
 									<Toolbar>
-										<Title id="tableHeader" text="{worklistView>/worklistTableTitle}"/>
+										<Title id="tableHeader"
+										       text="{worklistView>/worklistTableTitle}" />
 										<ToolbarSpacer/>
-										<SearchField id="searchField" search="onSearch" tooltip="{i18n>worklistSearchTooltip}" width="auto"/>
+										<SearchField id="searchField"
+										             search="onSearch"
+										             tooltip="{i18n>worklistSearchTooltip}"
+										             width="auto" />
 									</Toolbar>
 								</t:toolbar>
 								<t:columns>
-									<t:Column id="groupName" width="8rem" filterProperty="GROUP_ID" sortProperty= "GROUP_ID">
-										<Label text="Group"/>
+									<t:Column id="groupName"
+									          width="8rem"
+									          filterProperty="GROUP_ID"
+									          sortProperty="GROUP_ID">
+										<Label text="Group" />
 										<t:template>
-											<Text text="{GROUP_ID}" wrapping="false"/>
+											<Text text="{GROUP_ID}"
+											      wrapping="false" />
 										</t:template>
 									</t:Column>
-									<t:Column id="groupCount" width="8rem" filterProperty="GROUP_COUNT" sortProperty="GROUP_COUNT">
-										<Label text="Group Count"/>
+									<t:Column id="groupCount"
+									          width="8rem"
+									          filterProperty="GROUP_COUNT"
+									          sortProperty="GROUP_COUNT">
+										<Label text="Group Count" />
 										<t:template>
-											<Text text="{GROUP_COUNT}" wrapping="false"/>
+											<Text text="{GROUP_COUNT}"
+											      wrapping="false" />
 										</t:template>
 									</t:Column>
-									<t:Column id="name" width="auto" filterProperty="NAME" sortProperty= "NAME">
-										<Label text="Name"/>
+									<t:Column id="name"
+									          width="auto"
+									          filterProperty="NAME"
+									          sortProperty="NAME">
+										<Label text="Name" />
 										<t:template>
-											<Text text="{NAME}" wrapping="false"/>
+											<Text text="{NAME}"
+											      wrapping="false" />
 										</t:template>
 									</t:Column>
-									<t:Column id="source" width="8rem" filterProperty="SOURCE_SYSTEM" sortProperty= "SOURCE_SYSTEM">
-										<Label text="Source"/>
+									<t:Column id="source"
+									          width="8rem"
+									          filterProperty="SOURCE_SYSTEM"
+									          sortProperty="SOURCE_SYSTEM">
+										<Label text="Source" />
 										<t:template>
-											<Text text="{SOURCE_SYSTEM}" wrapping="false"/>
+											<Text text="{SOURCE_SYSTEM}"
+											      wrapping="false" />
 										</t:template>
 									</t:Column>
-									<t:Column id="averageScore" width="8rem" filterProperty="AVG_SCORE" sortProperty= "AVG_SCORE">
-										<Label text="Average Score"/>
+									<t:Column id="averageScore"
+									          width="8rem"
+									          filterProperty="AVG_SCORE"
+									          sortProperty="AVG_SCORE">
+										<Label text="Average Score" />
 										<t:template>
-											<ObjectNumber number="{AVG_SCORE}"/>
+											<ObjectNumber number="{AVG_SCORE}" />
 										</t:template>
 									</t:Column>
-									<t:Column id="strategyResolved" width="10rem" filterProperty="STRATEGY_RESOLVED" sortProperty= "STRATEGY_RESOLVED">
-										<Label text="Strategy"/>
+									<t:Column id="strategyResolved"
+									          width="10rem"
+									          filterProperty="STRATEGY_RESOLVED"
+									          sortProperty="STRATEGY_RESOLVED">
+										<Label text="Strategy" />
 										<t:template>
-											<ObjectStatus text="{STRATEGY_RESOLVED}" state="{ path: 'STRATEGY_RESOLVED', formatter: '.formatter.strategyState' }" wrapping="false"/>
+											<ObjectStatus text="{STRATEGY_RESOLVED}"
+											              state="{ path: 'STRATEGY_RESOLVED', formatter: '.formatter.strategyState' }"
+											              wrapping="false" />
 										</t:template>
 									</t:Column>
-									<t:Column id="actionResolved" width="8rem" filterProperty="ACTION_RESOLVED" sortProperty= "ACTION_RESOLVED">
-										<Label text="Action"/>
+									<t:Column id="actionResolved"
+									          width="8rem"
+									          filterProperty="ACTION_RESOLVED"
+									          sortProperty="ACTION_RESOLVED">
+										<Label text="Action" />
 										<t:template>
-											<ObjectStatus text="{ACTION_RESOLVED}" state="{ path: 'ACTION_RESOLVED', formatter: '.formatter.actionState' }"/>
+											<ObjectStatus text="{ACTION_RESOLVED}"
+											              state="{ path: 'ACTION_RESOLVED', formatter: '.formatter.actionState' }" />
 										</t:template>
 									</t:Column>
-									<t:Column id="navigation" width="3rem">
-										<Label text=""/>
+									<t:Column id="navigation"
+									          width="3rem">
+										<Label text="" />
 										<t:template>
-											<Button icon="sap-icon://feeder-arrow" press="onPress" tooltip="Show Group Details"/>
+											<Button icon="sap-icon://feeder-arrow"
+											        press="onPress"
+											        tooltip="Show Group Details" />
 										</t:template>
 									</t:Column>
 								</t:columns>
 							</t:Table>
-							<!--	<Table id="table" fixedLayout="false" busyIndicatorDelay="{worklistView>/tableBusyDelay}" class="sapUiResponsiveMargin sapUiNoMarginTop" growing="true"
-							growingScrollToLoad="true" noDataText="{worklistView>/tableNoDataText}" updateFinished="onUpdateFinished" width="auto" mode="None"
-							items="{ path: '/matchResultsReview', sorter: { path: 'GROUP_ID', descending: false }, filters : [{ path : 'RMS_DUPLICATES', operator : 'EQ', value1 : 1 }]}">
-							<headerToolbar>
-								<Toolbar>
-									<Title id="tableHeader" text="{worklistView>/worklistTableTitle}"/>
-									<ToolbarSpacer/>
-									<SearchField id="searchField" search="onSearch" tooltip="{i18n>worklistSearchTooltip}" width="auto"/>
-									<ToolbarSpacer/>
-									<Button tooltip="View Settings" icon="sap-icon://drop-down-list" press="handleViewSettingsDialogButtonPressed" />
-								</Toolbar>
-							</headerToolbar>
-							<columns>
-								<Column hAlign="End">
-									<Text text="{i18n>TableMatchGroupIdTitle}"	sortProperty="Name" wrapping="false"/>
-								</Column>
-								<Column hAlign="End">
-									<Text text="Group Count" wrapping="false"/>
-								</Column>
-								<Column>
-									<Text text="Name"/>
-								</Column>
-								<Column>
-									<Text text="Source"/>
-								</Column>
-								<Column hAlign="End" >
-									<Text text="Average Score"/>
-								</Column>
-								<Column>
-									<Text text="Strategy"/>
-								</Column>
-
-								<Column>
-									<Text text="Action"/>
-								</Column>
-							</columns>
-							<items>
-								<ColumnListItem press="onPress" type="Navigation" >
-									<cells>
-										<Text text="{GROUP_ID}"/>
-										<Text text="{GROUP_COUNT}"/>
-										<Text text="{NAME}" wrapping="false"/>
-										<Text text="{SOURCE_SYSTEM}" />
-										<ObjectNumber number="{AVG_SCORE}" />
-										<ObjectStatus text="{STRATEGY_RESOLVED}" state="{ path: 'STRATEGY_RESOLVED', formatter: '.formatter.strategyState' }"/>
-										<ObjectStatus  text="{ACTION_RESOLVED}" state="{ path: 'ACTION_RESOLVED', formatter: '.formatter.actionState' }" />
-									</cells>
-								</ColumnListItem>
-							</items>
-						</Table>	-->
 						</content>
 					</IconTabBar>
 				</content>
 			</IconTabBar>
 		</semantic:content>
-		<!--<semantic:sendEmailAction>
-			<semantic:SendEmailAction id="shareEmail" press="onShareEmailPress"/>
-		</semantic:sendEmailAction>-->
-		<!--<semantic:positiveAction>
-			<semantic:PositiveAction text="{i18n>PromoteToSCV}" press="onPromoteToSCV"/>
-		</semantic:positiveAction>-->
-		<!--<semantic:negativeAction>
-			<semantic:NegativeAction text="{i18n>FlagForReview}" press="onFlagForReview"/>
-		</semantic:negativeAction>-->
+
 	</semantic:FullscreenPage>
 </mvc:View>
