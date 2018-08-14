@@ -123,9 +123,9 @@ sap.ui.define([
 
 			//enable busy indicator for the main table
 			this._setBusyIndicatorForMainTable(true);
-			//this.getView().byId("detailsTable1").unbindRows();
+			this._setBusyIndicatorForDetailTable(true);
+			this.getView().byId("tableDetails1Header").setText("Matches for Row ");
 
-			//clean table binding
 
       // Disable change log tab?
       // Read the change log count for current entity
@@ -159,7 +159,8 @@ sap.ui.define([
         // result of the data set, ensuring the first row is always loaded and selected.
         let matchRow = oData.getParameters().data.results[0].MATCH_ROW;
         oController.currentMatchRow = matchRow;
-        oController.getView().byId("tableDetails1Header").setText("Matches for Row " + matchRow);
+        
+        
         let sObjectPathRelated = "/matchResultsDetailsRelatedParameters(I_MATCH_ROW='" + matchRow + "')/Results";
         oController.byId("detailsTable1").bindRows({
           path: sObjectPathRelated,
@@ -199,6 +200,8 @@ sap.ui.define([
 
       // For the second table
       this.fOnDataReceivedDetailTable = function(oData) {
+      	//set the text for the detail table.
+      	oController.getView().byId("tableDetails1Header").setText("Matches for Row " + oController.currentMatchRow);
         let tableLength = oData.getSource().iLength;
         if (tableLength === 0) {
           that.getView().byId("detailsTable1").setVisibleRowCount(1);
@@ -648,8 +651,12 @@ sap.ui.define([
 
     },
 
-		_setBusyIndicatorForMainTable(bEnable){
+		_setBusyIndicatorForMainTable : function(bEnable){
 			this.getView().byId("table").setBusy(bEnable);
+		},
+
+		_setBusyIndicatorForDetailTable : function(bEnable){
+			this.getView().byId("detailsTable1").setBusy(bEnable);
 		}
   });
 
