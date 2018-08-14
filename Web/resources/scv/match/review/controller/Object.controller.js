@@ -189,25 +189,7 @@ sap.ui.define([
       let oBinding = this._oTable.getBinding("rows");
       oBinding.attachDataReceived(this._onMainTableDataReceived, this);
 
-      // For the second table
-      // this.fOnDataReceivedDetailTable = function(oData) {
-      //   //set the text for the detail table.
-      //   oController.getView().byId("tableDetails1Header").setText("Matches for Row " + oController.currentMatchRow);
-      //   let tableLength = oData.getSource().iLength;
-      //   if (tableLength === 0) {
-      //     oController.getView().byId("detailsTable1").setVisibleRowCount(1);
-      //   } else {
-      //     oController.getView().byId("detailsTable1").setVisibleRowCount(tableLength);
-			//
-      //   }
-      // };
-
     },
-
-		_onDetailTableDataReceived: function(oEvent){
-
-		},
-
 
 		_onMainTableDataReceived: function(oEvent){
 
@@ -230,7 +212,7 @@ sap.ui.define([
 			//attached a function call once data is received call
 			//fOnDataReceivedDetailTable function
 			let oBinding2 = oController._oDetailTable.getBinding("rows");
-			oBinding2.attachDataReceived(oController._onDataReceivedOnDetailTable);
+			oBinding2.attachDataReceived(oController._onDataReceivedOnDetailTable, this);
 
 			//disable the very first button on the main table.
 			oController._disableFirstButton();
