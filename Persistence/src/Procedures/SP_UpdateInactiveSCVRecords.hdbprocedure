@@ -1,0 +1,44 @@
+/*
+	Write some statistics about the latest SCV full/delta update
+*/
+PROCEDURE "osr.scv.foundation.db.Procedures::SP_UpdateInactiveSCVRecords" (
+
+)
+	LANGUAGE SQLSCRIPT
+	SQL SECURITY INVOKER
+    --DEFAULT SCHEMA <default_schema_name>
+   AS
+BEGIN
+	
+	/*****************************************************
+		Update SCV Person RMS Records - Inactive Flag
+	*****************************************************/
+	
+	-- Turn on the flag
+	-- Find the records that have been flagged to be de-duplicated and the Partner number exists in the SCV. 
+	-- Return: Partner number and Block Flag
+	lt_different_person_on =	SELECT a.PARTNER, a.XBLCK FROM "osr.scv.foundation.db.synonyms::BUT000" a
+								WHERE XBLCK = 'X' and XDELE = 'X' and NAME_FIRST LIKE 'De-duplicated - same as BP%' 
+								and a.PARTNER IN (SELECT SOURCE_ID FROM "osr.scv.foundation.db.data::SCVFoundation.PersonRms")
+								EXCEPT 
+								SELECT b.SOURCE_ID, b.INACTIVE FROM "osr.scv.foundation.db.data::SCVFoundation.PersonRms" b
+								;
+
+	-- Switch on the Inactive flag in the Person RMS table 
+	UPDATE "osr.scv.foundation.db.data::SCVFoundation.PersonRms" a SET  a.INACTIVE = b.XBLCK
+	FROM "osr.scv.foundation.db.data::SCVFoundation.PersonRms" a , :lt_different_person_on b
+	WHERE a.SOURCE_ID = b.PARTNER;
+	
+	--Turn off the flag 
+	lt_different_person_off =	SELECT a.PARTNER, a.XBLCK FROM "osr.scv.foundation.db.synonyms::BUT000" a
+								WHERE XBLCK = '' and XDELE = '' and a.PARTNER IN (SELECT SOURCE_ID FROM "osr.scv.foundation.db.data::SCVFoundation.PersonRms")
+								EXCEPT 
+								SELECT b.SOURCE_ID, b.INACTIVE FROM "osr.scv.foundation.db.data::SCVFoundation.PersonRms" b
+								;
+								
+	-- Switch off the Inactive flag in the Person RMS table
+	UPDATE "osr.scv.foundation.db.data::SCVFoundation.PersonRms" a SET  a.INACTIVE = ''
+	FROM "osr.scv.foundation.db.data::SCVFoundation.PersonRms" a , :lt_different_person_off b
+	WHERE a.SOURCE_ID = b.PARTNER;
+
+END

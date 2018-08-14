@@ -118,9 +118,14 @@ sap.ui.define([
      */
     _onObjectMatched: function(oEvent) {
 
-      //let sObjectPath = "/matchResultsReview('" + oEvent.getParameter("arguments").objectId + "')/matchResults";
       let sObjectPath = "/matchResultsReview('" + oEvent.getParameter("arguments").objectId.split("|")[0] + "')";
       this._bindView(sObjectPath);
+
+			//enable busy indicator for the main table
+			this._setBusyIndicatorForMainTable(true);
+			//this.getView().byId("detailsTable1").unbindRows();
+
+			//clean table binding
 
       // Disable change log tab?
       // Read the change log count for current entity
@@ -146,6 +151,9 @@ sap.ui.define([
       let oController = this;
 
       this.fOnDataReceived = function(oData) {
+
+				//disable busy once data is received.
+				oController._setBusyIndicatorForMainTable(false);
 
         // once data is recieved, details table get binding with the very first
         // result of the data set, ensuring the first row is always loaded and selected.
@@ -638,7 +646,11 @@ sap.ui.define([
         }
       }
 
-    }
+    },
+
+		_setBusyIndicatorForMainTable(bEnable){
+			this.getView().byId("table").setBusy(bEnable);
+		}
   });
 
 });
