@@ -43,7 +43,7 @@ BEGIN SEQUENTIAL EXECUTION
 						SELECT * FROM (
 										SELECT DISTINCT mr.GROUP_ID, mr."Match_ROW_ID", mr.SOURCE_SYSTEM, mr.SYSTEM_ID 
 										FROM "osr.scv.foundation.db.data::MatchResults.MatchResults" mr
-										--WHERE GROUP_ID IN (906,5)
+										--WHERE GROUP_ID IN (1899805)
 										--WHERE mr."Match_ROW_ID" IN (7388650,7388649,7388648,10243511,5659635)
 						) a
 						-- Add tracing information
@@ -190,7 +190,7 @@ BEGIN SEQUENTIAL EXECUTION
 				    		--AND a.MATCH_ROW = b.RELATED_ROW
 			         )
 			) WHERE GROUP_ROW_COUNT = 1
-		) WHERE MATCH_ROW NOT IN (SELECT "MATCH_ROW" FROM #lt_sub_groups)
+		) --WHERE MATCH_ROW NOT IN (SELECT "MATCH_ROW" FROM #lt_sub_groups)
 		;
 	
 	-- Update main group table
