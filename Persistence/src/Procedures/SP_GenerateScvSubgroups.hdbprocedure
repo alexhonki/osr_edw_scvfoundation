@@ -43,7 +43,7 @@ BEGIN SEQUENTIAL EXECUTION
 						SELECT * FROM (
 										SELECT DISTINCT mr.GROUP_ID, mr."Match_ROW_ID", mr.SOURCE_SYSTEM, mr.SYSTEM_ID 
 										FROM "osr.scv.foundation.db.data::MatchResults.MatchResults" mr
-										--WHERE mr.GROUP_ID = 676
+										--WHERE mr.GROUP_ID = 1899805
 						) a
 						-- Add tracing information
 						LEFT OUTER JOIN (SELECT DISTINCT mt.ROW_ID, mt.RELATED_ROW_ID, mr.SYSTEM_ID as RELATED_SYSTEM_ID, mr.SOURCE_SYSTEM as RELATED_SOURCE_SYSTEM, mt.SCORE, mt.POLICY_NAME from "osr.scv.foundation.db.data::MatchResults.MatchResults" mr
@@ -224,9 +224,8 @@ BEGIN SEQUENTIAL EXECUTION
 				    		ON a.RELATED_ROW = b.MATCH_ROW
 				    		) 
 				    		-- Only add match rows for system TMR
-				    		WHERE MATCH_ROW NOT IN (SELECT RELATED_ROW FROM  #lt_sub_groups_mapping WHERE SOURCE_SYSTEM = 'RMS')
-				    		
-				    	
+				    		WHERE MATCH_ROW NOT IN (SELECT RELATED_ROW FROM  #lt_sub_groups_mapping WHERE SOURCE_SYSTEM = 'RMS' 
+				    			AND RELATED_ROW IS NOT NULL)
 			         )
 			) WHERE GROUP_ROW_COUNT = 1
 		) 
