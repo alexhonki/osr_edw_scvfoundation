@@ -23,7 +23,6 @@
           "type" : "PROCEDURE",
           "privileges" : [ "EXECUTE", "DEBUG" ]
       },
-      ,
       {
           "name" : "osr.scv.foundation.db.Procedures::SP_GenerateScvSubgroups",
           "type" : "PROCEDURE",
