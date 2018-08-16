@@ -268,6 +268,7 @@ BEGIN SEQUENTIAL EXECUTION
 			FROM #lt_sub_groups_mapping
 			WHERE SOURCE_SYSTEM = 'TMR'
 				AND RELATED_SYSTEM = 'TMR'
+				AND MATCH_POLICY = 'Person, Address, Date'
 		) WHERE GROUP_ROW_COUNT = 1 								-- Only 1 row per related row match
 			AND RELATED_ROW IS NOT NULL								-- Rows with null reference are being added in the initial step
 		;
@@ -296,6 +297,7 @@ BEGIN SEQUENTIAL EXECUTION
 				    								(SOURCE_SYSTEM = 'RMS' AND RELATED_ROW IS NOT NULL)
 				    									OR (GROUP_TAG_RMS_TMR IS NULL AND GROUP_TAG_TMR_RMS IS NULL)
 				    								)
+				    			OR MATCH_ROW IN (SELECT RELATED_ROW FROM #lt_sub_groups_mapping WHERE SYSTEM_ID = GROUP_TAG_RMS_TMR and SYSTEM_ID = GROUP_TAG_TMR_RMS AND SCORE >= 90)
 			         )
 			) WHERE GROUP_ROW_COUNT = 1
 		) 
