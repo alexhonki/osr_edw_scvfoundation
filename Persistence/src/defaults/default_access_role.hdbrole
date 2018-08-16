@@ -22,6 +22,12 @@
           "name" : "osr.scv.foundation.db.Procedures::SP_GenerateScvDelta",
           "type" : "PROCEDURE",
           "privileges" : [ "EXECUTE", "DEBUG" ]
+      },
+      ,
+      {
+          "name" : "osr.scv.foundation.db.Procedures::SP_GenerateScvSubgroups",
+          "type" : "PROCEDURE",
+          "privileges" : [ "EXECUTE", "DEBUG" ]
       }
     ]
   }
