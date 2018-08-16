@@ -1,17 +1,17 @@
 {
-  "osr.scv.foundation.db.synonyms::BUT000": {
+  "osr.scv.foundation.db.synonyms::BUT000_DEL": {
     "target": {
       "object": "osr.edw.propagation.md.rms::CDS_BP.DSO.BUT000.active_data",
       "schema.configure": "logical-OSR-EDW-SOURCE-RMS-grantor/schema"
     }
   },
-  "osr.scv.foundation.db.synonyms::BUT021_FS": {
+  "osr.scv.foundation.db.synonyms::BUT021_FS_DEL": {
     "target": {
       "object": "osr.edw.staging.md.rms::CDS_BP.DSO.BUT021FS.active_data",
        "schema.configure": "logical-OSR-EDW-SOURCE-RMS-grantor/schema"
     }
   },
-  "osr.scv.foundation.db.synonyms::ADRC": {
+  "osr.scv.foundation.db.synonyms::ADRC_DEL": {
     "target": {
       "object": "osr.edw.propagation.md.rms::CDS_BP.DSO.ADRC.active_data",
        "schema.configure": "logical-OSR-EDW-SOURCE-RMS-grantor/schema"

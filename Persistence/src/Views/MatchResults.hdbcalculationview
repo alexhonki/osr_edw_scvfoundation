@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" xmlns:Variable="http://www.sap.com/ndb/BiModelVariable.ecore" id="osr.scv.foundation.db.views::MatchResults" applyPrivilegeType="NONE" dataCategory="DEFAULT" schemaVersion="3.0" outputViewType="Projection" cacheInvalidationPeriod="NONE" enforceSqlExecution="true">
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" xmlns:Variable="http://www.sap.com/ndb/BiModelVariable.ecore" id="osr.scv.foundation.db.views::MatchResults" applyPrivilegeType="NONE" dataCategory="DEFAULT" schemaVersion="3.0" outputViewType="Projection" cacheInvalidationPeriod="NONE" enforceSqlExecution="false" analyticViewCompatibilityMode="false">
 <descriptions defaultDescription="OSR SCV - Match Results View"/>
 <localVariables>
   <variable id="IP_ENTITY_ID" parameter="true">
-    <descriptions defaultDescription="IP_ENTITY_ID">
-      <comment text="Entity ID"/>
-    </descriptions>
-    <variableProperties datatype="VARCHAR" length="20" mandatory="true">
+    <descriptions defaultDescription=" "/>
+    <variableProperties datatype="NVARCHAR" length="20" mandatory="true">
       <valueDomain type="empty"/>
       <selection multiLine="false" type="Single"/>
       <defaultRange lowValue="1"/>
@@ -15,7 +13,7 @@
 </localVariables>
 <variableMappings>
   <mapping xsi:type="Variable:VariableMapping" dataSource="osr.scv.foundation.db.functions::MatchResults">
-    <targetVariable name="I_ENTITY_ID" resourceUri="osr.scv.foundation.db.functions::MatchResults"/>
+    <targetVariable name="IP_ENTITY_ID" resourceUri="osr.scv.foundation.db.functions::MatchResults"/>
     <localVariable>IP_ENTITY_ID</localVariable>
   </mapping>
 </variableMappings>
@@ -112,7 +110,9 @@
   
     <attribute id="SCV_ID" order="24" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="SCV_ID"/>
+  
       <keyMapping columnObjectName="MatchResults" columnName="SCV_ID"/>
+  
     </attribute>
   </attributes>
   <calculatedAttributes>
@@ -121,7 +121,7 @@
       <keyCalculation datatype="NVARCHAR" expressionLanguage="SQL" length="256">
         <formula>CONCAT(CONCAT(&quot;LAST_NAME&quot;, ', '), CONCAT(&quot;FIRST_NAME&quot;, CONCAT(' ',CASE WHEN &quot;MIDDLE_NAME&quot; IS NULL THEN '' ELSE &quot;MIDDLE_NAME&quot; END)))</formula>
       </keyCalculation>
-      </calculatedAttribute>
+    </calculatedAttribute>
   
     <calculatedAttribute id="ADDRESS" order="14" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="ADDRESS"/>
@@ -131,7 +131,8 @@
         <formula>&quot;ADDRESS_PRIM_NUMBER&quot; || ' ' || &quot;ADDRESS_PRIM_NAME&quot; || ' ' || &quot;ADDRESS_LOCALITY&quot; || ' ' || &quot;ADDRESS_POSTCODE&quot; || ' ' || &quot;ADDRESS_REGION&quot; || ' ' || &quot;ADDRESS_COUNTRY&quot;</formula>
   
       </keyCalculation>
-      </calculatedAttribute>
+  
+    </calculatedAttribute>
   
     <calculatedAttribute id="FIRST_MIDDLE_NAME" order="15" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="FIRST_MIDDLE_NAME"/>
@@ -141,7 +142,8 @@
         <formula>CONCAT(&quot;FIRST_NAME&quot;, CONCAT(' ' , &quot;MIDDLE_NAME&quot;))</formula>
   
       </keyCalculation>
-      </calculatedAttribute>
+  
+    </calculatedAttribute>
   
     <calculatedAttribute id="MATCH_ROW_STR" order="22" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="MATCH_ROW_STR"/>
@@ -151,7 +153,8 @@
         <formula>TO_NVARCHAR(&quot;MATCH_ROW&quot;)</formula>
   
       </keyCalculation>
-      </calculatedAttribute>
+  
+    </calculatedAttribute>
   </calculatedAttributes>
   <baseMeasures/>
   <calculatedMeasures/>

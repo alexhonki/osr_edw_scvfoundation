@@ -1,29 +1,29 @@
 {
-  "osr.scv.foundation.db.synonyms::BUT000_DEL": {
+  "osr.scv.foundation.db.synonyms::BUT000": {
     "target": {
       "object": "osr.edw.propagation.rms.proxy::CV_BUT000",
       "schema.configure": "logical-OSR-EDW-PLATFORM-grantor/schema"
     }
   },
-  "osr.scv.foundation.db.synonyms::BUT021_FS_DEL": {
+  "osr.scv.foundation.db.synonyms::BUT021_FS": {
     "target": {
       "object": "osr.edw.staging.md.rms.proxy::CV_BUT021FS",
        "schema.configure": "logical-OSR-EDW-PLATFORM-grantor/schema"
     }
   },
-  "osr.scv.foundation.db.synonyms::ADRC_DEL": {
+  "osr.scv.foundation.db.synonyms::ADRC": {
     "target": {
       "object": "osr.edw.propagation.rms.proxy::CV_ADRC",
        "schema.configure": "logical-OSR-EDW-PLATFORM-grantor/schema"
     }
   },
-	"osr.scv.foundation.db.synonyms::TMR_CustContact_DEL": {
+	"osr.scv.foundation.db.synonyms::TMR_CustContact": {
 		"target": {
 			"object": "osr.edw.propagation.tmr.proxy::CV_CUSTCONTACT",
 			"schema.configure": "logical-OSR-EDW-PLATFORM-grantor/schema"
 		}
 	},
-	"osr.scv.foundation.db.synonyms::TMR_CustMain_DEL": {
+	"osr.scv.foundation.db.synonyms::TMR_CustMain": {
 		"target": {
 			"object": "osr.edw.propagation.tmr.proxy::CV_CUSTMAIN",
 			"schema.configure": "logical-OSR-EDW-PLATFORM-grantor/schema"
