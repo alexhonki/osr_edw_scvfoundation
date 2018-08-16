@@ -272,22 +272,30 @@ BEGIN SEQUENTIAL EXECUTION
 		) WHERE GROUP_ROW_COUNT = 1 								-- Only 1 row per related row match
 			AND RELATED_ROW IS NOT NULL								-- Rows with null reference are being added in the initial step
 		;
-	
+		
+	lt_set_d_corrected = SELECT 
+							a.MATCH_ROW, a.RELATED_ROW, CASE WHEN a.SYSTEM_ID = a.GROUP_TAG and a.SYSTEM_ID = a.GROUP_TAG_RMS_TMR and a.GROUP_TAG = a.GROUP_TAG_TMR_RMS THEN b.GROUP_TAG ELSE a.GROUP_TAG END as GROUP_TAG_RESOLVED
+						 FROM :lt_mapping a
+						 INNER JOIN :lt_mapping b
+						 ON a.RELATED_ROW = b.MATCH_ROW
+						 WHERE a.MATCH_ROW IN (SELECT MATCH_ROW FROM :lt_set_d)
+	;
+
 	lt_tmr_tmr_orphan_record_set_d = 
 		SELECT * FROM 
 		(
-			SELECT DISTINCT MATCH_ROW, GROUP_TAG 
-        	FROM :lt_set_d 
+			SELECT DISTINCT MATCH_ROW, GROUP_TAG_RESOLVED AS GROUP_TAG
+        	FROM :lt_set_d_corrected 
         	WHERE RELATED_ROW IS NOT NULL
 			UNION ALL 
 			-- Union TMR records found using system ID from match source (RMS)
-			SELECT MATCH_ROW, GROUP_TAG 
+			SELECT MATCH_ROW, GROUP_TAG
 			FROM (									
 				SELECT *, ROW_NUMBER() OVER (PARTITION BY MATCH_ROW, RELATED_ROW ORDER BY SCORE DESC) AS GROUP_ROW_COUNT 
 				FROM (
 				    	
 				    		SELECT * FROM (
-				    		SELECT b.MATCH_ROW, a.GROUP_TAG, b.RELATED_ROW, b.SCORE FROM :lt_set_d a
+				    		SELECT b.MATCH_ROW, a.GROUP_TAG_RESOLVED as GROUP_TAG, b.RELATED_ROW, b.SCORE FROM :lt_set_d_corrected a
 				    		INNER JOIN #lt_sub_groups_mapping b
 				    		ON a.RELATED_ROW = b.MATCH_ROW
 				    		) 
