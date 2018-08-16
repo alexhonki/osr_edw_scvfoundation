@@ -1,4 +1,4 @@
-FUNCTION "osr.scv.foundation.db.functions::MatchResults" ( IN i_entity_id NVARCHAR(20) )
+FUNCTION "osr.scv.foundation.db.functions::MatchResults" ( IN IP_ENTITY_ID NVARCHAR(20) )
        RETURNS TABLE (	GROUP_ID Integer,
         				ENTITY_ID VARCHAR(20),
         				SCV_ID INTEGER,
@@ -74,7 +74,7 @@ BEGIN
 		                ON a."Match_ROW_ID" = h."MATCH_ROW_ID"
 		                LEFT OUTER JOIN "osr.scv.foundation.db.data::MatchResults.SubGroups" sg
 		                ON a."Match_ROW_ID" = sg."MATCH_ROW"
-						WHERE ENTITY_ID = :i_entity_id
+						WHERE ENTITY_ID = :IP_ENTITY_ID
 						
 						GROUP BY GROUP_ID ,
         				ENTITY_ID ,
