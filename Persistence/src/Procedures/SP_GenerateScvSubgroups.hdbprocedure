@@ -23,6 +23,8 @@ BEGIN SEQUENTIAL EXECUTION
 	BEGIN
 		
 		DROP TABLE #lt_sub_groups;
+		DROP TABLE #lt_sub_groups_mapping;
+		DROP TABLE #lt_rms_resolve;
 	
 		o_return_code :=  'ERROR';
 		o_message:=  'ERROR: ' || ::SQL_ERROR_CODE || ' ' || ::SQL_ERROR_MESSAGE;
@@ -31,11 +33,12 @@ BEGIN SEQUENTIAL EXECUTION
 	-- Temporary table
 	CREATE LOCAL TEMPORARY TABLE #lt_sub_groups_mapping (MATCH_ROW INTEGER, SOURCE_SYSTEM NVARCHAR(10), SYSTEM_ID NVARCHAR(10), RELATED_ROW INTEGER, RELATED_SYSTEM NVARCHAR(10), RELATED_SYSTEM_ID NVARCHAR(10), 
 														 MATCH_POLICY NVARCHAR(256), SCORE DOUBLE, GROUP_TAG NVARCHAR(20), GROUP_TAG_PAD_OVERRIDE NVARCHAR(20), GROUP_TAG_RMS_TMR NVARCHAR(20), GROUP_TAG_TMR_RMS NVARCHAR(20), GROUP_TAG_TMR_TMR NVARCHAR(20));      
-	CREATE LOCAL TEMPORARY TABLE #lt_sub_groups (MATCH_ROW INTEGER, GROUP_TAG NVARCHAR(20));      
+	CREATE LOCAL TEMPORARY TABLE #lt_sub_groups (MATCH_ROW INTEGER, GROUP_TAG NVARCHAR(20));
+	CREATE LOCAL TEMPORARY TABLE #lt_rms_resolve (MATCH_ROW INTEGER, RELATED_ROW INTEGER, SYSTEM_ID NVARCHAR(20), RELATED_ID NVARCHAR(20));      
+	
 	TRUNCATE TABLE "osr.scv.foundation.db.data::MatchResults.SubGroups";
 	
 	-- Create lookup table
-	
 	IF :i_match_group IS NOT NULL AND :i_match_group > 0 THEN
 		INSERT INTO #lt_sub_groups_mapping
 		(
@@ -82,24 +85,61 @@ BEGIN SEQUENTIAL EXECUTION
 		;
 	END IF;
 	
-
-	
 	-- Change baseline for RMS records refering to other RMS records
 	lt_set_rms_rms_person_address_dob_match = 
-		SELECT DISTINCT RELATED_ROW , SYSTEM_ID, RELATED_SYSTEM_ID 
+		SELECT DISTINCT MATCH_ROW, RELATED_ROW , SYSTEM_ID, RELATED_SYSTEM_ID 
 		FROM #lt_sub_groups_mapping 
 		WHERE SOURCE_SYSTEM = 'RMS' 
 			AND RELATED_SYSTEM = 'RMS' 
 			AND MATCH_POLICY = 'Person, Address, Date'
 			AND SYSTEM_ID != RELATED_SYSTEM_ID
 		;
-		
+	
+	
+	-- Base table
+	INSERT INTO #lt_rms_resolve (SELECT * FROM :lt_set_rms_rms_person_address_dob_match);
+	
+	-- Get update instruction
+	lt_update_instruction = SELECT DISTINCT RELATED_ROW, SYSTEM_ID FROM #lt_rms_resolve WHERE RELATED_ROW IS NOT NULL;
+	
+	UPDATE #lt_rms_resolve r SET r.SYSTEM_ID = u.SYSTEM_ID
+	FROM #lt_rms_resolve r, :lt_update_instruction u
+	WHERE r.MATCH_ROW = u.RELATED_ROW;
+	
+		-- Get update instruction
+	lt_update_instruction1 = SELECT DISTINCT RELATED_ROW, SYSTEM_ID FROM #lt_rms_resolve WHERE RELATED_ROW IS NOT NULL;
+	
+	UPDATE #lt_rms_resolve r SET r.SYSTEM_ID = u.SYSTEM_ID
+	FROM #lt_rms_resolve r, :lt_update_instruction1 u
+	WHERE r.MATCH_ROW = u.RELATED_ROW;
+	
+		-- Get update instruction
+	lt_update_instruction2 = SELECT DISTINCT RELATED_ROW, SYSTEM_ID FROM #lt_rms_resolve WHERE RELATED_ROW IS NOT NULL;
+	
+	UPDATE #lt_rms_resolve r SET r.SYSTEM_ID = u.SYSTEM_ID
+	FROM #lt_rms_resolve r, :lt_update_instruction2 u
+	WHERE r.MATCH_ROW = u.RELATED_ROW;
+	
+		-- Get update instruction
+	lt_update_instruction3 = SELECT DISTINCT RELATED_ROW, SYSTEM_ID FROM #lt_rms_resolve WHERE RELATED_ROW IS NOT NULL;
+	
+	UPDATE #lt_rms_resolve r SET r.SYSTEM_ID = u.SYSTEM_ID
+	FROM #lt_rms_resolve r, :lt_update_instruction3 u
+	WHERE r.MATCH_ROW = u.RELATED_ROW;
+	
+		-- Get update instruction
+	lt_update_instruction4 = SELECT DISTINCT RELATED_ROW, SYSTEM_ID FROM #lt_rms_resolve WHERE RELATED_ROW IS NOT NULL;
+	
+	UPDATE #lt_rms_resolve r SET r.SYSTEM_ID = u.SYSTEM_ID
+	FROM #lt_rms_resolve r, :lt_update_instruction4 u
+	WHERE r.MATCH_ROW = u.RELATED_ROW;
+	
 	lt_additional_records = SELECT b.MATCH_ROW, a.SYSTEM_ID AS RSYS
-							FROM :lt_set_rms_rms_person_address_dob_match a
+							FROM #lt_rms_resolve a
 							INNER JOIN #lt_sub_groups_mapping b
-							ON a.RELATED_SYSTEM_ID = b.SYSTEM_ID;
+							ON a.RELATED_ID = b.SYSTEM_ID;
 
-	lt_update = SELECT DISTINCT * FROM (SELECT RELATED_ROW, SYSTEM_ID FROM :lt_set_rms_rms_person_address_dob_match UNION ALL SELECT MATCH_ROW AS RELATED_ROW, RSYS AS SYSTEM_ID FROM :lt_additional_records);							
+	lt_update = SELECT DISTINCT * FROM (SELECT DISTINCT MATCH_ROW AS RELATED_ROW, SYSTEM_ID FROM #lt_rms_resolve UNION ALL SELECT DISTINCT MATCH_ROW AS RELATED_ROW, RSYS AS SYSTEM_ID FROM :lt_additional_records);							
 	
 	lt_mapping_before = SELECT * FROM #lt_sub_groups_mapping;
 					        
@@ -284,5 +324,6 @@ BEGIN SEQUENTIAL EXECUTION
 	-- ### Clean-up ##############################################################################################################
 	DROP TABLE #lt_sub_groups_mapping;
 	DROP TABLE #lt_sub_groups;
+	DROP TABLE #lt_rms_resolve;
    
 END
