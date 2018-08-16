@@ -1,4 +1,5 @@
 PROCEDURE "osr.scv.foundation.db.Procedures::SP_GenerateScvSubgroups" (
+	IN i_match_group		INTEGER DEFAULT 0,
 	OUT o_return_code		NVARCHAR(128), 			-- 0 = execution successful; 1 = execution raised exception.
 	OUT o_message			NVARCHAR(1000) 			-- message
 )
@@ -28,32 +29,60 @@ BEGIN SEQUENTIAL EXECUTION
 	END;
 	
 	-- Temporary table
-	CREATE LOCAL TEMPORARY TABLE #lt_sub_groups_mapping (MATCH_ROW INTEGER, SOURCE_SYSTEM NVARCHAR(10), SYSTEM_ID NVARCHAR(10), RELATED_ROW INTEGER, RELATED_SYSTEM NVARCHAR(10), RELATED_SYSTEM_ID NVARCHAR(10), MATCH_POLICY NVARCHAR(256), SCORE DOUBLE, GROUP_TAG NVARCHAR(20));      
+	CREATE LOCAL TEMPORARY TABLE #lt_sub_groups_mapping (MATCH_ROW INTEGER, SOURCE_SYSTEM NVARCHAR(10), SYSTEM_ID NVARCHAR(10), RELATED_ROW INTEGER, RELATED_SYSTEM NVARCHAR(10), RELATED_SYSTEM_ID NVARCHAR(10), 
+														 MATCH_POLICY NVARCHAR(256), SCORE DOUBLE, GROUP_TAG NVARCHAR(20), GROUP_TAG_PAD_OVERRIDE NVARCHAR(20), GROUP_TAG_RMS_TMR NVARCHAR(20), GROUP_TAG_TMR_RMS NVARCHAR(20), GROUP_TAG_TMR_TMR NVARCHAR(20));      
 	CREATE LOCAL TEMPORARY TABLE #lt_sub_groups (MATCH_ROW INTEGER, GROUP_TAG NVARCHAR(20));      
 	TRUNCATE TABLE "osr.scv.foundation.db.data::MatchResults.SubGroups";
 	
 	-- Create lookup table
-	INSERT INTO #lt_sub_groups_mapping
-	(
-		SELECT "Match_ROW_ID" as MATCH_ROW, SOURCE_SYSTEM, SYSTEM_ID, RELATED_ROW_ID AS RELATED_ROW, RELATED_SOURCE_SYSTEM, RELATED_SYSTEM_ID, POLICY_NAME as MATCH_POLICY, SCORE, SYSTEM_ID as GROUP_TAG FROM (
-				SELECT *,
-					   -- Add row number, sort by score 
-					   ROW_NUMBER() OVER (PARTITION BY RELATED_ROW_ID ORDER BY SCORE DESC) AS GROUP_ROW_COUNT
-				FROM (
-						SELECT * FROM (
-										SELECT DISTINCT mr.GROUP_ID, mr."Match_ROW_ID", mr.SOURCE_SYSTEM, mr.SYSTEM_ID 
-										FROM "osr.scv.foundation.db.data::MatchResults.MatchResults" mr
-										--WHERE mr.GROUP_ID IN (1798987, 1899805)
-						) a
-						-- Add tracing information
-						LEFT OUTER JOIN (SELECT DISTINCT mt.ROW_ID, mt.RELATED_ROW_ID, mr.SYSTEM_ID as RELATED_SYSTEM_ID, mr.SOURCE_SYSTEM as RELATED_SOURCE_SYSTEM, mt.SCORE, mt.POLICY_NAME from "osr.scv.foundation.db.data::MatchResults.MatchResults" mr
-										 INNER JOIN "osr.scv.foundation.db.data::MatchResults.MatchTracing" mt
-										 ON mr."Match_ROW_ID" = mt.RELATED_ROW_ID) b
-						ON a."Match_ROW_ID" = b.ROW_ID
-					  )
+	
+	IF :i_match_group IS NOT NULL AND :i_match_group > 0 THEN
+		INSERT INTO #lt_sub_groups_mapping
+		(
+			SELECT "Match_ROW_ID" as MATCH_ROW, SOURCE_SYSTEM, SYSTEM_ID, RELATED_ROW_ID AS RELATED_ROW, RELATED_SOURCE_SYSTEM, RELATED_SYSTEM_ID, POLICY_NAME as MATCH_POLICY, SCORE, SYSTEM_ID as GROUP_TAG, null, null, null, null FROM (
+					SELECT *,
+						   -- Add row number, sort by score 
+						   ROW_NUMBER() OVER (PARTITION BY RELATED_ROW_ID ORDER BY SCORE DESC) AS GROUP_ROW_COUNT
+					FROM (
+							SELECT * FROM (
+											SELECT DISTINCT mr.GROUP_ID, mr."Match_ROW_ID", mr.SOURCE_SYSTEM, mr.SYSTEM_ID 
+											FROM "osr.scv.foundation.db.data::MatchResults.MatchResults" mr
+											WHERE mr.GROUP_ID = :i_match_group
+							) a
+							-- Add tracing information
+							LEFT OUTER JOIN (SELECT DISTINCT mt.ROW_ID, mt.RELATED_ROW_ID, mr.SYSTEM_ID as RELATED_SYSTEM_ID, mr.SOURCE_SYSTEM as RELATED_SOURCE_SYSTEM, mt.SCORE, mt.POLICY_NAME from "osr.scv.foundation.db.data::MatchResults.MatchResults" mr
+											 INNER JOIN "osr.scv.foundation.db.data::MatchResults.MatchTracing" mt
+											 ON mr."Match_ROW_ID" = mt.RELATED_ROW_ID) b
+							ON a."Match_ROW_ID" = b.ROW_ID
+						  )
+				)
 			)
-		)
-	;
+		;
+	ELSE
+		INSERT INTO #lt_sub_groups_mapping
+		(
+			SELECT "Match_ROW_ID" as MATCH_ROW, SOURCE_SYSTEM, SYSTEM_ID, RELATED_ROW_ID AS RELATED_ROW, RELATED_SOURCE_SYSTEM, RELATED_SYSTEM_ID, POLICY_NAME as MATCH_POLICY, SCORE, SYSTEM_ID as GROUP_TAG, null, null, null, null FROM (
+					SELECT *,
+						   -- Add row number, sort by score 
+						   ROW_NUMBER() OVER (PARTITION BY RELATED_ROW_ID ORDER BY SCORE DESC) AS GROUP_ROW_COUNT
+					FROM (
+							SELECT * FROM (
+											SELECT DISTINCT mr.GROUP_ID, mr."Match_ROW_ID", mr.SOURCE_SYSTEM, mr.SYSTEM_ID 
+											FROM "osr.scv.foundation.db.data::MatchResults.MatchResults" mr
+											--WHERE mr.GROUP_ID IN (1798987, 1899805)
+							) a
+							-- Add tracing information
+							LEFT OUTER JOIN (SELECT DISTINCT mt.ROW_ID, mt.RELATED_ROW_ID, mr.SYSTEM_ID as RELATED_SYSTEM_ID, mr.SOURCE_SYSTEM as RELATED_SOURCE_SYSTEM, mt.SCORE, mt.POLICY_NAME from "osr.scv.foundation.db.data::MatchResults.MatchResults" mr
+											 INNER JOIN "osr.scv.foundation.db.data::MatchResults.MatchTracing" mt
+											 ON mr."Match_ROW_ID" = mt.RELATED_ROW_ID) b
+							ON a."Match_ROW_ID" = b.ROW_ID
+						  )
+				)
+			)
+		;
+	END IF;
+	
+
 	
 	-- Change baseline for RMS records refering to other RMS records
 	lt_set_rms_rms_person_address_dob_match = 
@@ -80,7 +109,7 @@ BEGIN SEQUENTIAL EXECUTION
 	WHERE sgm.RELATED_ROW = d.RELATED_ROW;
 			
 	-- Adjust system IDs
-	UPDATE #lt_sub_groups_mapping sgm SET sgm.GROUP_TAG = d.SYSTEM_ID
+	UPDATE #lt_sub_groups_mapping sgm SET sgm.GROUP_TAG = d.SYSTEM_ID, sgm.GROUP_TAG_PAD_OVERRIDE = d.SYSTEM_ID
 	FROM #lt_sub_groups_mapping sgm, :lt_update d
 	WHERE sgm.MATCH_ROW = d.RELATED_ROW;
 	
@@ -134,7 +163,7 @@ BEGIN SEQUENTIAL EXECUTION
 	WHERE sg.MATCH_ROW = d.MATCH_ROW;
 	
 	-- Update group tags
-	UPDATE #lt_sub_groups_mapping sgm SET sgm.GROUP_TAG = d.GROUP_TAG
+	UPDATE #lt_sub_groups_mapping sgm SET sgm.GROUP_TAG = d.GROUP_TAG, sgm.GROUP_TAG_RMS_TMR = d.GROUP_TAG
 	FROM #lt_sub_groups_mapping sgm, #lt_sub_groups d
 	WHERE sgm.MATCH_ROW = d.MATCH_ROW;
 
@@ -182,7 +211,7 @@ BEGIN SEQUENTIAL EXECUTION
 	WHERE sg.MATCH_ROW = d.MATCH_ROW;
 	
 	-- Update group tags
-	UPDATE #lt_sub_groups_mapping sgm SET sgm.GROUP_TAG = d.GROUP_TAG
+	UPDATE #lt_sub_groups_mapping sgm SET sgm.GROUP_TAG = d.GROUP_TAG,  sgm.GROUP_TAG_TMR_RMS = d.GROUP_TAG
 	FROM #lt_sub_groups_mapping sgm, #lt_sub_groups d
 	WHERE sgm.MATCH_ROW = d.MATCH_ROW;
 	
@@ -222,8 +251,11 @@ BEGIN SEQUENTIAL EXECUTION
 				    		ON a.RELATED_ROW = b.MATCH_ROW
 				    		) 
 				    		-- Only add match rows for system TMR
-				    		WHERE MATCH_ROW NOT IN (SELECT RELATED_ROW FROM  #lt_sub_groups_mapping WHERE SOURCE_SYSTEM = 'RMS' 
-				    			AND RELATED_ROW IS NOT NULL)
+				    		WHERE MATCH_ROW NOT IN (SELECT RELATED_ROW FROM  #lt_sub_groups_mapping 
+				    								WHERE 
+				    								(SOURCE_SYSTEM = 'RMS' AND RELATED_ROW IS NOT NULL)
+				    									OR (GROUP_TAG_RMS_TMR IS NULL AND GROUP_TAG_TMR_RMS IS NULL)
+				    								)
 			         )
 			) WHERE GROUP_ROW_COUNT = 1
 		) 
@@ -233,6 +265,14 @@ BEGIN SEQUENTIAL EXECUTION
 	UPDATE #lt_sub_groups sg SET sg.GROUP_TAG = d.GROUP_TAG
 	FROM #lt_sub_groups sg, :lt_tmr_tmr_orphan_record_set_d d
 	WHERE sg.MATCH_ROW = d.MATCH_ROW;
+	
+	-- Update group tags
+	UPDATE #lt_sub_groups_mapping sgm SET sgm.GROUP_TAG = d.GROUP_TAG,  sgm.GROUP_TAG_TMR_TMR = d.GROUP_TAG
+	FROM #lt_sub_groups_mapping sgm, #lt_sub_groups d
+	WHERE sgm.MATCH_ROW = d.MATCH_ROW;
+	
+	lt_mapping_final = SELECT * FROM  #lt_sub_groups_mapping;
+	lt_mapping_sub = SELECT * FROM  #lt_sub_groups;
 	
 	-- Write to table
 	INSERT INTO "osr.scv.foundation.db.data::MatchResults.SubGroups" (SELECT * FROM #lt_sub_groups);
