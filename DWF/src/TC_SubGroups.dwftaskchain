@@ -15,6 +15,10 @@
           {
             "id": "procName",
             "value": "osr.scv.foundation.db.Procedures::SP_GenerateScvSubgroups"
+          },
+          {
+            "id": "procForm.I_MATCH_GROUP",
+            "value": "0"
           }
         ]
       },

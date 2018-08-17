@@ -1,0 +1,40 @@
+/*
+	Remove unwanted records
+*/
+PROCEDURE "osr.scv.foundation.db.Procedures::SP_RemoveUnwantedRecords" (
+
+)
+	LANGUAGE SQLSCRIPT
+	SQL SECURITY INVOKER
+   AS
+BEGIN
+	
+	/***************************************************************
+		Go Live Step - Remove records with an 'and' in the 
+		name from tables MatchResults, Assessments and Delta.
+		This procedure will run before the shadow table population.
+	****************************************************************/
+	lt_records_to_remove = SELECT * FROM	(	
+											SELECT	a."Match_ROW_ID" as MATCH_ROW,
+													COALESCE (b.NAME_FIRST, c.FIRST_NAME) as NAME_FIRST,
+													COALESCE (b.NAMEMIDDLE, c.MIDDLE_NAME) as NAME_MIDDLE,
+													COALESCE (b.NAME_LAST, c.FAMILY_ORG_NAME) as NAME_LAST
+													from "osr.scv.foundation.db.data::MatchResults.MatchResults" a
+														LEFT OUTER JOIN "osr.scv.foundation.db.synonyms::BUT000" b
+														ON a."Cleanse_ROW_ID_BUT" = b.Z_RUN_SEQ_ID
+															LEFT OUTER JOIN  "osr.scv.foundation.db.synonyms::TMR_CustMain" c
+															ON a."Cleanse_ROW_ID_TMR" = c.Z_RUN_SEQ_ID
+											) 
+											WHERE 
+											("NAME_FIRST" LIKE '% and %') OR ("NAME_FIRST" LIKE '% and') OR ("NAME_FIRST" LIKE 'and %')
+											OR
+											("NAME_MIDDLE" LIKE '% and %') OR ("NAME_MIDDLE" LIKE '% and') OR ("NAME_MIDDLE" LIKE 'and %')
+											OR
+											("NAME_LAST" LIKE '% and %') OR ("NAME_LAST" LIKE '% and') OR ("NAME_LAST" LIKE 'and %')
+											;
+											
+	DELETE FROM "osr.scv.foundation.db.data::MatchResults.MatchResults" 		WHERE "Match_ROW_ID" IN (SELECT MATCH_ROW FROM :lt_records_to_remove);	
+	DELETE FROM "osr.scv.foundation.db.data::MatchResultsReview.Assessments"	WHERE "MATCH_ROW" IN (SELECT MATCH_ROW FROM :lt_records_to_remove);	
+	DELETE FROM "osr.scv.foundation.db.data::MatchResults.Delta" 				WHERE "MATCH_ROW" IN (SELECT MATCH_ROW FROM :lt_records_to_remove);	
+
+END

@@ -184,15 +184,14 @@
     
       <mapping xsi:type="Calculation:AttributeMapping" target="Z_RUN_SEQ_ID" source="Z_RUN_SEQ_ID"/>
     </input>
-    <filter>((lower(&quot;NAME_LAST&quot;) NOT LIKE '%duplicat%' AND &quot;NAME_LAST&quot; NOT LIKE '%&amp;%' AND lower(&quot;NAME_LAST&quot;) NOT LIKE '%trust%' AND lower(&quot;NAME_LAST&quot;) NOT LIKE '%executor%' AND lower(&quot;NAME_LAST&quot;) NOT LIKE '%copy%' AND (&quot;NAME_LAST&quot; NOT LIKE  '%0%') AND (&quot;NAME_LAST&quot; NOT LIKE  '%1%')AND (&quot;NAME_LAST&quot; NOT LIKE  '%2%')AND (&quot;NAME_LAST&quot; NOT LIKE  '%3%')AND (&quot;NAME_LAST&quot; NOT LIKE  '%4%')AND (&quot;NAME_LAST&quot; NOT LIKE  '%5%')AND (&quot;NAME_LAST&quot; NOT LIKE  '%6%')AND (&quot;NAME_LAST&quot; NOT LIKE  '%7%')AND (&quot;NAME_LAST&quot; NOT LIKE  '%8%')AND (&quot;NAME_LAST&quot; NOT LIKE  '%9%') )
+    <filter>((lower(&quot;NAME_LAST&quot;) NOT LIKE '%duplicat%' AND &quot;NAME_LAST&quot; NOT LIKE '%&amp;%' AND lower(&quot;NAME_LAST&quot;) NOT LIKE '%trust%' AND lower(&quot;NAME_LAST&quot;) NOT LIKE '%executor%' AND lower(&quot;NAME_LAST&quot;) NOT LIKE '%copy%' AND (&quot;NAME_LAST&quot; NOT LIKE  '%0%') AND (&quot;NAME_LAST&quot; NOT LIKE  '%1%')AND (&quot;NAME_LAST&quot; NOT LIKE  '%2%')AND (&quot;NAME_LAST&quot; NOT LIKE  '%3%')AND (&quot;NAME_LAST&quot; NOT LIKE  '%4%')AND (&quot;NAME_LAST&quot; NOT LIKE  '%5%')AND (&quot;NAME_LAST&quot; NOT LIKE  '%6%')AND (&quot;NAME_LAST&quot; NOT LIKE  '%7%')AND (&quot;NAME_LAST&quot; NOT LIKE  '%8%')AND (&quot;NAME_LAST&quot; NOT LIKE  '%9%') AND (&quot;NAME_LAST&quot; NOT LIKE '% and %') AND (&quot;NAME_LAST&quot; NOT LIKE '% and') AND (&quot;NAME_LAST&quot; NOT LIKE 'and %'))
     AND
-(lower(&quot;NAME_FIRST&quot;) NOT LIKE '%duplicat%' AND &quot;NAME_FIRST&quot; NOT LIKE '%&amp;%' AND lower(&quot;NAME_FIRST&quot;) NOT LIKE '%trust%' AND lower(&quot;NAME_FIRST&quot;) NOT LIKE '%executor%' AND lower(&quot;NAME_FIRST&quot;) NOT LIKE '%copy%' AND (&quot;NAME_FIRST&quot; NOT LIKE  '%0%') AND (&quot;NAME_FIRST&quot; NOT LIKE  '%1%')AND (&quot;NAME_FIRST&quot; NOT LIKE  '%2%')AND (&quot;NAME_FIRST&quot; NOT LIKE  '%3%')AND (&quot;NAME_FIRST&quot; NOT LIKE  '%4%')AND (&quot;NAME_FIRST&quot; NOT LIKE  '%5%')AND (&quot;NAME_FIRST&quot; NOT LIKE  '%6%')AND (&quot;NAME_FIRST&quot; NOT LIKE  '%7%')AND (&quot;NAME_FIRST&quot; NOT LIKE  '%8%')AND (&quot;NAME_FIRST&quot; NOT LIKE  '%9%'))
+(lower(&quot;NAME_FIRST&quot;) NOT LIKE '%duplicat%' AND &quot;NAME_FIRST&quot; NOT LIKE '%&amp;%' AND lower(&quot;NAME_FIRST&quot;) NOT LIKE '%trust%' AND lower(&quot;NAME_FIRST&quot;) NOT LIKE '%executor%' AND lower(&quot;NAME_FIRST&quot;) NOT LIKE '%copy%' AND (&quot;NAME_FIRST&quot; NOT LIKE  '%0%') AND (&quot;NAME_FIRST&quot; NOT LIKE  '%1%')AND (&quot;NAME_FIRST&quot; NOT LIKE  '%2%')AND (&quot;NAME_FIRST&quot; NOT LIKE  '%3%')AND (&quot;NAME_FIRST&quot; NOT LIKE  '%4%')AND (&quot;NAME_FIRST&quot; NOT LIKE  '%5%')AND (&quot;NAME_FIRST&quot; NOT LIKE  '%6%')AND (&quot;NAME_FIRST&quot; NOT LIKE  '%7%')AND (&quot;NAME_FIRST&quot; NOT LIKE  '%8%')AND (&quot;NAME_FIRST&quot; NOT LIKE  '%9%') AND (&quot;NAME_FIRST&quot; NOT LIKE '% and %') AND (&quot;NAME_FIRST&quot; NOT LIKE '% and') AND (&quot;NAME_FIRST&quot; NOT LIKE 'and %'))
     AND
-(lower(&quot;NAMEMIDDLE&quot;) NOT LIKE '%duplicat%' AND &quot;NAMEMIDDLE&quot; NOT LIKE '%&amp;%' AND lower(&quot;NAMEMIDDLE&quot;) NOT LIKE '%trust%' AND lower(&quot;NAMEMIDDLE&quot;) NOT LIKE '%executor%' AND lower(&quot;NAMEMIDDLE&quot;) NOT LIKE '%copy%' AND (&quot;NAMEMIDDLE&quot; NOT LIKE  '%0%') AND (&quot;NAMEMIDDLE&quot; NOT LIKE  '%1%')AND (&quot;NAMEMIDDLE&quot; NOT LIKE  '%2%')AND (&quot;NAMEMIDDLE&quot; NOT LIKE  '%3%')AND (&quot;NAMEMIDDLE&quot; NOT LIKE  '%4%')AND (&quot;NAMEMIDDLE&quot; NOT LIKE  '%5%')AND (&quot;NAMEMIDDLE&quot; NOT LIKE  '%6%')AND (&quot;NAMEMIDDLE&quot; NOT LIKE  '%7%')AND (&quot;NAMEMIDDLE&quot; NOT LIKE  '%8%')AND (&quot;NAMEMIDDLE&quot; NOT LIKE  '%9%'))
+(lower(&quot;NAMEMIDDLE&quot;) NOT LIKE '%duplicat%' AND &quot;NAMEMIDDLE&quot; NOT LIKE '%&amp;%' AND lower(&quot;NAMEMIDDLE&quot;) NOT LIKE '%trust%' AND lower(&quot;NAMEMIDDLE&quot;) NOT LIKE '%executor%' AND lower(&quot;NAMEMIDDLE&quot;) NOT LIKE '%copy%' AND (&quot;NAMEMIDDLE&quot; NOT LIKE  '%0%') AND (&quot;NAMEMIDDLE&quot; NOT LIKE  '%1%')AND (&quot;NAMEMIDDLE&quot; NOT LIKE  '%2%')AND (&quot;NAMEMIDDLE&quot; NOT LIKE  '%3%')AND (&quot;NAMEMIDDLE&quot; NOT LIKE  '%4%')AND (&quot;NAMEMIDDLE&quot; NOT LIKE  '%5%')AND (&quot;NAMEMIDDLE&quot; NOT LIKE  '%6%')AND (&quot;NAMEMIDDLE&quot; NOT LIKE  '%7%')AND (&quot;NAMEMIDDLE&quot; NOT LIKE  '%8%')AND (&quot;NAMEMIDDLE&quot; NOT LIKE  '%9%') AND (&quot;NAMEMIDDLE&quot; NOT LIKE '% and %') AND (&quot;NAMEMIDDLE&quot; NOT LIKE '% and') AND (&quot;NAMEMIDDLE&quot; NOT LIKE 'and %'))
 
 )
  OR ((&quot;NAME_FIRST&quot; LIKE 'De-duplicated - same as BP%' ) )
- 
  </filter>
   </calculationView>
   <calculationView xsi:type="Calculation:ProjectionView" id="P_TimedependendAddressUsage">
@@ -1903,7 +1902,7 @@
     </input>
     <filter>&quot;PATH&quot; = 'DONOTLOAD'</filter>
   </calculationView>
-  <calculationView xsi:type="Calculation:ProjectionView" id="P_TMRCustomers">
+  <calculationView xsi:type="Calculation:ProjectionView" id="P_TMRCustomers" filterExpressionLanguage="SQL">
     <viewAttributes>
       <viewAttribute id="MATCH_PERSON_GN_STD6">
         <descriptions defaultDescription="MATCH_PERSON_GN_STD6"/>
