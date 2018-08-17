@@ -140,50 +140,6 @@ sap.ui.define([
         }
       });
 
-
-      this.fOnDataReceived = function(oData) {
-
-        //disable busy once data is received.
-        oController._setBusyIndicatorForMainTable(false);
-
-        // once data is recieved, details table get binding with the very first
-        // result of the data set, ensuring the first row is always loaded and selected.
-        let matchRow = oData.getParameters().data.results[0].MATCH_ROW;
-        oController.currentMatchRow = matchRow;
-
-
-        let sObjectPathRelated = "/matchResultsDetailsRelatedParameters(I_MATCH_ROW='" + matchRow + "')/Results";
-        oController.byId("detailsTable1").bindRows({
-          path: sObjectPathRelated,
-          template: oController.byId("detailsTable1").getBindingInfo("rows").template
-        });
-
-        //attached a function call once data is received call
-        //fOnDataReceivedDetailTable function
-        let oBinding2 = oController._oDetailTable.getBinding("rows");
-        oBinding2.attachDataReceived(oController.fOnDataReceivedDetailTable);
-
-        //disable the very first button on the main table.
-        oController._disableFirstButton();
-
-        oController.getView().byId("table").setVisibleRowCount(oData.getSource().iLength);
-
-        // Read assessments and set initial selection
-        oController.getModel().read(sObjectPath + "/matchAssessments", {
-
-          urlParameters: {
-            "$orderby": "TIMESTAMP desc"
-          },
-          success: function(oData) {
-            // Adjust selection for checkboxes
-            if (oData.results.length > 0) {
-              oController._selectRows(oData);
-            }
-          }
-        });
-
-      };
-
       //attached a function call once data is received call
       //fOnDataReceived function
       let oBinding = this._oTable.getBinding("rows");
@@ -201,7 +157,9 @@ sap.ui.define([
 			// result of the data set, ensuring the first row is always loaded and selected.
 			let matchRow = oEvent.getParameters().data.results[0].MATCH_ROW;
 			oController.currentMatchRow = matchRow;
-
+			
+			// Set new title for details table
+    		oController.getView().byId("tableDetails1Header").setText("Matches for Row " + matchRow);
 
 			let sObjectPathRelated = "/matchResultsDetailsRelatedParameters(I_MATCH_ROW='" + matchRow + "')/Results";
 			oController.byId("detailsTable1").bindRows({
