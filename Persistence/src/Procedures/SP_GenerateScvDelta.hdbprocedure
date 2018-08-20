@@ -83,9 +83,10 @@ BEGIN
 	
 	IF :i_read_mode > 0 THEN
 		UPDATE "osr.scv.foundation.db.data::MatchResults.Delta" d SET d.SCV_ID = u.SCV_ID 
-		FROM "osr.scv.foundation.db.data::MatchResults.Delta" d, :lt_master u
+		FROM "osr.scv.foundation.db.data::MatchResults.Delta" d, (SELECT DISTINCT MATCH_ROW, SCV_ID FROM :lt_master) u
 		WHERE d.MATCH_ROW = u.MATCH_ROW
-			AND d.RELATED_ROW = u.RELATED_ROW;
+			--AND d.RELATED_ROW = u.RELATED_ROW
+		;
 	ELSE
 		INSERT INTO "osr.scv.foundation.db.data::MatchResults.Delta" (SELECT * FROM :lt_master);
 	END IF;
