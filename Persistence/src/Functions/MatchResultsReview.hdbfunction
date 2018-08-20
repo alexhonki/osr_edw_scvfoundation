@@ -322,8 +322,8 @@ BEGIN
 						WHEN STRATEGY_BR_REVIEW = 'X' AND LENGTH(ACTION_RES_BR) > 0 THEN 'Success'				-- User assessment, set to promote
 						ELSE 
 							-- Bucket for everything else which has a resolved action
-							CASE WHEN LENGTH(ACTION_RES_BR) > 0 THEN 'Success'
-							ELSE 'Success'
+							CASE WHEN LENGTH(ACTION_RES_BR) > 0 THEN 'Success'									-- Promote
+							ELSE CASE WHEN HAS_DELTA = 'X' THEN 'Success' ELSE 'None' END						-- System accept	
 							END
 					  END AS STRATEGY_RESOLVED_STATUS,
 					  '' AS PROMOTED_TO_SCV,
@@ -360,7 +360,7 @@ BEGIN
 								WHEN ACTION_RES_BR = 'Split' THEN 'Success'
 								WHEN ACTION_RES_BR = 'Accept' THEN 'Success'
 								WHEN ACTION_RES_BR = 'Reject' THEN 'Success'
-							ELSE 'Success'
+							ELSE CASE WHEN HAS_DELTA = 'X' THEN 'Success' ELSE 'None' END
 							END
 					  END AS ACTION_RESOLVED_STATUS,
 					  SHOW_IN_REVIEW,
