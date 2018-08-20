@@ -362,7 +362,8 @@ BEGIN
 							ELSE 'Success'
 							END
 					  END AS ACTION_RESOLVED_STATUS,
-					  SHOW_IN_REVIEW
+					  SHOW_IN_REVIEW,
+					  HAS_DELTA
 			FROM :lt_overview
 		);
 	
