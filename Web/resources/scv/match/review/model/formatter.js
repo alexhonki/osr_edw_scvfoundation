@@ -92,7 +92,7 @@ sap.ui.define([
 					if (iValue === 'Split' || !iValue) {	
 					return ValueState.Warning;
 					}
-					else if (iValue === 'Neutral' || !iValue) {
+					else if (iValue === 'None' || !iValue) {
 						return ValueState.None;	
 					}
 					else {
@@ -105,7 +105,7 @@ sap.ui.define([
 				if (iValue === 'System Exclude' || iValue === 'Review' || !iValue) {
 					return ValueState.Error;
 				} 
-				else if (iValue === 'Neutral' || !iValue) {
+				else if (iValue === 'None' || !iValue) {
 						return ValueState.None;	
 				} else {
 					return ValueState.Success;
