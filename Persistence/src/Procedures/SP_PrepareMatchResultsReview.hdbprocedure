@@ -9,7 +9,7 @@ BEGIN
    /*************************************
        Prepare match results review 
    *************************************/
-   
+  /* 
    DECLARE l_latestExecutionID INTEGER;
 
 	-- Retrieve latest task execution ID
@@ -36,7 +36,7 @@ BEGIN
 	-- Clear statistics table first
 	TRUNCATE TABLE "osr.scv.foundation.db.data::MatchResults.MatchGroupInfo";
 	INSERT INTO "osr.scv.foundation.db.data::MatchResults.MatchGroupInfo" (SELECT * FROM :lt_latest_match_group_counts);
-	
+	*/
 	-- Identify match groups with multiple RMS business partners
 	lt_rms_duplicate_groups = SELECT GROUP_ID, SOURCE_SYSTEM
 							  FROM "osr.scv.foundation.db.data::MatchResults.MatchResults"

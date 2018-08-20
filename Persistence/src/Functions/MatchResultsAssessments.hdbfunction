@@ -33,10 +33,10 @@ BEGIN
 		            	CASE WHEN (SUBSTRING (COALESCE(e.NAME_LAST, f.FAMILY_ORG_NAME),1,1)) LIKE_REGEXPR '[A-Z]' THEN (SUBSTRING (COALESCE(e.NAME_LAST, f.FAMILY_ORG_NAME),1,1)) ELSE 'ZZ' END AS MATCH_PERSON_FN_FC_SORT,
 		            	a1.STRATEGY_RESOLVED
 		                FROM  "osr.scv.foundation.db.data::MatchResults.MatchResults" AS a 
-		                LEFT OUTER JOIN ( SELECT NAME_LAST, "Cleanse_TABLE_ID", "Z_RUN_SEQ_ID", "PARTNER" FROM "osr.scv.foundation.db.synonyms::BUT000") as e
-		                ON a."Cleanse_ROW_ID_BUT" = e."Z_RUN_SEQ_ID" AND a."Cleanse_TABLE_ID_BUT" = e."Cleanse_TABLE_ID" AND a."SYSTEM_ID" = e."PARTNER" and a."SOURCE_SYSTEM" = 'RMS'
-		                LEFT OUTER JOIN ( SELECT FAMILY_ORG_NAME, "Cleanse_TABLE_ID", "Z_RUN_SEQ_ID", "CUSTOMER_REF" FROM "osr.scv.foundation.db.synonyms::TMR_CustMain") as f
-		                ON a."Cleanse_ROW_ID_TMR" = f."Z_RUN_SEQ_ID" AND a."Cleanse_TABLE_ID_TMR" = f."Cleanse_TABLE_ID" AND a."SYSTEM_ID" = f."CUSTOMER_REF" AND a."SOURCE_SYSTEM" = 'TMR'
+		                LEFT OUTER JOIN ( SELECT NAME_LAST, "Z_RUN_SEQ_ID", "PARTNER" FROM "osr.scv.foundation.db.synonyms::BUT000") as e
+		                ON a."Cleanse_ROW_ID_BUT" = e."Z_RUN_SEQ_ID" AND a."SYSTEM_ID" = e."PARTNER" and a."SOURCE_SYSTEM" = 'RMS'
+		                LEFT OUTER JOIN ( SELECT FAMILY_ORG_NAME, "Z_RUN_SEQ_ID", "CUSTOMER_REF" FROM "osr.scv.foundation.db.synonyms::TMR_CustMain") as f
+		                ON a."Cleanse_ROW_ID_TMR" = f."Z_RUN_SEQ_ID" AND a."SYSTEM_ID" = f."CUSTOMER_REF" AND a."SOURCE_SYSTEM" = 'TMR'
 		                LEFT OUTER JOIN "osr.scv.foundation.db.data::MatchResultsReview.Review" a1
 		                ON a.ENTITY_ID = a1.ENTITY_ID
 		                WHERE a.SHOW_IN_REVIEW = 'X' 
@@ -64,10 +64,10 @@ BEGIN
 		            	CASE WHEN (SUBSTRING (COALESCE(e.NAME_LAST, f.FAMILY_ORG_NAME),1,1)) LIKE_REGEXPR '[A-Z]' THEN (SUBSTRING (COALESCE(e.NAME_LAST, f.FAMILY_ORG_NAME),1,1)) ELSE 'ZZ' END AS MATCH_PERSON_FN_FC_SORT,
 		            	a1.STRATEGY_RESOLVED
 		                FROM   "osr.scv.foundation.db.data::MatchResults.MatchResults" AS a 
-		                LEFT OUTER JOIN ( SELECT NAME_LAST, "Cleanse_TABLE_ID", "Z_RUN_SEQ_ID", "PARTNER" FROM "osr.scv.foundation.db.synonyms::BUT000") as e
-		                ON a."Cleanse_ROW_ID_BUT" = e."Z_RUN_SEQ_ID" AND a."Cleanse_TABLE_ID_BUT" = e."Cleanse_TABLE_ID" AND a."SYSTEM_ID" = e."PARTNER" and a."SOURCE_SYSTEM" = 'RMS'
-		                LEFT OUTER JOIN ( SELECT FAMILY_ORG_NAME, "Cleanse_TABLE_ID", "Z_RUN_SEQ_ID", "CUSTOMER_REF" FROM "osr.scv.foundation.db.synonyms::TMR_CustMain") as f
-		                ON a."Cleanse_ROW_ID_TMR" = f."Z_RUN_SEQ_ID" AND a."Cleanse_TABLE_ID_TMR" = f."Cleanse_TABLE_ID" AND a."SYSTEM_ID" = f."CUSTOMER_REF" AND a."SOURCE_SYSTEM" = 'TMR'
+		                LEFT OUTER JOIN ( SELECT NAME_LAST, "Z_RUN_SEQ_ID", "PARTNER" FROM "osr.scv.foundation.db.synonyms::BUT000") as e
+		                ON a."Cleanse_ROW_ID_BUT" = e."Z_RUN_SEQ_ID" AND a."SYSTEM_ID" = e."PARTNER" and a."SOURCE_SYSTEM" = 'RMS'
+		                LEFT OUTER JOIN ( SELECT FAMILY_ORG_NAME, "Z_RUN_SEQ_ID", "CUSTOMER_REF" FROM "osr.scv.foundation.db.synonyms::TMR_CustMain") as f
+		                ON a."Cleanse_ROW_ID_TMR" = f."Z_RUN_SEQ_ID" AND a."SYSTEM_ID" = f."CUSTOMER_REF" AND a."SOURCE_SYSTEM" = 'TMR'
 		                LEFT OUTER JOIN "osr.scv.foundation.db.data::MatchResultsReview.Review" a1
 		                ON a.ENTITY_ID = a1.ENTITY_ID
 		                WHERE a.SHOW_IN_REVIEW = 'X'
