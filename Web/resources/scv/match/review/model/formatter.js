@@ -104,6 +104,9 @@ sap.ui.define([
 			strategyState: function(iValue) {
 				if (iValue === 'System Exclude' || iValue === 'Review' || !iValue) {
 					return ValueState.Error;
+				} 
+				else if (iValue === 'Neutral' || !iValue) {
+						return ValueState.None;	
 				} else {
 					return ValueState.Success;
 				}
