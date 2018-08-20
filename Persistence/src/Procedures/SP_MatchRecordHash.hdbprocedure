@@ -30,38 +30,38 @@ BEGIN
 		                -- Add original fields
 		                --BUT000-RMS
 		                LEFT OUTER JOIN ( 
-		                			      SELECT BIRTHDT , NAME_FIRST, NAMEMIDDLE, NAME_LAST, DEATHDT, "Cleanse_TABLE_ID", "Z_RUN_SEQ_ID", "PARTNER", "XBLCK",
+		                			      SELECT BIRTHDT , NAME_FIRST, NAMEMIDDLE, NAME_LAST, DEATHDT, "Z_RUN_SEQ_ID", "PARTNER", "XBLCK",
 		                			      (NAME_FIRST || NAMEMIDDLE || NAME_LAST || (CASE WHEN BIRTHDT = ' ' THEN TO_DATE('19990101', 'YYYYMMDD') ELSE TO_DATE(BIRTHDT, 'YYYYMMDD') END) || XBLCK || PARTNER ) as PERSON_RMS
 		                			      FROM "osr.scv.foundation.db.synonyms::BUT000"
 		                					
 		                				) as prms
-		                ON a."Cleanse_ROW_ID_BUT" = prms."Z_RUN_SEQ_ID" AND a."Cleanse_TABLE_ID_BUT" = prms."Cleanse_TABLE_ID" AND a."SYSTEM_ID" = prms."PARTNER"
+		                ON a."Cleanse_ROW_ID_BUT" = prms."Z_RUN_SEQ_ID" AND a."SYSTEM_ID" = prms."PARTNER"
 		                --ADRC-RMS
 		                LEFT OUTER JOIN (
-		                				 SELECT TEL_NUMBER, TEL_EXTENS, ADDRNUMBER, COUNTRY as COUNTRY_ORIG_ADRC, REGION AS REGION_ORIG_ADRC, CITY1 AS CITY_ORIG_ADRC, STREET AS STREET_ORIG_ADRC, HOUSE_NUM1 AS STREET_NUMBER_ORIG_ADRC, POST_CODE1 as POSTCODE_ORIG_ADRC, "Cleanse_TABLE_ID", "Z_RUN_SEQ_ID",
+		                				 SELECT TEL_NUMBER, TEL_EXTENS, ADDRNUMBER, COUNTRY as COUNTRY_ORIG_ADRC, REGION AS REGION_ORIG_ADRC, CITY1 AS CITY_ORIG_ADRC, STREET AS STREET_ORIG_ADRC, HOUSE_NUM1 AS STREET_NUMBER_ORIG_ADRC, POST_CODE1 as POSTCODE_ORIG_ADRC, "Z_RUN_SEQ_ID",
 	--	                				 HASH_SHA256(TO_BINARY(TO_VARCHAR(CITY1)), TO_BINARY(TO_VARCHAR(POST_CODE1)), TO_BINARY(TO_VARCHAR(STREET)), TO_BINARY(TO_VARCHAR(HOUSE_NUM1)), TO_BINARY(TO_VARCHAR(COUNTRY)),
     --									 TO_BINARY(TO_VARCHAR(REGION)), TO_BINARY(TO_VARCHAR(PERS_ADDR)), TO_BINARY(TO_VARCHAR(MC_CITY1)), TO_BINARY(TO_VARCHAR(STREET)), TO_BINARY(TO_VARCHAR(TIME_ZONE)), TO_BINARY(TO_VARCHAR(ADRC_UUID))) as CHECKSUM_ADDR_RMS
     									 (CITY1 || POST_CODE1 || STREET || HOUSE_NUM1 || COUNTRY || REGION || PERS_ADDR || MC_CITY1 || MC_STREET || TIME_ZONE || ADRC_UUID) as ADDR_RMS
 
 		                				 FROM "osr.scv.foundation.db.synonyms::ADRC"
 		                				) as e1
-		                ON a."Cleanse_TABLE_ID_ADRC" = e1."Cleanse_TABLE_ID" AND a."Cleanse_ROW_ID_ADRC" = e1."Z_RUN_SEQ_ID"
+		                ON  a."Cleanse_ROW_ID_ADRC" = e1."Z_RUN_SEQ_ID"
 		                --Phone number-RMS
 		                LEFT OUTER JOIN(
-		                				SELECT TEL_NUMBER, TEL_EXTENS, "Cleanse_TABLE_ID", "Z_RUN_SEQ_ID",
+		                				SELECT TEL_NUMBER, TEL_EXTENS, "Z_RUN_SEQ_ID",
 		                				(TEL_NUMBER || TEL_EXTENS) as TEL_RMS
 		                				FROM "osr.scv.foundation.db.synonyms::ADRC"
 		                				WHERE ( LENGTH(TEL_NUMBER) > 0)
 		                				) e2
-		                ON a."Cleanse_TABLE_ID_ADRC" = e2."Cleanse_TABLE_ID" AND a."Cleanse_ROW_ID_ADRC" = e2."Z_RUN_SEQ_ID"
+		                ON a."Cleanse_ROW_ID_ADRC" = e2."Z_RUN_SEQ_ID"
 		                --Fax number-RMS
 		                LEFT OUTER JOIN(
-		                				SELECT FAX_NUMBER, FAX_EXTENS, "Cleanse_TABLE_ID", "Z_RUN_SEQ_ID",
+		                				SELECT FAX_NUMBER, FAX_EXTENS, "Z_RUN_SEQ_ID",
 		                				(FAX_NUMBER || FAX_EXTENS) as FAX_RMS
 		                				FROM "osr.scv.foundation.db.synonyms::ADRC"
 		                				WHERE ( LENGTH(FAX_NUMBER) > 0)
 		                				) e3
-		                ON a."Cleanse_TABLE_ID_ADRC" = e3."Cleanse_TABLE_ID" AND a."Cleanse_ROW_ID_ADRC" = e3."Z_RUN_SEQ_ID" 
+		                ON a."Cleanse_ROW_ID_ADRC" = e3."Z_RUN_SEQ_ID" 
 		                WHERE a.SOURCE_SYSTEM = 'RMS'
 		                
 		                ORDER  BY ENTITY_ID ASC
@@ -157,12 +157,12 @@ BEGIN
 		                -- Add original fields
 		                --Name and Address-TMR
 		                LEFT OUTER JOIN ( 
-		                			      SELECT DATE_OF_BIRTH, FIRST_NAME, MIDDLE_NAME, FAMILY_ORG_NAME, COUNTRY, STATE, SUBURB, STREET_NAME, STREET_NO, POSTCODE, "Cleanse_TABLE_ID", "Z_RUN_SEQ_ID", "CUSTOMER_REF",
+		                			      SELECT DATE_OF_BIRTH, FIRST_NAME, MIDDLE_NAME, FAMILY_ORG_NAME, COUNTRY, STATE, SUBURB, STREET_NAME, STREET_NO, POSTCODE,  "Z_RUN_SEQ_ID", "CUSTOMER_REF",
 		                			      (FIRST_NAME || MIDDLE_NAME || FAMILY_ORG_NAME || DATE_OF_BIRTH) as PERSON_TMR,
 		                			      (FLOOR || UNIT || BUILDING_NAME || STREET_NO || STREET_NAME || STREET_TYPE || STREET_SUFFIX || SUBURB || POSTCODE || STATE || COUNTRY) as ADDR_TMR
 		                			      FROM "osr.scv.foundation.db.synonyms::TMR_CustMain"
 		                				) as ptmr
-		                ON a."Cleanse_ROW_ID_TMR" = ptmr."Z_RUN_SEQ_ID" AND a."Cleanse_TABLE_ID_TMR" = ptmr."Cleanse_TABLE_ID" AND a."SYSTEM_ID" = ptmr."CUSTOMER_REF" 
+		                ON a."Cleanse_ROW_ID_TMR" = ptmr."Z_RUN_SEQ_ID" AND a."SYSTEM_ID" = ptmr."CUSTOMER_REF" 
 				
 		                --Phone number-TMR
 		                LEFT OUTER JOIN(

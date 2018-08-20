@@ -101,7 +101,7 @@
       },
       "preconditions": [
         {
-          "from": "3",
+          "from": "8",
           "status": "OK"
         }
       ]
@@ -121,6 +121,25 @@
       "preconditions": [
         {
           "from": "6",
+          "status": "OK"
+        }
+      ]
+    },
+    "8": {
+      "inline": {
+        "type": "SUB",
+        "taskGroup": "com.sap.dwf.toe.executionControl",
+        "description": "Copy Match Information",
+        "parameterValues": [
+          {
+            "id": "taskChainId",
+            "value": "src#TC_CopyMatchInfo"
+          }
+        ]
+      },
+      "preconditions": [
+        {
+          "from": "3",
           "status": "OK"
         }
       ]

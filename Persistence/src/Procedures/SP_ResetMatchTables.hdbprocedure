@@ -5,6 +5,9 @@ PROCEDURE "osr.scv.foundation.db.Procedures::SP_ResetMatchTables" ( )
    --READS SQL DATA 
    AS
 BEGIN
+
+
+
    /*************************************
        Write your procedure logic 
    *************************************/
@@ -22,6 +25,6 @@ BEGIN
 	Truncate Table "osr.scv.foundation.db.data::HashResults.MatchResultsHash";
 	--Truncate Table "osr.scv.foundation.db.data::HashResults.MatchResultsHashRMS";
 	
-	   
+
 	   
 END
