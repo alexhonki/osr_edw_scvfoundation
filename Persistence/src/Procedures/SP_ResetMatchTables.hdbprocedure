@@ -17,10 +17,10 @@ BEGIN
 	Truncate Table "osr.scv.foundation.db.data::MatchResults.MatchTracing";
 	Truncate Table "osr.scv.foundation.db.data::MatchResultsReview.Review";
 	Truncate Table "osr.scv.foundation.db.data::MatchResults.MatchGroupInfo";
-	Truncate Table "osr.scv.foundation.db.data::HashResults.SCVRecordHash";
-	Truncate Table "osr.scv.foundation.db.data::HashResults.SCVRecordHashRMS";
+	--Truncate Table "osr.scv.foundation.db.data::HashResults.SCVRecordHash";
+	--Truncate Table "osr.scv.foundation.db.data::HashResults.SCVRecordHashRMS";
 	Truncate Table "osr.scv.foundation.db.data::HashResults.MatchResultsHash";
-	Truncate Table "osr.scv.foundation.db.data::HashResults.MatchResultsHashRMS";
+	--Truncate Table "osr.scv.foundation.db.data::HashResults.MatchResultsHashRMS";
 	
 	   
 	   
