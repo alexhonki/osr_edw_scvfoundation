@@ -53,6 +53,8 @@ BEGIN
 		-- (System) exclude group:	TMR single entities or match groups
 		-- (System) accept group:	Category 2 + category 3 - review group - exclude group
 		-- (System) promote:		Category 3 + Category 4 - identical group - exclude group - match groups with no SCV ID assigned (all records show ADD)
+		
+		-- Delta group:		    Flag for all groups above indicating whether or not a new record has been added to the match
 	
 	lt_delta_indicator_groups = SELECT DISTINCT GROUP_ID, 'X' AS HAS_DELTA
 								FROM "osr.scv.foundation.db.data::MatchResults.MatchResults" mr
@@ -312,9 +314,9 @@ BEGIN
 					  CASE 
 						WHEN STRATEGY_BR_EXCLUDE = 'X' AND LENGTH(ACTION_RES_BR) = 0 THEN 'Error'
 						WHEN STRATEGY_BR_EXCLUDE = 'X' AND LENGTH(ACTION_RES_BR) > 0 THEN 'Success'
-						WHEN STRATEGY_IDENTICAL = 'X' AND LENGTH(ACTION_RES_BR) = 0 THEN (CASE WHEN HAS_DELTA = 'X' THEN 'Success' ELSE 'Neutral' END)
+						WHEN STRATEGY_IDENTICAL = 'X' AND LENGTH(ACTION_RES_BR) = 0 THEN (CASE WHEN HAS_DELTA = 'X' THEN 'Success' ELSE 'None' END)
 						WHEN STRATEGY_IDENTICAL = 'X' AND LENGTH(ACTION_RES_BR) > 0 THEN 'Success'
-						WHEN STRATEGY_SYS_PROMOTE = 'X' AND LENGTH(ACTION_RES_BR) = 0 THEN (CASE WHEN HAS_DELTA = 'X' THEN 'Success' ELSE 'Neutral' END)
+						WHEN STRATEGY_SYS_PROMOTE = 'X' AND LENGTH(ACTION_RES_BR) = 0 THEN (CASE WHEN HAS_DELTA = 'X' THEN 'Success' ELSE 'None' END)
 						WHEN STRATEGY_SYS_PROMOTE = 'X' AND LENGTH(ACTION_RES_BR) > 0 THEN 'Success'
 						WHEN STRATEGY_BR_REVIEW = 'X' AND LENGTH(ACTION_RES_BR) = 0 THEN 'Error'				-- No action -> set to review
 						WHEN STRATEGY_BR_REVIEW = 'X' AND LENGTH(ACTION_RES_BR) > 0 THEN 'Success'				-- User assessment, set to promote
@@ -347,9 +349,9 @@ BEGIN
 					  CASE 
 						WHEN STRATEGY_BR_EXCLUDE = 'X' AND LENGTH(ACTION_RES_BR) = 0 THEN 'Error'
 						WHEN STRATEGY_BR_EXCLUDE = 'X' AND LENGTH(ACTION_RES_BR) > 0 THEN 'Success'
-						WHEN STRATEGY_IDENTICAL = 'X' AND LENGTH(ACTION_RES_BR) = 0 THEN (CASE WHEN HAS_DELTA = 'X' THEN 'Success' ELSE 'Neutral' END)
+						WHEN STRATEGY_IDENTICAL = 'X' AND LENGTH(ACTION_RES_BR) = 0 THEN (CASE WHEN HAS_DELTA = 'X' THEN 'Success' ELSE 'None' END)
 						WHEN STRATEGY_IDENTICAL = 'X' AND LENGTH(ACTION_RES_BR) > 0 THEN 'Success'
-						WHEN STRATEGY_SYS_PROMOTE = 'X' AND LENGTH(ACTION_RES_BR) = 0 THEN (CASE WHEN HAS_DELTA = 'X' THEN 'Success' ELSE 'Neutral' END)
+						WHEN STRATEGY_SYS_PROMOTE = 'X' AND LENGTH(ACTION_RES_BR) = 0 THEN (CASE WHEN HAS_DELTA = 'X' THEN 'Success' ELSE 'None' END)
 						WHEN STRATEGY_SYS_PROMOTE = 'X' AND LENGTH(ACTION_RES_BR) > 0 THEN 'Success'
 						WHEN STRATEGY_BR_REVIEW = 'X' AND LENGTH(ACTION_RES_BR) = 0 THEN 'Error'  -- No action -> set to review
 						WHEN STRATEGY_BR_REVIEW = 'X' AND LENGTH(ACTION_RES_BR) > 0 THEN 'Success' -- User assessment, set to promote
