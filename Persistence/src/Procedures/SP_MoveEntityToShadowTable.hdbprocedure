@@ -41,12 +41,23 @@ BEGIN
 		SELECT ENTITY_ID, STRATEGY_RESOLVED, ACTION_RESOLVED 
 		FROM "osr.scv.foundation.db.data::MatchResultsReview.Review"
 		WHERE STRATEGY_RESOLVED IN ('Identical', 'System Accept', 'Promote', 'System Promote');
+	
+	lt_single_RMS_records = 
+		SELECT ENTITY_ID
+		FROM "osr.scv.foundation.db.data::MatchResults.MatchResults"
+		WHERE "ENTITY_ID" LIKE '0-%' and SOURCE_SYSTEM = 'RMS';
+		
+	lt_entities_total =	SELECT ENTITY_ID FROM :lt_entities
+							UNION ALL
+						SELECT ENTITY_ID FROM :lt_single_RMS_records;	
+
+
 
 	INSERT INTO "osr.scv.foundation.db.data::MatchResults.MatchResultsShadow"
 	(
 		SELECT m.* FROM "osr.scv.foundation.db.data::MatchResults.MatchResults" m
 		INNER JOIN (
-					SELECT * FROM :lt_entities
+					SELECT * FROM :lt_entities_total
 				   ) r
 		ON m.ENTITY_ID = r.ENTITY_ID
 		-- Only move the entities that have changed
