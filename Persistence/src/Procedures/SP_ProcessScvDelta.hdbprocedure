@@ -60,10 +60,69 @@ BEGIN
 		-- 4th iteration
 		CALL "osr.scv.foundation.db.Procedures::SP_GenerateScvDelta"(
 			I_READ_MODE => 3,
+			I_FINAL_READ_MODE => 0,
+			O_RETURN_CODE => :O_RETURN_CODE,
+			O_MESSAGE => :O_MESSAGE
+		);
+	END;
+	
+	BEGIN
+		-- 5th iteration
+		CALL "osr.scv.foundation.db.Procedures::SP_GenerateScvDelta"(
+			I_READ_MODE => 4,
 			I_FINAL_READ_MODE => 1,
 			O_RETURN_CODE => :O_RETURN_CODE,
 			O_MESSAGE => :O_MESSAGE
 		);
 	END;
 	
+	BEGIN
+		-- 6th iteration
+		CALL "osr.scv.foundation.db.Procedures::SP_GenerateScvDelta"(
+			I_READ_MODE => 5,
+			I_FINAL_READ_MODE => 1,
+			O_RETURN_CODE => :O_RETURN_CODE,
+			O_MESSAGE => :O_MESSAGE
+		);
+	END;
+	
+	BEGIN
+		-- 7th iteration
+		CALL "osr.scv.foundation.db.Procedures::SP_GenerateScvDelta"(
+			I_READ_MODE => 6,
+			I_FINAL_READ_MODE => 1,
+			O_RETURN_CODE => :O_RETURN_CODE,
+			O_MESSAGE => :O_MESSAGE
+		);
+	END;
+	
+	BEGIN
+		-- 8th iteration
+		CALL "osr.scv.foundation.db.Procedures::SP_GenerateScvDelta"(
+			I_READ_MODE => 7,
+			I_FINAL_READ_MODE => 1,
+			O_RETURN_CODE => :O_RETURN_CODE,
+			O_MESSAGE => :O_MESSAGE
+		);
+	END;
+	
+	BEGIN
+		-- 9th iteration
+		CALL "osr.scv.foundation.db.Procedures::SP_GenerateScvDelta"(
+			I_READ_MODE => 8,
+			I_FINAL_READ_MODE => 1,
+			O_RETURN_CODE => :O_RETURN_CODE,
+			O_MESSAGE => :O_MESSAGE
+		);
+	END;
+	
+	BEGIN
+		-- 10th iteration
+		CALL "osr.scv.foundation.db.Procedures::SP_GenerateScvDelta"(
+			I_READ_MODE => 9,
+			I_FINAL_READ_MODE => 1,
+			O_RETURN_CODE => :O_RETURN_CODE,
+			O_MESSAGE => :O_MESSAGE
+		);
+	END;
 END
