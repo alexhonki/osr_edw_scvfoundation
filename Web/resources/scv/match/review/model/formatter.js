@@ -91,7 +91,11 @@ sap.ui.define([
 				} else {
 					if (iValue === 'Split' || !iValue) {	
 					return ValueState.Warning;
-					}else {
+					}
+					else if (iValue === 'Neutral' || !iValue) {
+						return ValueState.None;	
+					}
+					else {
 					return ValueState.Success;
 					}
 				}
