@@ -220,7 +220,7 @@
 										<Label text="Strategy" />
 										<t:template>
 											<ObjectStatus text="{STRATEGY_RESOLVED}"
-											              state="{ path: 'STRATEGY_RESOLVED', formatter: '.formatter.strategyState' }"
+											              state="{= ${STRATEGY_RESOLVED_STATUS} }"
 											              wrapping="false" />
 										</t:template>
 									</t:Column>
@@ -231,7 +231,7 @@
 										<Label text="Action" />
 										<t:template>
 											<ObjectStatus text="{ACTION_RESOLVED}"
-											              state="{ path: 'ACTION_RESOLVED', formatter: '.formatter.actionState' }" />
+											              state="{= ${ACTION_RESOLVED_STATUS} }" />
 										</t:template>
 									</t:Column>
 									<t:Column id="navigation"
