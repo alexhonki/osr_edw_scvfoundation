@@ -111,7 +111,6 @@ return	SELECT
        "MATCH_PERSON_MATPOST" ,
        "MATCH_PERSON_MATPOST_STD" ,
        "MATCH_PERSON", 
-       "Cleanse_TABLE_ID" ,
        "BIRTHDT",
        "NAME_LAST",
        "NAME_FIRST",
