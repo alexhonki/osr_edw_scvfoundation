@@ -1025,8 +1025,8 @@ lt_address_entities_date_tmr =
 	-- ### Update SCV Foundation #################################################################################################
 	-- Reason for the Commit: all the SCV foundation table need to be loaded before the below procedure can run. These procedure use the write data in the tables in calculations.
 	COMMIT; 
-	CALL "osr.scv.foundation.db.Procedures::SP_UpdateAddressScvRecords"(L_LOAD_ID => :l_load_id);
-	CALL "osr.scv.foundation.db.Procedures::SP_UpdateInactiveScvRecords"();
+	CALL "osr.scv.foundation.db.Procedures::SP_UpdateAddressSCVRecords"(L_LOAD_ID => :l_load_id);
+	CALL "osr.scv.foundation.db.Procedures::SP_UpdateInactiveSCVRecords"();
 	CALL "osr.scv.foundation.db.Procedures::SP_UpdateEntityVisibility"();
 	
 	-- ### Write statistics ######################################################################################################
