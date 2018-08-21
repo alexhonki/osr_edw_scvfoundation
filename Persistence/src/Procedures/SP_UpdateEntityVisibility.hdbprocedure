@@ -1,0 +1,21 @@
+PROCEDURE "osr.scv.foundation.db.Procedures::SP_UpdateEntityVisibility" ( )
+   LANGUAGE SQLSCRIPT
+   SQL SECURITY INVOKER
+   AS
+BEGIN
+   
+   /*************************************
+       Updates whether or not a SCV entity can be seen in the SCV API and Explorer 
+   *************************************/
+   
+   -- Set all SCV entities to hidden
+   UPDATE "osr.scv.foundation.db.data::SCVFoundation.Master" SET IS_HIDDEN = 'X';
+   
+   lt_visible_entities = SELECT DISTINCT SCV_ID FROM "osr.scv.foundation.db.data::SCVFoundation.PersonRms";
+   
+   -- Only allow access to SCV entities with a related RMS record
+   UPDATE "osr.scv.foundation.db.data::SCVFoundation.Master" SET IS_HIDDEN = ''
+   WHERE SCV_ID IN (SELECT SCV_ID FROM :lt_visible_entities)
+   ;
+   
+END
