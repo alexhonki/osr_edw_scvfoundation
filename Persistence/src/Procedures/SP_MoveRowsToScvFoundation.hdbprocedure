@@ -216,8 +216,8 @@ BEGIN
 										;
 
 		-- Filter out any SCV_ID's that only contain TMR records.
-		DELETE FROM #lt_entity_mapping WHERE SCV_ID NOT IN (SELECT DISTINCT SCV_ID FROM #lt_entity_mapping
-										WHERE SOURCE_SYSTEM = 'RMS');
+--		DELETE FROM #lt_entity_mapping WHERE SCV_ID NOT IN (SELECT DISTINCT SCV_ID FROM #lt_entity_mapping
+--										WHERE SOURCE_SYSTEM = 'RMS');
 										
 		-- Filter out any records that are duplicates.											
 		DELETE FROM #lt_entity_mapping WHERE MATCH_ROW_ID IN (SELECT a."Match_ROW_ID" FROM "osr.scv.foundation.db.data::MatchResults.MatchResultsShadow" a
