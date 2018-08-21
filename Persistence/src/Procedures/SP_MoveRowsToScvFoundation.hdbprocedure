@@ -1027,6 +1027,7 @@ lt_address_entities_date_tmr =
 	COMMIT; 
 	CALL "osr.scv.foundation.db.Procedures::SP_UpdateAddressSCVRecords"(L_LOAD_ID => :l_load_id);
 	CALL "osr.scv.foundation.db.Procedures::SP_UpdateInactiveSCVRecords"();
+	CALL "osr.scv.foundation.db.Procedures::SP_UpdateEntityVisibility"();
 	
 	-- ### Write statistics ######################################################################################################
 
