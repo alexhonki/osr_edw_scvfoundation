@@ -1,0 +1,25 @@
+FUNCTION "osr.scv.foundation.db.functions::MatchDelta" (  )
+       RETURNS TABLE (	
+    					MATCH_ROW_ID INTEGER,
+    					SCV_ID NVARCHAR(20),
+						ACTION NVARCHAR(10)
+        			  )
+       SQL SECURITY INVOKER AS 
+BEGIN 
+	/*****************************  
+       Project match delta
+	*****************************/ 
+
+				RETURN 
+					SELECT MATCH_ROW AS MATCH_ROW_ID, SCV_ID, DELTA_STATUS AS ACTION
+					FROM
+					(
+						SELECT *,
+							   ROW_NUMBER() OVER (PARTITION BY MATCH_ROW ORDER BY POLICY_NAME, SCORE DESC) AS GROUP_ROW_COUNT
+						FROM 
+						(
+							SELECT * FROM "osr.scv.foundation.db.data::MatchResults.Delta"
+						)
+					) WHERE GROUP_ROW_COUNT = 1
+					;
+END;
