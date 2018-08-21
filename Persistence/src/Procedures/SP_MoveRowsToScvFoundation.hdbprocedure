@@ -231,7 +231,7 @@ BEGIN
 										
 		-- Fill auto-promotions, rejects and accepts into SCV master table. Only where records do not have an SCV_ID automatically assigned. An example is when a brand new entity is formed. 
 		INSERT INTO "osr.scv.foundation.db.data::SCVFoundation.Master" (
-				SELECT DISTINCT SCV_ID, CURRENT_DATE, null,CURRENT_USER, null, null, null, REJECTED_IDS  FROM (
+				SELECT DISTINCT SCV_ID, CURRENT_DATE, null,CURRENT_USER, null, null, null, REJECTED_IDS, null  FROM (
 				SELECT a.SCV_ID, b.REJECTED_IDS FROM #lt_entity_mapping a
 				LEFT OUTER JOIN :lt_reject_master_scv_ids b
 				ON a.SCV_ID = b.SCV_ID

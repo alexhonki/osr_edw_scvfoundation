@@ -38,6 +38,7 @@ context SCVFoundation {
             MASTER_SCV_ID : Integer;
             IS_MASTER     : String(1);
             REJECTED_IDS  : String(200);
+            IS_HIDDEN     : String(1);
     };
 
     /*@@layout{"layoutInfo":{}}*/

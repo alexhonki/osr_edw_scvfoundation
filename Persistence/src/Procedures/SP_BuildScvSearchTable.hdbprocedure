@@ -56,7 +56,8 @@ BEGIN
 										GROUP BY STD_ADDR_PRIM_TYPE, LOWER(ADDR_TYPE)
 									) GROUP BY STD_ADDR_PRIM_TYPE) c
 					ON b.STD_ADDR_PRIM_TYPE = c.STD_ADDR_PRIM_TYPE
-			   )
+			   ) 
+			   WHERE SCV_ID IN (SELECT SCV_ID FROM "osr.scv.foundation.db.data::SCVFoundation.Master" WHERE IS_HIDDEN != 'X')
 	);
 	
 	-- 2. Add TMR data
@@ -96,7 +97,7 @@ BEGIN
 								GROUP BY STD_ADDR_PRIM_TYPE, LOWER(ADDR_TYPE)
 							) GROUP BY STD_ADDR_PRIM_TYPE) c
 					ON b.STD_ADDR_PRIM_TYPE = c.STD_ADDR_PRIM_TYPE
-		)
+		) WHERE SCV_ID IN (SELECT SCV_ID FROM "osr.scv.foundation.db.data::SCVFoundation.Master" WHERE IS_HIDDEN != 'X')
 	);
    
 END
