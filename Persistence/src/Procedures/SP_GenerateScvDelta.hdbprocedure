@@ -43,7 +43,7 @@ BEGIN
 	ELSE
 		lt_master = SELECT * FROM "osr.scv.foundation.db.data::MatchResults.Delta";
 	END IF;
-	
+
 	-- Resolve SCV ID level 1
 	lt_master = 
 		SELECT m0.MATCH_ROW, m0.RELATED_ROW, m0.POLICY_NAME, m0.SCORE, COALESCE(m0.SCV_ID, m1.SCV_ID) as SCV_ID,  m0.GROUP_INDEX, m0.DELTA_STATUS
