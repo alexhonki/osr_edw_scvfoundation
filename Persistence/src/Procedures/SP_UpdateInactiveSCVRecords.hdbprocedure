@@ -1,7 +1,7 @@
 /*
 	Write some statistics about the latest SCV full/delta update
 */
-PROCEDURE "osr.scv.foundation.db.Procedures::SP_UpdateInactiveScvRecords" (
+PROCEDURE "osr.scv.foundation.db.Procedures::SP_UpdateInactiveSCVRecords" (
 
 )
 	LANGUAGE SQLSCRIPT
