@@ -19,7 +19,7 @@
         "parameterValues": [
           {
             "id": "taskChainId",
-            "value": "src#TC_Match"
+            "value": "src#TC_RunMatch"
           }
         ]
       },
@@ -38,7 +38,7 @@
         "parameterValues": [
           {
             "id": "taskChainId",
-            "value": "src#TC_MatchResultsHash"
+            "value": "src#TC_GenerateMatchResultsHash"
           }
         ]
       },
@@ -57,7 +57,7 @@
         "parameterValues": [
           {
             "id": "taskChainId",
-            "value": "src#TC_ResetmatchTables"
+            "value": "src#TC_ResetMatchTables"
           }
         ]
       },
@@ -76,7 +76,7 @@
         "parameterValues": [
           {
             "id": "taskChainId",
-            "value": "src#TC_SubGroups"
+            "value": "src#TC_GenerateSubGroups"
           }
         ]
       },

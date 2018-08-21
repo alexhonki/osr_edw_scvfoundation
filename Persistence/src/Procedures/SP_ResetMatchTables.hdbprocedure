@@ -6,25 +6,18 @@ PROCEDURE "osr.scv.foundation.db.Procedures::SP_ResetMatchTables" ( )
    AS
 BEGIN
 
-
-
    /*************************************
-       Write your procedure logic 
+      Reset match tables
    *************************************/
+   
 	Truncate Table "osr.scv.foundation.db.data::MatchResults.MatchResultsShadow";	
 	Truncate Table "osr.scv.foundation.db.data::MatchResultsReview.ReviewShadow";	
-	--Truncate Table "osr.scv.foundation.db.data::MatchResults.MatchDelta";	
 	Truncate Table "osr.scv.foundation.db.data::MatchResults.MatchResults";	
 	Truncate Table "osr.scv.foundation.db.data::MatchResultsReview.Assessments";	
 	Truncate Table "osr.scv.foundation.db.data::MatchResultsReview.Promotions";	
 	Truncate Table "osr.scv.foundation.db.data::MatchResults.MatchTracing";
 	Truncate Table "osr.scv.foundation.db.data::MatchResultsReview.Review";
 	Truncate Table "osr.scv.foundation.db.data::MatchResults.MatchGroupInfo";
-	--Truncate Table "osr.scv.foundation.db.data::HashResults.SCVRecordHash";
-	--Truncate Table "osr.scv.foundation.db.data::HashResults.SCVRecordHashRMS";
 	Truncate Table "osr.scv.foundation.db.data::HashResults.MatchResultsHash";
-	--Truncate Table "osr.scv.foundation.db.data::HashResults.MatchResultsHashRMS";
-	
-
 	   
 END

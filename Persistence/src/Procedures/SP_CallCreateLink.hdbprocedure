@@ -5,7 +5,7 @@ PROCEDURE "osr.scv.foundation.db.Procedures::SP_CallCreateLink" ( )
    AS
 BEGIN
    /*************************************
-       Write your procedure logic 
+       Wrapper procedure: Link SCV entities
    *************************************/
    
    lt_temp = SELECT 2 as SCV_MASTER_ID, 3 as SCV_SLAVE_ID FROM "synonyms::dummy";

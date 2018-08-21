@@ -1,17 +1,15 @@
 PROCEDURE "osr.scv.foundation.db.Procedures::SP_CopyMatchinfo" ( )
    LANGUAGE SQLSCRIPT
    SQL SECURITY INVOKER
-   --DEFAULT SCHEMA <default_schema_name>
-   --READS SQL DATA 
    AS
 BEGIN
+   
    /*************************************
       Copy Tracing Tables 
    *************************************/
    
 	DECLARE l_latestExecutionID INTEGER;
 	 
-
 	-- Retrieve latest task execution ID
 	SELECT MAX(TASK_EXECUTION_ID) INTO l_latestExecutionID 
 	FROM "osr.scv.foundation.db.synonyms::MATCH_TRACING" 
@@ -36,6 +34,5 @@ BEGIN
 	-- Clear statistics table first
 	TRUNCATE TABLE "osr.scv.foundation.db.data::MatchResults.MatchGroupInfo";
 	INSERT INTO "osr.scv.foundation.db.data::MatchResults.MatchGroupInfo" (SELECT * FROM :lt_latest_match_group_counts);
-   
    
 END

@@ -50,41 +50,42 @@ BEGIN
 		WHERE mr."ENTITY_ID" LIKE '0-%' and mr.SOURCE_SYSTEM = 'RMS' AND LENGTH(sb.BIRTHDT) > 7;	   	
 		
 	lt_entities_total =	SELECT * FROM :lt_entities
-							UNION ALL
+						UNION ALL
 						SELECT * FROM :lt_single_RMS_records;	
 
-
-
-	INSERT INTO "osr.scv.foundation.db.data::MatchResults.MatchResultsShadow"
-	(
-		SELECT m.* FROM "osr.scv.foundation.db.data::MatchResults.MatchResults" m
-		INNER JOIN (
-					SELECT DISTINCT ENTITY_ID FROM :lt_entities_total
-				   ) r
-		ON m.ENTITY_ID = r.ENTITY_ID
-		-- Only move the entities that have changed
-		INNER JOIN (
-					SELECT DISTINCT * FROM "osr.scv.foundation.db.data::MatchResults.MatchDelta"
-				   ) d
-		ON m."Match_ROW_ID" = d.MATCH_ROW_ID
-		WHERE d.ACTION = 'New'
-	);
+	lt_update = 
+		(
+			SELECT m.* FROM "osr.scv.foundation.db.data::MatchResults.MatchResults" m
+			INNER JOIN (
+						SELECT DISTINCT ENTITY_ID FROM :lt_entities_total
+					   ) r
+			ON m.ENTITY_ID = r.ENTITY_ID
+			-- Only move the entities that have changed
+			INNER JOIN (
+						SELECT DISTINCT * FROM "osr.scv.foundation.db.data::MatchResults.MatchDelta"
+					   ) d
+			ON m."Match_ROW_ID" = d.MATCH_ROW_ID
+			WHERE d.ACTION = 'New'
+		);
 	
-	-- TODO: Remove comments to activate deletion of moved records from match results and match review table
-	-- Delete from match results table
-	-- DELETE FROM "osr.scv.foundation.db.data::MatchResults.MatchResults" WHERE ENTITY_ID IN (SELECT ENTITY_ID FROM :lt_entities);
+	INSERT INTO "osr.scv.foundation.db.data::MatchResults.MatchResultsShadow" (SELECT * FROM :lt_update);
+	
+	-- Delete from match results table what has been moved into shadow table
+	 DELETE FROM "osr.scv.foundation.db.data::MatchResults.MatchResults" WHERE ENTITY_ID IN (SELECT ENTITY_ID FROM :lt_update);
 	   
 	-- Delete from main UI review table
-	-- DELETE FROM "osr.scv.foundation.db.data::MatchResultsReview.Review" WHERE ENTITY_ID IN (SELECT ENTITY_ID FROM :lt_entities);
+	DELETE FROM "osr.scv.foundation.db.data::MatchResultsReview.Review" WHERE ENTITY_ID IN (SELECT ENTITY_ID FROM :lt_update);
 	
 	-- Update statistics
-	INSERT INTO  "osr.scv.foundation.db.data::MatchResultsReview.Promotions" (SELECT e.ENTITY_ID, :i_timestamp, :i_user, e.ACTION_RESOLVED as ACTION, e.STRATEGY_RESOLVED AS STRATEGY  
-																			  FROM :lt_entities_total e
-																			  INNER JOIN (
-																							SELECT DISTINCT ENTITY_ID FROM "osr.scv.foundation.db.data::MatchResults.MatchResultsShadow"
-																					     ) d
+	INSERT INTO  "osr.scv.foundation.db.data::MatchResultsReview.Promotions" 
+	(
+		SELECT e.ENTITY_ID, :i_timestamp, :i_user, e.ACTION_RESOLVED as ACTION, e.STRATEGY_RESOLVED AS STRATEGY  
+		FROM :lt_entities_total e
+		INNER JOIN (
+		SELECT DISTINCT ENTITY_ID FROM "osr.scv.foundation.db.data::MatchResults.MatchResultsShadow"
+		) d
 		ON e.ENTITY_ID = d.ENTITY_ID
-																			  );
+	);
 	
 	-- o_return_code := 'SUCCESS';
 	-- o_message := 'Entites moved successfully';
