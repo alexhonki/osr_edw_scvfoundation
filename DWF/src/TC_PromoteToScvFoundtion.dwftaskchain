@@ -57,7 +57,7 @@
         "parameterValues": [
           {
             "id": "taskChainId",
-            "value": "src#TC_SCVSearchTable"
+            "value": "src#TC_GenerateScvSearchTable"
           }
         ]
       },

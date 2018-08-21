@@ -6,7 +6,7 @@ PROCEDURE "osr.scv.foundation.db.Procedures::SP_MatchRecordHash" ( )
    AS
 BEGIN
    /*************************************
-       Write your procedure logic 
+       Generate match row hash 
    *************************************/
    
    TRUNCATE TABLE "osr.scv.foundation.db.data::HashResults.MatchResultsHash";

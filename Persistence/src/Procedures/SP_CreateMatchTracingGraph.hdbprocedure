@@ -4,6 +4,7 @@ PROCEDURE "osr.scv.foundation.db.Procedures::SP_CreateMatchTracingGraph" ( )
    --DEFAULT SCHEMA <default_schema_name>
    AS
 BEGIN
+   
    /*************************************
        Create match tracing graph
    *************************************/
@@ -48,6 +49,5 @@ BEGIN
 	KEY COLUMN "NAME"
 
 	*/
-   
    
 END

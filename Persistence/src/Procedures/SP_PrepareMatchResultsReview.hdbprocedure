@@ -9,34 +9,7 @@ BEGIN
    /*************************************
        Prepare match results review 
    *************************************/
-  /* 
-   DECLARE l_latestExecutionID INTEGER;
-
-	-- Retrieve latest task execution ID
-	SELECT MAX(TASK_EXECUTION_ID) INTO l_latestExecutionID 
-	FROM "osr.scv.foundation.db.synonyms::MATCH_TRACING" 
-	WHERE TASK_NAME = 'osr.scv.foundation.db.flowgraphs::MatchBusinessPartners';
 	
-	-- Copy match tracing statistics
-	lt_latest_match_tracing_stats = SELECT ROW_ID, RELATED_ROW_ID, POLICY_NAME, RULE_NAME, SCORE 
-		FROM "osr.scv.foundation.db.synonyms::MATCH_TRACING" 
-		WHERE TASK_NAME = 'osr.scv.foundation.db.flowgraphs::MatchBusinessPartners'
-			AND TASK_EXECUTION_ID = :l_latestExecutionID;
-	
-	-- Clear statistics table first
-	TRUNCATE TABLE "osr.scv.foundation.db.data::MatchResults.MatchTracing";
-	INSERT INTO "osr.scv.foundation.db.data::MatchResults.MatchTracing" (SELECT * FROM :lt_latest_match_tracing_stats);
-		
-	-- Copy match group statistics
-	lt_latest_match_group_counts = SELECT GROUP_ID, GROUP_COUNT 
-		FROM "osr.scv.foundation.db.synonyms::MATCH_GROUP_INFO" 
-		WHERE TASK_NAME = 'osr.scv.foundation.db.flowgraphs::MatchBusinessPartners'
-			AND TASK_EXECUTION_ID = :l_latestExecutionID;
-	
-	-- Clear statistics table first
-	TRUNCATE TABLE "osr.scv.foundation.db.data::MatchResults.MatchGroupInfo";
-	INSERT INTO "osr.scv.foundation.db.data::MatchResults.MatchGroupInfo" (SELECT * FROM :lt_latest_match_group_counts);
-	*/
 	-- Identify match groups with multiple RMS business partners
 	lt_rms_duplicate_groups = SELECT GROUP_ID, SOURCE_SYSTEM
 							  FROM "osr.scv.foundation.db.data::MatchResults.MatchResults"
