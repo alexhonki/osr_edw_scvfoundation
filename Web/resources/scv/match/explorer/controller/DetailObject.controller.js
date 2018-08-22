@@ -216,7 +216,7 @@ sap.ui.define([
 			oController.getModel("scvExplorerModel").read("/personParameters(IP_SCV_ID='" + sScvId + "')/Results", {
 				//both url to filter and order the result set.
 				urlParameters: {
-					"$orderby": "SOURCE desc,UPDATED_AT desc, VALID_TO desc",
+					"$orderby": "SOURCE desc,UPDATED_AT desc, VALID_TO desc, RMS_SCV_LOAD_ID desc",
 					"$filter": "substringof('9999',S_VALID_TO)"
 				},
 				success: function(data) {
