@@ -1,9 +1,9 @@
-FUNCTION "osr.scv.foundation.db.functions.Util::UtilSplitStringColumns" (i_string NVARCHAR(4096),i_separator NVARCHAR(1) DEFAULT ',' )
-     RETURNS OT_RESULT1 NVARCHAR(1024),
-		    OT_RESULT2 NVARCHAR(1024),												
-			OT_RESULT3 NVARCHAR(1024),												
-			OT_RESULT4 NVARCHAR(1024),												
-			OT_RESULT5 NVARCHAR(1024)
+FUNCTION "osr.scv.foundation.db.functions.Util::UtilSplitStringColumns" (i_string STRING,i_separator NVARCHAR(1) DEFAULT ',' )
+     RETURNS OT_RESULT1 STRING,
+		    OT_RESULT2 STRING,												
+			OT_RESULT3 STRING,												
+			OT_RESULT4 STRING,												
+			OT_RESULT5 STRING
        LANGUAGE SQLSCRIPT 
        SQL SECURITY INVOKER AS 
 BEGIN 
