@@ -1,9 +1,9 @@
-FUNCTION "osr.scv.foundation.db.functions.Util::UtilSplitStringColumns" ( i_string NVARCHAR(4096),i_separator NVARCHAR(1) DEFAULT ',' )
-    RETURNS ot_result1     STRING,
-		    ot_result2 	STRING,												
-			ot_result3 	STRING,												
-			ot_result4		STRING,												
-			ot_result5     STRING	 
+FUNCTION "osr.scv.foundation.db.functions.Util::UtilSplitStringColumns" (i_string NVARCHAR(4096),i_separator NVARCHAR(1) DEFAULT ',' )
+     RETURNS OT_RESULT1 NVARCHAR(1024),
+		    OT_RESULT2 NVARCHAR(1024),												
+			OT_RESULT3 NVARCHAR(1024),												
+			OT_RESULT4 NVARCHAR(1024),												
+			OT_RESULT5 NVARCHAR(1024)
        LANGUAGE SQLSCRIPT 
        SQL SECURITY INVOKER AS 
 BEGIN 
@@ -13,10 +13,9 @@ BEGIN
 		Author: Balakumar Ganesan, SAP
 		 			
 	*/
- declare l_splitted STRING;
+declare l_splitted STRING;
 declare l_removeEmpty char(1) := 'X';
 declare l_counter NVARCHAR(1) := 0;
-
 
 
 if right(:i_string,1) <> :i_separator then
@@ -31,25 +30,26 @@ l_splitted = SUBSTR_BEFORE (:i_string,:i_separator);
  if not(:l_removeEmpty = 'X' and :l_splitted = '') then
  
  if :l_counter = 1 then
-  ot_result1 = :l_splitted;
+  OT_RESULT1 = :l_splitted;
  end if; 
  
  if :l_counter = 2 then
-  ot_result2 = :l_splitted;
+  OT_RESULT2 = :l_splitted;
  end if; 
  
  if :l_counter = 3 then
-  ot_result3 = :l_splitted;
+  OT_RESULT3 = :l_splitted;
  end if; 
  
  if :l_counter = 4 then
-  ot_result4 = :l_splitted;
+  OT_RESULT4 = :l_splitted;
  end if; 
  
  if :l_counter = 5 then
-  ot_result5 = :l_splitted;
+  OT_RESULT5 = :l_splitted;
  end if; 
  
 end if;
 end while;
+
 END;
