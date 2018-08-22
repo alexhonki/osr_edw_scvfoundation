@@ -55,13 +55,14 @@ BEGIN
 		-- (System) promote:		Category 3 + Category 4 - identical group - exclude group - match groups with no SCV ID assigned (all records show ADD)
 		
 		-- Delta group:		    Flag for all groups above indicating whether or not a new record has been added to the match
-	
+BEGIN	
 	lt_delta_indicator_groups = SELECT DISTINCT GROUP_ID, 'X' AS HAS_DELTA
 								FROM "osr.scv.foundation.db.data::MatchResults.MatchResults" mr
 								LEFT OUTER JOIN "osr.scv.foundation.db.data::MatchResults.Delta" md
 								ON mr."Match_ROW_ID" = md.MATCH_ROW
 								WHERE md.DELTA_STATUS = 'New';
-	
+END;
+BEGIN
 	lt_identical_groups = SELECT DISTINCT GROUP_ID, 'X' AS STRATEGY_IDENTICAL
 						  FROM "osr.scv.foundation.db.data::MatchResults.MatchResults" 
 						  WHERE GROUP_CATEGORY IN (0,1)
@@ -73,7 +74,8 @@ BEGIN
 												WHERE b.POLICY_NAME LIKE '%Phone%'
 											  )
 	;
-	
+END;
+BEGIN
 	lt_exclude_groups = SELECT DISTINCT GROUP_ID, 'X' AS STRATEGY_BR_EXCLUDE
 						FROM "osr.scv.foundation.db.data::MatchResults.MatchResults"
 						GROUP BY GROUP_ID
@@ -82,12 +84,14 @@ BEGIN
 							AND GROUP_ID IS NOT NULL 
 							AND MAX(SOURCE_SYSTEM) = 'TMR' 
 							AND MIN(SOURCE_SYSTEM) = 'TMR';
-	
+END;
+BEGIN
 	lt_match_groups_with_delta_scv_id = SELECT DISTINCT GROUP_ID FROM "osr.scv.foundation.db.data::MatchResults.MatchResults" mr
 										INNER JOIN "osr.scv.foundation.db.data::MatchResults.MatchDelta" md
 										ON mr."Match_ROW_ID" = md.MATCH_ROW_ID
-										WHERE md.SCV_ID > 0;
-								
+										WHERE md.SCV_ID > 0 AND GROUP_ID IS NOT NULL;
+END;
+BEGIN
 	lt_system_promote_groups = SELECT DISTINCT m.GROUP_ID, 'X' AS STRATEGY_SYS_PROMOTE
 						FROM "osr.scv.foundation.db.data::MatchResults.MatchResults" m
 						INNER JOIN "osr.scv.foundation.db.data::MatchResults.MatchTracing" s
@@ -97,7 +101,8 @@ BEGIN
 							AND GROUP_ID NOT IN (SELECT GROUP_ID FROM :lt_exclude_groups)
 							AND GROUP_ID IN (SELECT * FROM :lt_match_groups_with_delta_scv_id)
 						;
-
+END;
+BEGIN
 	lt_review_groups = 	SELECT DISTINCT m.GROUP_ID, 'X' AS STRATEGY_BR_REVIEW
 						FROM "osr.scv.foundation.db.data::MatchResults.MatchResults" m
 						INNER JOIN "osr.scv.foundation.db.data::MatchResults.MatchTracing" s
@@ -107,14 +112,16 @@ BEGIN
 							AND GROUP_ID NOT IN (SELECT GROUP_ID FROM :lt_exclude_groups)
 							AND GROUP_ID NOT IN (SELECT * FROM :lt_match_groups_with_delta_scv_id)
 						;
-							
+END;
+BEGIN							
 	lt_accept_groups = SELECT DISTINCT GROUP_ID, 'X' AS STRATEGY_BR_ACCEPT 
 					   FROM "osr.scv.foundation.db.data::MatchResults.MatchResults" 
 					   WHERE GROUP_CATEGORY IN (2,3)
 						AND GROUP_ID NOT IN (SELECT GROUP_ID FROM :lt_review_groups)
 						AND GROUP_ID NOT IN (SELECT GROUP_ID FROM :lt_exclude_groups)
 						AND GROUP_ID NOT IN (SELECT GROUP_ID FROM :lt_identical_groups);
-	
+END;
+BEGIN	
 	lt_overview =
 	
 		SELECT * FROM (
@@ -242,7 +249,7 @@ BEGIN
                 	*/
 		)
 		;
-	
+END;	
 	return 
 	
 		-- Wrap to exclude business rules
@@ -367,6 +374,7 @@ BEGIN
 					  HAS_DELTA
 			FROM :lt_overview
 		);
+
 	
 	-- TODO: Apply view filter here
 
