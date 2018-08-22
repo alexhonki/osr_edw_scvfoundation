@@ -7,7 +7,7 @@ service {
 
 	"osr.scv.foundation.db.views.Explorer::CV_PersonByScvId" as "person"
 	with("SCV_ID", "SOURCE", "SOURCE_ID", "UPDATED_AT", "BIRTH_DATE", "DEATH_DATE", "STD_PERSON_GN", 
-	"STD_PERSON_GN2", "STD_PERSON_FN", "VALID_FROM", "VALID_TO", "S_VALID_FROM", "S_VALID_TO", "INACTIVE")
+	"STD_PERSON_GN2", "STD_PERSON_FN", "VALID_FROM", "VALID_TO", "S_VALID_FROM", "S_VALID_TO", "INACTIVE", "RMS_SCV_LOAD_ID")
 	keys generate local "UNIQUE_ID"
 	parameters via entity
 	create forbidden 

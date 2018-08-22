@@ -65,6 +65,10 @@
       <viewAttribute id="INACTIVE">
         <descriptions defaultDescription="INACTIVE"/>
       </viewAttribute>
+    
+      <viewAttribute id="RMS_SCV_LOAD_ID" aggregationType="sum">
+        <descriptions defaultDescription="SCV_LOAD_ID"/>
+      </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes>
       <calculatedViewAttribute id="S_VALID_FROM" datatype="VARCHAR" length="10" expressionLanguage="SQL">
@@ -91,6 +95,8 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="STD_PERSON_FN" source="STD_PERSON_FN"/>
     
       <mapping xsi:type="Calculation:AttributeMapping" target="INACTIVE" source="INACTIVE"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="RMS_SCV_LOAD_ID" source="SCV_LOAD_ID"/>
     </input>
     <filter>(&quot;SCV_ID&quot; = '$$IP_SCV_ID$$')</filter>
   </calculationView>
@@ -223,6 +229,10 @@
       <viewAttribute id="INACTIVE">
         <descriptions defaultDescription="INACTIVE"/>
       </viewAttribute>
+    
+      <viewAttribute id="RMS_SCV_LOAD_ID" aggregationType="sum">
+        <descriptions defaultDescription="SCV_LOAD_ID"/>
+      </viewAttribute>
     </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
@@ -246,6 +256,8 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="S_VALID_TO" source="S_VALID_TO"/>
     
       <mapping xsi:type="Calculation:ConstantAttributeMapping" target="INACTIVE" null="true" value=""/>
+    
+      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="RMS_SCV_LOAD_ID" null="true" value=""/>
     </input>
     <input node="PersonRMS" emptyUnionBehavior="NO_ROW">
       <mapping xsi:type="Calculation:AttributeMapping" target="SCV_ID" source="SCV_ID"/>
@@ -267,6 +279,8 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="S_VALID_TO" source="S_VALID_TO"/>
     
       <mapping xsi:type="Calculation:AttributeMapping" target="INACTIVE" source="INACTIVE"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="RMS_SCV_LOAD_ID" source="RMS_SCV_LOAD_ID"/>
     </input>
   </calculationView>
 </calculationViews>
@@ -345,6 +359,11 @@
   
       <keyMapping columnObjectName="PersonUnion" columnName="INACTIVE"/>
   
+    </attribute>
+  
+    <attribute id="RMS_SCV_LOAD_ID" order="18" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="SCV_LOAD_ID"/>
+      <keyMapping columnObjectName="PersonUnion" columnName="RMS_SCV_LOAD_ID"/>
     </attribute>
   </attributes>
   <calculatedAttributes/>
