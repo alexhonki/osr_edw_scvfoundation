@@ -11,19 +11,28 @@ BEGIN
 	-- Replace with delta mechanism instead of deleting whole table
 	TRUNCATE TABLE "osr.scv.foundation.db.data::SCVFoundation.Search";
 	
-	-- Create lookup table
-	lt_addr_type_lookup = SELECT STD_ADDR_PRIM_TYPE, STRING_AGG(LOWER_TYPE, ' ') FROM 
-						  (
-							SELECT STD_ADDR_PRIM_TYPE, LOWER(ADDR_TYPE) AS LOWER_TYPE FROM "osr.scv.foundation.db.data::SCVPrimType.AddrType"
-							GROUP BY STD_ADDR_PRIM_TYPE, LOWER(ADDR_TYPE)
-						   ) 
-						   GROUP BY STD_ADDR_PRIM_TYPE;
-	
+-- Create lookup table to get the mapping for cleansed address type --
+	lt_addr_type_lookup = SELECT STD_ADDR_PRIM_TYPE,
+	                       "osr.scv.foundation.db.functions.Util::UtilSplitStringColumnSinglePos"(ADDR_TYPE_ADD,'&','1').OT_RESULT AS ADDR_TYPE_ADD_1,
+							"osr.scv.foundation.db.functions.Util::UtilSplitStringColumnSinglePos"(ADDR_TYPE_ADD,'&','2').OT_RESULT AS ADDR_TYPE_ADD_2,
+							"osr.scv.foundation.db.functions.Util::UtilSplitStringColumnSinglePos"(ADDR_TYPE_ADD,'&','3').OT_RESULT AS ADDR_TYPE_ADD_3,
+							"osr.scv.foundation.db.functions.Util::UtilSplitStringColumnSinglePos"(ADDR_TYPE_ADD,'&','4').OT_RESULT AS ADDR_TYPE_ADD_4,
+							"osr.scv.foundation.db.functions.Util::UtilSplitStringColumnSinglePos"(ADDR_TYPE_ADD,'&','5').OT_RESULT AS ADDR_TYPE_ADD_5
+							FROM 
+						(
+	                       SELECT STD_ADDR_PRIM_TYPE, STD_ADDR_PRIM_TYPE  || '&' || STRING_AGG(LOWER_TYPE, '&') AS ADDR_TYPE_ADD   FROM 
+							(
+								SELECT STD_ADDR_PRIM_TYPE, LOWER(ADDR_TYPE) AS LOWER_TYPE 
+								FROM "osr.scv.foundation.db.data::SCVPrimType.AddrType"
+								GROUP BY STD_ADDR_PRIM_TYPE, LOWER(ADDR_TYPE)
+						) GROUP BY STD_ADDR_PRIM_TYPE);
+						
 	-- 1. Add RMS data
+BEGIN PARALLEL EXECUTION
 	INSERT INTO "osr.scv.foundation.db.data::SCVFoundation.Search" 
-	(
-		SELECT DISTINCT * FROM ( 
-					SELECT a.SCV_ID, a.SOURCE, a.SOURCE_ID, 
+			SELECT DISTINCT * FROM 
+			    ( 
+					SELECT a.SCV_ID as SCV_ID, a.SOURCE, a.SOURCE_ID, 
 					-- SEARCH_STRING
 					(a.FIRST_NAME || '|' || a.MIDDLE_NAME || '|' || a.LAST_NAME || '|' || a.BIRTH_DATE || '|' ||  b.CITY1
 					|| '|' || b.POST_CODE1 || '|' || b.STREET || '|' || b.HOUSE_NUM1 || '|' || b.REGION || '|' || b.COUNTRY
@@ -36,34 +45,40 @@ BEGIN
 					-- SEARCH_STRING_LT12
 					(b.STREET || '|' || b.CITY1 || '|' || b.POST_CODE1
 					) AS SEARCH_STRING_LT12,
-					-- SEARCH_STRING_CLEANSED_LT12 
-					--No Match Found in Cleanse Lookup Table--
-					CASE WHEN c.ADDR_TYPE_ADD is NULL or b.STD_ADDR_PRIM_NAME = ''   THEN (b.STD_ADDR_PRIM_NAME_FULL || '|' || b.STD_ADDR_LOCALITY || '|' || b.STD_ADDR_POSTCODE1)
-					--Match Found in Cleanse Lookup Table but it is already part of STD_ADDR_PRIM_NAME_FULL--
-					WHEN LOCATE(LOWER(c.ADDR_TYPE_ADD),LOWER(b.STD_ADDR_PRIM_TYPE)) > 0 THEN (b.STD_ADDR_PRIM_NAME || ' ' || LOWER(REPLACE(c.ADDR_TYPE_ADD,b.STD_ADDR_PRIM_TYPE,' ')) || '|' || b.STD_ADDR_LOCALITY || '|' || b.STD_ADDR_POSTCODE1 )
-					--Match Found in Cleanse Lookup Table but it is not not part of STD_ADDR_PRIM_NAME_FULL--
-					ELSE (b.STD_ADDR_PRIM_NAME || ' ' || LOWER(b.STD_ADDR_PRIM_TYPE) || ' ' || LOWER(c.ADDR_TYPE_ADD) || '|' || b.STD_ADDR_LOCALITY || '|' || b.STD_ADDR_POSTCODE1) END  
-					AS "SEARCH_STRING_CLEANSED_LT12",'NULL','NULL','NULL','NULL'
+				    -- SEARCH_STRING_CLEANSED_LT12 
+					CASE WHEN c.ADDR_TYPE_ADD_1 IS NULL or b.STD_ADDR_PRIM_NAME = '' THEN
+					(b.STD_ADDR_PRIM_NAME_FULL || '|' || b.STD_ADDR_LOCALITY || '|' || b.STD_ADDR_POSTCODE1)
+					ELSE (b.STD_ADDR_PRIM_NAME|| ' ' || LOWER(c.ADDR_TYPE_ADD_1) || '|' || b.STD_ADDR_LOCALITY || '|' || b.STD_ADDR_POSTCODE1) END
+					AS "SEARCH_STRING_CLEANSED_LT12",
+					CASE WHEN c.ADDR_TYPE_ADD_2 IS NOT NULL AND LOWER (c.ADDR_TYPE_ADD_2) != LOWER(c.ADDR_TYPE_ADD_1) THEN 
+					(b.STD_ADDR_PRIM_NAME|| ' ' || LOWER(c.ADDR_TYPE_ADD_2) || '|' || b.STD_ADDR_LOCALITY || '|' || b.STD_ADDR_POSTCODE1) END
+					AS "SEARCH_STRING_CLEANSED_LT12_1",
+					CASE WHEN c.ADDR_TYPE_ADD_3 IS NOT NULL AND LOWER (c.ADDR_TYPE_ADD_3) != LOWER(c.ADDR_TYPE_ADD_1) THEN 
+					(b.STD_ADDR_PRIM_NAME|| ' ' || LOWER(c.ADDR_TYPE_ADD_3) || '|' || b.STD_ADDR_LOCALITY || '|' || b.STD_ADDR_POSTCODE1) END
+					AS "SEARCH_STRING_CLEANSED_LT12_2",
+					CASE WHEN c.ADDR_TYPE_ADD_4 IS NOT NULL AND LOWER (c.ADDR_TYPE_ADD_4) != LOWER(c.ADDR_TYPE_ADD_1) THEN 
+					(b.STD_ADDR_PRIM_NAME|| ' ' || LOWER(c.ADDR_TYPE_ADD_4) || '|' || b.STD_ADDR_LOCALITY || '|' || b.STD_ADDR_POSTCODE1) END
+					AS "SEARCH_STRING_CLEANSED_LT12_3",
+					CASE WHEN c.ADDR_TYPE_ADD_5 IS NOT NULL AND LOWER (c.ADDR_TYPE_ADD_5) != LOWER(c.ADDR_TYPE_ADD_1) THEN 
+					(b.STD_ADDR_PRIM_NAME|| ' ' || LOWER(c.ADDR_TYPE_ADD_5) || '|' || b.STD_ADDR_LOCALITY || '|' || b.STD_ADDR_POSTCODE1) END
+					AS "SEARCH_STRING_CLEANSED_LT12_4"
 					FROM "osr.scv.foundation.db.data::SCVFoundation.PersonRms" a
 					INNER JOIN
 					"osr.scv.foundation.db.data::SCVFoundation.AddressRms" b
 					ON a.SCV_ID = b.SCV_ID AND a.SOURCE = b.SOURCE and a.SOURCE_ID = b.SOURCE_ID
-					LEFT OUTER JOIN (
-									SELECT STD_ADDR_PRIM_TYPE, STRING_AGG(LOWER_TYPE, ' ') AS ADDR_TYPE_ADD FROM 
-									(
-										SELECT STD_ADDR_PRIM_TYPE, LOWER(ADDR_TYPE) AS LOWER_TYPE 
-										FROM "osr.scv.foundation.db.data::SCVPrimType.AddrType"
-										GROUP BY STD_ADDR_PRIM_TYPE, LOWER(ADDR_TYPE)
-									) GROUP BY STD_ADDR_PRIM_TYPE) c
+					LEFT OUTER JOIN :lt_addr_type_lookup c
 					ON b.STD_ADDR_PRIM_TYPE = c.STD_ADDR_PRIM_TYPE
-			   ) 
-			   WHERE SCV_ID IN (SELECT SCV_ID FROM "osr.scv.foundation.db.data::SCVFoundation.Master" WHERE IS_HIDDEN != 'X')
+			    ) 
+		WHERE SCV_ID IN (SELECT SCV_ID FROM "osr.scv.foundation.db.data::SCVFoundation.Master" WHERE IS_HIDDEN != 'X'
 	);
+	END;
 	
+	BEGIN PARALLEL EXECUTION
 	-- 2. Add TMR data
 	INSERT INTO "osr.scv.foundation.db.data::SCVFoundation.Search" 
 	(
-		SELECT DISTINCT * FROM (
+		SELECT DISTINCT * FROM 
+		(
 			SELECT a.SCV_ID, a.SOURCE, a.SOURCE_ID, 
 			-- SEARCH_STRING
 			(a.FIRST_NAME || '|' || a.MIDDLE_NAME || '|' || a.LAST_NAME || '|' || a.BIRTH_DATE || '|' ||  b.SUBURB
@@ -77,27 +92,31 @@ BEGIN
 			-- SEARCH_STRING_LT12
 			(b.STREET_NAME || '|' || b.SUBURB || '|' || b.POSTCODE
 			) AS SEARCH_STRING_LT12,
-								-- SEARCH_STRING_CLEANSED_LT12 
-					--No Match Found in Cleanse Lookup Table--
-					CASE WHEN c.ADDR_TYPE_ADD is NULL or b.STD_ADDR_PRIM_NAME = '' THEN (b.STD_ADDR_PRIM_NAME_FULL || '|' || b.STD_ADDR_LOCALITY || '|' || b.STD_ADDR_POSTCODE1)
-					--Match Found in Cleanse Lookup Table but it is already part of STD_ADDR_PRIM_NAME_FULL--
-					WHEN LOCATE(LOWER(c.ADDR_TYPE_ADD),LOWER(b.STD_ADDR_PRIM_TYPE)) > 0 THEN (b.STD_ADDR_PRIM_NAME  || ' ' || LOWER(REPLACE(c.ADDR_TYPE_ADD,b.STD_ADDR_PRIM_TYPE,' ')) || '|' || b.STD_ADDR_LOCALITY || '|' || b.STD_ADDR_POSTCODE1)
-					--Match Found in Cleanse Lookup Table but it is not not part of STD_ADDR_PRIM_NAME_FULL--
-					ELSE (b.STD_ADDR_PRIM_NAME || ' ' || LOWER(b.STD_ADDR_PRIM_TYPE) || ' ' || LOWER(c.ADDR_TYPE_ADD) || '|' || b.STD_ADDR_LOCALITY || '|' || b.STD_ADDR_POSTCODE1) END  
-					AS "SEARCH_STRING_CLEANSED_LT12",'NULL','NULL','NULL','NULL'
+		    -- SEARCH_STRING_CLEANSED_LT12 
+			--No Match Found in Cleanse Lookup Table--
+			CASE WHEN c.ADDR_TYPE_ADD_1 is NULL or b.STD_ADDR_PRIM_NAME = ''  THEN 
+			(b.STD_ADDR_PRIM_NAME_FULL || '|' || b.STD_ADDR_LOCALITY || '|' || b.STD_ADDR_POSTCODE1)
+			ELSE (b.STD_ADDR_PRIM_NAME || ' ' || LOWER(c.ADDR_TYPE_ADD_1) || '|' || b.STD_ADDR_LOCALITY || '|' || b.STD_ADDR_POSTCODE1) END  
+			AS "SEARCH_STRING_CLEANSED_LT12",
+			CASE WHEN c.ADDR_TYPE_ADD_2 is NOT NULL AND LOWER (c.ADDR_TYPE_ADD_2) != LOWER(c.ADDR_TYPE_ADD_1) THEN
+			(b.STD_ADDR_PRIM_NAME || ' ' || LOWER(c.ADDR_TYPE_ADD_2) || '|' || b.STD_ADDR_LOCALITY || '|' || b.STD_ADDR_POSTCODE1) END 
+			AS "SEARCH_STRING_CLEANSED_LT12_1",
+			CASE WHEN c.ADDR_TYPE_ADD_3 is NOT NULL AND LOWER (c.ADDR_TYPE_ADD_3) != LOWER(c.ADDR_TYPE_ADD_1) THEN
+			(b.STD_ADDR_PRIM_NAME || ' ' || LOWER(c.ADDR_TYPE_ADD_3) || '|' || b.STD_ADDR_LOCALITY || '|' || b.STD_ADDR_POSTCODE1) END  
+			AS "SEARCH_STRING_CLEANSED_LT12_2",
+			CASE WHEN c.ADDR_TYPE_ADD_4 is NOT NULL AND LOWER (c.ADDR_TYPE_ADD_4) != LOWER(c.ADDR_TYPE_ADD_1) THEN
+			(b.STD_ADDR_PRIM_NAME || ' ' || LOWER(c.ADDR_TYPE_ADD_4) || '|' || b.STD_ADDR_LOCALITY || '|' || b.STD_ADDR_POSTCODE1) END  
+			AS "SEARCH_STRING_CLEANSED_LT12_3",
+			CASE WHEN c.ADDR_TYPE_ADD_5 is NOT NULL AND LOWER (c.ADDR_TYPE_ADD_5) != LOWER(c.ADDR_TYPE_ADD_1) THEN
+			(b.STD_ADDR_PRIM_NAME || ' ' || LOWER(c.ADDR_TYPE_ADD_5) || '|' || b.STD_ADDR_LOCALITY || '|' || b.STD_ADDR_POSTCODE1) END  			
+			AS "SEARCH_STRING_CLEANSED_LT12_4"
 			FROM "osr.scv.foundation.db.data::SCVFoundation.PersonTmr" a
 			INNER JOIN
 			"osr.scv.foundation.db.data::SCVFoundation.AddressTmr" b
 			ON a.SCV_ID = b.SCV_ID AND a.SOURCE = b.SOURCE and a.SOURCE_ID = b.SOURCE_ID
-			LEFT OUTER JOIN (
-							SELECT STD_ADDR_PRIM_TYPE, STRING_AGG(LOWER_TYPE, ' ') AS ADDR_TYPE_ADD FROM 
-							(
-								SELECT STD_ADDR_PRIM_TYPE, LOWER(ADDR_TYPE) AS LOWER_TYPE 
-								FROM "osr.scv.foundation.db.data::SCVPrimType.AddrType"
-								GROUP BY STD_ADDR_PRIM_TYPE, LOWER(ADDR_TYPE)
-							) GROUP BY STD_ADDR_PRIM_TYPE) c
+			LEFT OUTER JOIN :lt_addr_type_lookup c
 					ON b.STD_ADDR_PRIM_TYPE = c.STD_ADDR_PRIM_TYPE
 		) WHERE SCV_ID IN (SELECT SCV_ID FROM "osr.scv.foundation.db.data::SCVFoundation.Master" WHERE IS_HIDDEN != 'X')
-	);
-   
+    );
+   END;
 END
