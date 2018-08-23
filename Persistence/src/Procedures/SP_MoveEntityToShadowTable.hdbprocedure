@@ -71,10 +71,10 @@ BEGIN
 	INSERT INTO "osr.scv.foundation.db.data::MatchResults.MatchResultsShadow" (SELECT * FROM :lt_update);
 	
 	-- Delete from match results table what has been moved into shadow table
---	 DELETE FROM "osr.scv.foundation.db.data::MatchResults.MatchResults" WHERE ENTITY_ID IN (SELECT ENTITY_ID FROM :lt_update);
+	 DELETE FROM "osr.scv.foundation.db.data::MatchResults.MatchResults" WHERE ENTITY_ID IN (SELECT ENTITY_ID FROM :lt_update);
 	   
 	-- Delete from main UI review table
---	DELETE FROM "osr.scv.foundation.db.data::MatchResultsReview.Review" WHERE ENTITY_ID IN (SELECT ENTITY_ID FROM :lt_update);
+	DELETE FROM "osr.scv.foundation.db.data::MatchResultsReview.Review" WHERE ENTITY_ID IN (SELECT ENTITY_ID FROM :lt_update);
 	
 	-- Update statistics
 	INSERT INTO  "osr.scv.foundation.db.data::MatchResultsReview.Promotions" 
