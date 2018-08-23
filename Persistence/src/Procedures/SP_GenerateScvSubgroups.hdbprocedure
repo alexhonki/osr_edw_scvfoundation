@@ -260,6 +260,34 @@ BEGIN SEQUENTIAL EXECUTION
 	
 	lt_mapping = SELECT * FROM #lt_sub_groups_mapping;
 	
+	-- Adjust group tags of related TMR records to RMS-TMR and TMR-RMS matches
+	lt_tmr_leads = SELECT MATCH_ROW, SYSTEM_ID 
+				   FROM #lt_sub_groups_mapping sgm
+				   WHERE SOURCE_SYSTEM = 'TMR'
+					AND (GROUP_TAG_RMS_TMR IS NOT NULL OR GROUP_TAG_TMR_RMS IS NOT NULL);
+					
+	lt_tmr_unassigned_matches = SELECT MATCH_ROW, SYSTEM_ID
+								FROM #lt_sub_groups_mapping sgm
+								   WHERE SOURCE_SYSTEM = 'TMR'
+									AND GROUP_TAG_RMS_TMR IS NULL
+									AND GROUP_TAG_TMR_RMS IS NULL;
+									
+	-- Match on system ID
+	lt_update_tmr_tmr = SELECT um.MATCH_ROW, l.SYSTEM_ID AS GROUP_TAG FROM :lt_tmr_leads l
+						INNER JOIN :lt_tmr_unassigned_matches um
+						ON l.SYSTEM_ID = um.SYSTEM_ID;
+				
+		-- Update main group table
+	UPDATE #lt_sub_groups sg SET sg.MATCH_ROW = d.MATCH_ROW, sg.GROUP_TAG = d.GROUP_TAG
+	FROM #lt_sub_groups sg, :lt_update_tmr_tmr d
+	WHERE sg.MATCH_ROW = d.MATCH_ROW;
+	
+	-- Update group tags
+	UPDATE #lt_sub_groups_mapping sgm SET sgm.GROUP_TAG = d.GROUP_TAG,  sgm.GROUP_TAG_TMR_TMR = d.GROUP_TAG
+	FROM #lt_sub_groups_mapping sgm, #lt_sub_groups d
+	WHERE sgm.MATCH_ROW = d.MATCH_ROW
+		AND sgm.GROUP_TAG != d.GROUP_TAG;			
+	
 	-- Collect orphan TMR-TMR matches
 	lt_set_d = 
 		SELECT MATCH_ROW, GROUP_TAG, RELATED_ROW, RELATED_SYSTEM_ID,SCORE FROM 
@@ -272,6 +300,7 @@ BEGIN SEQUENTIAL EXECUTION
 			WHERE SOURCE_SYSTEM = 'TMR'
 				AND RELATED_SYSTEM = 'TMR'
 				AND MATCH_POLICY != 'Person, Address, Phone'
+				AND GROUP_TAG_TMR_TMR IS NULL
 		) WHERE GROUP_ROW_COUNT = 1 								-- Only 1 row per related row match
 			AND RELATED_ROW IS NOT NULL								-- Rows with null reference are being added in the initial step
 		;
