@@ -38,12 +38,12 @@ BEGIN
 					) AS SEARCH_STRING_LT12,
 					-- SEARCH_STRING_CLEANSED_LT12 
 					--No Match Found in Cleanse Lookup Table--
-					CASE WHEN c.ADDR_TYPE_ADD is NULL THEN (b.STD_ADDR_PRIM_NAME_FULL || '|' || b.STD_ADDR_LOCALITY || '|' || b.STD_ADDR_POSTCODE1)
+					CASE WHEN c.ADDR_TYPE_ADD is NULL or b.STD_ADDR_PRIM_NAME = ''   THEN (b.STD_ADDR_PRIM_NAME_FULL || '|' || b.STD_ADDR_LOCALITY || '|' || b.STD_ADDR_POSTCODE1)
 					--Match Found in Cleanse Lookup Table but it is already part of STD_ADDR_PRIM_NAME_FULL--
-					WHEN LOCATE(LOWER(c.ADDR_TYPE_ADD),LOWER(b.STD_ADDR_PRIM_TYPE)) > 0 THEN (b.STD_ADDR_PRIM_NAME || '|' || LOWER(REPLACE(c.ADDR_TYPE_ADD,b.STD_ADDR_PRIM_TYPE,' ')) || '|' || b.STD_ADDR_LOCALITY || '|' || b.STD_ADDR_POSTCODE1 )
+					WHEN LOCATE(LOWER(c.ADDR_TYPE_ADD),LOWER(b.STD_ADDR_PRIM_TYPE)) > 0 THEN (b.STD_ADDR_PRIM_NAME || ' ' || LOWER(REPLACE(c.ADDR_TYPE_ADD,b.STD_ADDR_PRIM_TYPE,' ')) || '|' || b.STD_ADDR_LOCALITY || '|' || b.STD_ADDR_POSTCODE1 )
 					--Match Found in Cleanse Lookup Table but it is not not part of STD_ADDR_PRIM_NAME_FULL--
-					ELSE (b.STD_ADDR_PRIM_NAME || '|' || LOWER(b.STD_ADDR_PRIM_TYPE) || '|' || LOWER(c.ADDR_TYPE_ADD) || '|' || b.STD_ADDR_LOCALITY || '|' || b.STD_ADDR_POSTCODE1) END  
-					AS "SEARCH_STRING_CLEANSED_LT12"
+					ELSE (b.STD_ADDR_PRIM_NAME || ' ' || LOWER(b.STD_ADDR_PRIM_TYPE) || ' ' || LOWER(c.ADDR_TYPE_ADD) || '|' || b.STD_ADDR_LOCALITY || '|' || b.STD_ADDR_POSTCODE1) END  
+					AS "SEARCH_STRING_CLEANSED_LT12",'NULL','NULL','NULL','NULL'
 					FROM "osr.scv.foundation.db.data::SCVFoundation.PersonRms" a
 					INNER JOIN
 					"osr.scv.foundation.db.data::SCVFoundation.AddressRms" b
@@ -79,12 +79,12 @@ BEGIN
 			) AS SEARCH_STRING_LT12,
 								-- SEARCH_STRING_CLEANSED_LT12 
 					--No Match Found in Cleanse Lookup Table--
-					CASE WHEN c.ADDR_TYPE_ADD is NULL THEN (b.STD_ADDR_PRIM_NAME_FULL || '|' || b.STD_ADDR_LOCALITY || '|' || b.STD_ADDR_POSTCODE1)
+					CASE WHEN c.ADDR_TYPE_ADD is NULL or b.STD_ADDR_PRIM_NAME = '' THEN (b.STD_ADDR_PRIM_NAME_FULL || '|' || b.STD_ADDR_LOCALITY || '|' || b.STD_ADDR_POSTCODE1)
 					--Match Found in Cleanse Lookup Table but it is already part of STD_ADDR_PRIM_NAME_FULL--
-					WHEN LOCATE(LOWER(c.ADDR_TYPE_ADD),LOWER(b.STD_ADDR_PRIM_TYPE)) > 0 THEN (b.STD_ADDR_PRIM_NAME  || '|' || LOWER(REPLACE(c.ADDR_TYPE_ADD,b.STD_ADDR_PRIM_TYPE,' ')) || '|' || b.STD_ADDR_LOCALITY || '|' || b.STD_ADDR_POSTCODE1)
+					WHEN LOCATE(LOWER(c.ADDR_TYPE_ADD),LOWER(b.STD_ADDR_PRIM_TYPE)) > 0 THEN (b.STD_ADDR_PRIM_NAME  || ' ' || LOWER(REPLACE(c.ADDR_TYPE_ADD,b.STD_ADDR_PRIM_TYPE,' ')) || '|' || b.STD_ADDR_LOCALITY || '|' || b.STD_ADDR_POSTCODE1)
 					--Match Found in Cleanse Lookup Table but it is not not part of STD_ADDR_PRIM_NAME_FULL--
-					ELSE (b.STD_ADDR_PRIM_NAME || '|' || LOWER(b.STD_ADDR_PRIM_TYPE) || '|' || LOWER(c.ADDR_TYPE_ADD) || '|' || b.STD_ADDR_LOCALITY || '|' || b.STD_ADDR_POSTCODE1) END  
-					AS "SEARCH_STRING_CLEANSED_LT12"
+					ELSE (b.STD_ADDR_PRIM_NAME || ' ' || LOWER(b.STD_ADDR_PRIM_TYPE) || ' ' || LOWER(c.ADDR_TYPE_ADD) || '|' || b.STD_ADDR_LOCALITY || '|' || b.STD_ADDR_POSTCODE1) END  
+					AS "SEARCH_STRING_CLEANSED_LT12",'NULL','NULL','NULL','NULL'
 			FROM "osr.scv.foundation.db.data::SCVFoundation.PersonTmr" a
 			INNER JOIN
 			"osr.scv.foundation.db.data::SCVFoundation.AddressTmr" b

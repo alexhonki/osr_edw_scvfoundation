@@ -226,6 +226,10 @@ context SCVFoundation {
         ADR_STD_CHECKSUM            : Binary(32);
         SEARCH_STRING_LT12          : String(1024);
         SEARCH_STRING_CLEANSED_LT12 : String(1024);
+		SEARCH_STRING_CLEANSED_LT12_1 : String(1024);
+        SEARCH_STRING_CLEANSED_LT12_2 : String(1024);
+        SEARCH_STRING_CLEANSED_LT12_3 : String(1024);
+        SEARCH_STRING_CLEANSED_LT12_4 : String(1024);
     }
     technical configuration {
         fulltext index idx_fulltext               on (SEARCH_STRING)
@@ -244,6 +248,22 @@ context SCVFoundation {
             token separators '|'
             text mining off
             search only on;
+        fulltext index idx_fulltext_cleansed_lt12_1 on (SEARCH_STRING_CLEANSED_LT12_1)
+            token separators '|'
+            text mining off
+            search only on;
+        fulltext index idx_fulltext_cleansed_lt12_2 on (SEARCH_STRING_CLEANSED_LT12_2)
+            token separators '|'
+            text mining off
+            search only on;
+        fulltext index idx_fulltext_cleansed_lt12_3 on (SEARCH_STRING_CLEANSED_LT12_3)
+            token separators '|'
+            text mining off
+            search only on;
+        fulltext index idx_fulltext_cleansed_lt12_4 on (SEARCH_STRING_CLEANSED_LT12_4)
+            token separators '|'
+            text mining off
+            search only on;            
     };
 
     /*@@layout{"layoutInfo":{}}*/

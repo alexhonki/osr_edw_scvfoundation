@@ -1,0 +1,56 @@
+FUNCTION "osr.scv.foundation.db.functions.Util::UtilSplitStringColumnSinglePos" (i_string NVARCHAR(5000) DEFAULT ',',i_separator NVARCHAR(1) DEFAULT ',',i_colnumret NVARCHAR(1) DEFAULT ',')
+     RETURNS OT_RESULT NVARCHAR(1024)
+       LANGUAGE SQLSCRIPT 
+       SQL SECURITY INVOKER AS 
+BEGIN 
+   	 /*
+		Utility stored procedure: Split String into Multiple Columns
+	
+		Author: Balakumar Ganesan, SAP
+		 			
+	*/
+declare l_splitted NVARCHAR(1024);
+declare l_removeEmpty char(1) := 'X';
+declare l_counter NVARCHAR(1) := 0;
+
+
+if right(:i_string,1) <> :i_separator then
+ i_string := :i_string || :i_separator;
+end if;
+
+while :i_string <> SUBSTR_AFTER (:i_string,:i_separator)
+do
+l_counter = :l_counter + 1;
+l_splitted = SUBSTR_BEFORE (:i_string,:i_separator);
+ i_string = SUBSTR_AFTER (:i_string,:i_separator);
+ if not(:l_removeEmpty = 'X' and :l_splitted = '') then
+ 
+ if :l_counter = 1 and :i_colnumret = 1 then
+  OT_RESULT = :l_splitted;
+  RETURN;
+ end if; 
+ 
+ if :l_counter = 2 and :i_colnumret = 2 then
+  OT_RESULT = :l_splitted;
+  RETURN;
+ end if; 
+ 
+ if :l_counter = 3 and :i_colnumret = 3 then
+  OT_RESULT = :l_splitted;
+  RETURN;
+ end if; 
+ 
+ if :l_counter = 4 and :i_colnumret = 4 then
+  OT_RESULT = :l_splitted;
+  RETURN;
+ end if; 
+ 
+ if :l_counter = 5 and :i_colnumret = 5 then
+  OT_RESULT = :l_splitted;
+  RETURN;
+ end if; 
+ 
+end if;
+end while;
+
+END;
