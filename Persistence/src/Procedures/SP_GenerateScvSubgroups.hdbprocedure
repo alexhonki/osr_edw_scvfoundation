@@ -206,7 +206,8 @@ BEGIN SEQUENTIAL EXECUTION
 	-- Update group tags
 	UPDATE #lt_sub_groups_mapping sgm SET sgm.GROUP_TAG = d.GROUP_TAG, sgm.GROUP_TAG_RMS_TMR = d.GROUP_TAG
 	FROM #lt_sub_groups_mapping sgm, #lt_sub_groups d
-	WHERE sgm.MATCH_ROW = d.MATCH_ROW;
+	WHERE sgm.MATCH_ROW = d.MATCH_ROW
+		AND sgm.GROUP_TAG != d.GROUP_TAG;
 
 	-- TMR to RMS matches
 	lt_set_c = 
@@ -254,7 +255,8 @@ BEGIN SEQUENTIAL EXECUTION
 	-- Update group tags
 	UPDATE #lt_sub_groups_mapping sgm SET sgm.GROUP_TAG = d.GROUP_TAG,  sgm.GROUP_TAG_TMR_RMS = d.GROUP_TAG
 	FROM #lt_sub_groups_mapping sgm, #lt_sub_groups d
-	WHERE sgm.MATCH_ROW = d.MATCH_ROW;
+	WHERE sgm.MATCH_ROW = d.MATCH_ROW
+		AND sgm.GROUP_TAG != d.GROUP_TAG;
 	
 	lt_mapping = SELECT * FROM #lt_sub_groups_mapping;
 	
