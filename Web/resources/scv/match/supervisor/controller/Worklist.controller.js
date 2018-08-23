@@ -163,6 +163,21 @@ sap.ui.define([
 				"rmsDuplicates": rmsDuplicatesFilter,
 				"allDuplicates": rmsAllDuplicatesFilter
 			};
+
+			this.getRouter().getRoute("worklist").attachPatternMatched(this._onRouteMatched, this);
+		},
+		
+		
+
+		_onRouteMatched: function(oEvent) {
+			console.log("helo on route match");
+			this.startIntervalChecker(10000);
+		},
+
+		startIntervalChecker: function(iMilliseconds) {
+			setInterval(function() {
+				console.log("Hello");
+			}, iMilliseconds);
 		},
 
 		/* =========================================================== */
@@ -593,133 +608,6 @@ sap.ui.define([
 			}
 		},
 
-		/**
-		 * Event handler for the unlist button. Will delete the
-		 * product from the (local) model.
-		 * @public
-		 */
-		onUnlistObjects: function() {
-			var aSelectedProducts, i, sPath, oProduct, oProductId;
-
-			aSelectedProducts = this.byId("table").getSelectedItems();
-			if (aSelectedProducts.length) {
-				for (i = 0; i < aSelectedProducts.length; i++) {
-					oProduct = aSelectedProducts[i];
-					oProductId = oProduct.getBindingContext().getProperty("GROUP_ID");
-					sPath = oProduct.getBindingContextPath();
-					this.getModel().remove(sPath, {
-						success: this._handleUnlistActionResult.bind(this, oProductId, true, i + 1, aSelectedProducts.length),
-						error: this._handleUnlistActionResult.bind(this, oProductId, false, i + 1, aSelectedProducts.length)
-					});
-				}
-			} else {
-				this._showErrorMessage(this.getModel("i18n").getResourceBundle().getText("TableSelectProduct"));
-			}
-		},
-
-		/**
-		 * Event handler for the reorder button. Will reorder the
-		 * product by updating the (local) model
-		 * @public
-		 */
-		onUpdateStockObjects: function() {
-			var aSelectedProducts, i, sPath, oProductObject;
-
-			aSelectedProducts = this.byId("table").getSelectedItems();
-			if (aSelectedProducts.length) {
-				for (i = 0; i < aSelectedProducts.length; i++) {
-					sPath = aSelectedProducts[i].getBindingContextPath();
-					oProductObject = aSelectedProducts[i].getBindingContext().getObject();
-					oProductObject.UnitsInStock += 10;
-					this.getModel().update(sPath, oProductObject, {
-						success: this._handleReorderActionResult.bind(this, oProductObject.ProductID, true, i + 1, aSelectedProducts.length),
-						error: this._handleReorderActionResult.bind(this, oProductObject.ProductID, false, i + 1, aSelectedProducts.length)
-					});
-				}
-			} else {
-				this._showErrorMessage(this.getModel("i18n").getResourceBundle().getText("TableSelectProduct"));
-			}
-		},
-
-		/**
-		 * Event handler for the promote to SCV.
-		 * @public
-		 */
-		// onPromoteToSCV: function() {
-
-		// 	var that = this;
-
-		// 	function wait(ms) {
-		// 		var start = new Date().getTime();
-		// 		var end = start;
-		// 		while (end < start + ms) {
-		// 			end = new Date().getTime();
-		// 		}
-		// 	}
-
-		// 	function refresh() {
-		// 		wait(1000);
-		// 		that.byId("idVizFrame").getModel().refresh(true);
-		// 	}
-
-		// 	function setBusy(bBusy) {
-		// 		that.byId("idVizFrame").setBusy(bBusy);
-		// 	}
-
-		// 	var dialog = new Dialog({
-		// 		title: 'Confirm',
-		// 		type: 'Message',
-		// 		content: new Text({
-		// 			text: 'Promote all entities to SCV layer? Note: This will move all entities with strategy \'Promote\' to the SCV foundation layer.'
-		// 		}),
-		// 		beginButton: new Button({
-		// 			text: 'Promote',
-		// 			press: function() {
-
-		// 				var payload = {};
-		// 				var data = JSON.stringify(payload);
-
-		// 				// Set to busy
-		// 				setBusy(true);
-
-		// 				$.ajax({
-		// 					type: "POST",
-		// 					url: "/scv/match/srv/xs/supervisor/moveEntitiesToShadowTable.xsjs",
-		// 					contentType: "application/json",
-		// 					data: data,
-		// 					dataType: "json",
-		// 					crossDomain: true,
-
-		// 					success: function(data) {
-		// 						refresh();
-		// 						MessageToast.show('All Entities promoted!');
-		// 						setBusy(false);
-		// 					},
-		// 					error: function(data) {
-		// 						var message = JSON.stringify(data);
-		// 						alert(message);
-		// 						setBusy(false);
-		// 					}
-		// 				});
-
-		// 				dialog.close();
-		// 			}
-		// 		}),
-		// 		endButton: new Button({
-		// 			text: 'Cancel',
-		// 			press: function() {
-		// 				dialog.close();
-		// 			}
-		// 		}),
-		// 		afterClose: function() {
-		// 			dialog.destroy();
-		// 		}
-		// 	});
-
-		// 	dialog.open();
-
-		// },
-
 		// BEGIN UPDATED CODE // 
 		/**
 		 * Event handler for the promote to SCV.
@@ -790,15 +678,6 @@ sap.ui.define([
 
 		},
 		// END UPDATED CODE //
-
-		handleViewSettingsDialogButtonPressed: function(oEvent) {
-			if (!this._oDialog) {
-				this._oDialog = sap.ui.xmlfragment("myCompany.myApp.dialogs.TableViewSettingsDialog", this);
-			}
-			// toggle compact style
-			jQuery.sap.syncStyleClass("sapUiSizeCompact", this.getView(), this._oDialog);
-			this._oDialog.open();
-		},
 
 		handleConfirm: function(oEvent) {
 

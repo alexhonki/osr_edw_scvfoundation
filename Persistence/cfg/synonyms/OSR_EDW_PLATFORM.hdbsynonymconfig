@@ -8,25 +8,37 @@
   "osr.scv.foundation.db.synonyms::BUT021_FS": {
     "target": {
       "object": "osr.edw.staging.md.rms.proxy::CV_BUT021FS",
-       "schema.configure": "logical-OSR-EDW-PLATFORM-grantor/schema"
+      "schema.configure": "logical-OSR-EDW-PLATFORM-grantor/schema"
     }
   },
   "osr.scv.foundation.db.synonyms::ADRC": {
     "target": {
       "object": "osr.edw.propagation.rms.proxy::CV_ADRC",
-       "schema.configure": "logical-OSR-EDW-PLATFORM-grantor/schema"
+      "schema.configure": "logical-OSR-EDW-PLATFORM-grantor/schema"
     }
   },
-	"osr.scv.foundation.db.synonyms::TMR_CustContact": {
-		"target": {
-			"object": "osr.edw.propagation.tmr.proxy::CV_CUSTCONTACT",
-			"schema.configure": "logical-OSR-EDW-PLATFORM-grantor/schema"
-		}
-	},
-	"osr.scv.foundation.db.synonyms::TMR_CustMain": {
-		"target": {
-			"object": "osr.edw.propagation.tmr.proxy::CV_CUSTMAIN",
-			"schema.configure": "logical-OSR-EDW-PLATFORM-grantor/schema"
-		}
-	}
+  "osr.scv.foundation.db.synonyms::TMR_CustContact": {
+    "target": {
+      "object": "osr.edw.propagation.tmr.proxy::CV_CUSTCONTACT",
+      "schema.configure": "logical-OSR-EDW-PLATFORM-grantor/schema"
+    }
+  },
+  "osr.scv.foundation.db.synonyms::TMR_CustMain": {
+    "target": {
+      "object": "osr.edw.propagation.tmr.proxy::CV_CUSTMAIN",
+      "schema.configure": "logical-OSR-EDW-PLATFORM-grantor/schema"
+    }
+  },
+  "osr.scv.foundation.db.synonyms::ACTIVE_PROCEDURES": {
+    "target": {
+      "object": "osr.hana.platform::CV_ACTIVE_PROCEDURES",
+      "schema.configure": "logical-OSR-EDW-PLATFORM-grantor/schema"
+    }
+  },
+  "osr.scv.foundation.db.synonyms::ACTIVE_STATEMENTS": {
+    "target": {
+      "object": "osr.hana.platform::CV_ACTIVE_STATEMENTS",
+      "schema.configure": "logical-OSR-EDW-PLATFORM-grantor/schema"
+    }
+  }
 }
