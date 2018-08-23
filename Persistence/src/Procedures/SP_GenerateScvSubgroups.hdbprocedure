@@ -273,7 +273,7 @@ BEGIN SEQUENTIAL EXECUTION
 									AND GROUP_TAG_TMR_RMS IS NULL;
 									
 	-- Match on system ID
-	lt_update_tmr_tmr = SELECT um.MATCH_ROW, l.SYSTEM_ID AS GROUP_TAG FROM :lt_tmr_leads l
+	lt_update_tmr_tmr = SELECT um.MATCH_ROW, l.GROUP_TAG FROM :lt_tmr_leads l
 						INNER JOIN :lt_tmr_unassigned_matches um
 						ON l.SYSTEM_ID = um.SYSTEM_ID;
 				
