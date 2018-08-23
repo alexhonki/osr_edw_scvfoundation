@@ -261,7 +261,7 @@ BEGIN SEQUENTIAL EXECUTION
 	lt_mapping = SELECT * FROM #lt_sub_groups_mapping;
 	
 	-- Adjust group tags of related TMR records to RMS-TMR and TMR-RMS matches
-	lt_tmr_leads = SELECT MATCH_ROW, SYSTEM_ID 
+	lt_tmr_leads = SELECT MATCH_ROW, SYSTEM_ID, GROUP_TAG 
 				   FROM #lt_sub_groups_mapping sgm
 				   WHERE SOURCE_SYSTEM = 'TMR'
 					AND (GROUP_TAG_RMS_TMR IS NOT NULL OR GROUP_TAG_TMR_RMS IS NOT NULL);
