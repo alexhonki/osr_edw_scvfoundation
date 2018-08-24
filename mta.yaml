@@ -24,8 +24,10 @@ modules:
         group: SERVICE_REPLACEMENTS
         properties:
           key: logical-OSR-EDW-PLATFORM-grantor
-          service: '~{OSR-EDW-PLATFORM-grantor-service}'               
+          service: '~{OSR-EDW-PLATFORM-grantor-service}'
       - name: scv-ext-access-grantor
+    properties:
+      timeout: 15m
   - name: OSR_SCV_FOUNDATION-Services
     type: nodejs
     path: Services
@@ -103,7 +105,7 @@ resources:
       OSR-EDW-PLATFORM-grantor-service: '${service-name}'
     parameters:
       service-name: OSR_EDW_PLATFORM-deploy
-    type: org.cloudfoundry.existing-service    
+    type: org.cloudfoundry.existing-service
   - name: OSR_SCV_FOUNDATION-uaa
     type: com.sap.xs.uaa
     parameters:
