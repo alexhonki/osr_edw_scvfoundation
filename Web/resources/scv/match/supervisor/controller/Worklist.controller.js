@@ -164,19 +164,80 @@ sap.ui.define([
 				"allDuplicates": rmsAllDuplicatesFilter
 			};
 
+			this.oBusyDialog = sap.ui.xmlfragment("osr.scv.match.supervisor.dialogs.BusyDialog");
+			this.getView().addDependent(this.oBusyDialog);
+
 			this.getRouter().getRoute("worklist").attachPatternMatched(this._onRouteMatched, this);
 		},
-		
-		
 
 		_onRouteMatched: function(oEvent) {
-			console.log("helo on route match");
-			this.startIntervalChecker(10000);
+
+			let oController = this;
+			oController.getView().byId("promoteToSCVBtn").setEnabled(false);
+			let sCheckerUrl = this.getOwnerComponent().getMetadata().getConfig("scvProcedureChecker");
+			$.ajax(sCheckerUrl, {
+				success: function(data) {
+					// boolean checker whether promote procedures running.
+					// 1 is true and the rest are false. 
+					if (data !== 1) {
+						//no more procedures running in regards to promote SCV
+						oController.getView().byId("promoteToSCVBtn").setEnabled(true);
+						oController.oBusyDialog.close();
+					} else {
+
+						oController.oBusyDialog.open();
+						oController.getView().byId("promoteToSCVBtn").setEnabled(false);
+					}
+
+				},
+				error: function(error) {
+					//check for http error and serve accordingly.
+					if (error.status === 403) {
+						oController.sendMessageToast("You do not have enough authorisation please contact your system admin.");
+					} else {
+						oController.sendMessageToast("Something went wrong, our apologies. Please close the browser and try again.");
+					}
+
+				}
+			});
+
+			//checker start to run interval for every 20seconds
+			//time in millisecond.
+			this.startIntervalChecker(20000);
 		},
 
 		startIntervalChecker: function(iMilliseconds) {
+
+			let oController = this;
+			//for api call search
+			let sCheckerUrl = this.getOwnerComponent().getMetadata().getConfig("scvProcedureChecker");
+
 			setInterval(function() {
-				console.log("Hello");
+				$.ajax(sCheckerUrl, {
+					success: function(data) {
+						// boolean checker whether promote procedures running.
+						// 1 is true and the rest are false.
+						if (data !== 1) {
+							//no more procedures running in regards to promote SCV
+							oController.getView().byId("promoteToSCVBtn").setEnabled(true);
+
+							oController.oBusyDialog.close();
+
+						} else {
+							oController.oBusyDialog.open();
+							oController.getView().byId("promoteToSCVBtn").setEnabled(false);
+						}
+					},
+					error: function(error) {
+						//check for http error and serve accordingly.
+						if (error.status === 403) {
+							oController.sendMessageToast("You do not have enough authorisation please contact your system admin.");
+						} else {
+							oController.sendMessageToast("Something went wrong, our apologies. Please close the browser and try again.");
+						}
+
+					}
+				});
 			}, iMilliseconds);
 		},
 
@@ -641,23 +702,14 @@ sap.ui.define([
 					press: function() {
 
 						// Set to busy
-						oController._setBusyStateFrame(true);
-
+						//oController._setBusyStateFrame(true);
+						oController.oBusyDialog.open();
+						
 						$.ajax({
 							type: "POST",
 							url: "/scv/match/srv/xs/supervisor/moveEntitiesToShadowTable.xsjs",
 							contentType: "application/json",
-							crossDomain: true,
-							success: function(data) {
-								oController._refreshFrame();
-								MessageToast.show('All Entities promoted!');
-								oController._setBusyStateFrame(false);
-							},
-							error: function(data) {
-								var message = JSON.stringify(data);
-								alert(message);
-								oController._setBusyStateFrame(false);
-							}
+							crossDomain: true
 						});
 
 						dialog.close();
