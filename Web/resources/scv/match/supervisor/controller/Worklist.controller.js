@@ -166,17 +166,68 @@ sap.ui.define([
 
 			this.getRouter().getRoute("worklist").attachPatternMatched(this._onRouteMatched, this);
 		},
-		
-		
 
 		_onRouteMatched: function(oEvent) {
-			console.log("helo on route match");
-			this.startIntervalChecker(10000);
+
+			let oController = this;
+			oController.getView().byId("promoteToSCVBtn").setEnabled(false);
+			let sCheckerUrl = this.getOwnerComponent().getMetadata().getConfig("scvProcedureChecker");
+			$.ajax(sCheckerUrl, {
+				success: function(data) {
+					// boolean checker whether promote procedures running.
+					// 1 is true and the rest are false. 
+					if (data !== 1) {
+						//no more procedures running in regards to promote SCV
+						oController.getView().byId("promoteToSCVBtn").setEnabled(true);
+					} else {
+						oController.getView().byId("promoteToSCVBtn").setEnabled(false);
+					}
+
+				},
+				error: function(error) {
+					//check for http error and serve accordingly.
+					if (error.status === 403) {
+						oController.sendMessageToast("You do not have enough authorisation please contact your system admin.");
+					} else {
+						oController.sendMessageToast("Something went wrong, our apologies. Please close the browser and try again.");
+					}
+
+				}
+			});
+
+			//checker start to run interval for every 20seconds
+			//time in millisecond.
+			this.startIntervalChecker(20000);
 		},
 
 		startIntervalChecker: function(iMilliseconds) {
+
+			let oController = this;
+			//for api call search
+			let sCheckerUrl = this.getOwnerComponent().getMetadata().getConfig("scvProcedureChecker");
+
 			setInterval(function() {
-				console.log("Hello");
+				$.ajax(sCheckerUrl, {
+					success: function(data) {
+						// boolean checker whether promote procedures running.
+						// 1 is true and the rest are false.
+						if (data !== 1) {
+							//no more procedures running in regards to promote SCV
+							oController.getView().byId("promoteToSCVBtn").setEnabled(true);
+						} else {
+							oController.getView().byId("promoteToSCVBtn").setEnabled(false);
+						}
+					},
+					error: function(error) {
+						//check for http error and serve accordingly.
+						if (error.status === 403) {
+							oController.sendMessageToast("You do not have enough authorisation please contact your system admin.");
+						} else {
+							oController.sendMessageToast("Something went wrong, our apologies. Please close the browser and try again.");
+						}
+
+					}
+				});
 			}, iMilliseconds);
 		},
 
