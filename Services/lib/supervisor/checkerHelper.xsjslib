@@ -108,7 +108,7 @@ function _bRowsChecker(aRows) {
 
 function getCurrentContainerSchemaName(oConn) {
 
-	let sSqlQuery = "SELECT \"SCHEMA_NAME\" FROM \"SYS\".\"SCHEMAS\" WHERE \"SCHEMA_NAME\" LIKE '%SCV_%'";
+	let sSqlQuery = "SELECT \"SCHEMA_NAME\" FROM \"SYS\".\"SCHEMAS\" WHERE \"SCHEMA_NAME\" LIKE '%SCV%'";
 	let ptsmt = oConn.prepareStatement(sSqlQuery);
 	let oResult = ptsmt.executeQuery();
 	let aRows = oResult._rows;
