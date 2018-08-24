@@ -134,7 +134,7 @@ BEGIN PARALLEL EXECUTION
 			ON a.SCV_ID = b.SCV_ID AND a.SOURCE = b.SOURCE and a.SOURCE_ID = b.SOURCE_ID
 			LEFT OUTER JOIN :lt_addr_type_lookup c
 					ON b.STD_ADDR_PRIM_TYPE = c.STD_ADDR_PRIM_TYPE
-		   AND b.STD_ADDR_PRIM_TYPE != ''			
+		    WHERE b.STD_ADDR_PRIM_TYPE != ''			
 		) WHERE SCV_ID IN (SELECT SCV_ID FROM "osr.scv.foundation.db.data::SCVFoundation.Master" WHERE IS_HIDDEN != 'X')
     );
    END;
@@ -181,20 +181,7 @@ BEGIN PARALLEL EXECUTION
 			INNER JOIN
 			"osr.scv.foundation.db.data::SCVFoundation.AddressTmr" b
 			ON a.SCV_ID = b.SCV_ID AND a.SOURCE = b.SOURCE and a.SOURCE_ID = b.SOURCE_ID
-			LEFT OUTER JOIN (SELECT STD_ADDR_PRIM_TYPE,
-	                       "osr.scv.foundation.db.functions.Util::UtilSplitStringColumnSinglePos"(ADDR_TYPE_ADD,'&','1').OT_RESULT AS ADDR_TYPE_ADD_1,
-							"osr.scv.foundation.db.functions.Util::UtilSplitStringColumnSinglePos"(ADDR_TYPE_ADD,'&','2').OT_RESULT AS ADDR_TYPE_ADD_2,
-							"osr.scv.foundation.db.functions.Util::UtilSplitStringColumnSinglePos"(ADDR_TYPE_ADD,'&','3').OT_RESULT AS ADDR_TYPE_ADD_3,
-							"osr.scv.foundation.db.functions.Util::UtilSplitStringColumnSinglePos"(ADDR_TYPE_ADD,'&','4').OT_RESULT AS ADDR_TYPE_ADD_4,
-							"osr.scv.foundation.db.functions.Util::UtilSplitStringColumnSinglePos"(ADDR_TYPE_ADD,'&','5').OT_RESULT AS ADDR_TYPE_ADD_5
-							FROM 
-						(
-	                       SELECT STD_ADDR_PRIM_TYPE, STD_ADDR_PRIM_TYPE  || '&' || STRING_AGG(LOWER_TYPE, '&') AS ADDR_TYPE_ADD   FROM 
-							(
-								SELECT ADDR_TYPE AS STD_ADDR_PRIM_TYPE, LOWER(STD_ADDR_PRIM_TYPE) AS LOWER_TYPE 
-								FROM "osr.scv.foundation.db.data::SCVPrimType.AddrType"
-								GROUP BY ADDR_TYPE, LOWER(STD_ADDR_PRIM_TYPE)
-						) GROUP BY STD_ADDR_PRIM_TYPE)) c
+			LEFT OUTER JOIN :lt_addr_type_reverse_lookup c
 					ON LOWER(b.STREET_TYPE) = LOWER(c.STD_ADDR_PRIM_TYPE)
 		   where b.STD_ADDR_PRIM_NAME = '' 
 		) WHERE SCV_ID IN (SELECT SCV_ID FROM "osr.scv.foundation.db.data::SCVFoundation.Master" WHERE IS_HIDDEN != 'X')
