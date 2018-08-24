@@ -702,23 +702,14 @@ sap.ui.define([
 					press: function() {
 
 						// Set to busy
-						oController._setBusyStateFrame(true);
-
+						//oController._setBusyStateFrame(true);
+						oController.oBusyDialog.open();
+						
 						$.ajax({
 							type: "POST",
 							url: "/scv/match/srv/xs/supervisor/moveEntitiesToShadowTable.xsjs",
 							contentType: "application/json",
-							crossDomain: true,
-							success: function(data) {
-								oController._refreshFrame();
-								MessageToast.show('All Entities promoted!');
-								oController._setBusyStateFrame(false);
-							},
-							error: function(data) {
-								var message = JSON.stringify(data);
-								alert(message);
-								oController._setBusyStateFrame(false);
-							}
+							crossDomain: true
 						});
 
 						dialog.close();

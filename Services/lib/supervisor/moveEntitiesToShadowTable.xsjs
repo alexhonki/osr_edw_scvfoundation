@@ -88,7 +88,16 @@ function moveRowsToScvFoundationTable(dbConn) {
 
 try {
 	// validate the inputs here!
-	//let moment = require('moment');
+	
+	$.response.status = $.net.http.OK;
+	response = {
+		"status": "success",
+		"data": {},
+		"message": "Request successful!"
+	};
+	$.response.setBody(response);
+	
+	
 	let oConn = $.hdb.getConnection();
 	var output = moveEntitiesToShadowTable(oConn);
 	moveRowsToScvFoundationTable(oConn);
@@ -97,28 +106,28 @@ try {
 	//commit everything and close the entire db connection for clean up.
 	oConn.commit();
 	oConn.close();
-	
+
 	//old code to adjust once check is in place.
-	var response = {};
-	if (output.result === "ERROR") {
-		$.response.status = 500;
-		$.response.status = $.net.http.INTERNAL_SERVER_ERROR;
-		response = {
-			"status": "error",
-			"data": {},
-			"message": "Internal server error!"
-		};
-		$.response.setBody(response);
-	} else {
-		$.response.status = 201;
-		$.response.status = $.net.http.CREATED;
-		response = {
-			"status": "success",
-			"data": {},
-			"message": "Request successful!"
-		};
-		$.response.setBody(response);
-	}
+	// var response = {};
+	// if (output.result === "ERROR") {
+	// 	$.response.status = 500;
+	// 	$.response.status = $.net.http.INTERNAL_SERVER_ERROR;
+	// 	response = {
+	// 		"status": "error",
+	// 		"data": {},
+	// 		"message": "Internal server error!"
+	// 	};
+	// 	$.response.setBody(response);
+	// } else {
+	// 	$.response.status = 201;
+	// 	$.response.status = $.net.http.CREATED;
+	// 	response = {
+	// 		"status": "success",
+	// 		"data": {},
+	// 		"message": "Request successful!"
+	// 	};
+	// 	$.response.setBody(response);
+	// }
 } catch (err) {
 	$.response.setBody("Error occured " + err);
 	$.response.status = $.net.http.INTERNAL_SERVER_ERROR;
