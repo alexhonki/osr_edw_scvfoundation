@@ -164,6 +164,9 @@ sap.ui.define([
 				"allDuplicates": rmsAllDuplicatesFilter
 			};
 
+			this.oBusyDialog = sap.ui.xmlfragment("osr.scv.match.supervisor.dialogs.BusyDialog");
+			this.getView().addDependent(this.oBusyDialog);
+
 			this.getRouter().getRoute("worklist").attachPatternMatched(this._onRouteMatched, this);
 		},
 
@@ -179,7 +182,10 @@ sap.ui.define([
 					if (data !== 1) {
 						//no more procedures running in regards to promote SCV
 						oController.getView().byId("promoteToSCVBtn").setEnabled(true);
+						oController.oBusyDialog.close();
 					} else {
+
+						oController.oBusyDialog.open();
 						oController.getView().byId("promoteToSCVBtn").setEnabled(false);
 					}
 
@@ -214,7 +220,11 @@ sap.ui.define([
 						if (data !== 1) {
 							//no more procedures running in regards to promote SCV
 							oController.getView().byId("promoteToSCVBtn").setEnabled(true);
+
+							oController.oBusyDialog.close();
+
 						} else {
+							oController.oBusyDialog.open();
 							oController.getView().byId("promoteToSCVBtn").setEnabled(false);
 						}
 					},

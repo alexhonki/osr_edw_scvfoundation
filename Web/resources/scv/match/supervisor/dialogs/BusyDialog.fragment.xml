@@ -1,0 +1,8 @@
+<core:FragmentDefinition
+	xmlns="sap.m"
+	xmlns:core="sap.ui.core">
+	<BusyDialog
+		title="Promotion To SCV Foundation"
+		text="The promotion to SCV is in progress. Please wait."
+		close=""/>
+</core:FragmentDefinition>
