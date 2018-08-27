@@ -1,26 +1,26 @@
 /*
  * Created by Stefanus
  * A library to help to check for system validation
- * Can be enhance to help other modules if necessary 
- * 23.08.2018 
+ * Can be enhance to help other modules if necessary
+ * 23.08.2018
  */
 
 "use strict";
 
 /**
- * get chosen if we are only searching the source id. 
+ * get chosen if we are only searching the source id.
  * NOT NULL is used for fail safe in case there's NULL happening
- * on the Search table. 
+ * on the Search table.
  */
 function getCurrentProcedureRunning(oConn) {
 
 	let sCurrentSchemaName = getCurrentContainerSchemaName(oConn);
 
-	//3 current procedures that is being called to PROMOTE SCV in the order below. 
+	//3 current procedures that is being called to PROMOTE SCV in the order below.
 	//source of procedures name is in moveEntitiesToShadowTable.xsjs
 
 	// 1 "osr.scv.foundation.db.Procedures::SP_MoveEntityToShadowTable"
-	// 2 "osr.scv.foundation.db.Procedures::SP_MoveRowsToScvFoundation" 
+	// 2 "osr.scv.foundation.db.Procedures::SP_MoveRowsToScvFoundation"
 	// 3 "osr.scv.foundation.db.Procedures::SP_BuildScvSearchTable"
 	let oResult;
 	let bIsExecuting;
@@ -92,6 +92,15 @@ function getCurrentProcedureRunning(oConn) {
 	return false;
 }
 
+/**
+ * Check and return boolean whether at any time the rows given contain any
+ * statement status of EXECUTING
+ * base on the https://help.sap.com/doc/6254b3bb439c4f409a979dc407b49c9b/2.0.00/en-US/SAP_HANA_SQL_Script_Reference_en.pdf
+ * document.
+ * @param       {[type]} aRows [description]
+ * @constructor
+ * @return      {[type]}       [description]
+ */
 function _bRowsChecker(aRows) {
 	if (aRows.length > 0) {
 		for (let i = 0; i < aRows.length; i++) {
@@ -106,6 +115,14 @@ function _bRowsChecker(aRows) {
 
 }
 
+/**
+ * Get the current container schema and use that
+ * to pre-filter the DB further so it can be isolated
+ * to a single container.
+ * Using SYS SCHEMAS table and querying it from there.
+ * @param  {[type]} oConn [DB connection]
+ * @return {[type]}       [description]
+ */
 function getCurrentContainerSchemaName(oConn) {
 
 	let sSqlQuery = "SELECT \"SCHEMA_NAME\" FROM \"SYS\".\"SCHEMAS\" WHERE \"SCHEMA_NAME\" LIKE '%SCV%'";

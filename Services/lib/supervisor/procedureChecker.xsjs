@@ -1,11 +1,11 @@
-//import xsjslib library depending on our need. 
+//import xsjslib library depending on our need.
 let oHelperChecker = $.import("supervisor", "checkerHelper");
 
 try {
-	//definition of all different variables. 
+	//definition of all different variables.
 	let oConn = $.db.getConnection();
-	let bExecutionStatus = oHelperChecker.getCurrentProcedureRunning(oConn); 
-	                        
+	let bExecutionStatus = oHelperChecker.getCurrentProcedureRunning(oConn);
+
 
 	$.response.contentType = "application/json";
 	$.response.setBody(bExecutionStatus);
