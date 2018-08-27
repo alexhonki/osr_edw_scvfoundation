@@ -1,4 +1,9 @@
 {
+  "description": "TC_RunMatchAndSCV",
+  "responsible": {
+    "email": "dwfalerts@gmail.com"
+  },
+  "taskTimeout": 14400,
   "taskList": {
     "1": {
       "inline": {

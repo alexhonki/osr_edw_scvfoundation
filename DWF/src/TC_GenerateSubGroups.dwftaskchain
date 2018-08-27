@@ -1,4 +1,9 @@
 {
+  "description": "Generate SubGroups",
+  "responsible": {
+    "email": "dwfalerts@gmail.com"
+  },
+  "taskTimeout": 3600,
   "taskList": {
     "1": {
       "inline": {
