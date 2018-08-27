@@ -3,7 +3,7 @@
   "responsible": {
     "email": "dwfalerts@gmail.com"
   },
-  "taskTimeout": 1200,
+  "taskTimeout": 3600,
   "taskList": {
     "1": {
       "inline": {
