@@ -30,7 +30,7 @@ BEGIN
 	DECLARE EXIT HANDLER FOR SQLEXCEPTION
 	BEGIN
 		
-		DROP TABLE #lt_entity_mapping;
+		DROP TABLE #lt_entity_mappings;
 		DROP TABLE #lt_existing_entity_mapping;
 		
 --		o_return_code :=  'ERROR';
@@ -38,7 +38,7 @@ BEGIN
 	END;
 	
 	-- Temporary table to hold the SCV ID to Entity ID mapping
-	CREATE LOCAL TEMPORARY TABLE #lt_entity_mapping (
+	CREATE LOCAL TEMPORARY TABLE #lt_entity_mappings (
             SCV_ID_SEQ_CONTROL NVARCHAR(10),
             SCV_ID INTEGER,
             ENTITY_ID NVARCHAR(20),
@@ -94,7 +94,7 @@ BEGIN
 								ON a.ENTITY_ID = b.ENTITY_ID;						  
 	
 		-- Insert into mapping table
-		INSERT INTO #lt_entity_mapping (SELECT * FROM :lt_auto_entity_ids_detail);
+		INSERT INTO #lt_entity_mappings (SELECT * FROM :lt_auto_entity_ids_detail);
 		/*
 		lt_reject_scv_ids = SELECT  "STD_PERSON_GN",  "STD_PERSON_GN2", "STD_PERSON_FN", "osr.scv.foundation.db.data::SEQ_ScvMaster".NEXTVAL as SCV_ID FROM (
 						SELECT s.SYSTEM_ID,  s."Match_ROW_ID" ,
@@ -167,7 +167,7 @@ BEGIN
 								
 
 		-- Insert into mapping table
-		INSERT INTO #lt_entity_mapping (SELECT * FROM :lt_reject_scv_ids_detail);
+		INSERT INTO #lt_entity_mappings (SELECT * FROM :lt_reject_scv_ids_detail);
 
 		lt_accept_scv_ids = SELECT ENTITY_ID, "osr.scv.foundation.db.data::SEQ_ScvMaster".NEXTVAL as SCV_ID FROM (
 							SELECT s.ENTITY_ID,  s."Match_ROW_ID" 
@@ -200,7 +200,7 @@ BEGIN
 									ON a.ENTITY_ID = b.ENTITY_ID;
 									
 		-- Insert into mapping table
-		INSERT INTO #lt_entity_mapping (SELECT * FROM :lt_accept_scv_ids_detail_zero);
+		INSERT INTO #lt_entity_mappings (SELECT * FROM :lt_accept_scv_ids_detail_zero);
 		
 		
 -- Generates the rejected SCV id's in an entity. 		
@@ -216,23 +216,23 @@ BEGIN
 										;
 
 		-- Filter out any SCV_ID's that only contain TMR records.
---		DELETE FROM #lt_entity_mapping WHERE SCV_ID NOT IN (SELECT DISTINCT SCV_ID FROM #lt_entity_mapping
+--		DELETE FROM #lt_entity_mappings WHERE SCV_ID NOT IN (SELECT DISTINCT SCV_ID FROM #lt_entity_mappings
 --										WHERE SOURCE_SYSTEM = 'RMS');
 										
 		-- Filter out any records that are duplicates.											
-		DELETE FROM #lt_entity_mapping WHERE MATCH_ROW_ID IN (SELECT a."Match_ROW_ID" FROM "osr.scv.foundation.db.data::MatchResults.MatchResultsShadow" a
+		DELETE FROM #lt_entity_mappings WHERE MATCH_ROW_ID IN (SELECT a."Match_ROW_ID" FROM "osr.scv.foundation.db.data::MatchResults.MatchResultsShadow" a
 																INNER JOIN "osr.scv.foundation.db.synonyms::BUT000" b
 																ON a."Cleanse_ROW_ID_BUT" = b."Z_RUN_SEQ_ID" 
 																WHERE NAME_FIRST LIKE 'De-duplicated – same as BP%'
 																);
 																
 		-- Count the number of SCV ID created - this is for statistic purposes.						
-		SELECT COUNT (DISTINCT SCV_ID) INTO l_num_scv_created FROM #lt_entity_mapping ;
+		SELECT COUNT (DISTINCT SCV_ID) INTO l_num_scv_created FROM #lt_entity_mappings ;
 										
 		-- Fill auto-promotions, rejects and accepts into SCV master table. Only where records do not have an SCV_ID automatically assigned. An example is when a brand new entity is formed. 
 		INSERT INTO "osr.scv.foundation.db.data::SCVFoundation.Master" (
 				SELECT DISTINCT SCV_ID, CURRENT_DATE, null,CURRENT_USER, null, null, null, REJECTED_IDS, null  FROM (
-				SELECT a.SCV_ID, b.REJECTED_IDS FROM #lt_entity_mapping a
+				SELECT a.SCV_ID, b.REJECTED_IDS FROM #lt_entity_mappings a
 				LEFT OUTER JOIN :lt_reject_master_scv_ids b
 				ON a.SCV_ID = b.SCV_ID
 				--LEFT OUTER JOIN (SELECT MATCH_ROW_ID, ACTION_RMS FROM "osr.scv.foundation.db.data::MatchResults.MatchDelta") md
@@ -282,7 +282,7 @@ BEGIN
 		WHERE a.SCV_ID = b.SCV_ID;
 		
 	-- Add these records to the master mapping table for further processing.	
-		INSERT INTO #lt_entity_mapping (SELECT * FROM #lt_existing_entity_mapping);
+		INSERT INTO #lt_entity_mappings (SELECT * FROM #lt_existing_entity_mapping);
 	
 	END;
 	
@@ -313,7 +313,7 @@ BEGIN
 								ORDER BY a.ENTITY_ID
 							) mr
 							-- Add SCV ID
-							INNER JOIN (SELECT SCV_ID, ENTITY_ID AS ENTITY_ID1, MATCH_ROW_ID FROM #lt_entity_mapping) ma
+							INNER JOIN (SELECT SCV_ID, ENTITY_ID AS ENTITY_ID1, MATCH_ROW_ID FROM #lt_entity_mappings) ma
 							ON mr.ENTITY_ID = ma.ENTITY_ID1 AND mr."Match_ROW_ID" = ma.MATCH_ROW_ID 
 							-- Only adds a new record if it does not exist in the SCV group
 							WHERE mr.CHECKSUM NOT IN (SELECT "CHECKSUM"
@@ -356,7 +356,7 @@ BEGIN
 								ORDER BY a.ENTITY_ID
 							) mr
 							-- Add SCV ID
-							INNER JOIN (SELECT SCV_ID, ENTITY_ID AS ENTITY_ID1, MATCH_ROW_ID FROM #lt_entity_mapping) ma
+							INNER JOIN (SELECT SCV_ID, ENTITY_ID AS ENTITY_ID1, MATCH_ROW_ID FROM #lt_entity_mappings) ma
 							ON mr.ENTITY_ID = ma.ENTITY_ID1 AND mr."Match_ROW_ID" = ma.MATCH_ROW_ID 
 							) 
 							GROUP BY
@@ -438,7 +438,7 @@ BEGIN
 							
 								
 									-- Add SCV ID
-									INNER JOIN #lt_entity_mapping ma
+									INNER JOIN #lt_entity_mappings ma
 									ON mr.ENTITY_ID = ma.ENTITY_ID AND mr.MATCH_ROW_ID  = ma.MATCH_ROW_ID
 									WHERE mr.CHECKSUM NOT IN (SELECT "CHECKSUM"
 															FROM "osr.scv.foundation.db.data::SCVFoundation.PersonTmr"
@@ -567,7 +567,7 @@ lt_person_entities_date_tmr =
 								--	WHERE a.SOURCE_SYSTEM = 'RMS'
 								) mr
 							-- Add SCV ID
-							INNER JOIN (SELECT SCV_ID, ENTITY_ID AS ENTITY_ID1, MATCH_ROW_ID FROM #lt_entity_mapping) ma
+							INNER JOIN (SELECT SCV_ID, ENTITY_ID AS ENTITY_ID1, MATCH_ROW_ID FROM #lt_entity_mappings) ma
 							ON mr.ENTITY_ID = ma.ENTITY_ID1 AND mr."Match_ROW_ID" = ma.MATCH_ROW_ID
 							WHERE mr.CHECKSUM NOT IN (SELECT "CHECKSUM"
 															FROM "osr.scv.foundation.db.data::SCVFoundation.AddressRms"
@@ -695,7 +695,7 @@ lt_person_entities_date_tmr =
 									ON zdate."Z_RUN_SEQ_ID" = ms."Cleanse_ROW_ID_TMR" 
 							) mr
 									-- Add SCV ID
-									INNER JOIN #lt_entity_mapping ma
+									INNER JOIN #lt_entity_mappings ma
 									ON mr.ENTITY_ID = ma.ENTITY_ID AND mr.MATCH_ROW_ID  = ma.MATCH_ROW_ID
 									-- Only adds a new record if it does not exist in the SCV group
 									WHERE mr.CHECKSUM NOT IN (SELECT "CHECKSUM"
@@ -860,7 +860,7 @@ lt_address_entities_date_tmr =
 									) u
 								) mr
 								-- Add SCV ID
-								INNER JOIN (SELECT SCV_ID, ENTITY_ID AS ENTITY_ID1, MATCH_ROW_ID FROM #lt_entity_mapping) ma
+								INNER JOIN (SELECT SCV_ID, ENTITY_ID AS ENTITY_ID1, MATCH_ROW_ID FROM #lt_entity_mappings) ma
 								ON mr.ENTITY_ID = ma.ENTITY_ID1 AND mr."Match_ROW_ID" = ma.MATCH_ROW_ID
 								-- Only adds a new record if it does not exist in the SCV group
 									WHERE mr.CHECKSUM NOT IN (SELECT "CHECKSUM"
@@ -915,7 +915,7 @@ lt_address_entities_date_tmr =
 --								WHERE NAME != 'TMR_CUST_MAIN_FY1702.txt'	
 							) mr
 							-- Add SCV ID
-							INNER JOIN (SELECT SCV_ID, ENTITY_ID AS ENTITY_ID1, MATCH_ROW_ID FROM #lt_entity_mapping) ma
+							INNER JOIN (SELECT SCV_ID, ENTITY_ID AS ENTITY_ID1, MATCH_ROW_ID FROM #lt_entity_mappings) ma
 							ON mr.ENTITY_ID = ma.ENTITY_ID1 AND mr."Match_ROW_ID" = ma.MATCH_ROW_ID
 							-- Only adds a new record if it does not exist in the SCV group
 							WHERE mr.CHECKSUM NOT IN (SELECT "CHECKSUM"
@@ -947,7 +947,7 @@ lt_address_entities_date_tmr =
 --												AND NAME != 'TMR_CUST_MAIN_FY1702.txt'												
 											) mr	
 											-- Add SCV ID
-											INNER JOIN (SELECT SCV_ID, ENTITY_ID AS ENTITY_ID1, MATCH_ROW_ID FROM #lt_entity_mapping) ma
+											INNER JOIN (SELECT SCV_ID, ENTITY_ID AS ENTITY_ID1, MATCH_ROW_ID FROM #lt_entity_mappings) ma
 											ON mr.ENTITY_ID = ma.ENTITY_ID1 AND mr."Match_ROW_ID" = ma.MATCH_ROW_ID
 											-- Only adds a new record if it does not exist in the SCV group
 											WHERE mr.CHECKSUM NOT IN (SELECT "CHECKSUM"
@@ -991,7 +991,7 @@ lt_address_entities_date_tmr =
 --												AND NAME != 'TMR_CUST_MAIN_FY1702.txt'
 											) mr	
 											-- Add SCV ID
-											INNER JOIN (SELECT SCV_ID, ENTITY_ID AS ENTITY_ID1, MATCH_ROW_ID FROM #lt_entity_mapping) ma
+											INNER JOIN (SELECT SCV_ID, ENTITY_ID AS ENTITY_ID1, MATCH_ROW_ID FROM #lt_entity_mappings) ma
 											ON mr.ENTITY_ID = ma.ENTITY_ID1 AND mr."Match_ROW_ID" = ma.MATCH_ROW_ID
 											-- Only adds a new record if it does not exist in the SCV group
 											WHERE mr.CHECKSUM NOT IN (SELECT "CHECKSUM"
@@ -1010,7 +1010,7 @@ lt_address_entities_date_tmr =
 	
 
 	INSERT INTO "osr.scv.foundation.db.data::SCVFoundation.EntityMappingHistory" ( 
-																					SELECT :l_load_id, a.SCV_ID_SEQ_CONTROL, a.SCV_ID, a.ENTITY_ID, a.MATCH_ROW_ID , b."HASH" FROM #lt_entity_mapping as a
+																					SELECT :l_load_id, a.SCV_ID_SEQ_CONTROL, a.SCV_ID, a.ENTITY_ID, a.MATCH_ROW_ID , b."HASH" FROM #lt_entity_mappings as a
 																					LEFT OUTER JOIN "osr.scv.foundation.db.data::HashResults.MatchResultsHash" b
 																					ON a.MATCH_ROW_ID = b.MATCH_ROW_ID
 																				);	
@@ -1035,7 +1035,7 @@ lt_address_entities_date_tmr =
 
 	
 	-- ### Clean-up ##############################################################################################################
-	DROP TABLE #lt_entity_mapping;
+	DROP TABLE #lt_entity_mappings;
 	DROP TABLE #lt_existing_entity_mapping;
 	
 	-- o_return_code := 'SUCCESS';
