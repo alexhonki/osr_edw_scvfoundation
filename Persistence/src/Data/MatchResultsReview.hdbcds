@@ -18,8 +18,8 @@ context MatchResultsReview {
         key ENTITY_ID : String(10);
             TIMESTAMP : UTCTimestamp;
             USER      : String(200);
-            STRATEGY  : String(20);
             ACTION    : String(20);
+            STRATEGY  : String(20);
     };
 
     /*@@layout{"layoutInfo":{}}*/
