@@ -82,10 +82,15 @@ BEGIN
 	    		AND b.SCV_ID IS NOT NULL
 	    ;
 	    
-	    lt_master = SELECT m.MATCH_ROW, m.RELATED_ROW, m.POLICY_NAME, m.SCORE, COALESCE(m.SCV_ID, u.SCV_ID) AS SCV_ID, m.GROUP_INDEX, m.DELTA_STATUS
-	    	FROM "osr.scv.foundation.db.data::MatchResults.Delta" m
-	    	LEFT OUTER JOIN :lt_records_with_no_scv_id_to_update u
-	    	ON m.MATCH_ROW = u.MATCH_ROW;
+	    UPDATE "osr.scv.foundation.db.data::MatchResults.Delta" d SET d.SCV_ID = u.SCV_ID
+	    FROM "osr.scv.foundation.db.data::MatchResults.Delta" d, :lt_records_with_no_scv_id_to_update u
+	    WHERE d.MATCH_ROW = u.MATCH_ROW;
+	    
+		lt_master = SELECT * FROM "osr.scv.foundation.db.data::MatchResults.Delta";
+	    --lt_master = SELECT m.MATCH_ROW, m.RELATED_ROW, m.POLICY_NAME, m.SCORE, COALESCE(m.SCV_ID, u.SCV_ID) AS SCV_ID, m.GROUP_INDEX, m.DELTA_STATUS
+	    --	FROM "osr.scv.foundation.db.data::MatchResults.Delta" m
+	    --	LEFT OUTER JOIN :lt_records_with_no_scv_id_to_update u
+	    --	ON m.MATCH_ROW = u.MATCH_ROW;
 		
 	END IF;
 
