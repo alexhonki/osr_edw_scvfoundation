@@ -135,27 +135,7 @@ BEGIN
 		FROM :lt_master m0
 		LEFT OUTER JOIN (SELECT DISTINCT MATCH_ROW, SCV_ID FROM :lt_master) m1 
 		ON m0.RELATED_ROW = m1.MATCH_ROW;
------- NEW		
-		    lt_records_with_no_scv_id_to_update2 = 
-	    	SELECT DISTINCT a.MATCH_ROW, COALESCE(a.SCV_ID, b.SCV_ID) as SCV_ID
-	    	FROM (SELECT MATCH_ROW, SYSTEM_ID,SCV_ID FROM "osr.scv.foundation.db.data::MatchResults.Delta" de
-	    			INNER JOIN "osr.scv.foundation.db.data::MatchResults.MatchResults" mr
-	    			ON de.MATCH_ROW = mr."Match_ROW_ID") a
-	    	LEFT OUTER JOIN (SELECT MATCH_ROW, SYSTEM_ID,SCV_ID FROM "osr.scv.foundation.db.data::MatchResults.Delta" de
-			    			INNER JOIN "osr.scv.foundation.db.data::MatchResults.MatchResults" mr
-			    			ON de.MATCH_ROW = mr."Match_ROW_ID") b
-	    	ON a.SYSTEM_ID = b.SYSTEM_ID
-	    	--	AND a.SOURCE_SYSTEM = b.SOURCE_SYSTEM
-	    	WHERE a.SCV_ID IS NULL
-	    		AND b.SCV_ID IS NOT NULL
-	    ;
-	    
-	    lt_master = SELECT m.MATCH_ROW, m.RELATED_ROW, m.POLICY_NAME, m.SCORE, COALESCE(m.SCV_ID, u.SCV_ID) AS SCV_ID, m.GROUP_INDEX, m.DELTA_STATUS
-	    	FROM :lt_master m
-	    	LEFT OUTER JOIN :lt_records_with_no_scv_id_to_update2 u
-	    	ON m.MATCH_ROW = u.MATCH_ROW
-	    ;	
-------- NEW
+
 	END IF;
 	
 	IF :i_read_mode > 0 THEN
