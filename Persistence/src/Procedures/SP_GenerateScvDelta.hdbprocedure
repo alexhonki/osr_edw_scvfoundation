@@ -83,7 +83,7 @@ BEGIN
 	    ;
 	    
 	    lt_master = SELECT m.MATCH_ROW, m.RELATED_ROW, m.POLICY_NAME, m.SCORE, COALESCE(m.SCV_ID, u.SCV_ID) AS SCV_ID, m.GROUP_INDEX, m.DELTA_STATUS
-	    	FROM :lt_master_temp m
+	    	FROM "osr.scv.foundation.db.data::MatchResults.Delta" m
 	    	LEFT OUTER JOIN :lt_records_with_no_scv_id_to_update u
 	    	ON m.MATCH_ROW = u.MATCH_ROW;
 		
