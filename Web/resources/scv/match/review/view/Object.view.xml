@@ -253,7 +253,8 @@
 											         rows="{ path: 'matchAssessments', sorter: { path: 'TIMESTAMP', descending: true }}"
 											         ariaLabelledBy="title"
 											         selectionMode="None"
-											         enableGrouping="true">
+											         enableGrouping="true"
+											         busyIndicatorDelay="50" >
 												<t:columns>
 													<t:Column width="10rem">
 														<Label text="Strategy" />

@@ -120,6 +120,7 @@ sap.ui.define([
       //enable busy indicator for the main table
       oController._setBusyIndicatorForMainTable(true);
       oController._setBusyIndicatorForDetailTable(true);
+      oController._setBusyIndicatorForChangeLogTable(true);
       oController.getView().byId("tableDetails1Header").setText("Matches for Row ");
 
 
@@ -127,6 +128,10 @@ sap.ui.define([
       // Read the change log count for current entity
       oController.getModel().read(oController.sObjectPath + "/matchAssessments/$count", {
         success: function(oData) {
+          
+          //on reading count, disable the busy indicator no matter what.
+          oController._setBusyIndicatorForChangeLogTable(false);
+          
           let oRowCount = parseInt(oData),
             maxRowCount = 17;
           if (oRowCount < maxRowCount) {
@@ -630,6 +635,15 @@ sap.ui.define([
         }
       }
 
+    },
+    
+   /**
+     * Helper function to set busy status of the main table
+     * @param  {[Boolean]} bEnable [boolean flag]
+     * @return {[type]}         [description]
+     */
+    _setBusyIndicatorForChangeLogTable: function(bEnable) {
+      this.getView().byId("changeLogTable").setBusy(bEnable);
     },
 
     /**
