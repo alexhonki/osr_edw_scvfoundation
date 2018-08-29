@@ -77,7 +77,7 @@ BEGIN
 	END;
 	
 	BEGIN
-		-- 5th iteration
+		-- 6th iteration
 		CALL "osr.scv.foundation.db.Procedures::SP_GenerateScvDelta"(
 			I_READ_MODE => 3,
 			I_FINAL_READ_MODE => 1,
