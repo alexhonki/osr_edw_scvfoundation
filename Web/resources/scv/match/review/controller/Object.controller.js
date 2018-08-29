@@ -118,9 +118,12 @@ sap.ui.define([
       oController.getView().byId("itb1").setSelectedKey("entity-info-tab");
 
       //enable busy indicator for the main table
+      //also set to original state and hide the changelog by default.
       oController._setBusyIndicatorForMainTable(true);
       oController._setBusyIndicatorForDetailTable(true);
       oController._setBusyIndicatorForChangeLogTable(true);
+      oController.byId("itb1").getItems()[1].setVisible(false);
+      
       oController.getView().byId("tableDetails1Header").setText("Matches for Row ");
 
 
