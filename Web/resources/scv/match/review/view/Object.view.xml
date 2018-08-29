@@ -48,7 +48,7 @@
 					            class="sapUiResponsiveContentPadding">
 						<items>
 							<IconTabFilter text="Entity Info"
-							               key="key1">
+							               key="entity-info-tab">
 								<content>
 									<t:Table id="table"
 									         rows="{ path: 'matchResults', sorter: { path: 'GROUP_ROW_COUNT', descending: false}}"

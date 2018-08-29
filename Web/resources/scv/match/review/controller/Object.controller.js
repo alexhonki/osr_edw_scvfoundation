@@ -113,6 +113,9 @@ sap.ui.define([
       let oController = this;
       oController.sObjectPath = "/matchResultsReview('" + oEvent.getParameter("arguments").objectId.split("|")[0] + "')";
       oController._bindView(oController.sObjectPath);
+      
+      //set the tab to entity info 
+      oController.getView().byId("itb1").setSelectedKey("entity-info-tab");
 
       //enable busy indicator for the main table
       oController._setBusyIndicatorForMainTable(true);
