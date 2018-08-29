@@ -59,7 +59,34 @@ BEGIN
 	    ;
 	    
 	ELSE
-		lt_master = SELECT * FROM "osr.scv.foundation.db.data::MatchResults.Delta";
+		
+		-- Adjust SCV IDs for match rows with same system ID
+	    
+		lt_records_with_no_scv_id_to_update = 
+	    	SELECT DISTINCT a.MATCH_ROW, COALESCE(a.SCV_ID, b.SCV_ID) as SCV_ID
+	    	FROM (
+	    		SELECT dlt.MATCH_ROW, mr.SOURCE_SYSTEM, mr.SYSTEM_ID, dlt.RELATED_ROW, dlt.POLICY_NAME, dlt.SCORE, dlt.SCV_ID, dlt.GROUP_INDEX, dlt.DELTA_STATUS
+	    		FROM "osr.scv.foundation.db.data::MatchResults.Delta" dlt
+	    		LEFT OUTER JOIN "osr.scv.foundation.db.data::MatchResults.MatchResults" mr
+	    		ON dlt.MATCH_ROW = mr."Match_ROW_ID"
+	    	) a
+	    	LEFT OUTER JOIN (
+	    		SELECT dlt.MATCH_ROW, mr.SOURCE_SYSTEM, mr.SYSTEM_ID, dlt.RELATED_ROW, dlt.POLICY_NAME, dlt.SCORE, dlt.SCV_ID, dlt.GROUP_INDEX, dlt.DELTA_STATUS
+	    		FROM "osr.scv.foundation.db.data::MatchResults.Delta" dlt
+	    		LEFT OUTER JOIN "osr.scv.foundation.db.data::MatchResults.MatchResults" mr
+	    		ON dlt.MATCH_ROW = mr."Match_ROW_ID"
+	    	) b
+	    	ON a.SYSTEM_ID = b.SYSTEM_ID
+	    		AND a.SOURCE_SYSTEM = b.SOURCE_SYSTEM
+	    	WHERE a.SCV_ID IS NULL
+	    		AND b.SCV_ID IS NOT NULL
+	    ;
+	    
+	    lt_master = SELECT m.MATCH_ROW, m.RELATED_ROW, m.POLICY_NAME, m.SCORE, COALESCE(m.SCV_ID, u.SCV_ID) AS SCV_ID, m.GROUP_INDEX, m.DELTA_STATUS
+	    	FROM :lt_master_temp m
+	    	LEFT OUTER JOIN :lt_records_with_no_scv_id_to_update u
+	    	ON m.MATCH_ROW = u.MATCH_ROW;
+		
 	END IF;
 
 	-- Resolve SCV ID level 1
