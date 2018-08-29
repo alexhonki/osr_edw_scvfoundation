@@ -43,7 +43,7 @@ BEGIN
 	    
 	    -- Adjust SCV IDs for match rows with same system ID
 	    lt_records_with_no_scv_id_to_update = 
-	    	SELECT a.MATCH_ROW, COALESCE(a.SCV_ID, b.SCV_ID) as SCV_ID
+	    	SELECT DISTINCT a.MATCH_ROW, COALESCE(a.SCV_ID, b.SCV_ID) as SCV_ID
 	    	FROM :lt_master_temp a
 	    	LEFT OUTER JOIN :lt_master_temp b
 	    	ON a.SYSTEM_ID = b.SYSTEM_ID
