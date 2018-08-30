@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" xmlns:Variable="http://www.sap.com/ndb/BiModelVariable.ecore" id="osr.scv.foundation.db.views::MatchResultsDetailsSingle" applyPrivilegeType="NONE" dataCategory="DEFAULT" schemaVersion="3.0" outputViewType="Projection" cacheInvalidationPeriod="NONE" enforceSqlExecution="true">
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" xmlns:Variable="http://www.sap.com/ndb/BiModelVariable.ecore" id="osr.scv.foundation.db.views::MatchResultsDetailsSingle" applyPrivilegeType="NONE" dataCategory="DEFAULT" schemaVersion="3.0" outputViewType="Projection" cacheInvalidationPeriod="NONE" enforceSqlExecution="false">
 <descriptions defaultDescription="OSR SCV - Match Results Details Single View"/>
 <localVariables>
   <variable id="I_MATCH_ROW" parameter="true">
@@ -116,13 +116,13 @@
       <keyCalculation datatype="NVARCHAR" expressionLanguage="SQL" length="20">
         <formula>TO_NVARCHAR(&quot;MATCH_ROW&quot;)</formula>
       </keyCalculation>
-      </calculatedAttribute>
+    </calculatedAttribute>
     <calculatedAttribute id="NAME" order="5" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="NAME"/>
       <keyCalculation datatype="NVARCHAR" expressionLanguage="SQL" length="256">
         <formula>CONCAT(CONCAT(&quot;LAST_NAME&quot;, ', '), CONCAT(&quot;FIRST_NAME&quot;, CONCAT(' ',CASE WHEN &quot;MIDDLE_NAME&quot; IS NULL THEN '' ELSE &quot;MIDDLE_NAME&quot; END)))</formula>
       </keyCalculation>
-      </calculatedAttribute>
+    </calculatedAttribute>
   
     <calculatedAttribute id="ADDRESS" order="13" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="ADDRESS"/>
@@ -132,7 +132,8 @@
         <formula>&quot;ADDRESS_PRIM_NUMBER&quot; || ' ' || &quot;ADDRESS_PRIM_NAME&quot; || ' ' || &quot;ADDRESS_LOCALITY&quot; || ' ' || &quot;ADDRESS_POSTCODE&quot; || ' ' || &quot;ADDRESS_REGION&quot; || ' ' || &quot;ADDRESS_COUNTRY&quot;</formula>
   
       </keyCalculation>
-      </calculatedAttribute>
+  
+    </calculatedAttribute>
   
     <calculatedAttribute id="FIRST_MIDDLE_NAME" order="14" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="FIRST_MIDDLE_NAME"/>
@@ -142,7 +143,8 @@
         <formula>CONCAT(&quot;FIRST_NAME&quot;, CONCAT(' ' , &quot;MIDDLE_NAME&quot;))</formula>
   
       </keyCalculation>
-      </calculatedAttribute>
+  
+    </calculatedAttribute>
   </calculatedAttributes>
   <baseMeasures/>
   <calculatedMeasures/>
