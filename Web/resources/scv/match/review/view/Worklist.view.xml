@@ -11,7 +11,7 @@
 			<Toolbar>
 				<ToolbarSpacer/>
 				<SegmentedButton id="segmentedButton"
-				                 selectedKey="rmsDuplicates">
+				                 selectedKey="reviewGroups">
 					<items>
 						<SegmentedButtonItem id="rmsDuplicates"
 						                     text="RMS Duplicates"
