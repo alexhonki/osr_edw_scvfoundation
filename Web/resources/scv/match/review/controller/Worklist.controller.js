@@ -71,7 +71,7 @@ sap.ui.define([
         outOfStock: 0,
         countAll: 0,
         countAllStr: "",
-        globalFilter: "rmsDuplicates",
+        globalFilter: "reviewGroups",
         worklistLetterFilter: "",
         worklistCategoryFilter: ""
 
@@ -861,7 +861,7 @@ sap.ui.define([
     },
 
     onRefreshCounts: function() {
-
+	  let oController = this;
       let oViewModel = this.getModel("worklistView"),
         oModel = this.getOwnerComponent().getModel();
       // Get the count for all the products and set the value to 'countAll' property
@@ -869,6 +869,7 @@ sap.ui.define([
         success: function(oData) {
           oViewModel.setProperty("/countAll", oData);
           oViewModel.setProperty("/countAllStr", formatter.localePresentation(parseInt(oData)));
+          oController._updateTableTitle(oData, oController);
         },
         filters: [this.getCategoryFilters('all')]
         //filters: []
