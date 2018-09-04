@@ -45,125 +45,6 @@ sap.ui.define([
      */
     onInit: function() {
 
-      this.oModel = [];
-
-      var oViewModel;
-      this._oTableSearchState = [];
-
-      // Model used to manipulate control states
-      oViewModel = new JSONModel({
-        worklistTableTitle: this.getResourceBundle().getText("worklistTableTitle"),
-        saveAsTileTitle: this.getResourceBundle().getText("worklistViewTitle"),
-        shareOnJamTitle: this.getResourceBundle().getText("worklistViewTitle"),
-        shareSendEmailSubject: this.getResourceBundle().getText("shareSendEmailWorklistSubject"),
-        shareSendEmailMessage: this.getResourceBundle().getText("shareSendEmailWorklistMessage", [location.href]),
-        tableNoDataText: this.getResourceBundle().getText("tableNoDataText"),
-        tableBusyDelay: 0,
-        uniqueEntitiesCount: 0,
-        highConfidenceCount: 0,
-        mediumConfidenceCount: 0,
-        lowConfidenceCount: 0,
-        uniqueMatchEntitiesCount: 0,
-        identicalMatchEntitiesCount: 0,
-        recommendedMatchEntitiesCount: 0,
-        similarMatchEntitiesCount: 0,
-        uniqueMatchEntitiesCountStr: "",
-        identicalMatchEntitiesCountStr: "",
-        recommendedMatchEntitiesCountStr: "",
-        similarMatchEntitiesCountStr: "",
-        identicalMatchEntitiesCountPercent: 0,
-        recommendedMatchEntitiesCountPercent: 0,
-        similarMatchEntitiesCountPercent: 0,
-        inStock: 0,
-        shortage: 0,
-        outOfStock: 0,
-        countAll: 0,
-        countAllStr: "",
-        globalFilter: "rmsDuplicates"
-
-      });
-      this.setModel(oViewModel, "worklistView");
-
-      // Prepare filters
-      var uniqueMatchEntitiesFilter = new sap.ui.model.Filter("GROUP_CATEGORY", sap.ui.model.FilterOperator.EQ, "0");
-      var identicalMatchEntitiesFilters = new sap.ui.model.Filter("GROUP_CATEGORY", sap.ui.model.FilterOperator.EQ, "1");
-      var nearIdenticalMatchEntitiesFilters = new sap.ui.model.Filter("GROUP_CATEGORY", sap.ui.model.FilterOperator.EQ, "2");
-      var similarMatchEntitiesFilters = new sap.ui.model.Filter("GROUP_CATEGORY", sap.ui.model.FilterOperator.EQ, "3");
-      var aSurnameFilter = new sap.ui.model.Filter("NAME", sap.ui.model.FilterOperator.StartsWith, "A");
-      var bSurnameFilter = new sap.ui.model.Filter("NAME", sap.ui.model.FilterOperator.StartsWith, "B");
-      var cSurnameFilter = new sap.ui.model.Filter("NAME", sap.ui.model.FilterOperator.StartsWith, "C");
-      var dSurnameFilter = new sap.ui.model.Filter("NAME", sap.ui.model.FilterOperator.StartsWith, "D");
-      var eSurnameFilter = new sap.ui.model.Filter("NAME", sap.ui.model.FilterOperator.StartsWith, "E");
-      var fSurnameFilter = new sap.ui.model.Filter("NAME", sap.ui.model.FilterOperator.StartsWith, "F");
-      var gSurnameFilter = new sap.ui.model.Filter("NAME", sap.ui.model.FilterOperator.StartsWith, "G");
-      var hSurnameFilter = new sap.ui.model.Filter("NAME", sap.ui.model.FilterOperator.StartsWith, "H");
-      var iSurnameFilter = new sap.ui.model.Filter("NAME", sap.ui.model.FilterOperator.StartsWith, "I");
-      var jSurnameFilter = new sap.ui.model.Filter("NAME", sap.ui.model.FilterOperator.StartsWith, "J");
-      var kSurnameFilter = new sap.ui.model.Filter("NAME", sap.ui.model.FilterOperator.StartsWith, "K");
-      var lSurnameFilter = new sap.ui.model.Filter("NAME", sap.ui.model.FilterOperator.StartsWith, "L");
-      var mSurnameFilter = new sap.ui.model.Filter("NAME", sap.ui.model.FilterOperator.StartsWith, "M");
-      var nSurnameFilter = new sap.ui.model.Filter("NAME", sap.ui.model.FilterOperator.StartsWith, "N");
-      var oSurnameFilter = new sap.ui.model.Filter("NAME", sap.ui.model.FilterOperator.StartsWith, "O");
-      var pSurnameFilter = new sap.ui.model.Filter("NAME", sap.ui.model.FilterOperator.StartsWith, "P");
-      var qSurnameFilter = new sap.ui.model.Filter("NAME", sap.ui.model.FilterOperator.StartsWith, "Q");
-      var rSurnameFilter = new sap.ui.model.Filter("NAME", sap.ui.model.FilterOperator.StartsWith, "R");
-      var sSurnameFilter = new sap.ui.model.Filter("NAME", sap.ui.model.FilterOperator.StartsWith, "S");
-      var tSurnameFilter = new sap.ui.model.Filter("NAME", sap.ui.model.FilterOperator.StartsWith, "T");
-      var uSurnameFilter = new sap.ui.model.Filter("NAME", sap.ui.model.FilterOperator.StartsWith, "U");
-      var vSurnameFilter = new sap.ui.model.Filter("NAME", sap.ui.model.FilterOperator.StartsWith, "V");
-      var wSurnameFilter = new sap.ui.model.Filter("NAME", sap.ui.model.FilterOperator.StartsWith, "W");
-      var xSurnameFilter = new sap.ui.model.Filter("NAME", sap.ui.model.FilterOperator.StartsWith, "X");
-      var ySurnameFilter = new sap.ui.model.Filter("NAME", sap.ui.model.FilterOperator.StartsWith, "Y");
-      var zSurnameFilter = new sap.ui.model.Filter("NAME", sap.ui.model.FilterOperator.StartsWith, "Z");
-
-      // Create an object of filters
-      this._mFilters = {
-        "uniqueMatchEntities": uniqueMatchEntitiesFilter,
-        "identicalMatchEntities": identicalMatchEntitiesFilters,
-        "recommendedMatchEntities": nearIdenticalMatchEntitiesFilters,
-        "similarMatchEntities": similarMatchEntitiesFilters,
-        "all": []
-      };
-
-      this._mFiltersNames = {
-        "a": aSurnameFilter,
-        "b": bSurnameFilter,
-        "c": cSurnameFilter,
-        "d": dSurnameFilter,
-        "e": eSurnameFilter,
-        "f": fSurnameFilter,
-        "g": gSurnameFilter,
-        "h": hSurnameFilter,
-        "i": iSurnameFilter,
-        "j": jSurnameFilter,
-        "k": kSurnameFilter,
-        "l": lSurnameFilter,
-        "m": mSurnameFilter,
-        "n": nSurnameFilter,
-        "o": oSurnameFilter,
-        "p": pSurnameFilter,
-        "q": qSurnameFilter,
-        "r": rSurnameFilter,
-        "s": sSurnameFilter,
-        "t": tSurnameFilter,
-        "u": uSurnameFilter,
-        "v": vSurnameFilter,
-        "w": wSurnameFilter,
-        "x": xSurnameFilter,
-        "y": ySurnameFilter,
-        "z": zSurnameFilter,
-        "all": []
-      };
-
-      // Global filters
-      var rmsDuplicatesFilter = new sap.ui.model.Filter("RMS_DUPLICATES", sap.ui.model.FilterOperator.EQ, 1);
-      var rmsAllDuplicatesFilter = new sap.ui.model.Filter("RMS_DUPLICATES", sap.ui.model.FilterOperator.NE, -1);
-
-      this._mGlobalFilters = {
-        "rmsDuplicates": rmsDuplicatesFilter,
-        "allDuplicates": rmsAllDuplicatesFilter
-      };
-
       //set a holder for the dialog and reference it so it can be open and close
       //at anytime necessary.
       this.oBusyDialog = sap.ui.xmlfragment("osr.scv.match.supervisor.dialogs.BusyDialog");
@@ -178,42 +59,46 @@ sap.ui.define([
      * @return {[type]}        [description]
      */
     _onRouteMatched: function(oEvent) {
-
-      let oController = this;
-      oController.getView().byId("promoteToSCVBtn").setEnabled(false); //assume something running
+	 
+	 // initial check whether any procedure is running is being disabled.
+	 // all funcs relating to SCV Promote Btn.
+	 
+      // let oController = this;
+      //oController.getView().byId("promoteToSCVBtn").setEnabled(false); //assume something running
 
       //do an ajax call to check whether it is working at the moment or not.
-      let sCheckerUrl = this.getOwnerComponent().getMetadata().getConfig("scvProcedureChecker");
-      $.ajax(sCheckerUrl, {
-        success: function(data) {
-          // boolean checker whether promote procedures running.
-          // 1 is true and the rest are false.
-          if (data !== 1) {
-            //no more procedures running in regards to promote SCV
-            oController.getView().byId("promoteToSCVBtn").setEnabled(true);
-            oController.oBusyDialog.close();
-          } else {
+      //let sCheckerUrl = this.getOwnerComponent().getMetadata().getConfig("scvProcedureChecker");
+      //$.ajax(sCheckerUrl, {
+      //  success: function(data) {
+      //    // boolean checker whether promote procedures running.
+      //    // 1 is true and the rest are false.
+      //    if (data !== 1) {
+      //      //no more procedures running in regards to promote SCV
+      //      oController.getView().byId("promoteToSCVBtn").setEnabled(true);
+      //      oController.oBusyDialog.close();
+      //    } else {
 
-            oController.oBusyDialog.open();
-            oController.getView().byId("promoteToSCVBtn").setEnabled(false);
-          }
+      //      oController.oBusyDialog.open();
+      //      oController.getView().byId("promoteToSCVBtn").setEnabled(false);
+      //    }
 
-        },
-        error: function(error) {
-          //check for http error and serve accordingly.
-          if (error.status === 403) {
-            oController.sendMessageToast("You do not have enough authorisation please contact your system admin.");
-          } else {
-            oController.sendMessageToast("Something went wrong, our apologies. Please close the browser and try again.");
-          }
+      //  },
+      //  error: function(error) {
+      //    //check for http error and serve accordingly.
+      //    if (error.status === 403) {
+      //      oController.sendMessageToast("You do not have enough authorisation please contact your system admin.");
+      //    } else {
+      //      oController.sendMessageToast("Something went wrong, our apologies. Please close the browser and try again.");
+      //    }
 
-        }
-      });
+      //  }
+      //});
 
       //checker start to run interval for every 30seconds
       //can be change to longer if necessary. e.g 1min interval
       //time in millisecond.
-      this.startIntervalChecker(30000);
+      //disable function
+      //this.startIntervalChecker(30000);
     },
 
     /**
@@ -258,223 +143,8 @@ sap.ui.define([
     },
 
     /* =========================================================== */
-    /* event handlers                                              */
-    /* =========================================================== */
-
-    /**
-     * Triggered by the table's 'updateFinished' event: after new table
-     * data is available, this handler method updates the table counter.
-     * This should only happen if the update was successful, which is
-     * why this handler is attached to 'updateFinished' and not to the
-     * table's list binding's 'dataReceived' method.
-     * @param {sap.ui.base.Event} oEvent the update finished event
-     * @public
-     */
-    onUpdateFinished: function(oEvent) {
-      // update the worklist's object counter after the table update
-      var sTitle,
-        oTable = oEvent.getSource(),
-        oViewModel = this.getModel("worklistView"),
-        iTotalItems = oEvent.getParameter("total");
-
-      // only update the counter if the length is final and
-      // the table is not empty
-      if (iTotalItems && oTable.getBinding("items").isLengthFinal()) {
-
-        // Get current select key from category filter
-        var sKey = this.byId("iconTabBar").getSelectedKey();
-        var prefix = "";
-
-        // Get current select key from category filter
-        var sKey1 = this.byId("subIconTabBar").getSelectedKey();
-        var prefix1 = "";
-
-        if (sKey === "uniqueMatchEntities") {
-          prefix = 'Unique ';
-        } else if (sKey === "identicalMatchEntities") {
-          prefix = 'Identical ';
-        } else if (sKey === "recommendedMatchEntities") {
-          prefix = 'Recommended ';
-        } else if (sKey === "similarMatchEntities") {
-          prefix = 'Similar ';
-        }
-
-        if (sKey1.length === 1) {
-          prefix1 = " - " + sKey1.toUpperCase();
-        }
-
-        sTitle = this.getResourceBundle().getText("worklistTableTitleCount", [prefix, prefix1, formatter.localePresentation(parseInt([
-          iTotalItems
-        ]))]);
-
-        // Get the count for all the products and set the value to 'countAll' property
-        this.getModel().read("/matchResultsReview/$count", {
-          success: function(oData) {
-            oViewModel.setProperty("/countAll", oData);
-            oViewModel.setProperty("/countAllStr", formatter.localePresentation(parseInt(oData)));
-          },
-          filters: [this.getCategoryFilters('all')]
-          //filters: []
-        });
-
-        // read the count for the high confidence matches
-        this.getModel().read("/matchResultsReview/$count", {
-          success: function(oData) {
-            oViewModel.setProperty("/uniqueMatchEntitiesCount", oData);
-            oViewModel.setProperty("/uniqueMatchEntitiesCountStr", formatter.localePresentation(parseInt(oData)));
-            oViewModel.setProperty("/uniqueMatchEntitiesCountPercent", ((oData / oViewModel.getProperty("/countAll")) * 100).toFixed(1) +
-              '%');
-          },
-          filters: [this.getCategoryFilters('uniqueMatchEntities')]
-        });
-
-        // read the count for the high confidence matches
-        this.getModel().read("/matchResultsReview/$count", {
-          success: function(oData) {
-            oViewModel.setProperty("/identicalMatchEntitiesCount", oData);
-            oViewModel.setProperty("/identicalMatchEntitiesCountStr", formatter.localePresentation(parseInt(oData)));
-            oViewModel.setProperty("/identicalMatchEntitiesCountPercent", ((oData / oViewModel.getProperty("/countAll")) * 100).toFixed(1) +
-              '%');
-          },
-          filters: [this.getCategoryFilters('identicalMatchEntities')]
-        });
-
-        // read the count for the medium confidence matches
-        this.getModel().read("/matchResultsReview/$count", {
-          success: function(oData) {
-            oViewModel.setProperty("/recommendedMatchEntitiesCount", oData);
-            oViewModel.setProperty("/recommendedMatchEntitiesCountStr", formatter.localePresentation(parseInt(oData)));
-            oViewModel.setProperty("/recommendedMatchEntitiesCountPercent", ((oData / oViewModel.getProperty("/countAll")) * 100).toFixed(
-              1) + '%');
-          },
-          filters: [this.getCategoryFilters('recommendedMatchEntities')]
-        });
-
-        // read the count for the low confidence matches
-        this.getModel().read("/matchResultsReview/$count", {
-          success: function(oData) {
-            oViewModel.setProperty("/similarMatchEntitiesCount", oData);
-            oViewModel.setProperty("/similarMatchEntitiesCountStr", formatter.localePresentation(parseInt(oData)));
-            oViewModel.setProperty("/similarMatchEntitiesCountPercent", ((oData / oViewModel.getProperty("/countAll")) * 100).toFixed(1) +
-              '%');
-          },
-          filters: [this.getCategoryFilters('similarMatchEntities')]
-        });
-
-      } else {
-        sTitle = this.getResourceBundle().getText("worklistTableTitle");
-      }
-      this.getModel("worklistView").setProperty("/worklistTableTitle", sTitle);
-    },
-
-    /**
-     * Event handler when a table item gets pressed
-     * @param {sap.ui.base.Event} oEvent the table selectionChange event
-     * @public
-     */
-    onPress: function(oEvent) {
-      // The source is the list item that got pressed
-      this._showObject(oEvent.getSource());
-    },
-
-    /**
-     * Navigates back in the browser history, if the entry was created by this app.
-     * If not, it navigates to the Fiori Launchpad home page.
-     * @public
-     */
-    onNavBack: function() {
-      var oHistory = sap.ui.core.routing.History.getInstance(),
-        sPreviousHash = oHistory.getPreviousHash();
-
-      if (sPreviousHash !== undefined) {
-        // The history contains a previous entry
-        history.go(-1);
-      }
-    },
-
-    onSearch: function(oEvent) {
-      if (oEvent.getParameters().refreshButtonPressed) {
-        // Search field's 'refresh' button has been pressed.
-        // This is visible if you select any master list item.
-        // In this case no new search is triggered, we only
-        // refresh the list binding.
-        this.onRefresh();
-      } else {
-        var oTableSearchState = [];
-        var sQuery = oEvent.getParameter("query");
-
-        if (sQuery && sQuery.length > 0) {
-          oTableSearchState = [new Filter("tolower(NAME)", FilterOperator.Contains, "'" + sQuery.toLowerCase() + "'")];
-        }
-        this._applySearch(oTableSearchState);
-      }
-    },
-
-    /**
-     * Event handler for refresh event. Keeps filter, sort
-     * and group settings and refreshes the list binding.
-     * @public
-     */
-    onRefresh: function() {
-
-      this._oTable.getBinding("items").refresh();
-    },
-
-    /* =========================================================== */
     /* internal methods                                            */
     /* =========================================================== */
-
-    /**
-     * Shows the selected item on the object page
-     * On phones a additional history entry is created
-     * @param {sap.m.ObjectListItem} oItem selected Item
-     * @private
-     */
-    _showObject: function(oItem) {
-      this.getRouter().navTo("object", {
-        objectId: oItem.getBindingContext().getProperty("ENTITY_ID") + '|' + oItem.getBindingContext().getProperty("MATCH_ROW")
-      });
-    },
-
-    /**
-     * Internal helper method to apply both filter and search state together on the list binding
-     * @param {array} oTableSearchState an array of filters for the search
-     * @private
-     */
-    _applySearch: function(oTableSearchState) {
-      var oViewModel = this.getModel("worklistView");
-
-      var catFilter = this.getView().byId("iconTabBar").getSelectedKey();
-      var letterFilter = this.getView().byId("subIconTabBar").getSelectedKey();
-      var filter;
-
-      if (catFilter === "all" && letterFilter === "all") {
-        filter = oTableSearchState;
-      } else if (catFilter === "all" && letterFilter !== "all") {
-        filter = new sap.ui.model.Filter([
-          this._mFiltersNames[this.getView().byId("subIconTabBar").getSelectedKey()],
-          oTableSearchState[0]
-        ], true);
-      } else if (catFilter !== "all" && letterFilter === "all") {
-        filter = new sap.ui.model.Filter([
-          this._mFilters[this.getView().byId("iconTabBar").getSelectedKey()],
-          oTableSearchState[0]
-        ], true);
-      } else {
-        filter = new sap.ui.model.Filter([
-          this._mFiltersNames[this.getView().byId("subIconTabBar").getSelectedKey()],
-          this._mFilters[this.getView().byId("iconTabBar").getSelectedKey()],
-          oTableSearchState[0]
-        ], true);
-      }
-
-      this._oTable.getBinding("items").filter(filter, "Application");
-      //this._oTable.getBinding("items").filter(oTableSearchState, "Application");
-      // changes the noDataText of the list in case there are no filter results
-      if (oTableSearchState.length !== 0) {
-        oViewModel.setProperty("/tableNoDataText", this.getResourceBundle().getText("worklistNoDataWithSearchText"));
-      }
-    },
 
     /**
      * Displays an error message dialog. The displayed dialog is content density aware.
@@ -485,217 +155,6 @@ sap.ui.define([
       MessageBox.error(sMsg, {
         styleClass: this.getOwnerComponent().getContentDensityClass()
       });
-    },
-
-    /**
-     * Toggle global filter to display RMS duplicates or all entities
-     */
-    handleToggleDuplicateViewButtonPress: function(oEvent) {
-
-      var oViewModel = this.getModel("worklistView");
-      var sKey = oEvent.getSource().getKey();
-
-      if (sKey === 'rmsDuplicates') {
-        // Show RMS duplicates only
-        oViewModel.setProperty("/globalFilter", "rmsDuplicates");
-        this.byId("idVizFrame").getDataset().bindData("/matchAssessmentsReviewParameters(I_RMS_DUPLICATES='1')/Results");
-      } else {
-        this.oModel = this.getModel();
-        oViewModel.setProperty("/globalFilter", "allDuplicates");
-        var that = this;
-        this.byId("idVizFrame").getDataset().bindData("/matchAssessmentsReviewParameters(I_RMS_DUPLICATES='0')/Results");
-      }
-    },
-
-    /**
-     * Gets the filters set by the current UI state for a given category
-     *
-     *
-     */
-    getCategoryFilters: function(sCategory) {
-
-      var oViewModel = this.getModel("worklistView");
-
-      if (sCategory === 'all') {
-        if (this.getView().byId("subIconTabBar").getSelectedKey() !== 'all') {
-          return new sap.ui.model.Filter([
-            this._mGlobalFilters[oViewModel.getProperty("/globalFilter")],
-            this._mFiltersNames[this.getView().byId("subIconTabBar").getSelectedKey()]
-          ], true);
-        } else {
-          // Return empty array
-          //return this._mFilters.all;
-          return this._mGlobalFilters[oViewModel.getProperty("/globalFilter")];
-        }
-      } else {
-
-        if (this.getView().byId("subIconTabBar").getSelectedKey() !== 'all') {
-          return new sap.ui.model.Filter([
-            this._mGlobalFilters[oViewModel.getProperty("/globalFilter")],
-            this._mFiltersNames[this.getView().byId("subIconTabBar").getSelectedKey()],
-            this._mFilters[sCategory]
-          ], true);
-        } else {
-          return new sap.ui.model.Filter([
-            this._mGlobalFilters[oViewModel.getProperty("/globalFilter")],
-            this._mFilters[sCategory]
-          ], true);
-        }
-      }
-    },
-
-    getCurrentFilters: function() {
-      var catFilter = this.getView().byId("iconTabBar").getSelectedKey();
-      var letterFilter = this.getView().byId("subIconTabBar").getSelectedKey();
-      var sQuery = this.getView().byId("searchField").getValue();
-      var oTableSearchState = [];
-
-      if (sQuery && sQuery.length > 0) {
-        // Convert search string to lower case (on backend, convert column content to lowercase as well)
-        oTableSearchState = [new Filter("tolower(NAME)", FilterOperator.Contains, "'" + sQuery.toLowerCase() + "'")];
-      }
-
-      var filter = [];
-      if (catFilter !== "all") {
-        filter.push(this._mFilters[this.getView().byId("iconTabBar").getSelectedKey()]);
-      }
-      if (letterFilter !== "all") {
-        filter.push(this._mFiltersNames[this.getView().byId("subIconTabBar").getSelectedKey()]);
-      }
-      if (sQuery && sQuery.length > 0) {
-        filter.push(oTableSearchState[0]);
-      }
-
-      return filter;
-    },
-
-    /**
-     * Event handler when a filter tab gets pressed.
-     *
-     * Note: This method handles event from both fiter bars!
-     *
-     * @param {sap.ui.base.Event} oEvent the filter tab event
-     * @public
-     */
-    onQuickFilter: function(oEvent) {
-
-      var oViewModel = this.getModel("worklistView");
-      var oSearch = this.getView().byId("searchField");
-      var icon = oSearch.$().find('.sapUiSearchFieldIco');
-      if (icon.prop('title')) {
-        icon.click();
-      }
-
-      var oBinding = this._oTable.getBinding("items"),
-        sKey = oEvent.getParameter("selectedKey");
-
-      if (oEvent.oSource.sId.indexOf("subIconTabBar") > 0) {
-        // Letter filter tab
-        if (sKey === 'all') {
-
-          if (this.getView().byId("iconTabBar").getSelectedKey() === 'all') {
-            oBinding.filter(new sap.ui.model.Filter([this._mGlobalFilters[oViewModel.getProperty("/globalFilter")]], true), sap.ui.model.FilterType
-              .Application);
-          } else {
-            oBinding.filter(new sap.ui.model.Filter([this._mGlobalFilters[oViewModel.getProperty("/globalFilter")], this._mFilters[this.getView()
-              .byId("iconTabBar").getSelectedKey()]], true), sap.ui.model.FilterType.Application);
-          }
-
-        } else {
-
-          // Filter for a specific letter is set, now check if category filter
-          if (this.getView().byId("iconTabBar").getSelectedKey() === 'all') {
-            oBinding.filter(new sap.ui.model.Filter([this._mGlobalFilters[oViewModel.getProperty("/globalFilter")], this._mFiltersNames[sKey]],
-              true), sap.ui.model.FilterType.Application);
-          } else {
-            // Set new filter for letter and combine with current filter selection for group category
-            oBinding.filter(
-              new sap.ui.model.Filter([
-                this._mGlobalFilters[oViewModel.getProperty("/globalFilter")],
-                this._mFilters[this.getView().byId("iconTabBar").getSelectedKey()],
-                this._mFiltersNames[sKey]
-              ], true), sap.ui.model.FilterType.Application);
-          }
-
-        }
-
-      } else {
-        // Category filter tab
-        if (sKey === 'all') {
-
-          // All categories, set filter for letter selection only
-          if (this.getView().byId("subIconTabBar").getSelectedKey() === 'all') {
-            oBinding.filter(new sap.ui.model.Filter([this._mGlobalFilters[oViewModel.getProperty("/globalFilter")]], true), sap.ui.model.FilterType
-              .Application);
-          } else {
-            oBinding.filter(new sap.ui.model.Filter([this._mGlobalFilters[oViewModel.getProperty("/globalFilter")], this._mFiltersNames[this
-              .getView().byId("subIconTabBar").getSelectedKey()]], true), sap.ui.model.FilterType.Application);
-          }
-
-        } else {
-
-          // Specific category, check filter for letter selection
-          if (this.getView().byId("subIconTabBar").getSelectedKey() === 'all') {
-            // Letter selection is all, only one filter for category required
-            oBinding.filter(new sap.ui.model.Filter([this._mGlobalFilters[oViewModel.getProperty("/globalFilter")], this._mFilters[this.getView()
-              .byId("iconTabBar").getSelectedKey()]], true), sap.ui.model.FilterType.Application);
-          } else {
-
-            // Set new filter for group category and combine with current filter selection for letter
-            oBinding.filter(
-              new sap.ui.model.Filter([
-                this._mGlobalFilters[oViewModel.getProperty("/globalFilter")],
-                this._mFiltersNames[this.getView().byId("subIconTabBar").getSelectedKey()],
-                this._mFilters[sKey]
-              ], true), sap.ui.model.FilterType.Application);
-          }
-        }
-      }
-    },
-
-    /**
-     * Error and success handler for the unlist action.
-     * @param {string} sProductId the product ID for which this handler is called
-     * @param {boolean} bSuccess true in case of a success handler, else false (for error handler)
-     * @param {number} iRequestNumber the counter which specifies the position of this request
-     * @param {number} iTotalRequests the number of all requests sent
-     * @private
-     */
-    _handleUnlistActionResult: function(sProductId, bSuccess, iRequestNumber, iTotalRequests) {
-      // we could create a counter for successful and one for failed requests
-      // however, we just assume that every single request was successful and display a success message once
-      if (iRequestNumber === iTotalRequests) {
-        MessageToast.show(this.getModel("i18n").getResourceBundle().getText("StockRemovedSuccessMsg", [iTotalRequests]));
-      }
-    },
-
-    /**
-     * Error and success handler for the reorder action.
-     * @param {string} sProductId the product ID for which this handler is called
-     * @param {boolean} bSuccess true in case of a success handler, else false (for error handler)
-     * @param {number} iRequestNumber the counter which specifies the position of this request
-     * @param {number} iTotalRequests the number of all requests sent
-     * @private
-     */
-    _handleReorderActionResult: function(sProductId, bSuccess, iRequestNumber, iTotalRequests) {
-      // we could create a counter for successful and one for failed requests
-      // however, we just assume that every single request was successful and display a success message once
-      if (iRequestNumber === iTotalRequests) {
-        MessageToast.show(this.getModel("i18n").getResourceBundle().getText("StockUpdatedSuccessMsg", [iTotalRequests]));
-      }
-    },
-
-    // BEGIN UPDATED CODE //
-    /**
-     * Event handler for the promote to SCV.
-     * @public
-     */
-
-    _refreshFrame: function(iTimerDelay) {
-      let oController = this;
-      setTimeout(function() {
-        oController.getView().byId("idVizFrame").getModel().refresh(true);
-      }, iTimerDelay);
     },
 
     _setBusyStateFrame: function(bShow) {
@@ -745,7 +204,6 @@ sap.ui.define([
       dialog.open();
 
     },
-    // END UPDATED CODE //
 
     handleConfirm: function(oEvent) {
 
