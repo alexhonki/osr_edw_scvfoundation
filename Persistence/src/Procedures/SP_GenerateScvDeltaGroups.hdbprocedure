@@ -1,0 +1,204 @@
+PROCEDURE "osr.scv.foundation.db.Procedures::SP_GenerateScvDeltaGroups" (
+--	IN  i_read_mode			INTEGER,																-- 0 = Initial creation; 1 = Continue reading from delta table
+--	IN  i_final_read_mode	INTEGER,
+	OUT o_return_code		NVARCHAR(128), 															-- 0 = execution successful; 1 = execution raised exception.
+	OUT o_message			NVARCHAR(1000) 	
+)
+   LANGUAGE SQLSCRIPT
+   SQL SECURITY INVOKER
+   AS
+BEGIN
+   /*************************************
+       Write your procedure logic 
+   *************************************/
+   	
+--   	DECLARE l_size INTEGER DEFAULT 0;
+   	
+   	DECLARE EXIT HANDLER FOR SQLEXCEPTION
+	BEGIN
+		
+		o_return_code :=  'ERROR';
+		o_message:=  'ERROR: ' || ::SQL_ERROR_CODE || ' ' || ::SQL_ERROR_MESSAGE;
+	END;
+
+	lt_master=
+      SELECT first.MATCH_ROW, COALESCE(first.SCV_ID, second.SCV_ID) as SCV_ID, COALESCE(first.DELTA_STATUS, second.DELTA_STATUS) as DELTA_STATUS FROM (          
+                        -- Join sub groups table to match results hash to get SCV ID
+                        SELECT sg.MATCH_ROW, sg.GROUP_TAG, delta.SCV_ID, delta.DELTA_STATUS FROM "osr.scv.foundation.db.data::MatchResults.SubGroups" sg
+                        INNER JOIN 
+                        (
+                        SELECT DISTINCT mh.MATCH_ROW_ID, sh.SCV_ID AS SCV_ID, CASE WHEN sh.SCV_ID IS NULL THEN 'New' ELSE 'Existing' END AS DELTA_STATUS FROM "osr.scv.foundation.db.data::HashResults.MatchResultsHash" as mh
+                        LEFT OUTER JOIN (
+                                        SELECT DISTINCT SCV_ID, "MATCH_ROW_CHECKSUM"  FROM "osr.scv.foundation.db.data::SCVFoundation.EntityMappingHistory"
+                                        ) as sh
+                        ON mh."HASH" = sh."MATCH_ROW_CHECKSUM"
+            ) delta
+            ON sg.Match_ROW = delta.MATCH_ROW_ID
+--            WHERE sg.MATCH_ROW IN (10731368, 16001331, 3501625, 4072996, 4072997, 4072995, 14174843, 14174842)
+
+        ) first
+        LEFT OUTER JOIN (
+                        SELECT DISTINCT sg.GROUP_TAG, delta.SCV_ID, delta.DELTA_STATUS FROM "osr.scv.foundation.db.data::MatchResults.SubGroups" sg
+                        INNER JOIN 
+                        (
+                        SELECT DISTINCT mh.MATCH_ROW_ID, sh.SCV_ID AS SCV_ID, CASE WHEN sh.SCV_ID IS NULL THEN 'New' ELSE 'Existing' END AS DELTA_STATUS FROM "osr.scv.foundation.db.data::HashResults.MatchResultsHash" as mh
+                        LEFT OUTER JOIN (
+                                        SELECT DISTINCT SCV_ID, "MATCH_ROW_CHECKSUM"  FROM "osr.scv.foundation.db.data::SCVFoundation.EntityMappingHistory"
+                                        ) as sh
+                        ON mh."HASH" = sh."MATCH_ROW_CHECKSUM"
+            ) delta
+            ON sg.Match_ROW = delta.MATCH_ROW_ID
+--            WHERE sg.MATCH_ROW IN (10731368, 16001331, 3501625, 4072996, 4072997, 4072995, 14174843, 14174842)
+                        AND delta.SCV_ID IS NOT NULL
+                        
+        ) second
+        ON first.GROUP_TAG = second.GROUP_TAG;
+
+
+		INSERT INTO "osr.scv.foundation.db.data::MatchResults.Delta" (SELECT MATCH_ROW, '','','',SCV_ID,'',DELTA_STATUS FROM :lt_master)
+		;
+
+/*	
+	IF :i_read_mode = 0 THEN
+		TRUNCATE TABLE "osr.scv.foundation.db.data::MatchResults.Delta";
+		lt_master_temp = 
+		SELECT "Match_ROW_ID" as MATCH_ROW, SOURCE_SYSTEM, SYSTEM_ID, RELATED_ROW_ID as RELATED_ROW, POLICY_NAME, SCORE, SCV_ID, 0 AS GROUP_INDEX, DELTA_STATUS FROM "osr.scv.foundation.db.data::MatchResults.MatchResults" AS a
+		LEFT OUTER JOIN (SELECT * 
+	    				 FROM "osr.scv.foundation.db.data::MatchResults.MatchTracing"
+	                    ) AS b
+	    ON a."Match_ROW_ID" = b.ROW_ID
+	    INNER JOIN (
+	    SELECT DISTINCT mh.MATCH_ROW_ID, sh.SCV_ID AS SCV_ID, CASE WHEN sh.SCV_ID IS NULL THEN 'New' ELSE 'Existing' END AS DELTA_STATUS FROM "osr.scv.foundation.db.data::HashResults.MatchResultsHash" as mh
+		LEFT OUTER JOIN (
+					SELECT DISTINCT SCV_ID, "MATCH_ROW_CHECKSUM"  FROM "osr.scv.foundation.db.data::SCVFoundation.EntityMappingHistory"
+					) as sh
+		ON mh."HASH" = sh."MATCH_ROW_CHECKSUM"
+	    ) c
+	    ON a."Match_ROW_ID" = c.MATCH_ROW_ID
+	    --WHERE a.GROUP_ID = 1605949
+	    --WHERE a."Match_ROW_ID" IN ( 6527855, 3923168, 8257941, 16686369, 634916, 12185035, 9697487, 11271814, 8584887, 8584886)
+	    ;
+
+	    
+	    -- Adjust SCV IDs for match rows with same system ID
+	    lt_records_with_no_scv_id_to_update = 
+	    	SELECT DISTINCT a.MATCH_ROW, COALESCE(a.SCV_ID, b.SCV_ID) as SCV_ID
+	    	FROM :lt_master_temp a
+	    	LEFT OUTER JOIN :lt_master_temp b
+	    	ON a.SYSTEM_ID = b.SYSTEM_ID
+	    		AND a.SOURCE_SYSTEM = b.SOURCE_SYSTEM
+	    	WHERE a.SCV_ID IS NULL
+	    		AND b.SCV_ID IS NOT NULL
+	    ;
+	    
+	    lt_master = SELECT m.MATCH_ROW, m.RELATED_ROW, m.POLICY_NAME, m.SCORE, COALESCE(m.SCV_ID, u.SCV_ID) AS SCV_ID, m.GROUP_INDEX, m.DELTA_STATUS
+	    	FROM :lt_master_temp m
+	    	LEFT OUTER JOIN :lt_records_with_no_scv_id_to_update u
+	    	ON m.MATCH_ROW = u.MATCH_ROW
+	    ;
+	    
+	ELSE
+		
+		-- Adjust SCV IDs for match rows with same system ID
+	    
+		lt_records_with_no_scv_id_to_update = 
+	    	SELECT DISTINCT a.MATCH_ROW, COALESCE(a.SCV_ID, b.SCV_ID) as SCV_ID
+	    	FROM (
+	    		SELECT dlt.MATCH_ROW, mr.SOURCE_SYSTEM, mr.SYSTEM_ID, dlt.RELATED_ROW, dlt.POLICY_NAME, dlt.SCORE, dlt.SCV_ID, dlt.GROUP_INDEX, dlt.DELTA_STATUS
+	    		FROM "osr.scv.foundation.db.data::MatchResults.Delta" dlt
+	    		LEFT OUTER JOIN "osr.scv.foundation.db.data::MatchResults.MatchResults" mr
+	    		ON dlt.MATCH_ROW = mr."Match_ROW_ID"
+	    	) a
+	    	LEFT OUTER JOIN (
+	    		SELECT dlt.MATCH_ROW, mr.SOURCE_SYSTEM, mr.SYSTEM_ID, dlt.RELATED_ROW, dlt.POLICY_NAME, dlt.SCORE, dlt.SCV_ID, dlt.GROUP_INDEX, dlt.DELTA_STATUS
+	    		FROM "osr.scv.foundation.db.data::MatchResults.Delta" dlt
+	    		LEFT OUTER JOIN "osr.scv.foundation.db.data::MatchResults.MatchResults" mr
+	    		ON dlt.MATCH_ROW = mr."Match_ROW_ID"
+	    	) b
+	    	ON a.SYSTEM_ID = b.SYSTEM_ID
+	    		AND a.SOURCE_SYSTEM = b.SOURCE_SYSTEM
+	    	WHERE a.SCV_ID IS NULL
+	    		AND b.SCV_ID IS NOT NULL
+	    ;
+	    
+	    UPDATE "osr.scv.foundation.db.data::MatchResults.Delta" d SET d.SCV_ID = u.SCV_ID
+	    FROM "osr.scv.foundation.db.data::MatchResults.Delta" d, :lt_records_with_no_scv_id_to_update u
+	    WHERE d.MATCH_ROW = u.MATCH_ROW;
+	    
+		lt_master = SELECT * FROM "osr.scv.foundation.db.data::MatchResults.Delta";
+	    --lt_master = SELECT m.MATCH_ROW, m.RELATED_ROW, m.POLICY_NAME, m.SCORE, COALESCE(m.SCV_ID, u.SCV_ID) AS SCV_ID, m.GROUP_INDEX, m.DELTA_STATUS
+	    --	FROM "osr.scv.foundation.db.data::MatchResults.Delta" m
+	    --	LEFT OUTER JOIN :lt_records_with_no_scv_id_to_update u
+	    --	ON m.MATCH_ROW = u.MATCH_ROW;
+		
+	END IF;
+
+	-- Resolve SCV ID level 1
+	lt_master = 
+		SELECT m0.MATCH_ROW, m0.RELATED_ROW, m0.POLICY_NAME, m0.SCORE, COALESCE(m0.SCV_ID, m1.SCV_ID) as SCV_ID,  m0.GROUP_INDEX, m0.DELTA_STATUS
+		FROM :lt_master m0
+		LEFT OUTER JOIN (SELECT DISTINCT MATCH_ROW, SCV_ID FROM :lt_master WHERE SCV_ID IS NOT NULL) m1 
+		ON m0.RELATED_ROW = m1.MATCH_ROW;
+		
+	
+	lt_master = 
+		SELECT m0.MATCH_ROW, m0.RELATED_ROW, m0.POLICY_NAME, m0.SCORE, COALESCE(m0.SCV_ID, m1.SCV_ID) as SCV_ID,  m0.GROUP_INDEX, m0.DELTA_STATUS
+		FROM :lt_master m0
+--		LEFT OUTER JOIN (SELECT DISTINCT RELATED_ROW, SCV_ID FROM :lt_master WHERE SCV_ID IS NOT NULL) m1 
+		LEFT OUTER JOIN (SELECT DISTINCT RELATED_ROW, SCV_ID FROM :lt_master ) m1 
+		ON m0.MATCH_ROW = m1.RELATED_ROW;	
+	
+
+	-- Fill SCV IDs for match rows with empty RELATED_ROW
+	lt_rows_with_no_relation = SELECT MATCH_ROW FROM :lt_master WHERE RELATED_ROW IS NULL;-- and SCV_ID IS NULL;
+	
+	lt_lookup_for_rows_with_no_relation = SELECT * FROM :lt_master WHERE RELATED_ROW IN (SELECT * FROM :lt_rows_with_no_relation) AND SCV_ID IS NOT NULL;
+	
+	-- Aggregate on match policy and score for multi-matches, take the top 1 per match row
+	-- TO DO: Replace with business rule
+	lt_final_lookup_for_rows_with_no_relation = 
+		SELECT RELATED_ROW, SCV_ID FROM (
+			SELECT *,
+				   ROW_NUMBER() OVER (PARTITION BY RELATED_ROW ORDER BY POLICY_NAME, SCORE DESC) AS GROUP_ROW_COUNT
+			FROM :lt_lookup_for_rows_with_no_relation
+		) WHERE GROUP_ROW_COUNT = 1;
+		
+	-- Perform lookup
+	lt_master = 
+		SELECT m0.MATCH_ROW, m0.RELATED_ROW, m0.POLICY_NAME, m0.SCORE,COALESCE(m0.SCV_ID, m1.SCV_ID) as SCV_ID,  m0.GROUP_INDEX, m0.DELTA_STATUS
+		FROM :lt_master m0
+		LEFT OUTER JOIN :lt_final_lookup_for_rows_with_no_relation m1
+		ON m0.MATCH_ROW = m1.RELATED_ROW;	
+		
+	-- Resolve final missing dependencies
+	IF :i_final_read_mode = 1 THEN
+	lt_master = 
+		SELECT m0.MATCH_ROW, m0.RELATED_ROW, m0.POLICY_NAME, m0.SCORE,COALESCE(m0.SCV_ID, m1.SCV_ID) as SCV_ID,  m0.GROUP_INDEX, m0.DELTA_STATUS
+		FROM :lt_master m0
+		LEFT OUTER JOIN (SELECT DISTINCT MATCH_ROW, SCV_ID FROM :lt_master) m1 
+		ON m0.RELATED_ROW = m1.MATCH_ROW;
+
+	END IF;
+	
+	IF :i_read_mode > 0 THEN
+		
+		-- Update SCV IDs based on match row and related row match
+		UPDATE "osr.scv.foundation.db.data::MatchResults.Delta" d SET d.SCV_ID = u.SCV_ID 
+		FROM "osr.scv.foundation.db.data::MatchResults.Delta" d, (SELECT DISTINCT MATCH_ROW, RELATED_ROW, SCV_ID FROM :lt_master) u
+		WHERE d.MATCH_ROW = u.MATCH_ROW
+			AND d.RELATED_ROW = u.RELATED_ROW
+		;
+		
+		-- Update SCV IDs based on match row match only, related row is null
+		UPDATE "osr.scv.foundation.db.data::MatchResults.Delta" d SET d.SCV_ID = u.SCV_ID 
+		FROM "osr.scv.foundation.db.data::MatchResults.Delta" d, (SELECT DISTINCT MATCH_ROW, RELATED_ROW, SCV_ID FROM :lt_master) u
+		WHERE d.MATCH_ROW = u.MATCH_ROW
+			AND d.RELATED_ROW IS NULL
+			AND u.RELATED_ROW IS NULL
+		;
+		
+	ELSE
+		INSERT INTO "osr.scv.foundation.db.data::MatchResults.Delta" (SELECT * FROM :lt_master);
+	END IF;
+*/	
+END
