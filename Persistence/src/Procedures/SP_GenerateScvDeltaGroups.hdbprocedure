@@ -57,7 +57,7 @@ BEGIN
         ON first.GROUP_TAG = second.GROUP_TAG;
 
 
-		INSERT INTO "osr.scv.foundation.db.data::MatchResults.Delta" (SELECT MATCH_ROW, '','','',SCV_ID,'',DELTA_STATUS FROM :lt_master)
+		INSERT INTO "osr.scv.foundation.db.data::MatchResults.Delta" (SELECT MATCH_ROW, 0,'',0,SCV_ID,0,DELTA_STATUS FROM :lt_master)
 		;
 
 /*	
