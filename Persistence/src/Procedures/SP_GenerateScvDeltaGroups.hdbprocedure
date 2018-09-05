@@ -20,7 +20,9 @@ BEGIN
 		o_return_code :=  'ERROR';
 		o_message:=  'ERROR: ' || ::SQL_ERROR_CODE || ' ' || ::SQL_ERROR_MESSAGE;
 	END;
-
+	
+	TRUNCATE TABLE "osr.scv.foundation.db.data::MatchResults.Delta";
+	
 	lt_master=
       SELECT first.MATCH_ROW, COALESCE(first.SCV_ID, second.SCV_ID) as SCV_ID, COALESCE(first.DELTA_STATUS, second.DELTA_STATUS) as DELTA_STATUS FROM (          
                         -- Join sub groups table to match results hash to get SCV ID
