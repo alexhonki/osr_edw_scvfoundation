@@ -292,6 +292,8 @@ BEGIN SEQUENTIAL EXECUTION
 	WHERE sgm.MATCH_ROW = d.MATCH_ROW
 		AND sgm.GROUP_TAG != d.GROUP_TAG;			
 	
+	lt_mapping_before3 = SELECT * FROM #lt_sub_groups_mapping;
+	
 	-- Collect orphan TMR-TMR matches
 	lt_set_d = 
 		SELECT MATCH_ROW, GROUP_TAG, RELATED_ROW, RELATED_SYSTEM_ID,SCORE FROM 
