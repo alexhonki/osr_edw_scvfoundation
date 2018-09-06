@@ -65,18 +65,22 @@ BEGIN
 		INNER JOIN :lt_master md
 		ON ma."Match_ROW_ID" = md.MATCH_ROW
 		WHERE ENTITY_ID IN (
-		                    SELECT ma.ENTITY_ID  FROM "osr.scv.foundation.db.data::MatchResults.MatchResults" ma                                                          
-		                    INNER JOIN :lt_master md
-		                    ON ma."Match_ROW_ID" = md.MATCH_ROW
+		                    SELECT ma1.ENTITY_ID  FROM "osr.scv.foundation.db.data::MatchResults.MatchResults" ma1                                                          
+		                    INNER JOIN :lt_master md1
+		                    ON ma1."Match_ROW_ID" = md1.MATCH_ROW
 		                    where DELTA_STATUS = 'Existing' and SCV_ID > 1
 							) AND SCV_ID IS NULL
 		;
 		
 		
 		lt_generate_scvids = 
-		SELECT sc.ENTITY_ID, sc."Match_ROW_ID" as MATCH_ROW, ms.SCV_ID, sc.DELTA_STATUS FROM :lt_missing_scvids sc
+		SELECT sc.ENTITY_ID, sc."Match_ROW_ID" as MATCH_ROW, ms.SCV_ID  FROM "osr.scv.foundation.db.data::MatchResults.MatchResults" sc
 		INNER JOIN (
-					SELECT ENTITY_ID, MAX(SCV_ID) as SCV_ID FROM :lt_missing_scvids
+						SELECT ENTITY_ID, MAX(SCV_ID) as SCV_ID  
+						FROM "osr.scv.foundation.db.data::MatchResults.MatchResults" ma                                                          
+						INNER JOIN "osr.scv.foundation.db.data::MatchResults.Delta" md
+						ON ma."Match_ROW_ID" = md.MATCH_ROW
+						WHERE ENTITY_ID IN (SELECT ENTITY_ID FROM :lt_missing_scvids)
 					GROUP BY ENTITY_ID
 					) ms		
 		ON sc.ENTITY_ID = ms.ENTITY_ID;		
