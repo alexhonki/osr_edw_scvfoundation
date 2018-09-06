@@ -91,11 +91,11 @@
       "inline": {
         "type": "SUB",
         "taskGroup": "com.sap.dwf.toe.executionControl",
-        "description": "Process SCV Delta",
+        "description": "Prepare Review Table",
         "parameterValues": [
           {
             "id": "taskChainId",
-            "value": "src#TC_ProcessSCVDelta"
+            "value": "src#TC_PrepareReview"
           }
         ]
       },
@@ -110,25 +110,6 @@
       "inline": {
         "type": "SUB",
         "taskGroup": "com.sap.dwf.toe.executionControl",
-        "description": "Prepare Review Table",
-        "parameterValues": [
-          {
-            "id": "taskChainId",
-            "value": "src#TC_PrepareReview"
-          }
-        ]
-      },
-      "preconditions": [
-        {
-          "from": "6",
-          "status": "OK"
-        }
-      ]
-    },
-    "8": {
-      "inline": {
-        "type": "SUB",
-        "taskGroup": "com.sap.dwf.toe.executionControl",
         "description": "Copy Match Information",
         "parameterValues": [
           {
@@ -140,6 +121,25 @@
       "preconditions": [
         {
           "from": "3",
+          "status": "OK"
+        }
+      ]
+    },
+    "8": {
+      "inline": {
+        "type": "SUB",
+        "taskGroup": "com.sap.dwf.toe.executionControl",
+        "description": "Generate Scv Delta Groups",
+        "parameterValues": [
+          {
+            "id": "taskChainId",
+            "value": "src#TC_GenerateScvDeltaGroups"
+          }
+        ]
+      },
+      "preconditions": [
+        {
+          "from": "5",
           "status": "OK"
         }
       ]

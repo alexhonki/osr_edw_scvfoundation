@@ -59,6 +59,33 @@ BEGIN
 
 		INSERT INTO "osr.scv.foundation.db.data::MatchResults.Delta" (SELECT MATCH_ROW, 0,'',0,SCV_ID,0,DELTA_STATUS FROM :lt_master)
 		;
+		
+		lt_missing_scvids = 
+		SELECT ma.ENTITY_ID, ma."Match_ROW_ID", SCV_ID, DELTA_STATUS FROM "osr.scv.foundation.db.data::MatchResults.MatchResults" ma                                                          
+		INNER JOIN :lt_master md
+		ON ma."Match_ROW_ID" = md.MATCH_ROW
+		WHERE ENTITY_ID IN (
+		                    SELECT ma.ENTITY_ID  FROM "osr.scv.foundation.db.data::MatchResults.MatchResults" ma                                                          
+		                    INNER JOIN :lt_master md
+		                    ON ma."Match_ROW_ID" = md.MATCH_ROW
+		                    where DELTA_STATUS = 'Existing' and SCV_ID > 1
+							) AND SCV_ID IS NULL
+		;
+		
+		
+		lt_generate_scvids = 
+		SELECT sc.ENTITY_ID, sc."Match_ROW_ID" as MATCH_ROW, ms.SCV_ID, sc.DELTA_STATUS FROM :lt_missing_scvids sc
+		INNER JOIN (
+					SELECT ENTITY_ID, MAX(SCV_ID) as SCV_ID FROM :lt_missing_scvids
+					GROUP BY ENTITY_ID
+					) ms		
+		ON sc.ENTITY_ID = ms.ENTITY_ID;		
+		
+		UPDATE "osr.scv.foundation.db.data::MatchResults.Delta" a SET a.SCV_ID = b.SCV_ID
+		FROM "osr.scv.foundation.db.data::MatchResults.Delta" a, :lt_generate_scvids b
+		WHERE a.MATCH_ROW = b.MATCH_ROW;
+		
+
 
 /*	
 	IF :i_read_mode = 0 THEN
