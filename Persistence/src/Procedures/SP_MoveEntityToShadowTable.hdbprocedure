@@ -16,15 +16,17 @@
 PROCEDURE "osr.scv.foundation.db.Procedures::SP_MoveEntityToShadowTable" (
 	
 	-- IN i_entities		TABLE (ENTITY_ID NVARCHAR(10)),
-	IN i_user			NVARCHAR(20),
-	OUT i_timestamp		TIMESTAMP
+	IN i_strategy_resolved		INTEGER DEFAULT 0,
+	IN i_rms_group				INTEGER DEFAULT 0,
+	IN i_user					NVARCHAR(20),
+	OUT i_timestamp				TIMESTAMP
 	-- OUT o_return_code	NVARCHAR(10),
 	-- OUT o_message		NVARCHAR(200)
 )
    LANGUAGE SQLSCRIPT
    SQL SECURITY INVOKER
    AS
-BEGIN
+BEGIN SEQUENTIAL EXECUTION
 
 	-- Declare exception hander for all SQL exceptions.
 	DECLARE EXIT HANDLER FOR SQLEXCEPTION
@@ -37,21 +39,33 @@ BEGIN
 	TRUNCATE TABLE "osr.scv.foundation.db.data::MatchResultsReview.Promotions";
 
 	-- Move match groups with strategies Identical, System Accept and Promote into the shadow table
-	lt_entities = 
-		SELECT ENTITY_ID, STRATEGY_RESOLVED, ACTION_RESOLVED 
-		FROM "osr.scv.foundation.db.data::MatchResultsReview.Review"
-		WHERE STRATEGY_RESOLVED IN ('Identical', 'System Accept', 'Promote', 'System Promote');
+	IF :i_strategy_resolved IS NOT NULL AND :i_strategy_resolved = 0 THEN
+		lt_entities = 
+			SELECT ENTITY_ID, STRATEGY_RESOLVED, ACTION_RESOLVED 
+			FROM "osr.scv.foundation.db.data::MatchResultsReview.Review"
+			WHERE STRATEGY_RESOLVED IN ('Identical', 'System Accept', 'Promote', 'System Promote');
+	ELSE
+		lt_entities = 
+			SELECT ENTITY_ID, STRATEGY_RESOLVED, ACTION_RESOLVED 
+			FROM "osr.scv.foundation.db.data::MatchResultsReview.Review"
+			WHERE STRATEGY_RESOLVED IN ('Promote');
+	END IF;	
 	
-	lt_single_RMS_records = 		
-		SELECT DISTINCT ENTITY_ID, 'System Accept' AS STRATEGY_RESOLVED, 'Auto-Promotion' AS ACTION_RESOLVED 
-		FROM "osr.scv.foundation.db.data::MatchResults.MatchResults" mr
-		LEFT OUTER JOIN "osr.scv.foundation.db.synonyms::BUT000"  sb
-		on mr."Cleanse_ROW_ID_BUT" = sb.Z_RUN_SEQ_ID
-		WHERE mr."ENTITY_ID" LIKE '0-%' and mr.SOURCE_SYSTEM = 'RMS' AND LENGTH(sb.BIRTHDT) > 7;	   	
-		
-	lt_entities_total =	SELECT * FROM :lt_entities
-						UNION ALL
-						SELECT * FROM :lt_single_RMS_records;	
+	IF :i_rms_group IS NOT NULL AND :i_rms_group = 0 THEN
+		lt_single_RMS_records = 		
+			SELECT DISTINCT ENTITY_ID, 'System Accept' AS STRATEGY_RESOLVED, 'Auto-Promotion' AS ACTION_RESOLVED 
+			FROM "osr.scv.foundation.db.data::MatchResults.MatchResults" mr
+			LEFT OUTER JOIN "osr.scv.foundation.db.synonyms::BUT000"  sb
+			on mr."Cleanse_ROW_ID_BUT" = sb.Z_RUN_SEQ_ID
+			WHERE mr."ENTITY_ID" LIKE '0-%' and mr.SOURCE_SYSTEM = 'RMS' AND LENGTH(sb.BIRTHDT) > 7;	   	
+			
+		lt_entities_total =	SELECT * FROM :lt_entities
+							UNION ALL
+							SELECT * FROM :lt_single_RMS_records;
+	ELSE	
+		lt_entities_total =	SELECT * FROM :lt_entities;
+	END IF;	
+						
 
 	lt_update = 
 		(
