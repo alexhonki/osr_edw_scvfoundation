@@ -1,0 +1,29 @@
+{
+  "taskList": {
+    "1": {
+      "inline": {
+        "type": "START",
+        "taskGroup": "com.sap.dwf.toe.executionControl"
+      }
+    },
+    "2": {
+      "inline": {
+        "type": "executeProcedure",
+        "taskGroup": "hanaNative",
+        "description": "Generate SCV Delta Groups",
+        "parameterValues": [
+          {
+            "id": "procName",
+            "value": "osr.scv.foundation.db.Procedures::SP_GenerateScvDeltaGroups"
+          }
+        ]
+      },
+      "preconditions": [
+        {
+          "from": "1",
+          "status": "NEUTRAL"
+        }
+      ]
+    }
+  }
+}

@@ -21,6 +21,14 @@
             "value": "osr.scv.foundation.db.Procedures::SP_MoveEntityToShadowTable"
           },
           {
+            "id": "procForm.I_STRATEGY_RESOLVED",
+            "value": "0"
+          },
+          {
+            "id": "procForm.I_RMS_GROUP",
+            "value": "0"
+          },
+          {
             "id": "procForm.I_USER",
             "value": ""
           }
