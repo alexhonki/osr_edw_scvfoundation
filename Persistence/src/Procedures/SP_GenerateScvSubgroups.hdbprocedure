@@ -308,7 +308,7 @@ BEGIN SEQUENTIAL EXECUTION
 			WHERE SOURCE_SYSTEM = 'TMR'
 				AND RELATED_SYSTEM = 'TMR'
 				AND MATCH_POLICY != 'Person, Address, Phone'
-				AND GROUP_TAG_TMR_TMR IS NULL
+		--		AND GROUP_TAG_TMR_TMR IS NULL
 		) WHERE GROUP_ROW_COUNT = 1 								-- Only 1 row per related row match
 			AND RELATED_ROW IS NOT NULL								-- Rows with null reference are being added in the initial step
 		;
