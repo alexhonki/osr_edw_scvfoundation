@@ -25,6 +25,10 @@ BEGIN
 /*****************************  
        Write your function logic 
  *****************************/ 
+DECLARE IP_Match_ROW_ID NVARCHAR(5000);
+
+-- Get the list of Match Row ids for a Entity id to Pass into MatchDelta Table Function used in join below  --
+select distinct STRING_AGG("Match_ROW_ID",',') INTO IP_Match_ROW_ID FROM "osr.scv.foundation.db.data::MatchResults.MatchResults" WHERE ENTITY_ID = :IP_ENTITY_ID ;
 
 				return	SELECT 
 		            	a.GROUP_ID,
@@ -47,7 +51,6 @@ BEGIN
 		            	COALESCE(e1.STREET_ORIG_ADRC, f.STREET_ORIG_TMR) AS ADDRESS_PRIM_NAME,
 		            	COALESCE(e1.STREET_NUMBER_ORIG_ADRC, f.STREET_NUMBER_ORIG_TMR) AS ADDRESS_PRIM_NUMBER,
 		            	a."Match_ROW_ID" as MATCH_ROW
-		                      
 		                FROM   "osr.scv.foundation.db.data::MatchResults.MatchResults" AS a 
 		                -- Add original fields
 		                --- BUT000
@@ -69,7 +72,7 @@ BEGIN
 		                				) as f
 		                ON a."Cleanse_ROW_ID_TMR" = f."Z_RUN_SEQ_ID" AND a."SYSTEM_ID" = f."CUSTOMER_REF" AND a."SOURCE_SYSTEM" = 'TMR'			
 						LEFT OUTER JOIN (
-		                				 SELECT "MATCH_ROW_ID", "SCV_ID", "ACTION" FROM "osr.scv.foundation.db.functions::MatchDelta"()
+		                				 SELECT "MATCH_ROW_ID", "SCV_ID", "ACTION" FROM "osr.scv.foundation.db.functions::MatchDelta"(:IP_Match_ROW_ID)
 		                				) AS h
 		                ON a."Match_ROW_ID" = h."MATCH_ROW_ID"
 		                LEFT OUTER JOIN "osr.scv.foundation.db.data::MatchResults.SubGroups" sg
