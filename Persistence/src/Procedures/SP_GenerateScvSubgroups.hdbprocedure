@@ -308,7 +308,7 @@ BEGIN SEQUENTIAL EXECUTION
 			WHERE SOURCE_SYSTEM = 'TMR'
 				AND RELATED_SYSTEM = 'TMR'
 				AND MATCH_POLICY != 'Person, Address, Phone'
-		--		AND GROUP_TAG_TMR_TMR IS NULL
+				AND GROUP_TAG_TMR_TMR IS NULL
 		) WHERE GROUP_ROW_COUNT = 1 								-- Only 1 row per related row match
 			AND RELATED_ROW IS NOT NULL								-- Rows with null reference are being added in the initial step
 		;
@@ -320,7 +320,7 @@ BEGIN SEQUENTIAL EXECUTION
 						 	CASE WHEN a.SYSTEM_ID = a.GROUP_TAG and a.GROUP_TAG_RMS_TMR IS NULL and a.GROUP_TAG_TMR_RMS IS NULL THEN b.GROUP_TAG ELSE 
 						 	a.GROUP_TAG END END as GROUP_TAG_RESOLVED
 						 FROM :lt_mapping a
-						 LEFT OUTER JOIN :lt_mapping b
+						 INNER JOIN :lt_mapping b
 						 ON a.RELATED_ROW = b.MATCH_ROW
 						 WHERE a.MATCH_ROW IN (SELECT MATCH_ROW FROM :lt_set_d)
 	;
