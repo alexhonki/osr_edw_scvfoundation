@@ -1,4 +1,4 @@
-FUNCTION "osr.scv.foundation.db.functions::MatchDelta" (  )
+FUNCTION "osr.scv.foundation.db.functions::MatchDelta" ( IN i_match_row NVARCHAR(5000) DEFAULT '')
        RETURNS TABLE (	
     					MATCH_ROW_ID INTEGER,
     					SCV_ID NVARCHAR(20),
@@ -9,8 +9,16 @@ BEGIN
 	/*****************************  
        Project match delta
 	*****************************/ 
-
-				RETURN 
+	
+	--Check if the Matchrows needs to be restricted the use Dynamic SQL Filter--
+	IF i_match_row != '' THEN
+	i_match_row = 'MATCH_ROW in (' || '' || :i_match_row || '' || ')';
+	LT_MatchresultsDelta = APPLY_FILTER("osr.scv.foundation.db.data::MatchResults.Delta",:i_match_row);
+	ELSE
+	LT_MatchresultsDelta = SELECT * FROM "osr.scv.foundation.db.data::MatchResults.Delta";
+	END IF;
+	
+				return 
 					SELECT MATCH_ROW AS MATCH_ROW_ID, SCV_ID, DELTA_STATUS AS ACTION
 					FROM
 					(
@@ -18,7 +26,8 @@ BEGIN
 							   ROW_NUMBER() OVER (PARTITION BY MATCH_ROW ORDER BY POLICY_NAME ASC, SCV_ID ASC, SCORE DESC) AS GROUP_ROW_COUNT
 						FROM 
 						(
-							SELECT * FROM "osr.scv.foundation.db.data::MatchResults.Delta"
+							SELECT * FROM :LT_MatchresultsDelta
+							
 						)
 					) WHERE GROUP_ROW_COUNT = 1
 					;
