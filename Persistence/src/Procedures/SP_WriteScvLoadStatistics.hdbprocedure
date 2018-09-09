@@ -22,10 +22,17 @@ BEGIN
 	-- 3. Move records from assessments table into assessments history
 	-- 4. Update entity mapping
    
+   DECLARE l_application_user NVARCHAR(256);
+   
 	-- 1. SCV load history
 	INSERT INTO "osr.scv.foundation.db.data::SCVFoundation.LoadHistory" 
-	VALUES (:i_load_id, NOW(), CURRENT_USER, 1, 'OK', :i_num_scv_created, :i_num_scv_updated);
-
+	VALUES (:i_load_id, NOW(), 
+			SESSION_CONTEXT('APPLICATIONUSER'),
+			1,
+			'OK',
+			:i_num_scv_created,
+			:i_num_scv_updated
+	);
 	
 	-- 2. Promotions history
 	INSERT INTO "osr.scv.foundation.db.data::MatchResultsReview.PromotionsHistory" 
