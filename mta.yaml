@@ -80,6 +80,8 @@ modules:
     properties:
       API_END_POINT: '${xs-api-url}'
       SAP_JWT_TRUST_ACL: '[{"clientid":"*","identityzone":"*"}]'
+    build-parameters:
+      timeout: 15m
 resources:
   - name: OsrScvFoundationContainer
     properties:
