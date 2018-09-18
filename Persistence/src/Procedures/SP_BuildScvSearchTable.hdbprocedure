@@ -183,7 +183,7 @@ BEGIN PARALLEL EXECUTION
 			ON a.SCV_ID = b.SCV_ID AND a.SOURCE = b.SOURCE and a.SOURCE_ID = b.SOURCE_ID
 			LEFT OUTER JOIN :lt_addr_type_reverse_lookup c
 					ON LOWER(b.STREET_TYPE) = LOWER(c.STD_ADDR_PRIM_TYPE)
-		   where b.STD_ADDR_PRIM_NAME = '' 
+		    WHERE b.STD_ADDR_PRIM_TYPE = ''			
 		) WHERE SCV_ID IN (SELECT SCV_ID FROM "osr.scv.foundation.db.data::SCVFoundation.Master" WHERE IS_HIDDEN != 'X')
     );    
    END;
