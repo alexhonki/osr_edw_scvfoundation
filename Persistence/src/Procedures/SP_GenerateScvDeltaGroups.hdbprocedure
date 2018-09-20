@@ -59,7 +59,7 @@ BEGIN
 
 		INSERT INTO "osr.scv.foundation.db.data::MatchResults.Delta" (SELECT MATCH_ROW, 0,'',0,SCV_ID,0,DELTA_STATUS FROM :lt_master)
 		;
-/*		
+		
 		lt_missing_scvids = 
 		SELECT ma.ENTITY_ID, ma."Match_ROW_ID", SCV_ID, DELTA_STATUS FROM "osr.scv.foundation.db.data::MatchResults.MatchResults" ma                                                          
 		INNER JOIN :lt_master md
@@ -89,7 +89,7 @@ BEGIN
 		FROM "osr.scv.foundation.db.data::MatchResults.Delta" a, :lt_generate_scvids b
 		WHERE a.MATCH_ROW = b.MATCH_ROW;
 		
-*/
+
 
 /*	
 	IF :i_read_mode = 0 THEN
