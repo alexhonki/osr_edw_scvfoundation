@@ -23,6 +23,7 @@ BEGIN SEQUENTIAL EXECUTION
 	SI007 - R.Silva 2018.09.25
 	
 	Reindent code to make it easier to debug
+	Add group_id to #lt_sub_groups_mapping to allow correction at end
 		
 	***************************************************************************************************************************************************/
 
@@ -50,7 +51,8 @@ BEGIN SEQUENTIAL EXECUTION
 														GROUP_TAG_PAD_OVERRIDE NVARCHAR(20), 
 														GROUP_TAG_RMS_TMR NVARCHAR(20), 
 														GROUP_TAG_TMR_RMS NVARCHAR(20), 
-														GROUP_TAG_TMR_TMR NVARCHAR(20));     
+														GROUP_TAG_TMR_TMR NVARCHAR(20),
+														GROUP_ID INTEGER); -- SI007     
 	-- Temporary table -- subgroupgs													
 	CREATE LOCAL TEMPORARY TABLE #lt_sub_groups 	(	MATCH_ROW INTEGER, 
 														GROUP_TAG NVARCHAR(20));
@@ -79,7 +81,8 @@ BEGIN SEQUENTIAL EXECUTION
 					POLICY_NAME as MATCH_POLICY, 
 					SCORE, 
 					SYSTEM_ID as GROUP_TAG, 
-					null, null, null, null 
+					null, null, null, null,
+					GROUP_ID -- SI007   
 			FROM 
 			(	
 				SELECT *,
@@ -90,7 +93,10 @@ BEGIN SEQUENTIAL EXECUTION
 					SELECT * 
 					FROM 
 					(
-						SELECT DISTINCT mr.GROUP_ID, mr."Match_ROW_ID", mr.SOURCE_SYSTEM, mr.SYSTEM_ID 
+						SELECT DISTINCT mr.GROUP_ID, 
+										mr."Match_ROW_ID", 
+										mr.SOURCE_SYSTEM, 
+										mr.SYSTEM_ID
 						FROM			"osr.scv.foundation.db.data::MatchResults.MatchResults" mr
 						WHERE			mr.GROUP_ID = :i_match_group
 					) a
@@ -123,8 +129,10 @@ BEGIN SEQUENTIAL EXECUTION
 					RELATED_SOURCE_SYSTEM, 
 					RELATED_SYSTEM_ID, 
 					POLICY_NAME as MATCH_POLICY, 
-					SCORE, SYSTEM_ID as GROUP_TAG, 
-					null, null, null, null 
+					SCORE, 
+					SYSTEM_ID as GROUP_TAG, 
+					null, null, null, null,
+					GROUP_ID -- SI007   					
 			FROM 
 			(
 				SELECT *,
@@ -138,7 +146,7 @@ BEGIN SEQUENTIAL EXECUTION
 						SELECT DISTINCT mr.GROUP_ID, 
 										mr."Match_ROW_ID", 
 										mr.SOURCE_SYSTEM, 
-										mr.SYSTEM_ID 
+										mr.SYSTEM_ID   
 						FROM "osr.scv.foundation.db.data::MatchResults.MatchResults" mr
 						--WHERE mr.GROUP_ID IN (1798987, 1899805)
 					) a
@@ -297,6 +305,7 @@ BEGIN SEQUENTIAL EXECUTION
 							GROUP_TAG 
 		FROM #lt_sub_groups_mapping;
 
+
 	INSERT INTO #lt_sub_groups 
 	(
 		SELECT	MATCH_ROW, GROUP_TAG 
@@ -411,10 +420,10 @@ BEGIN SEQUENTIAL EXECUTION
 							b.GROUP_TAG as GROUP_TAG1 
 					FROM 
 					(
-				    	SELECT	b.* 
-				    	FROM	:lt_set_c a
-				    	INNER JOIN #lt_sub_groups_mapping b
-				    	ON a.RELATED_ROW = b.MATCH_ROW
+				    	SELECT		b.* 
+				    	FROM		:lt_set_c a
+				    	INNER JOIN	#lt_sub_groups_mapping b
+				    	ON			a.RELATED_ROW = b.MATCH_ROW
 				    ) a
 				    INNER JOIN :lt_set_c b
 				    ON a.MATCH_ROW = b.RELATED_ROW
@@ -422,7 +431,8 @@ BEGIN SEQUENTIAL EXECUTION
 			) 
 			WHERE GROUP_ROW_COUNT = 1
 		);
-	
+		
+	-- store mappings after on query veriable for debug	
 	lt_mapping_after2 =
 		SELECT	* 
 		FROM	#lt_sub_groups_mapping;
@@ -483,7 +493,8 @@ BEGIN SEQUENTIAL EXECUTION
 	lt_mapping = 
 		SELECT * 
 		FROM	#lt_sub_groups_mapping;
-	
+		
+	-- store mappings before on query veriable for debug	
 	lt_mapping_before3 = 
 		SELECT	* 
 		FROM	#lt_sub_groups_mapping;
@@ -595,6 +606,30 @@ BEGIN SEQUENTIAL EXECUTION
 	
 	lt_mapping_sub = 
 		SELECT * FROM  #lt_sub_groups;
+		
+		
+	-- SI007 - start
+	/*
+	TDDO - Correct groups that have more than one GROUP_TAG
+	
+	*/
+	
+	lt_in_error = 
+		SELECT	GROUP_ID, 
+				GROUP_TAG
+		FROM	#lt_sub_groups_mapping 
+		WHERE	GROUP_ID IN
+		( 
+			SELECT GROUP_ID FROM
+			(
+				SELECT		COUNT( DISTINCT GROUP_TAG), GROUP_ID
+				FROM		#lt_sub_groups_mapping 
+				GROUP BY	GROUP_ID
+				HAVING		COUNT( DISTINCT GROUP_TAG) > 1
+			)
+		);
+		
+	-- SI007 - end
 	
 	-- Write to table
 	INSERT INTO "osr.scv.foundation.db.data::MatchResults.SubGroups" 
