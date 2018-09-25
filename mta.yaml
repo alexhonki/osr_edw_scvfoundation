@@ -117,9 +117,9 @@ resources:
   - name: ui5-lib
     type: configuration
     parameters:
-      ID: 'com.sap.ui5.dist.sapui5-dist-xsa.XSAC_SAPUI5_FESV3:sapui5_fesv3'
-      name: sapui5_fesv3
-      version: =1.44.30
+      ID: 'com.sap.ui5.dist.sapui5-dist-xsa.XSAC_SAPUI5_FESV4:sapui5_fesv4'
+      name: sapui5_fesv4
+      version: =1.52.11
   - name: OSR_SCV_FOUNDATION-dws
     properties:
       dwf-edw-client-name: '${service-name}'
