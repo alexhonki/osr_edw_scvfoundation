@@ -27,6 +27,8 @@ BEGIN SEQUENTIAL EXECUTION
 	25.09.2018 - R.Silva - SI072 - Add group_id to #lt_sub_groups_mapping to allow correction at end
 
 	26.09.2018 - R.Silva - SI072 - Determine GROUP_IDs with multiple GROUP_TAGs
+
+	26.09.2018 - R.Silva - SI072 - Override GROUP_TAGs with multiple GROUP_IDs with the highest GROUP_TAG
 		
 	***************************************************************************************************************************************************/
 
@@ -633,20 +635,24 @@ BEGIN SEQUENTIAL EXECUTION
 		);
 		
 	-- pick the highest GROUP TAG to represent the GROUP_ID
-/*
+
 	UPDATE	#lt_sub_groups	AS t
 	SET		GROUP_TAG =
 	(
 		SELECT	MAX( GROUP_TAG )
-		FROM	:lt_multi_tag	AS s
-		WHERE	s.GROUP_ID = t.GROUP_ID
+		FROM	:lt_multi_tag
+		WHERE	GROUP_ID = 
+		(	
+			SELECT	GROUP_ID
+			FROM	:lt_multi_tag	AS	r
+			WHERE	r.MATCH_ROW = t.MATCH_ROW 
+		)
 	)
 	WHERE	GROUP_TAG IN 
 	(
 		SELECT	GROUP_TAG
 		FROM	:lt_multi_tag
 	);
-*/
 
 	-- SI007 ****************** end
 
