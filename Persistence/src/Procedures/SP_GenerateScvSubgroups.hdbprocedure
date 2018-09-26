@@ -20,10 +20,13 @@ BEGIN SEQUENTIAL EXECUTION
 		
 	***************************************************************************************************************************************************
 
-	SI007 - R.Silva 2018.09.25
-	
-	Reindent code to make it easier to debug
-	Add group_id to #lt_sub_groups_mapping to allow correction at end
+	Change log:
+   
+	25.09.2018 - R.Silva - SI007 - Reindent code to make it easier to debug
+   
+	25.09.2018 - R.Silva - SI072 - Add group_id to #lt_sub_groups_mapping to allow correction at end
+
+	26.09.2018 - R.Silva - SI072 - Determine GROUP_IDs with multiple GROUP_TAGs
 		
 	***************************************************************************************************************************************************/
 
@@ -608,29 +611,45 @@ BEGIN SEQUENTIAL EXECUTION
 		SELECT * FROM  #lt_sub_groups;
 		
 		
-	-- SI007 - start
-	/*
-	TDDO - Correct groups that have more than one GROUP_TAG
+	-- SI007 ****************** start
 	
-	*/
-	
-	lt_in_error = 
+	-- identify all records that have multiple GROUP_TAGs per GROUP_ID
+	lt_multi_tag = 
 		SELECT	GROUP_ID, 
-				GROUP_TAG
+				GROUP_TAG,
+				MATCH_ROW
 		FROM	#lt_sub_groups_mapping 
 		WHERE	GROUP_ID IN
 		( 
 			SELECT GROUP_ID FROM
 			(
-				SELECT		COUNT( DISTINCT GROUP_TAG), GROUP_ID
+				SELECT		COUNT( DISTINCT GROUP_TAG), 
+							COUNT(*) AS FREQUENCY, 
+							GROUP_ID
 				FROM		#lt_sub_groups_mapping 
 				GROUP BY	GROUP_ID
 				HAVING		COUNT( DISTINCT GROUP_TAG) > 1
 			)
 		);
 		
-	-- SI007 - end
-	
+	-- pick the highest GROUP TAG to represent the GROUP_ID
+/*
+	UPDATE	#lt_sub_groups	AS t
+	SET		GROUP_TAG =
+	(
+		SELECT	MAX( GROUP_TAG )
+		FROM	:lt_multi_tag	AS s
+		WHERE	s.GROUP_ID = t.GROUP_ID
+	)
+	WHERE	GROUP_TAG IN 
+	(
+		SELECT	GROUP_TAG
+		FROM	:lt_multi_tag
+	);
+*/
+
+	-- SI007 ****************** end
+
 	-- Write to table
 	INSERT INTO "osr.scv.foundation.db.data::MatchResults.SubGroups" 
 	(	
