@@ -121,7 +121,7 @@
       <keyCalculation datatype="NVARCHAR" expressionLanguage="SQL" length="256">
         <formula>CONCAT(CONCAT(&quot;LAST_NAME&quot;, ', '), CONCAT(&quot;FIRST_NAME&quot;, CONCAT(' ',CASE WHEN &quot;MIDDLE_NAME&quot; IS NULL THEN '' ELSE &quot;MIDDLE_NAME&quot; END)))</formula>
       </keyCalculation>
-    </calculatedAttribute>
+      </calculatedAttribute>
   
     <calculatedAttribute id="ADDRESS" order="14" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="ADDRESS"/>
@@ -131,8 +131,7 @@
         <formula>&quot;ADDRESS_PRIM_NUMBER&quot; || ' ' || &quot;ADDRESS_PRIM_NAME&quot; || ' ' || &quot;ADDRESS_LOCALITY&quot; || ' ' || &quot;ADDRESS_POSTCODE&quot; || ' ' || &quot;ADDRESS_REGION&quot; || ' ' || &quot;ADDRESS_COUNTRY&quot;</formula>
   
       </keyCalculation>
-  
-    </calculatedAttribute>
+      </calculatedAttribute>
   
     <calculatedAttribute id="FIRST_MIDDLE_NAME" order="15" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="FIRST_MIDDLE_NAME"/>
@@ -142,8 +141,7 @@
         <formula>CONCAT(&quot;FIRST_NAME&quot;, CONCAT(' ' , &quot;MIDDLE_NAME&quot;))</formula>
   
       </keyCalculation>
-  
-    </calculatedAttribute>
+      </calculatedAttribute>
   
     <calculatedAttribute id="MATCH_ROW_STR" order="22" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="MATCH_ROW_STR"/>
@@ -153,8 +151,17 @@
         <formula>TO_NVARCHAR(&quot;MATCH_ROW&quot;)</formula>
   
       </keyCalculation>
+      </calculatedAttribute>
   
-    </calculatedAttribute>
+    <calculatedAttribute id="S_GROUP_ID" order="25" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="S_GROUP_ID"/>
+  
+      <keyCalculation datatype="VARCHAR" expressionLanguage="SQL" length="25">
+  
+        <formula>TO_VARCHAR(&quot;GROUP_ID&quot;)</formula>
+  
+      </keyCalculation>
+      </calculatedAttribute>
   </calculatedAttributes>
   <baseMeasures/>
   <calculatedMeasures/>
