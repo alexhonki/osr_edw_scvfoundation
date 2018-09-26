@@ -23,14 +23,8 @@ BEGIN SEQUENTIAL EXECUTION
 	Change log:
    
 	25.09.2018 - R.Silva - SI007 - Reindent code to make it easier to debug
-   
-	25.09.2018 - R.Silva - SI072 - Add group_id to #lt_sub_groups_mapping to allow correction at end
 
-	26.09.2018 - R.Silva - SI072 - Determine GROUP_IDs with multiple GROUP_TAGs
-
-	26.09.2018 - R.Silva - SI072 - Override GROUP_TAGs with multiple GROUP_IDs with the highest GROUP_TAG
-	
-	26.09.2018 - R.Silva - SI072 - Adjust GROUP_TAG update query to return one GROUP_ID only
+	26.09.2018 - R.Silva - SI007 - Remove change SI007, as it did not address the problem
 		
 	***************************************************************************************************************************************************/
 
@@ -58,8 +52,7 @@ BEGIN SEQUENTIAL EXECUTION
 														GROUP_TAG_PAD_OVERRIDE NVARCHAR(20), 
 														GROUP_TAG_RMS_TMR NVARCHAR(20), 
 														GROUP_TAG_TMR_RMS NVARCHAR(20), 
-														GROUP_TAG_TMR_TMR NVARCHAR(20),
-														GROUP_ID INTEGER); -- SI007     
+														GROUP_TAG_TMR_TMR NVARCHAR(20));     
 	-- Temporary table -- subgroupgs													
 	CREATE LOCAL TEMPORARY TABLE #lt_sub_groups 	(	MATCH_ROW INTEGER, 
 														GROUP_TAG NVARCHAR(20));
@@ -88,8 +81,7 @@ BEGIN SEQUENTIAL EXECUTION
 					POLICY_NAME as MATCH_POLICY, 
 					SCORE, 
 					SYSTEM_ID as GROUP_TAG, 
-					null, null, null, null,
-					GROUP_ID -- SI007   
+					null, null, null, null
 			FROM 
 			(	
 				SELECT *,
@@ -138,8 +130,7 @@ BEGIN SEQUENTIAL EXECUTION
 					POLICY_NAME as MATCH_POLICY, 
 					SCORE, 
 					SYSTEM_ID as GROUP_TAG, 
-					null, null, null, null,
-					GROUP_ID -- SI007   					
+					null, null, null, null 					
 			FROM 
 			(
 				SELECT *,
@@ -614,49 +605,7 @@ BEGIN SEQUENTIAL EXECUTION
 	lt_mapping_sub = 
 		SELECT * FROM  #lt_sub_groups;
 		
-		
-	-- SI007 ****************** start
-	
-	-- identify all records that have multiple GROUP_TAGs per GROUP_ID
-	lt_multi_tag = 
-		SELECT	GROUP_ID, 
-				GROUP_TAG,
-				MATCH_ROW
-		FROM	#lt_sub_groups_mapping 
-		WHERE	GROUP_ID IN
-		( 
-			SELECT GROUP_ID FROM
-			(
-				SELECT		COUNT( DISTINCT GROUP_TAG), 
-							COUNT(*) AS FREQUENCY, 
-							GROUP_ID
-				FROM		#lt_sub_groups_mapping 
-				GROUP BY	GROUP_ID
-				HAVING		COUNT( DISTINCT GROUP_TAG) > 1
-			)
-		);
-		
-	-- pick the highest GROUP TAG to represent the GROUP_ID
 
-	UPDATE	#lt_sub_groups	AS t
-	SET		GROUP_TAG =
-	(
-		SELECT	MAX( GROUP_TAG )
-		FROM	:lt_multi_tag
-		WHERE	GROUP_ID IN 
-		(	
-			SELECT	GROUP_ID
-			FROM	:lt_multi_tag	AS	r
-			WHERE	r.MATCH_ROW = t.MATCH_ROW 
-		)
-	)
-	WHERE	GROUP_TAG IN 
-	(
-		SELECT	GROUP_TAG
-		FROM	:lt_multi_tag
-	);
-
-	-- SI007 ****************** end
 
 	-- Write to table
 	INSERT INTO "osr.scv.foundation.db.data::MatchResults.SubGroups" 

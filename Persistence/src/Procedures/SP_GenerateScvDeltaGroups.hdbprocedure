@@ -8,9 +8,19 @@ PROCEDURE "osr.scv.foundation.db.Procedures::SP_GenerateScvDeltaGroups" (
    SQL SECURITY INVOKER
    AS
 BEGIN
-   /*************************************
+   	/***************************************************************************************************************************************************
        Write your procedure logic 
-   *************************************/
+
+   
+   	***************************************************************************************************************************************************
+
+	Change log:
+   
+	25.09.2018 - C.Parente - SI007 - Remove Assignment of Entity ID to blank SCV iD
+		
+	***************************************************************************************************************************************************/
+
+
    	
 --   	DECLARE l_size INTEGER DEFAULT 0;
    	
@@ -59,7 +69,7 @@ BEGIN
 
 		INSERT INTO "osr.scv.foundation.db.data::MatchResults.Delta" (SELECT MATCH_ROW, 0,'',0,SCV_ID,0,DELTA_STATUS FROM :lt_master)
 		;
-		
+/*		
 		lt_missing_scvids = 
 		SELECT ma.ENTITY_ID, ma."Match_ROW_ID", SCV_ID, DELTA_STATUS FROM "osr.scv.foundation.db.data::MatchResults.MatchResults" ma                                                          
 		INNER JOIN :lt_master md
@@ -88,7 +98,7 @@ BEGIN
 		UPDATE "osr.scv.foundation.db.data::MatchResults.Delta" a SET a.SCV_ID = b.SCV_ID
 		FROM "osr.scv.foundation.db.data::MatchResults.Delta" a, :lt_generate_scvids b
 		WHERE a.MATCH_ROW = b.MATCH_ROW;
-		
+*/		
 
 
 /*	
