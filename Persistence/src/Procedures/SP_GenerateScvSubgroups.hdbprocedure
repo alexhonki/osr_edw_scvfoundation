@@ -29,6 +29,8 @@ BEGIN SEQUENTIAL EXECUTION
 	26.09.2018 - R.Silva - SI072 - Determine GROUP_IDs with multiple GROUP_TAGs
 
 	26.09.2018 - R.Silva - SI072 - Override GROUP_TAGs with multiple GROUP_IDs with the highest GROUP_TAG
+	
+	26.09.2018 - R.Silva - SI072 - Adjust GROUP_TAG update query to return one GROUP_ID only
 		
 	***************************************************************************************************************************************************/
 
@@ -641,7 +643,7 @@ BEGIN SEQUENTIAL EXECUTION
 	(
 		SELECT	MAX( GROUP_TAG )
 		FROM	:lt_multi_tag
-		WHERE	GROUP_ID = 
+		WHERE	GROUP_ID IN 
 		(	
 			SELECT	GROUP_ID
 			FROM	:lt_multi_tag	AS	r
