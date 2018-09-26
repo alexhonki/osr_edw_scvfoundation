@@ -166,7 +166,7 @@
 								<t:columns>
 									<t:Column id="groupName"
 									          width="8rem"
-									          filterProperty="GROUP_ID"
+									          filterProperty="S_GROUP_ID"
 									          sortProperty="GROUP_ID">
 										<Label text="Group" />
 										<t:template>
