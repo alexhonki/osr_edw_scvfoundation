@@ -1,6 +1,6 @@
 PROCEDURE "osr.scv.foundation.db.Procedures.Test::SP_TestMatchResultsOtherTest" (
 
---	OUT o_results "osr.scv.foundation.db.data::TestResults.ResultsOther"
+	OUT o_results "osr.scv.foundation.db.data::TestResults.Results"
 
 )
    LANGUAGE SQLSCRIPT
@@ -36,7 +36,7 @@ BEGIN
    
     DECLARE l_test_id NVARCHAR(50);
     DECLARE l_result_size INT;
-/*   
+   
     l_test_id = 'Match results other test';
    
 	lt_result = SELECT a.GROUP_ID FROM "osr.scv.foundation.db.data::MatchResults.MatchResults" a
@@ -53,5 +53,5 @@ BEGIN
 	ELSE
 		:o_results.INSERT((:l_test_id, 'FAILURE'), 1);
 	END IF;
-   */
+   
 END

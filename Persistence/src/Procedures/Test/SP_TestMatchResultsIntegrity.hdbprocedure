@@ -1,6 +1,6 @@
 PROCEDURE "osr.scv.foundation.db.Procedures.Test::SP_TestMatchResultsIntegrity" (
 
-	-- OUT o_results "osr.scv.foundation.db.data::TestResults.Results"
+	OUT o_results "osr.scv.foundation.db.data::TestResults.Results"
 
 )
    LANGUAGE SQLSCRIPT
@@ -36,7 +36,6 @@ BEGIN
    DECLARE l_result_size INT;
    DECLARE l_test_id NVARCHAR(50);
  
- /*  
    l_test_id = 'Match results integrity';
    
 	lt_result = SELECT		a.GROUP_ID 
@@ -54,5 +53,5 @@ BEGIN
 	ELSE
 		:o_results.INSERT((:l_test_id, 'FAILURE'), 1);
 	END IF;
-   */
+   
 END
