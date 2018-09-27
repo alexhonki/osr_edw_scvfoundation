@@ -22,7 +22,7 @@ describe("Generate SubGroup Test Suite", function() {
 	// before all test cases
 	beforeOnce(function() {
 
-		sqlExecutor = new SqlExecutor(jasmine.dbConnection);
+		//
 
 	});
 
@@ -52,6 +52,8 @@ describe("Generate SubGroup Test Suite", function() {
 
 		// Execute test Stored Procedure
 		var callStatement = 'CALL ' + testSP + ';';
+		
+		var sqlExecutor = new SqlExecutor(jasmine.dbConnection);
 		var actual = sqlExecutor.execQuery(callStatement);
 		$.trace.info(actual);   	
 		

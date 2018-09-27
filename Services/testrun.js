@@ -38,7 +38,8 @@ var options = {
 		filename: coverageFile,
 		instrumentation: {
 			includes: ["**/Test*.xsjslib"],
-		}
+		},
+		verbose: false
 	}
 };
 
