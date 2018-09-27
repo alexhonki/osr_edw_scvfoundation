@@ -67,9 +67,12 @@ BEGIN SEQUENTIAL EXECUTION
 	TRUNCATE TABLE "osr.scv.foundation.db.data::MatchResults.SubGroups";
 	
 	-- Create initial table
+	-- Initially, the SYSTEM_ID is copied onto GROUP_TAG
+	
 	IF :i_match_group IS NOT NULL AND :i_match_group > 0 THEN
 	
 		-- if MATCH GROUP specified
+		-- create table with specifieid MATCH_GROUP
 		INSERT INTO #lt_sub_groups_mapping
 		(
 			SELECT "Match_ROW_ID" as MATCH_ROW, 
@@ -119,6 +122,8 @@ BEGIN SEQUENTIAL EXECUTION
 	ELSE
 
 		-- if MATCH GROUP not specified
+		-- create initial group with all MATCH_GROUPS
+		
 		INSERT INTO #lt_sub_groups_mapping
 		(
 			SELECT	"Match_ROW_ID" as MATCH_ROW, 
@@ -514,7 +519,7 @@ BEGIN SEQUENTIAL EXECUTION
 			WHERE	SOURCE_SYSTEM = 'TMR'
 			AND		RELATED_SYSTEM = 'TMR'
 			AND 	MATCH_POLICY != 'Person, Address, Phone'
-			AND GROUP_TAG_TMR_TMR IS NULL
+			AND 	GROUP_TAG_TMR_TMR IS NULL
 		) 
 		WHERE GROUP_ROW_COUNT = 1 								-- Only 1 row per related row match
 		AND RELATED_ROW IS NOT NULL;							-- Rows with null reference are being added in the initial step
