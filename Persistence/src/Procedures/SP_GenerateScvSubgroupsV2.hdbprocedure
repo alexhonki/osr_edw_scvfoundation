@@ -1,0 +1,53 @@
+PROCEDURE "osr.scv.foundation.db.Procedures::SP_GenerateScvSubgroupsV2" (
+	IN i_match_group		INTEGER ARRAY DEFAULT [],
+	OUT o_return_code		NVARCHAR(128), 			-- 0 = execution successful; 1 = execution raised exception.
+	OUT o_message			NVARCHAR(1000) 			-- message
+)
+   LANGUAGE SQLSCRIPT
+   SQL SECURITY INVOKER
+   AS
+BEGIN SEQUENTIAL EXECUTION
+	/**************************************************************************************************************************************************
+	Generate SCV subgroups
+	
+	Create subgroups for all match rows within a match group:
+	
+		1. Assign initial system ID to match row									-> set mr_initial (all records)
+		2. Set new baseline for RMS records refering to other RMS records using		-> set mr_rms_policy_overrides
+		   match policy 'Person, Address, DOB'
+		3. Override RMS match rows which refer to a TMR record (RMS-TMR)			-> set mr_rms_tmr_matches (rms records and matched tmr records)
+		4. Override TMR match rows which refer to a RMS record (TMR-RMS)			-> set mr_tmr_rms_matches (tmr records and matched rms records)
+		
+	***************************************************************************************************************************************************
+
+	Change log:
+   
+	25.09.2018 - R.Silva - SI007 - Reindent code to make it easier to debug
+
+	26.09.2018 - R.Silva - SI007 - Remove change SI007, as it did not address the problem
+		
+	***************************************************************************************************************************************************/
+
+   	DECLARE EXIT HANDLER FOR SQLEXCEPTION
+	BEGIN
+		
+		o_return_code :=  'ERROR';
+		o_message:=  'ERROR: ' || ::SQL_ERROR_CODE || ' ' || ::SQL_ERROR_MESSAGE;
+	END;
+	
+	
+	-- let us work group by group
+	
+	
+	
+	
+	-- Empty Sub-Groups table
+	TRUNCATE TABLE "osr.scv.foundation.db.data::MatchResults.SubGroups";
+	
+	-- Set return code
+	o_return_code	:=  'SUCCESS';
+	o_message		:=  'SCV groups created successfully';
+	
+
+   
+END
