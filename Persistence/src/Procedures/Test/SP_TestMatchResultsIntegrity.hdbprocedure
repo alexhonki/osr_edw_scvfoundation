@@ -1,6 +1,6 @@
 PROCEDURE "osr.scv.foundation.db.Procedures.Test::SP_TestMatchResultsIntegrity" (
 
-	OUT o_results "osr.scv.foundation.db.data::TestResults.Results"
+	-- OUT o_results "osr.scv.foundation.db.data::TestResults.Results"
 
 )
    LANGUAGE SQLSCRIPT
@@ -10,27 +10,49 @@ PROCEDURE "osr.scv.foundation.db.Procedures.Test::SP_TestMatchResultsIntegrity" 
 
 BEGIN
    
-   /*************************************
-       Test integrity of match result data set
-       - Returns 0 if integrity of match results tables are ok
-   *************************************/
+   /************************************************************************************************************************************
+    	
+    	Test case:	Integrity of Match Result data set
+
+		Test ID:	'Match results integrity'
+		
+		Standard TEST SQL Prodedure
+		
+		Returning table O_RESULTS contains:
+		
+		[O_TEST_ID, O_RETURN_CODE]
+
+   ************************************************************************************************************************************
    
+   Log:
+   
+   -- A.Bauer
+   Create procedure
+   
+   SI007 - R.Silva - 27.09.2018
+   Reformat and comment test procedure to serve as a model for others
+ 
+   ************************************************************************************************************************************/  
    DECLARE l_result_size INT;
    DECLARE l_test_id NVARCHAR(50);
-   
+ 
+ /*  
    l_test_id = 'Match results integrity';
    
-	lt_result = SELECT a.GROUP_ID FROM "osr.scv.foundation.db.data::MatchResults.MatchResults" a
+	lt_result = SELECT		a.GROUP_ID 
+				FROM		"osr.scv.foundation.db.data::MatchResults.MatchResults" a
 				INNER JOIN 	"osr.scv.foundation.db.data::MatchResults.MatchResultsShadow" b
-				on a.GROUP_ID = b.GROUP_ID
-				WHERE a.GROUP_ID is not null and b.GROUP_ID is not null;
+				on			a.GROUP_ID = b.GROUP_ID
+				WHERE		a.GROUP_ID is not null and b.GROUP_ID is not null;
 
 	SELECT COUNT(*) into l_result_size FROM :lt_result;
+	
+	-- fill up the O_RESULTS table
 	
 	IF :l_result_size is null OR :l_result_size = 0 THEN
 		:o_results.INSERT((:l_test_id, 'SUCCESS'), 1);
 	ELSE
 		:o_results.INSERT((:l_test_id, 'FAILURE'), 1);
 	END IF;
-   
+   */
 END

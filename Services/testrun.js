@@ -25,8 +25,8 @@ var coverageFile = timestamp + "_coverage";
 var options = {
 	test: {
 		format: "xml",
-		/*package: "OSR_SCV_FOUNDATION.Services.test.suites",*/
-		pattern: ".*Test",
+		// package: "OSR_SCV_FOUNDATION.Services.test.suites/",
+		pattern: "test/suits/*",
 		reportdir: testResultsDir,
 		filename: testResultFileName
 	},
@@ -35,7 +35,10 @@ var options = {
 			reports: ["json"]
 		},
 		dir: testResultsDir,
-		filename: coverageFile
+		filename: coverageFile,
+		instrumentation: {
+			includes: ["**/Test*.xsjslib"],
+		}
 	}
 };
 

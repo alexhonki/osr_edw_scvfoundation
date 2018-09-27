@@ -1,6 +1,8 @@
-PROCEDURE "osr.scv.foundation.db.Procedures.Test::SP_TestMatchResultsOtherTest" (
+PROCEDURE "osr.scv.foundation.db.Procedures.Test::SP_TestGenerateSCVSubgroupsV2" (
 
---	OUT o_results "osr.scv.foundation.db.data::TestResults.ResultsOther"
+	OUT o_test_id		NVARCHAR(50),
+	OUT o_return_code	NVARCHAR(10)
+	--OUT o_message		NVARCHAR(200)
 
 )
    LANGUAGE SQLSCRIPT
@@ -10,11 +12,12 @@ PROCEDURE "osr.scv.foundation.db.Procedures.Test::SP_TestMatchResultsOtherTest" 
 
 BEGIN
    
+
    /************************************************************************************************************************************
     	
-    	Test case:	Integrity of Match Result data set
+    	Test case:	Integrity of Match Result data set - other tests
 
-		Test ID:	'Match results other test
+		Test ID:	'Match results other test'
 		
 		Standard TEST SQL Prodedure
 		
@@ -25,33 +28,29 @@ BEGIN
    ************************************************************************************************************************************
    
    Log:
-   
-   -- A.Bauer
-   Create procedure
+  
    
    SI007 - R.Silva - 27.09.2018
    Reformat and comment test procedure to serve as a model for others
  
    ************************************************************************************************************************************/  
    
-    DECLARE l_test_id NVARCHAR(50);
-    DECLARE l_result_size INT;
-/*   
-    l_test_id = 'Match results other test';
+   DECLARE l_result_size INT;
    
-	lt_result = SELECT a.GROUP_ID FROM "osr.scv.foundation.db.data::MatchResults.MatchResults" a
+	o_test_id = 'Match results other test';
+   
+	lt_result = SELECT		a.GROUP_ID 
+				FROM		"osr.scv.foundation.db.data::MatchResults.MatchResults" a
 				INNER JOIN 	"osr.scv.foundation.db.data::MatchResults.MatchResultsShadow" b
-				on a.GROUP_ID = b.GROUP_ID
-				WHERE a.GROUP_ID is not null and b.GROUP_ID is not null;
+				on			a.GROUP_ID = b.GROUP_ID
+				WHERE		a.GROUP_ID is not null and b.GROUP_ID is not null;
 
 	SELECT COUNT(*) into l_result_size FROM :lt_result;
 	
-	-- fill up the O_RESULTS table
-	
 	IF :l_result_size is null OR :l_result_size = 0 THEN
-		:o_results.INSERT((:l_test_id, 'SUCCESS'), 1);
+		o_return_code := 'SUCCESS';
 	ELSE
-		:o_results.INSERT((:l_test_id, 'FAILURE'), 1);
+		o_return_code := 'FAILURE';
 	END IF;
-   */
+   
 END
