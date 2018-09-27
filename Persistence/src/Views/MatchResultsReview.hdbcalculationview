@@ -14,19 +14,19 @@
       <viewAttribute id="ENTITY_ID">
         <descriptions defaultDescription="ENTITY_ID"/>
       </viewAttribute>
-      <viewAttribute id="MATCH_ROW" aggregationType="sum">
+      <viewAttribute id="MATCH_ROW">
         <descriptions defaultDescription="MATCH_ROW"/>
       </viewAttribute>
-      <viewAttribute id="GROUP_ID" aggregationType="sum">
+      <viewAttribute id="GROUP_ID">
         <descriptions defaultDescription="GROUP_ID"/>
       </viewAttribute>
       <viewAttribute id="REVIEW_GROUP">
         <descriptions defaultDescription="REVIEW_GROUP"/>
       </viewAttribute>
-      <viewAttribute id="GROUP_COUNT" aggregationType="sum">
+      <viewAttribute id="GROUP_COUNT">
         <descriptions defaultDescription="GROUP_COUNT"/>
       </viewAttribute>
-      <viewAttribute id="GROUP_CATEGORY" aggregationType="sum">
+      <viewAttribute id="GROUP_CATEGORY">
         <descriptions defaultDescription="GROUP_CATEGORY"/>
       </viewAttribute>
       <viewAttribute id="SOURCE_SYSTEM">
@@ -50,25 +50,25 @@
       <viewAttribute id="STRATEGY_RESOLVED_STATUS">
         <descriptions defaultDescription="STRATEGY_RESOLVED_STATUS"/>
       </viewAttribute>
-      <viewAttribute id="AVG_SCORE" aggregationType="sum">
+      <viewAttribute id="AVG_SCORE">
         <descriptions defaultDescription="AVG_SCORE"/>
       </viewAttribute>
       <viewAttribute id="SYSTEM_ID">
         <descriptions defaultDescription="SYSTEM_ID"/>
       </viewAttribute>
-      <viewAttribute id="GROUP_ROW_COUNT" aggregationType="sum">
+      <viewAttribute id="GROUP_ROW_COUNT">
         <descriptions defaultDescription="GROUP_ROW_COUNT"/>
       </viewAttribute>
-      <viewAttribute id="RELATED_ROW" aggregationType="sum">
+      <viewAttribute id="RELATED_ROW">
         <descriptions defaultDescription="RELATED_ROW"/>
       </viewAttribute>
-      <viewAttribute id="SCORE" aggregationType="sum">
+      <viewAttribute id="SCORE">
         <descriptions defaultDescription="SCORE"/>
       </viewAttribute>
       <viewAttribute id="PROMOTED_TO_SCV">
         <descriptions defaultDescription="PROMOTED_TO_SCV"/>
       </viewAttribute>
-      <viewAttribute id="PROMOTION_TIMESTAMP" aggregationType="min">
+      <viewAttribute id="PROMOTION_TIMESTAMP">
         <descriptions defaultDescription="PROMOTION_TIMESTAMP"/>
       </viewAttribute>
       <viewAttribute id="PROMOTED_BY">
@@ -96,7 +96,11 @@
         <descriptions defaultDescription="SHOW_IN_REVIEW"/>
       </viewAttribute>
     </viewAttributes>
-    <calculatedViewAttributes/>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="S_GROUP_ID" datatype="VARCHAR" length="25" expressionLanguage="SQL">
+        <formula>TO_VARCHAR(&quot;GROUP_ID&quot;)</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
     <restrictedViewAttributes/>
     <input node="osr.scv.foundation.db.data::MatchResultsReview.Review">
       <mapping xsi:type="Calculation:AttributeMapping" target="ENTITY_ID" source="ENTITY_ID"/>
@@ -233,6 +237,11 @@
       <descriptions defaultDescription="MATCH_PERSON_FN"/>
       <keyMapping columnObjectName="Projection_1" columnName="MATCH_PERSON_FN"/>
     </attribute>
+  
+    <attribute id="S_GROUP_ID" order="25" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="S_GROUP_ID"/>
+      <keyMapping columnObjectName="Projection_1" columnName="S_GROUP_ID"/>
+    </attribute>
   </attributes>
   <calculatedAttributes>
     <calculatedAttribute id="NAME" order="1" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false" key="true">
@@ -240,21 +249,21 @@
       <keyCalculation datatype="NVARCHAR" expressionLanguage="SQL" length="256">
         <formula>CONCAT(CONCAT(&quot;LAST_NAME&quot;, ', '), CONCAT(&quot;FIRST_NAME&quot;, CONCAT(' ',CASE WHEN &quot;MIDDLE_NAME&quot; IS NULL THEN '' ELSE &quot;MIDDLE_NAME&quot; END)))</formula>
       </keyCalculation>
-    </calculatedAttribute></calculatedAttributes>
+      </calculatedAttribute></calculatedAttributes>
   <baseMeasures/>
   <calculatedMeasures/>
   <restrictedMeasures/></logicalModel>
 <layout>
   <shapes>
     <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
-      <upperLeftCorner x="100" y="105"/>
+      <upperLeftCorner x="92" y="112"/>
     
-      <rectangleSize width="140"/>
+      <rectangleSize width="160"/>
     </shape>
   
     <shape expanded="true" modelObjectName="Projection_1" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="85" y="243"/>
-      <rectangleSize height="30" width="140"/>
+      <upperLeftCorner x="92" y="217"/>
+      <rectangleSize height="30" width="160"/>
     </shape>
   </shapes>
 </layout>
