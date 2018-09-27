@@ -1,6 +1,6 @@
-PROCEDURE "osr.scv.foundation.db.Procedures.Test::SP_TestGenerateSCVSubgroupsV2" (
+PROCEDURE "osr.scv.foundation.db.Procedures.Test::SP_TestGenerateSCVSubgroupsV21" (
 	IN  I_ENTITY_ID  INTEGER,
-	OUT o_results "osr.scv.foundation.db.data::TestResults.Results"
+	OUT O_RESULT INTEGER
 
 )
    LANGUAGE SQLSCRIPT
@@ -39,12 +39,11 @@ BEGIN
 	l_test_id = 'Generate SugGroup';
 	
 	-- test .. determine the number of subgroups created by this entity
-	SELECT		count(distinct "GROUP_TAG") into l_count_groups
+	SELECT		count(distinct "GROUP_TAG") into O_RESULT
 	FROM		"osr.scv.foundation.db.data::MatchResults.MatchResults" as a
 	inner join	"osr.scv.foundation.db.data::MatchResults.SubGroups"	as b
 	on			a."Match_ROW_ID" = b."MATCH_ROW"
 	where		entity_id = :I_ENTITY_ID;
 	
-	:o_results.INSERT((:l_test_id, TRIM( ' ' FROM TO_NVARCHAR( :l_count_groups ) )) , 1);
-   
+
 END

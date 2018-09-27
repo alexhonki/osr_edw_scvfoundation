@@ -3,7 +3,10 @@
 var SqlExecutor = $.import('sap.hana.testtools.unit.util', 'sqlExecutor').SqlExecutor;
 var tableDataSet = $.import('sap.hana.testtools.unit.util', 'tableDataSet');
 /*****************************************************************************************************************
- * Test suite: Match Subgroup
+ * Test suite: Generate Subgroups
+ * 
+ * NB -> For more info on using XSJS test libraries, refer to:	https://goo.gl/NhbXYR
+ * 
 ******************************************************************************************************************
 
 Release LOG:
@@ -22,46 +25,66 @@ describe("Generate SubGroup Test Suite", function() {
 	// before all test cases
 	beforeOnce(function() {
 
-		//
+		sqlExecutor = new SqlExecutor(jasmine.dbConnection);
 
+		var testSP = ' \"osr.scv.foundation.db.Procedures::SP_GenerateScvSubgroups\"( 0, ?, ?) ';
+
+		// Execute test Stored Procedure
+		var callStatement = 'CALL ' + testSP + ';';
+		
+		var actual = sqlExecutor.execSingleIgnoreFailing(callStatement);
+		
 	});
 
 
 	// before each test case
-	// beforeEach(function() {
-	// });
+	beforeEach(function() {
+		sqlExecutor = new SqlExecutor(jasmine.dbConnection);
+	});
+
 
 
 	// Test case - execute SubGroups
-	it("CASE " + "Generate SugGroups", function() {
+	it("CASE " + "Generate SugGroup - 238787 ", function() {
 
 
 		//
 		//  *** enter here the SQL procedure that runs the test case
 		//
-		var testSP = ' \"osr.scv.foundation.db.Procedures.Test::SP_TestGenerateSubgroupV2\"(?) ';
-		var testSuccess = "SUCCESS";
-
-		//
-		//  *** enter here expected result (O_RETURN_CODE is the key to it)
-		//
-		var expectedData = {
-			"O_TEST_ID": ["Match results integrity"],
-			"O_RETURN_CODE": [testSuccess]
-		};	
+		var testSP = ' \"osr.scv.foundation.db.Procedures.Test::SP_TestGenerateSCVSubgroupsV2\"( 238787, ?) ';
 
 		// Execute test Stored Procedure
 		var callStatement = 'CALL ' + testSP + ';';
 		
-		var sqlExecutor = new SqlExecutor(jasmine.dbConnection);
 		var actual = sqlExecutor.execQuery(callStatement);
-		$.trace.info(actual);   	
 		
 		//  Assertion
-		expect(actual).toMatchData(expectedData, [ "O_RETURN_CODE" ]);
+		expect(actual.getRow(0).O_RETURN_CODE).toBe("2");
+		
         
-	});
+        
+	});	
 	
+	// Test case - execute SubGroups
+	it("CASE " + "Generate SugGroup - 767515 ", function() {
+
+
+		//
+		//  *** enter here the SQL procedure that runs the test case
+		//
+		var testSP = ' \"osr.scv.foundation.db.Procedures.Test::SP_TestGenerateSCVSubgroupsV2\"( 767515, ?) ';
+
+
+		// Execute test Stored Procedure
+		var callStatement = 'CALL ' + testSP + ';';
+		
+		var actual = sqlExecutor.execQuery(callStatement);
+		
+		//  Assertion
+		expect(actual.getRow(0).O_RETURN_CODE).toBe("1");
+		
+       
+	});	
 
 
 });
