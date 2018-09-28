@@ -76,6 +76,6 @@ app.use(
 	xsHDBConn.middleware(options.hana)
 );
 
-xsjstest(options).runTests();
-app.use(xsjstest);
+// xsjstest(options).runTests();
+// app.use(xsjstest);
 app.listen(port);
