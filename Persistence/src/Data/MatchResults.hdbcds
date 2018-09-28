@@ -96,6 +96,12 @@ context MatchResults {
             SCORE       : Integer;
     };
 
+    /*@@layout{"layoutInfo":{}}*/
+    entity MatchWeakLinks {
+        key RULE_NAME   : String(256);
+            MIN_SCORE   : Integer;
+    };
+
 
     /*@@layout{"layoutInfo":{}}*/
     entity MatchGroupInfo {
