@@ -1,0 +1,146 @@
+PROCEDURE "osr.scv.foundation.db.Procedures::SP_GenerateScvSubgroupsV20" (
+	IN i_match_group		INTEGER DEFAULT 0, 
+	OUT o_return_code		NVARCHAR(128), 			-- 0 = execution successful; 1 = execution raised exception.
+	OUT o_message			NVARCHAR(1000) 			-- message
+)
+   LANGUAGE SQLSCRIPT
+   SQL SECURITY INVOKER
+   AS
+BEGIN SEQUENTIAL EXECUTION
+	/**************************************************************************************************************************************************
+	Generate SCV subgroups Version 2 -Using Graphs
+	
+	Create subgroups for all match rows within a match group:
+	
+		1.Copy all the entities that are to be analysed to table MatchReviewRelationships
+		2.Remove all the weaklinks
+		3.Identify all heads of Graphs
+		4.Tranverse graph, starting from ideintied heads
+		5.Create GROUP_TAGs for all subgraphs that are related
+		
+	***************************************************************************************************************************************************
+
+	Change log:
+   
+	28.09.2018 - R.Silva - SI007 - Build procedure
+	
+	***************************************************************************************************************************************************/
+
+
+	DECLARE l_count_rules	INTEGER;
+	DECLARE l_total_rules	INTEGER;
+	DECLARE l_rule_name		NVARCHAR(50);
+	DECLARE l_min_score		INTEGER;
+
+
+   	DECLARE EXIT HANDLER FOR SQLEXCEPTION
+	BEGIN
+		
+		o_return_code :=  'ERROR';
+		o_message:=  'ERROR: ' || ::SQL_ERROR_CODE || ' ' || ::SQL_ERROR_MESSAGE;
+	END;
+	
+	-- *********>  1.Copy all the entities that are to be analysed to table MatchReviewRelationships
+	
+	-- delete relationships table
+	TRUNCATE TABLE "osr.scv.foundation.db.data::MatchResults.MatchTracingRelationships";
+	
+	-- reset sequence
+	-- EXECUTE IMMEDIATE 'ALTER SEQUENCE "osr.scv.foundation.db.data::SEQ_MatchTracingRelationships" RESTART WITH 1';
+	
+	-- copy edges from relationships
+	INSERT INTO "osr.scv.foundation.db.data::MatchResults.MatchTracingRelationships" 
+	(
+		SELECT 
+			"osr.scv.foundation.db.data::SEQ_MatchTracingRelationships".NEXTVAL, *
+			FROM "osr.scv.foundation.db.data::MatchResults.MatchTracing"
+			
+			-- TO DO.. .ADD i_match_group SELECTOR
+	);
+	
+	
+	-- *********>  2.Remove all the weaklinks
+	
+
+	-- first read all rule (they should be three anyway)
+	lt_rules =
+		SELECT	"RULE_NAME",
+				"MIN_SCORE",
+				row_number() OVER (Order by RULE_NAME) As row_number
+		FROM	"osr.scv.foundation.db.data::MatchResults.MatchWeakLinks";
+	
+	-- count total number of rules
+	SELECT	count(row_number)
+	INTO	l_total_rules
+	FROM	:lt_rules ;	
+	
+	-- start with one
+	l_count_rules = 1;
+	
+	-- delete links according to each rule
+	WHILE :l_count_rules <= :l_total_rules DO
+		
+		SELECT "RULE_NAME",
+				"MIN_SCORE"
+		INTO	l_rule_name,
+				l_min_score
+		FROM	:lt_rules
+		WHERE	 row_number = l_count_rules;
+		
+		-- delete data based on rules
+		DELETE	FROM "osr.scv.foundation.db.data::MatchResults.MatchTracingRelationships"
+		WHERE	"RULE_NAME" = l_rule_name
+		AND		SCORE < :l_min_score; 
+		
+		l_count_rules = :l_count_rules + 1;
+		
+	END WHILE;
+	
+	
+	-- *********>  This is the table of Members for the GRAPH
+	
+	TRUNCATE TABLE  "osr.scv.foundation.db.data::MatchResults.MatchTracingRows";
+	
+	-- now I am ready to fill up the table of members
+	INSERT INTO "osr.scv.foundation.db.data::MatchResults.MatchTracingRows"
+	(
+		SELECT	DISTINCT "MATCH_ROW"
+		
+		FROM 
+		(
+			SELECT	"MATCH_ROW"
+			FROM	"osr.scv.foundation.db.data::MatchResults.MatchTracingRelationships"
+			UNION	
+			SELECT	"RELATED_ROW" AS "MATCH_ROW"
+			FROM	"osr.scv.foundation.db.data::MatchResults.MatchTracingRelationships"
+		)
+	);
+	
+	
+	-- *****> Identify all heads
+	-- "heads"  are elements that no other row "relates to"
+	-- so, they appear in the list of MATCH_ROWS but never in RELATED_ROWS
+	
+	lt_heads =
+		select	"MATCH_ROW"
+		FROM	"osr.scv.foundation.db.data::MatchResults.MatchTracingRelationships"
+		where	"MATCH_ROW" 
+		NOT IN	
+		(	
+			SELECT	"RELATED_ROW" AS "MATCH_ROW" 
+			FROM	"osr.scv.foundation.db.data::MatchResults.MatchTracingRelationships"
+		);
+	
+	
+	-- lt_result = NEIGHBORS(Graph, :lt_heads, Int, Int)
+	
+	-- Empty Sub-Groups table
+	TRUNCATE TABLE "osr.scv.foundation.db.data::MatchResults.SubGroups";
+	
+
+	-- Set return code
+	o_return_code	:=  'SUCCESS';
+	o_message		:=  'SCV groups created successfully';
+	
+
+END

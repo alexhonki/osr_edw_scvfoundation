@@ -5,7 +5,9 @@ var tableDataSet = $.import('sap.hana.testtools.unit.util', 'tableDataSet');
 /*****************************************************************************************************************
  * Test suite: Generate Subgroups
  * 
- * NB -> For more info on using XSJS test libraries, refer to:	https://goo.gl/NhbXYR
+ * NB -> For more info on using XSJS test libraries, refer to:	https://goo.gl/NhbXYR 
+ *																and https://goo.gl/R8DJtn
+ *		
  * 
 ******************************************************************************************************************
 
@@ -27,7 +29,7 @@ describe("Generate SubGroup Test Suite", function() {
 
 		sqlExecutor = new SqlExecutor(jasmine.dbConnection);
 
-		var testSP = ' \"osr.scv.foundation.db.Procedures::SP_GenerateScvSubgroups\"( 0, ?, ?) ';
+		var testSP = ' \"osr.scv.foundation.db.Procedures::SP_GenerateScvSubgroupsV20\"( 0, ?, ?) ';
 
 		// Execute test Stored Procedure
 		var callStatement = 'CALL ' + testSP + ';';

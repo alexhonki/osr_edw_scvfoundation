@@ -9,7 +9,8 @@
 		    			  "EXECUTE",
 		    			  "DELETE",
 		    			  "UPDATE",
-		    			  "CREATE TEMPORARY TABLE"
+		    			  "CREATE TEMPORARY TABLE",
+		    			  "ALTER"
 		  ]
 		}]
      }
