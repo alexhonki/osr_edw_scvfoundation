@@ -26,16 +26,20 @@ BEGIN SEQUENTIAL EXECUTION
 	
 	***************************************************************************************************************************************************/
 
-
+	
 	DECLARE l_count_rules	INTEGER;
 	DECLARE l_total_rules	INTEGER;
 	DECLARE l_rule_name		NVARCHAR(50);
+	
 	DECLARE l_min_score		INTEGER;
+	
+	DECLARE v_TOTAL_GROUPS	integer;
+	DECLARE v_group			integer;
+	DECLARE v_vertice  		integer;
 
 
    	DECLARE EXIT HANDLER FOR SQLEXCEPTION
 	BEGIN
-		
 		o_return_code :=  'ERROR';
 		o_message:=  'ERROR: ' || ::SQL_ERROR_CODE || ' ' || ::SQL_ERROR_MESSAGE;
 	END;
@@ -117,25 +121,93 @@ BEGIN SEQUENTIAL EXECUTION
 	);
 	
 	
-	-- *****> Identify all heads
-	-- "heads"  are elements that no other row "relates to"
-	-- so, they appear in the list of MATCH_ROWS but never in RELATED_ROWS
+	-- get all roots 
+	vertices =	
+		SELECT		"MATCH_ROW",
+					row_number() OVER (Order by "MATCH_ROW") As row_number
+		FROM		"osr.scv.foundation.db.functions::MatchVertices"();  -- Table function that returns all vertices (roots)
 	
-	lt_heads =
-		select	"MATCH_ROW"
-		FROM	"osr.scv.foundation.db.data::MatchResults.MatchTracingRelationships"
-		where	"MATCH_ROW" 
-		NOT IN	
-		(	
-			SELECT	"RELATED_ROW" AS "MATCH_ROW" 
-			FROM	"osr.scv.foundation.db.data::MatchResults.MatchTracingRelationships"
-		);
+	-- count how many vertices were returned by the previous query
+	SELECT	count(*) 
+	INTO	V_TOTAL_GROUPS
+	FROM	:vertices;
 	
-	
-	-- lt_result = NEIGHBORS(Graph, :lt_heads, Int, Int)
 	
 	-- Empty Sub-Groups table
 	TRUNCATE TABLE "osr.scv.foundation.db.data::MatchResults.SubGroups";
+	
+	
+	-- now check SUB_GROUP by subgroup
+	if v_total_groups >= 1 then
+
+		-- stargint from one
+		V_GROUP = 1;
+		
+		-- crazy way to do a cursor
+		WHILE :V_GROUP <= :v_total_groups DO
+	
+			SELECT	"MATCH_ROW" 
+			INTO	V_VERTICE     -- this is the vertice
+			FROM	:VERTICES
+			WHERE	row_number =  V_GROUP; -- NEXT ROW
+				
+				-- breath first search of all nodes that are part of the new group
+				lt_new_groupS =
+					SELECT 	"PARENT",
+							"MATCH_ROW",
+							MIN("DEPTH")
+					FROM	"osr.scv.foundation.db.data::MatchTrackingBFT"
+							(placeholder."$$startVertice$$"=> :V_VERTICE)
+					GROUP BY "PARENT" , "MATCH_ROW";
+					
+				-- group(s) that already exist in the groups table
+				-- and contain any of the MATCH_ROWS to be added
+				lt_existing_groups = 
+					SELECT	"GROUP_TAG",
+							"MATCH_ROW"
+					FROM	 "osr.scv.foundation.db.data::MatchResults.SubGroups"
+					WHERE	"MATCH_ROW"
+					IN
+					(
+						SELECT	"MATCH_ROW"
+						FROM	:lt_new_groupS
+					);
+				
+				-- delete existing groups
+				-- they will be readded with the new group number
+				DELETE FROM "osr.scv.foundation.db.data::MatchResults.SubGroups"
+				WHERE		"GROUP_TAG"
+				IN 
+				(
+					SELECT DISTINCT "GROUP_TAG"
+					FROM	:lt_existing_groups
+				);
+				
+				
+					
+				-- now add them with the new group number
+				INSERT	INTO "osr.scv.foundation.db.data::MatchResults.SubGroups"
+				(
+					SELECT	DISTINCT "MATCH_ROW",
+							:V_VERTICE AS "GROUP_TAG"
+					FROM	
+					(
+						SELECT	"MATCH_ROW"
+						FROM	:lt_new_groups
+						UNION
+						SELECT	"MATCH_ROW"
+						FROM	:lt_existing_groups
+					)
+					
+				);
+
+			
+			V_GROUP = V_GROUP + 1;
+		
+		END WHILE;
+		
+
+	END IF;
 	
 
 	-- Set return code
