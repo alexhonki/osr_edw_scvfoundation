@@ -1,0 +1,47 @@
+FUNCTION "osr.scv.foundation.db.functions::MatchVertices" ()
+    RETURNS table (	"MATCH_ROW" INTEGER    )
+    LANGUAGE SQLSCRIPT 
+    SQL SECURITY INVOKER AS 
+BEGIN 
+	/*************************************************************************************************************************************  
+    	API endpoint to return a list of SCV entities
+       
+    	Returns a list of Vertices (Roots) from the match results Tracking table
+    			
+		A vertice or a root is defined as a node that does not have any incoming link
+		
+	***************************************************************************************************************************************
+	
+	Change Log
+	
+	
+	SI007 - 02.10.2018 - R. Silva
+	
+	Function created
+
+	
+	***************************************************************************************************************************************/ 
+	
+
+	
+	DECLARE EXIT HANDLER FOR SQLEXCEPTION
+	BEGIN
+		--o_return_code :=  'ERROR';
+		--o_message:=  'ERROR: ' || ::SQL_ERROR_CODE || ' ' || ::SQL_ERROR_MESSAGE;
+	END;
+
+
+
+	RETURN
+	SELECT	DISTINCT  "MATCH_ROW"
+	FROM	"osr.scv.foundation.db.data::MatchResults.MatchTracingRelationships"
+	WHERE	"MATCH_ROW" 
+	NOT IN	
+	(	
+		SELECT	"RELATED_ROW" AS "MATCH_ROW" 
+		FROM	"osr.scv.foundation.db.data::MatchResults.MatchTracingRelationships"
+	)
+	ORDER BY "MATCH_ROW";
+	
+
+END;
