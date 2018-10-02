@@ -12,11 +12,13 @@ BEGIN SEQUENTIAL EXECUTION
 	
 	Create subgroups for all match rows within a match group:
 	
-		1.Copy all the entities that are to be analysed to table MatchReviewRelationships
-		2.Remove all the weaklinks
-		3.Identify all heads of Graphs
-		4.Tranverse graph, starting from ideintied heads
-		5.Create GROUP_TAGs for all subgraphs that are related
+		1. Copy all the entities that are to be analysed to table MatchReviewRelationships
+		
+		2. Remove all the weak links
+		
+		3. Complete the Graph table - with the vertices
+		
+		4. Update subgroup table with groups created by Tranversing graph breadth-first
 		
 	***************************************************************************************************************************************************
 
@@ -33,18 +35,28 @@ BEGIN SEQUENTIAL EXECUTION
 	
 	DECLARE l_min_score		INTEGER;
 	
-	DECLARE v_TOTAL_GROUPS	integer;
-	DECLARE v_group			integer;
+	DECLARE v_total_groups	integer;
+	DECLARE v_count_groups	integer;
 	DECLARE v_vertice  		integer;
 
 
+	-- error handler
    	DECLARE EXIT HANDLER FOR SQLEXCEPTION
 	BEGIN
 		o_return_code :=  'ERROR';
 		o_message:=  'ERROR: ' || ::SQL_ERROR_CODE || ' ' || ::SQL_ERROR_MESSAGE;
 	END;
 	
-	-- *********>  1.Copy all the entities that are to be analysed to table MatchReviewRelationships
+	
+	-- standardise input
+	IF (:i_match_group IS NULL) THEN
+		I_MATCH_GROUP = 0;
+	END IF;
+	
+	
+	/*********************************************************************************************************************
+		1. Copy all the entities that are to be analysed to table MatchReviewRelationships
+	***********************************************************************************************************************/
 	
 	-- delete relationships table
 	TRUNCATE TABLE "osr.scv.foundation.db.data::MatchResults.MatchTracingRelationships";
@@ -53,37 +65,62 @@ BEGIN SEQUENTIAL EXECUTION
 	-- EXECUTE IMMEDIATE 'ALTER SEQUENCE "osr.scv.foundation.db.data::SEQ_MatchTracingRelationships" RESTART WITH 1';
 	
 	-- copy edges from relationships
-	INSERT INTO "osr.scv.foundation.db.data::MatchResults.MatchTracingRelationships" 
-	(
-		SELECT 
-			"osr.scv.foundation.db.data::SEQ_MatchTracingRelationships".NEXTVAL, *
-			FROM "osr.scv.foundation.db.data::MatchResults.MatchTracing"
-			
-			-- TO DO.. .ADD i_match_group SELECTOR
-	);
 	
+	IF :i_match_group  = 0 OR  :i_match_group  IS NULL THEN
 	
-	-- *********>  2.Remove all the weaklinks
+		-- read all records
+		INSERT INTO "osr.scv.foundation.db.data::MatchResults.MatchTracingRelationships" 
+		(
+			SELECT		"osr.scv.foundation.db.data::SEQ_MatchTracingRelationships".NEXTVAL, t.*
+			FROM		"osr.scv.foundation.db.data::MatchResults.MatchTracing"		AS t
+		);
+		
+		-- Empty Sub-Groups table ... will rework all subgroups
+		TRUNCATE TABLE "osr.scv.foundation.db.data::MatchResults.SubGroups";
+		
+	ELSE
 	
-
-	-- first read all rule (they should be three anyway)
+		-- limit the select to the records matching L_match_group
+		INSERT INTO "osr.scv.foundation.db.data::MatchResults.MatchTracingRelationships" 
+		(
+			SELECT		"osr.scv.foundation.db.data::SEQ_MatchTracingRelationships".NEXTVAL, t.*
+			FROM		"osr.scv.foundation.db.data::MatchResults.MatchTracing"	AS t
+			INNER JOIN	"osr.scv.foundation.db.data::MatchResults.MatchResults"	AS r
+			ON			t."ROW_ID" = r."Match_ROW_ID"
+			WHERE	
+			(
+				:i_match_group  = 0 OR
+				r."GROUP_ID"	= :i_match_group 
+			)
+		);
+		
+		-- do not emapty table.. we will rely on thi procedure's delta abilities to handle the new records
+		
+	END IF;
+	
+	/***********************************************************************************************************************
+		2. Remove all the weak links
+	***********************************************************************************************************************/
+	
+	-- first read all rules (they should be three to start with)
 	lt_rules =
 		SELECT	"RULE_NAME",
 				"MIN_SCORE",
-				row_number() OVER (Order by RULE_NAME) As row_number
+				row_number() OVER (Order by RULE_NAME) As row_number   -- get a counter that will be used to access data
 		FROM	"osr.scv.foundation.db.data::MatchResults.MatchWeakLinks";
 	
 	-- count total number of rules
 	SELECT	count(row_number)
 	INTO	l_total_rules
-	FROM	:lt_rules ;	
+	FROM	:lt_rules;	
 	
 	-- start with one
 	l_count_rules = 1;
 	
-	-- delete links according to each rule
+	-- loop over rules
 	WHILE :l_count_rules <= :l_total_rules DO
 		
+		-- read next rule
 		SELECT "RULE_NAME",
 				"MIN_SCORE"
 		INTO	l_rule_name,
@@ -91,18 +128,21 @@ BEGIN SEQUENTIAL EXECUTION
 		FROM	:lt_rules
 		WHERE	 row_number = l_count_rules;
 		
-		-- delete data based on rules
+		-- delete links that match that rule data based on read rule
 		DELETE	FROM "osr.scv.foundation.db.data::MatchResults.MatchTracingRelationships"
 		WHERE	"RULE_NAME" = l_rule_name
-		AND		SCORE < :l_min_score; 
+		AND		SCORE		< :l_min_score; 
 		
+		-- increment counter
 		l_count_rules = :l_count_rules + 1;
 		
 	END WHILE;
 	
 	
-	-- *********>  This is the table of Members for the GRAPH
-	
+	/***********************************************************************************************************************
+		3. Complete the Graph table with all vertices 
+	***********************************************************************************************************************/
+
 	TRUNCATE TABLE  "osr.scv.foundation.db.data::MatchResults.MatchTracingRows";
 	
 	-- now I am ready to fill up the table of members
@@ -121,7 +161,14 @@ BEGIN SEQUENTIAL EXECUTION
 	);
 	
 	
-	-- get all roots 
+
+	
+	
+	/***********************************************************************************************************************
+		4. Update subgroup table with groups created by Tranversing graph breadth-first
+	***********************************************************************************************************************/
+
+	-- get all roots from table function "Matrch Vertices"
 	vertices =	
 		SELECT		"MATCH_ROW",
 					row_number() OVER (Order by "MATCH_ROW") As row_number
@@ -131,25 +178,22 @@ BEGIN SEQUENTIAL EXECUTION
 	SELECT	count(*) 
 	INTO	V_TOTAL_GROUPS
 	FROM	:vertices;
+
 	
-	
-	-- Empty Sub-Groups table
-	TRUNCATE TABLE "osr.scv.foundation.db.data::MatchResults.SubGroups";
-	
-	
-	-- now check SUB_GROUP by subgroup
+	-- now update SUB_GROUP by subgroup
 	if v_total_groups >= 1 then
 
 		-- stargint from one
-		V_GROUP = 1;
+		v_count_groups = 1;
 		
 		-- crazy way to do a cursor
-		WHILE :V_GROUP <= :v_total_groups DO
-	
+		WHILE :v_count_groups <= :v_total_groups DO
+		
+			-- get next root
 			SELECT	"MATCH_ROW" 
 			INTO	V_VERTICE     -- this is the vertice
 			FROM	:VERTICES
-			WHERE	row_number =  V_GROUP; -- NEXT ROW
+			WHERE	row_number =  v_count_groups; -- NEXT ROW
 				
 				-- breath first search of all nodes that are part of the new group
 				lt_new_groupS =
@@ -160,8 +204,7 @@ BEGIN SEQUENTIAL EXECUTION
 							(placeholder."$$startVertice$$"=> :V_VERTICE)
 					GROUP BY "PARENT" , "MATCH_ROW";
 					
-				-- group(s) that already exist in the groups table
-				-- and contain any of the MATCH_ROWS to be added
+				-- group(s) that already exist in the groups table and contain any of the MATCH_ROWS from the new group
 				lt_existing_groups = 
 					SELECT	"GROUP_TAG",
 							"MATCH_ROW"
@@ -183,9 +226,8 @@ BEGIN SEQUENTIAL EXECUTION
 					FROM	:lt_existing_groups
 				);
 				
-				
 					
-				-- now add them with the new group number
+				-- now add the group again with the new group number
 				INSERT	INTO "osr.scv.foundation.db.data::MatchResults.SubGroups"
 				(
 					SELECT	DISTINCT "MATCH_ROW",
@@ -201,8 +243,8 @@ BEGIN SEQUENTIAL EXECUTION
 					
 				);
 
-			
-			V_GROUP = V_GROUP + 1;
+			-- increament group counter
+			v_count_groups = v_count_groups + 1;
 		
 		END WHILE;
 		
