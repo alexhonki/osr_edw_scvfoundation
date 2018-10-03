@@ -16,6 +16,6 @@
 		"start": "node node_modules/@sap/dwf-deploy/main.js"
 	},
 	"engines": {
-		"node": ">=6.9.1"
+		"node": "6.9.1"
 	}
 }
