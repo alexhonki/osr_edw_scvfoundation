@@ -14,7 +14,7 @@ BEGIN
    
    INSERT INTO "osr.scv.foundation.db.data::MatchResults.MatchTracingRows" 
    (
-	SELECT "Match_ROW_ID" FROM "osr.scv.foundation.db.data::MatchResults.MatchResults" 
+	SELECT "Match_ROW_ID", 0 FROM "osr.scv.foundation.db.data::MatchResults.MatchResults" 
    );
    
    INSERT INTO "osr.scv.foundation.db.data::MatchResults.MatchTracingRelationships"

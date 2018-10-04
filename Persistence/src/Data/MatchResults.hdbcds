@@ -83,22 +83,23 @@ context MatchResults {
 
     /*@@layout{"layoutInfo":{}}*/
     entity MatchTracingRows {
-        key MATCH_ROW : Integer not null;
+        key MATCH_ROW_ID : Integer not null default 0;
+            GROUP_ID     : Integer;
     };
 
     /*@@layout{"layoutInfo":{}}*/
     entity MatchTracingRelationships {
-        key ID          : Integer not null;
-            MATCH_ROW   : Integer not null;
-            RELATED_ROW : Integer not null;
-            POLICY_NAME : String(256);
-            RULE_NAME   : String(256);
-            SCORE       : Integer;
+        key ID             : Integer not null default 0;
+            MATCH_ROW_ID   : Integer not null default 0;
+            RELATED_ROW_ID : Integer default 0 not null;
+            POLICY_NAME    : String(256);
+            RULE_NAME      : String(256);
+            SCORE          : Integer;
     };
 
     /*@@layout{"layoutInfo":{}}*/
     entity MatchWeakLinks {
-        key RULE_NAME   : String(256);
+        key POLICY_NAME : String(256);
             MIN_SCORE   : Integer;
     };
 
