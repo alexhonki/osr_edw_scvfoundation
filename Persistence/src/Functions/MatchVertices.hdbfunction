@@ -1,5 +1,5 @@
 FUNCTION "osr.scv.foundation.db.functions::MatchVertices" ()
-    RETURNS table (	"MATCH_ROW" INTEGER    )
+    RETURNS table (	"MATCH_ROW_ID" INTEGER    )
     LANGUAGE SQLSCRIPT 
     SQL SECURITY INVOKER AS 
 BEGIN 
@@ -33,15 +33,15 @@ BEGIN
 
 
 	RETURN
-	SELECT	DISTINCT  "MATCH_ROW"
+	SELECT	DISTINCT  "MATCH_ROW_ID"
 	FROM	"osr.scv.foundation.db.data::MatchResults.MatchTracingRelationships"
-	WHERE	"MATCH_ROW" 
+	WHERE	"MATCH_ROW_ID" 
 	NOT IN	
 	(	
-		SELECT	"RELATED_ROW" AS "MATCH_ROW" 
+		SELECT	"RELATED_ROW_ID" AS "MATCH_ROW_ID" 
 		FROM	"osr.scv.foundation.db.data::MatchResults.MatchTracingRelationships"
 	)
-	ORDER BY "MATCH_ROW";
+	ORDER BY "MATCH_ROW_ID";
 	
 
 END;
