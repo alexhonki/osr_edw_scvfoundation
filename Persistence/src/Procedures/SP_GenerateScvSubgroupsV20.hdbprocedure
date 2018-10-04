@@ -338,6 +338,9 @@ BEGIN SEQUENTIAL EXECUTION
 		(
 			SELECT 	DISTINCT "MATCH_ROW_ID" 
 			FROM	"osr.scv.foundation.db.data::MatchResults.MatchTracingRelationships"
+			UNION
+			SELECT 	DISTINCT "RELATED_ROW_ID"  AS "MATCH_ROW_ID" 
+			FROM	"osr.scv.foundation.db.data::MatchResults.MatchTracingRelationships"			
 		); 
 		
 	-- GROUPS that DO NOT include deletions ... will go straight to SubGroupss
