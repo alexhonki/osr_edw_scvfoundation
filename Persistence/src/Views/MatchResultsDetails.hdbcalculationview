@@ -14,18 +14,18 @@
   </variable>
 </localVariables>
 <variableMappings>
-  <mapping xsi:type="Variable:VariableMapping" dataSource="osr.scv.foundation.db.functions::MatchResultsDetails">
-    <targetVariable name="I_ENTITY_ID" resourceUri="osr.scv.foundation.db.functions::MatchResultsDetails"/>
+  <mapping xsi:type="Variable:VariableMapping" dataSource="osr.scv.foundation.db.Functions::MatchResultsDetails">
+    <targetVariable name="I_ENTITY_ID" resourceUri="osr.scv.foundation.db.Functions::MatchResultsDetails"/>
     <localVariable>IP_ENTITY_ID</localVariable>
   </mapping>
 </variableMappings>
 <dataSources>
-  <DataSource id="osr.scv.foundation.db.functions::MatchResultsDetails" type="TABLE_FUNCTION">
-    <resourceUri>osr.scv.foundation.db.functions::MatchResultsDetails</resourceUri>
+  <DataSource id="osr.scv.foundation.db.Functions::MatchResultsDetails" type="TABLE_FUNCTION">
+    <resourceUri>osr.scv.foundation.db.Functions::MatchResultsDetails</resourceUri>
   </DataSource>
 </dataSources>
 <calculationViews/>
-<logicalModel id="osr.scv.foundation.db.functions::MatchResultsDetails">
+<logicalModel id="osr.scv.foundation.db.Functions::MatchResultsDetails">
   <attributes>
     <attribute id="ENTITY_ID" order="1" displayAttribute="false" attributeHierarchyActive="false" key="true">
       <descriptions defaultDescription="ENTITY_ID"/>

@@ -76,7 +76,7 @@ BEGIN SEQUENTIAL EXECUTION
 			ON m.ENTITY_ID = r.ENTITY_ID
 			-- Only move the entities that have changed
 			INNER JOIN (
-						SELECT DISTINCT * FROM "osr.scv.foundation.db.functions::MatchDelta" ()
+						SELECT DISTINCT * FROM "osr.scv.foundation.db.Functions::MatchDelta" ()
 					   ) d
 			ON m."Match_ROW_ID" = d.MATCH_ROW_ID
 			WHERE d.ACTION = 'New'

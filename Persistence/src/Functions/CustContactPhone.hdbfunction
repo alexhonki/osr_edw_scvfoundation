@@ -1,4 +1,4 @@
-FUNCTION "osr.scv.foundation.db.functions::CustContactPhone" (  )
+FUNCTION "osr.scv.foundation.db.Functions::CustContactPhone" (  )
        RETURNS TABLE (	CUSTOMER_REF NVARCHAR(20),
     					Z_CHANGE_TIME TIMESTAMP,
     					SMS_CONTACT_NUMBER NVARCHAR(50)

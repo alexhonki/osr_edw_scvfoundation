@@ -1,4 +1,4 @@
-FUNCTION "osr.scv.foundation.db.functions::MatchResultsAssessments" ( i_rms_duplicates nvarchar(1) )
+FUNCTION "osr.scv.foundation.db.Functions::MatchResultsAssessments" ( i_rms_duplicates nvarchar(1) )
        RETURNS TABLE (	MATCH_PERSON_FN_FC_SORT NVARCHAR(2),
     					MATCH_PERSON_FN_FC NVARCHAR(1),
     					STRATEGY NVARCHAR(10),

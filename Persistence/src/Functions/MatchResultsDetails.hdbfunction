@@ -1,4 +1,4 @@
-FUNCTION "osr.scv.foundation.db.functions::MatchResultsDetails" ( IN i_entity_id NVARCHAR(20) )
+FUNCTION "osr.scv.foundation.db.Functions::MatchResultsDetails" ( IN i_entity_id NVARCHAR(20) )
        RETURNS TABLE (	GROUP_ID Integer,
         				ENTITY_ID VARCHAR(20),
         				SCV_ID INTEGER,
