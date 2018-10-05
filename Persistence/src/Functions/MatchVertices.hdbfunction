@@ -1,4 +1,4 @@
-FUNCTION "osr.scv.foundation.db.functions::MatchVertices" ()
+FUNCTION "osr.scv.foundation.db.Functions::MatchVertices" ()
     RETURNS table (	"MATCH_ROW_ID" INTEGER    )
     LANGUAGE SQLSCRIPT 
     SQL SECURITY INVOKER AS 

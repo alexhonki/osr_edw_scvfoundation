@@ -1,4 +1,4 @@
-FUNCTION "osr.scv.foundation.db.functions.Util::UtilSplitStringColumnSinglePos" (i_string NVARCHAR(5000) DEFAULT ',',i_separator NVARCHAR(1) DEFAULT ',',i_colnumret NVARCHAR(1) DEFAULT ',')
+FUNCTION "osr.scv.foundation.db.Functions.Util::UtilSplitStringColumnSinglePos" (i_string NVARCHAR(5000) DEFAULT ',',i_separator NVARCHAR(1) DEFAULT ',',i_colnumret NVARCHAR(1) DEFAULT ',')
      RETURNS OT_RESULT NVARCHAR(1024)
        LANGUAGE SQLSCRIPT 
        SQL SECURITY INVOKER AS 

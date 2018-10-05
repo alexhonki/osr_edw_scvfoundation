@@ -1,4 +1,4 @@
-FUNCTION "osr.scv.foundation.db.functions::MatchResultsReview" ( )
+FUNCTION "osr.scv.foundation.db.Functions::MatchResultsReview" ( )
        RETURNS TABLE (	
     					MATCH_ROW					INTEGER,
     					SOURCE_SYSTEM				NVARCHAR(10),

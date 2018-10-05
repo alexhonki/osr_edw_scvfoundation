@@ -13,11 +13,11 @@ BEGIN
 	
 -- Create lookup table to get the mapping for cleansed address type --
 	lt_addr_type_lookup = SELECT STD_ADDR_PRIM_TYPE,
-	                       "osr.scv.foundation.db.functions.Util::UtilSplitStringColumnSinglePos"(ADDR_TYPE_ADD,'&','1').OT_RESULT AS ADDR_TYPE_ADD_1,
-							"osr.scv.foundation.db.functions.Util::UtilSplitStringColumnSinglePos"(ADDR_TYPE_ADD,'&','2').OT_RESULT AS ADDR_TYPE_ADD_2,
-							"osr.scv.foundation.db.functions.Util::UtilSplitStringColumnSinglePos"(ADDR_TYPE_ADD,'&','3').OT_RESULT AS ADDR_TYPE_ADD_3,
-							"osr.scv.foundation.db.functions.Util::UtilSplitStringColumnSinglePos"(ADDR_TYPE_ADD,'&','4').OT_RESULT AS ADDR_TYPE_ADD_4,
-							"osr.scv.foundation.db.functions.Util::UtilSplitStringColumnSinglePos"(ADDR_TYPE_ADD,'&','5').OT_RESULT AS ADDR_TYPE_ADD_5
+	                       "osr.scv.foundation.db.Functions.Util::UtilSplitStringColumnSinglePos"(ADDR_TYPE_ADD,'&','1').OT_RESULT AS ADDR_TYPE_ADD_1,
+							"osr.scv.foundation.db.Functions.Util::UtilSplitStringColumnSinglePos"(ADDR_TYPE_ADD,'&','2').OT_RESULT AS ADDR_TYPE_ADD_2,
+							"osr.scv.foundation.db.Functions.Util::UtilSplitStringColumnSinglePos"(ADDR_TYPE_ADD,'&','3').OT_RESULT AS ADDR_TYPE_ADD_3,
+							"osr.scv.foundation.db.Functions.Util::UtilSplitStringColumnSinglePos"(ADDR_TYPE_ADD,'&','4').OT_RESULT AS ADDR_TYPE_ADD_4,
+							"osr.scv.foundation.db.Functions.Util::UtilSplitStringColumnSinglePos"(ADDR_TYPE_ADD,'&','5').OT_RESULT AS ADDR_TYPE_ADD_5
 							FROM 
 						(
 	                       SELECT STD_ADDR_PRIM_TYPE, STD_ADDR_PRIM_TYPE  || '&' || STRING_AGG(LOWER_TYPE, '&') AS ADDR_TYPE_ADD   FROM 
@@ -29,11 +29,11 @@ BEGIN
 
 -- Create reverse lookup table to get the mapping for cleansed address types --
 	lt_addr_type_reverse_lookup = SELECT STD_ADDR_PRIM_TYPE,
-	                       "osr.scv.foundation.db.functions.Util::UtilSplitStringColumnSinglePos"(ADDR_TYPE_ADD,'&','1').OT_RESULT AS ADDR_TYPE_ADD_1,
-							"osr.scv.foundation.db.functions.Util::UtilSplitStringColumnSinglePos"(ADDR_TYPE_ADD,'&','2').OT_RESULT AS ADDR_TYPE_ADD_2,
-							"osr.scv.foundation.db.functions.Util::UtilSplitStringColumnSinglePos"(ADDR_TYPE_ADD,'&','3').OT_RESULT AS ADDR_TYPE_ADD_3,
-							"osr.scv.foundation.db.functions.Util::UtilSplitStringColumnSinglePos"(ADDR_TYPE_ADD,'&','4').OT_RESULT AS ADDR_TYPE_ADD_4,
-							"osr.scv.foundation.db.functions.Util::UtilSplitStringColumnSinglePos"(ADDR_TYPE_ADD,'&','5').OT_RESULT AS ADDR_TYPE_ADD_5
+	                       "osr.scv.foundation.db.Functions.Util::UtilSplitStringColumnSinglePos"(ADDR_TYPE_ADD,'&','1').OT_RESULT AS ADDR_TYPE_ADD_1,
+							"osr.scv.foundation.db.Functions.Util::UtilSplitStringColumnSinglePos"(ADDR_TYPE_ADD,'&','2').OT_RESULT AS ADDR_TYPE_ADD_2,
+							"osr.scv.foundation.db.Functions.Util::UtilSplitStringColumnSinglePos"(ADDR_TYPE_ADD,'&','3').OT_RESULT AS ADDR_TYPE_ADD_3,
+							"osr.scv.foundation.db.Functions.Util::UtilSplitStringColumnSinglePos"(ADDR_TYPE_ADD,'&','4').OT_RESULT AS ADDR_TYPE_ADD_4,
+							"osr.scv.foundation.db.Functions.Util::UtilSplitStringColumnSinglePos"(ADDR_TYPE_ADD,'&','5').OT_RESULT AS ADDR_TYPE_ADD_5
 							FROM 
 						(
 	                       SELECT STD_ADDR_PRIM_TYPE, STD_ADDR_PRIM_TYPE  || '&' || STRING_AGG(LOWER_TYPE, '&') AS ADDR_TYPE_ADD   FROM 

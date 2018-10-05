@@ -90,6 +90,6 @@ BEGIN
    
    -- Fill match results review table
    TRUNCATE TABLE "osr.scv.foundation.db.data::MatchResultsReview.Review";
-   INSERT INTO "osr.scv.foundation.db.data::MatchResultsReview.Review" (SELECT * FROM "osr.scv.foundation.db.functions::MatchResultsReview"());
+   INSERT INTO "osr.scv.foundation.db.data::MatchResultsReview.Review" (SELECT * FROM "osr.scv.foundation.db.Functions::MatchResultsReview"());
    
 END
