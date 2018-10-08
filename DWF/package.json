@@ -2,10 +2,10 @@
 	"name": "dwf-module",
 	"version": "1.0.0",
 	"dependencies": {
-		"@sap/dwf-deploy": "2.2.3"
+		"@sap/dwf-deploy": "~2.3.0"
 	},
 	"devDependencies": {
-		"@sap/dwf-generator": "2.2.3"
+		"@sap/dwf-generator": "~2.3.0"
 	},
 	"dwfConfig": {
 		"hdb-module": {
@@ -16,6 +16,6 @@
 		"start": "node node_modules/@sap/dwf-deploy/main.js"
 	},
 	"engines": {
-		"node": "6.9.1"
+		"node": "^6.9.1"
 	}
 }
