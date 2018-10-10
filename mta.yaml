@@ -27,7 +27,7 @@ modules:
           service: '~{OSR-EDW-PLATFORM-grantor-service}'
       - name: scv-ext-access-grantor
     properties:
-      timeout: 45m
+      timeout: 15m
   - name: OSR_SCV_FOUNDATION-Services
     type: nodejs
     path: Services
@@ -42,7 +42,7 @@ modules:
       - name: OsrScvFoundationContainer
       - name: OSR_SCV_FOUNDATION-uaa
     properties:
-      timeout: 45m
+      timeout: 30m
   - name: OSR_SCV_FOUNDATION-Web
     type: html5
     path: Web
@@ -59,15 +59,13 @@ modules:
         properties:
           ui5liburl: '~{url}'
     properties:
-      timeout: 45m
+      timeout: 29m
   - name: OSR_SCV_FOUNDATION-DWF
     type: dwf
     path: DWF
     requires:
       - name: OSR_SCV_FOUNDATION_DWF-uaa
       - name: OSR_SCV_FOUNDATION-dws
-    properties:
-      timeout: 45m
   - name: OSR_SCV_FOUNDATION-Backend
     type: nodejs
     path: Backend
@@ -82,7 +80,6 @@ modules:
     properties:
       API_END_POINT: '${xs-api-url}'
       SAP_JWT_TRUST_ACL: '[{"clientid":"*","identityzone":"*"}]'
-      timeout: 45m
     build-parameters:
       timeout: 15m
 resources:
