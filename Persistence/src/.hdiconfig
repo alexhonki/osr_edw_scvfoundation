@@ -8,20 +8,16 @@
             "plugin_name" : "com.sap.hana.di.synonym.config"
         },
         "hdbtable" : {
-            "plugin_name" : "com.sap.hana.di.table",
-            "plugin_version": "2.0.0.0"
+            "plugin_name" : "com.sap.hana.di.table"
         },
         "hdbdropcreatetable" : {
-            "plugin_name" : "com.sap.hana.di.dropcreatetable",
-            "plugin_version": "2.0.0.0"
+            "plugin_name" : "com.sap.hana.di.dropcreatetable"
         },
         "hdbvirtualtable" : {
-            "plugin_name" : "com.sap.hana.di.virtualtable",
-            "plugin_version": "2.0.0.0"
+            "plugin_name" : "com.sap.hana.di.virtualtable"
         },
         "hdbvirtualtableconfig" : {
-            "plugin_name" : "com.sap.hana.di.virtualtable.config",
-            "plugin_version": "2.0.0.0"
+            "plugin_name" : "com.sap.hana.di.virtualtable.config"
         },
         "hdbindex" : {
             "plugin_name" : "com.sap.hana.di.index"
@@ -51,8 +47,7 @@
             "plugin_name" : "com.sap.hana.di.projectionview.config"
         },
         "hdbresultcache" : {
-            "plugin_name" : "com.sap.hana.di.resultcache",
-            "plugin_version": "2.0.0.0"
+            "plugin_name" : "com.sap.hana.di.resultcache"
         },
         "hdbcds" : {
             "plugin_name" : "com.sap.hana.di.cds"
@@ -73,12 +68,10 @@
             "plugin_name" : "com.sap.hana.di.virtualfunctionpackage.hadoop"
         },
         "hdbtabletype" : {
-            "plugin_name" : "com.sap.hana.di.tabletype",
-            "plugin_version": "2.0.0.0"
+            "plugin_name" : "com.sap.hana.di.tabletype"
         },
         "hdbprocedure" : {
-            "plugin_name" : "com.sap.hana.di.procedure",
-            "plugin_version": "2.0.0.0"
+            "plugin_name" : "com.sap.hana.di.procedure"
         },
         "hdbvirtualprocedure" : {
             "plugin_name" : "com.sap.hana.di.virtualprocedure"
@@ -108,15 +101,13 @@
             "plugin_name" : "com.sap.hana.di.analyticprivilege"
         },
         "hdbtabledata" : {
-            "plugin_name" : "com.sap.hana.di.tabledata",
-            "plugin_version": "2.0.0.0"
+            "plugin_name" : "com.sap.hana.di.tabledata"
         },
         "csv" : {
             "plugin_name" : "com.sap.hana.di.tabledata.source"
         },
         "properties" : {
-            "plugin_name" : "com.sap.hana.di.tabledata.properties",
-            "plugin_version": "2.0.0.0"
+            "plugin_name" : "com.sap.hana.di.tabledata.properties"
         },
         "tags" : {
             "plugin_name" : "com.sap.hana.di.tabledata.properties"
@@ -125,12 +116,10 @@
             "plugin_name" : "com.sap.hana.di.graphworkspace"
         },
         "hdbflowgraph" : {
-            "plugin_name" : "com.sap.hana.di.flowgraph",
-            "plugin_version": "2.0.0.0"
+            "plugin_name" : "com.sap.hana.di.flowgraph"
         },
         "hdbreptask" : {
-            "plugin_name" : "com.sap.hana.di.reptask",
-            "plugin_version": "2.0.0.0"
+            "plugin_name" : "com.sap.hana.di.reptask"
         },
         "hdbsearchruleset" : {
             "plugin_name" : "com.sap.hana.di.searchruleset"
