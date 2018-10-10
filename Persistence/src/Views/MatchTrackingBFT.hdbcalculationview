@@ -7,7 +7,7 @@
     <variableProperties mandatory="false">
       <valueDomain type="empty"/>
       <selection multiLine="false" type="Single"/>
-      <derivationRule inputEnabled="true"/>
+      <derivationRule/>
       <defaultRange/>
     </variableProperties>
   </variable>
@@ -39,7 +39,14 @@
       <keyMapping columnObjectName="Graph_1" columnName="MATCH_ROW"/>
     </attribute>
   </attributes>
-  <calculatedAttributes/>
+  <calculatedAttributes>
+    <calculatedAttribute id="PARENT" order="3" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="PARENT"/>
+      <keyCalculation datatype="INTEGER" expressionLanguage="SQL">
+        <formula>'$$startVertice$$'</formula>
+      </keyCalculation>
+      </calculatedAttribute>
+  </calculatedAttributes>
   <baseMeasures>
     <measure id="DEPTH" order="2" aggregationType="sum" measureType="simple">
       <descriptions defaultDescription="DEPTH"/>
