@@ -39,32 +39,12 @@ BEGIN
 	l_test_id = 'Generate SugGroup';
 	
 	-- test .. determine the number of subgroups created by this entity
-	SELECT		count(distinct "GROUP_TAG")
-	into		l_count_groups
+	SELECT		count(distinct "GROUP_TAG") into l_count_groups
 	FROM		"osr.scv.foundation.db.data::MatchResults.MatchResults" as a
 	inner join	"osr.scv.foundation.db.data::MatchResults.SubGroups"	as b
 	on			a."Match_ROW_ID" = b."MATCH_ROW"
 	where		entity_id = :I_ENTITY_ID;
 	
 	:o_results.INSERT((:l_test_id, TRIM( ' ' FROM TO_NVARCHAR( :l_count_groups ) )) , 1);
-
-	-- now get the composition of the groups
-	lt_groups =
-		SELECT		count(distinct b."MATCH_ROW") AS COUNT_ELS, 
-					"GROUP_TAG"
-		FROM		"osr.scv.foundation.db.data::MatchResults.MatchResults" as a
-		inner join	"osr.scv.foundation.db.data::MatchResults.SubGroups"	as b
-		on			a."Match_ROW_ID" = b."MATCH_ROW"
-		where		entity_id = :I_ENTITY_ID
-		GROUP BY	"GROUP_TAG"
-		ORDER BY	COUNT_ELS;
-		
-	o_results = 
-		SELECT	* 
-		FROM	:O_RESULTS 
-		UNION all
-		SELECT :l_test_id,
-				TO_NVARCHAR(COUNT_ELS)
-		FROM :lt_groups;
-			
+   
 END
