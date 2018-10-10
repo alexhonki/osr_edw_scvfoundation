@@ -164,14 +164,4 @@ entity MatchDelta {
             MATCH_ROW,
             SCV_ID,
             DELTA_STATUS;
-            
-    view MatchTracingView as 
-        SELECT FROM	MatchTracing 
-        {   key "ROW_ID" || '-' ||  "RELATED_ROW_ID" AS "ID",
-			"ROW_ID",
-			"RELATED_ROW_ID",
-	        "POLICY_NAME",
-	        "RULE_NAME",
-	        "SCORE"
-		};
 };
