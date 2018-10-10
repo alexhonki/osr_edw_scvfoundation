@@ -8,16 +8,13 @@
 	"license": "",
 	"main": "app.js",
 	"dependencies": {
-		"body-parser": "1.18.2",
-		"express": "4.16.2",
+		"body-parser": "1.17.2",
+		"express": "4.15.3",
 		"passport": "0.3.2",
-		"@sap/xsenv": "1.2.9",
-		"@sap/dwf-dws-client": "~2.3.3"
+		"@sap/xsenv": "^1.2.6",
+		"@sap/dwf-dws-client": "2.2.16"
 	},
 	"scripts": {
 		"start": "node app.js"
-	},
-	"engines": {
-		"node": "^6.9.1"
 	}
 }
