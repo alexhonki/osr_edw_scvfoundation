@@ -9,7 +9,7 @@
       <selection multiLine="false" type="Single"/>
       <derivationRule inputEnabled="true">
         <resourceUri>osr.scv.foundation.db.data::MatchResults.MatchTracingRows</resourceUri>
-        <resultElementName>MATCH_ROW_ID</resultElementName>
+        <resultElementName>MATCH_ROW</resultElementName>
       </derivationRule>
       <defaultRange/>
     </variableProperties>
@@ -19,7 +19,7 @@
 <calculationViews>
   <calculationView xsi:type="Calculation:GraphView" id="Graph_1" workspace="osr.scv.foundation.db.data::MatchTracing" action="GET_NEIGHBORHOOD">
     <viewAttributes>
-      <viewAttribute datatype="INTEGER" length="10" id="MATCH_ROW_ID"/>
+      <viewAttribute datatype="INTEGER" length="10" id="MATCH_ROW"/>
       <viewAttribute datatype="INTEGER" id="DEPTH"/>
     </viewAttributes>
     <calculatedViewAttributes/>
@@ -36,9 +36,9 @@
 </calculationViews>
 <logicalModel id="Graph_1">
   <attributes>
-    <attribute id="MATCH_ROW_ID" order="2" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="MATCH_ROW_ID"/>
-      <keyMapping columnObjectName="Graph_1" columnName="MATCH_ROW_ID"/>
+    <attribute id="MATCH_ROW" order="2" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="MATCH_ROW"/>
+      <keyMapping columnObjectName="Graph_1" columnName="MATCH_ROW"/>
     </attribute>
     <attribute id="DEPTH" order="3" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="DEPTH"/>
