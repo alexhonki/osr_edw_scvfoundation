@@ -22,7 +22,6 @@ var timestamp = Date.now();
 var testResultFileName = timestamp + "_report";
 var coverageFile = timestamp + "_coverage";
 
-
 var options = {
 	test: {
 		format: "xml",
