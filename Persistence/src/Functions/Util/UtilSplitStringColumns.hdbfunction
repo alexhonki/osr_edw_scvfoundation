@@ -1,4 +1,4 @@
-FUNCTION "osr.scv.foundation.db.Functions.Util::UtilSplitStringColumns" (i_string STRING DEFAULT ',',i_separator NVARCHAR(1) DEFAULT ',' )
+FUNCTION "osr.scv.foundation.db.functions.Util::UtilSplitStringColumns" (i_string STRING DEFAULT ',',i_separator NVARCHAR(1) DEFAULT ',' )
      RETURNS OT_RESULT1 STRING,
 		    OT_RESULT2 STRING,												
 			OT_RESULT3 STRING,												

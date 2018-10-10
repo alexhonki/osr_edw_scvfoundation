@@ -12,18 +12,18 @@
   </variable>
 </localVariables>
 <variableMappings>
-  <mapping xsi:type="Variable:VariableMapping" dataSource="osr.scv.foundation.db.Functions::MatchResultsDetailsSingle">
-    <targetVariable name="I_MATCH_ROW" resourceUri="osr.scv.foundation.db.Functions::MatchResultsDetailsSingle"/>
+  <mapping xsi:type="Variable:VariableMapping" dataSource="osr.scv.foundation.db.functions::MatchResultsDetailsSingle">
+    <targetVariable name="I_MATCH_ROW" resourceUri="osr.scv.foundation.db.functions::MatchResultsDetailsSingle"/>
     <localVariable>I_MATCH_ROW</localVariable>
   </mapping>
 </variableMappings>
 <dataSources>
-  <DataSource id="osr.scv.foundation.db.Functions::MatchResultsDetailsSingle" type="TABLE_FUNCTION">
-    <resourceUri>osr.scv.foundation.db.Functions::MatchResultsDetailsSingle</resourceUri>
+  <DataSource id="osr.scv.foundation.db.functions::MatchResultsDetailsSingle" type="TABLE_FUNCTION">
+    <resourceUri>osr.scv.foundation.db.functions::MatchResultsDetailsSingle</resourceUri>
   </DataSource>
 </dataSources>
 <calculationViews/>
-<logicalModel id="osr.scv.foundation.db.Functions::MatchResultsDetailsSingle">
+<logicalModel id="osr.scv.foundation.db.functions::MatchResultsDetailsSingle">
   <attributes>
     <attribute id="ENTITY_ID" order="2" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="ENTITY_ID"/>

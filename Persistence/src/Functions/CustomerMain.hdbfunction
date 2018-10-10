@@ -1,4 +1,4 @@
-FUNCTION "osr.scv.foundation.db.Functions::CustomerMain" (  )
+FUNCTION "osr.scv.foundation.db.functions::CustomerMain" (  )
        RETURNS TABLE (	
     					"MATCH_PERSON_GN" NVARCHAR(30),
 						"MATCH_PERSON_GN_STD" NVARCHAR(30),

@@ -1,4 +1,4 @@
-FUNCTION "osr.scv.foundation.db.Functions::BUT000Aggregation" ( )
+FUNCTION "osr.scv.foundation.db.functions::BUT000Aggregation" ( )
        RETURNS TABLE (
        "CLIENT" NVARCHAR(3),
        "PARTNER" NVARCHAR(10),

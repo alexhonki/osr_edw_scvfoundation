@@ -1,4 +1,4 @@
-FUNCTION "osr.scv.foundation.db.Functions::MatchResultsDetailsSingle" ( IN i_match_row NVARCHAR(20) )
+FUNCTION "osr.scv.foundation.db.functions::MatchResultsDetailsSingle" ( IN i_match_row NVARCHAR(20) )
        RETURNS TABLE (	
     					POLICY_NAME NVARCHAR(256),
     					SCORE Integer,

@@ -1,4 +1,4 @@
-FUNCTION "osr.scv.foundation.db.Functions::MatchDelta" ( IN i_match_row NVARCHAR(5000) DEFAULT '')
+FUNCTION "osr.scv.foundation.db.functions::MatchDelta" ( IN i_match_row NVARCHAR(5000) DEFAULT '')
        RETURNS TABLE (	
     					MATCH_ROW_ID INTEGER,
     					SCV_ID NVARCHAR(20),

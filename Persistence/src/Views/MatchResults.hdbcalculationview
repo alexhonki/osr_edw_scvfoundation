@@ -12,18 +12,18 @@
   </variable>
 </localVariables>
 <variableMappings>
-  <mapping xsi:type="Variable:VariableMapping" dataSource="osr.scv.foundation.db.Functions::MatchResults">
-    <targetVariable name="IP_ENTITY_ID" resourceUri="osr.scv.foundation.db.Functions::MatchResults"/>
+  <mapping xsi:type="Variable:VariableMapping" dataSource="osr.scv.foundation.db.functions::MatchResults">
+    <targetVariable name="IP_ENTITY_ID" resourceUri="osr.scv.foundation.db.functions::MatchResults"/>
     <localVariable>IP_ENTITY_ID</localVariable>
   </mapping>
 </variableMappings>
 <dataSources>
-  <DataSource id="osr.scv.foundation.db.Functions::MatchResults" type="TABLE_FUNCTION">
-    <resourceUri>osr.scv.foundation.db.Functions::MatchResults</resourceUri>
+  <DataSource id="osr.scv.foundation.db.functions::MatchResults" type="TABLE_FUNCTION">
+    <resourceUri>osr.scv.foundation.db.functions::MatchResults</resourceUri>
   </DataSource>
 </dataSources>
 <calculationViews/>
-<logicalModel id="osr.scv.foundation.db.Functions::MatchResults">
+<logicalModel id="osr.scv.foundation.db.functions::MatchResults">
   <attributes>
     <attribute id="ENTITY_ID" order="2" displayAttribute="false" attributeHierarchyActive="false" key="true">
       <descriptions defaultDescription="ENTITY_ID"/>

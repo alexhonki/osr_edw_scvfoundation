@@ -12,14 +12,14 @@
   </variable>
 </localVariables>
 <variableMappings>
-  <mapping xsi:type="Variable:VariableMapping" dataSource="osr.scv.foundation.db.Functions::MatchResultsAssessments">
-    <targetVariable name="I_RMS_DUPLICATES" resourceUri="osr.scv.foundation.db.Functions::MatchResultsAssessments"/>
+  <mapping xsi:type="Variable:VariableMapping" dataSource="osr.scv.foundation.db.functions::MatchResultsAssessments">
+    <targetVariable name="I_RMS_DUPLICATES" resourceUri="osr.scv.foundation.db.functions::MatchResultsAssessments"/>
     <localVariable>I_RMS_DUPLICATES</localVariable>
   </mapping>
 </variableMappings>
 <dataSources>
-  <DataSource id="osr.scv.foundation.db.Functions::MatchResultsAssessments" type="TABLE_FUNCTION">
-    <resourceUri>osr.scv.foundation.db.Functions::MatchResultsAssessments</resourceUri>
+  <DataSource id="osr.scv.foundation.db.functions::MatchResultsAssessments" type="TABLE_FUNCTION">
+    <resourceUri>osr.scv.foundation.db.functions::MatchResultsAssessments</resourceUri>
   </DataSource>
 </dataSources>
 <calculationViews>
@@ -41,7 +41,7 @@
     </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
-    <input node="osr.scv.foundation.db.Functions::MatchResultsAssessments">
+    <input node="osr.scv.foundation.db.functions::MatchResultsAssessments">
       <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_FN_FC" source="MATCH_PERSON_FN_FC"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="STRATEGY" source="STRATEGY"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="COUNTER" source="COUNTER"/>

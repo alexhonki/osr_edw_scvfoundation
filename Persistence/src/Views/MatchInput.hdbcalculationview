@@ -4,8 +4,8 @@
 <localVariables/>
 <variableMappings/>
 <dataSources>
-  <DataSource id="osr.scv.foundation.db.Functions::BUT000Aggregation" type="TABLE_FUNCTION">
-    <resourceUri>osr.scv.foundation.db.Functions::BUT000Aggregation</resourceUri>
+  <DataSource id="osr.scv.foundation.db.functions::BUT000Aggregation" type="TABLE_FUNCTION">
+    <resourceUri>osr.scv.foundation.db.functions::BUT000Aggregation</resourceUri>
   </DataSource>
   <DataSource id="osr.scv.foundation.db.synonyms::BUT021_FS">
     <resourceUri>osr.scv.foundation.db.synonyms::BUT021_FS</resourceUri>
@@ -16,8 +16,8 @@
   <DataSource id="osr.scv.foundation.db.data::RTA_Tenant_Placeholder.RTA_Tenant_Placeholder">
     <resourceUri>osr.scv.foundation.db.data::RTA_Tenant_Placeholder.RTA_Tenant_Placeholder</resourceUri>
   </DataSource>
-  <DataSource id="osr.scv.foundation.db.Functions::CustomerMain" type="TABLE_FUNCTION">
-    <resourceUri>osr.scv.foundation.db.Functions::CustomerMain</resourceUri>
+  <DataSource id="osr.scv.foundation.db.functions::CustomerMain" type="TABLE_FUNCTION">
+    <resourceUri>osr.scv.foundation.db.functions::CustomerMain</resourceUri>
   </DataSource>
 </dataSources>
 <calculationViews>
@@ -142,7 +142,7 @@
       </calculatedViewAttribute>
     </calculatedViewAttributes>
     <restrictedViewAttributes/>
-    <input node="osr.scv.foundation.db.Functions::BUT000Aggregation">
+    <input node="osr.scv.foundation.db.functions::BUT000Aggregation">
       <mapping xsi:type="Calculation:AttributeMapping" target="CLIENT" source="CLIENT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="PARTNER" source="PARTNER"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="TYPE" source="TYPE"/>
@@ -2087,7 +2087,7 @@
       </viewAttribute></viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
-    <input node="osr.scv.foundation.db.Functions::CustomerMain">
+    <input node="osr.scv.foundation.db.functions::CustomerMain">
       <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_BLOCK" source="MATCH_ADDR_BLOCK"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="Cleanse_ROW_ID" source="Cleanse_ROW_ID"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="STD_ADDR_BUILDING_NAME" source="STD_ADDR_BUILDING_NAME"/>

@@ -247,7 +247,7 @@ BEGIN SEQUENTIAL EXECUTION
 	vertices =	
 		SELECT		"MATCH_ROW_ID",
 					row_number() OVER (Order by "MATCH_ROW_ID") As row_number
-		FROM		"osr.scv.foundation.db.Functions::MatchVertices"();  -- Table function that returns all vertices (roots)
+		FROM		"osr.scv.foundation.db.functions::MatchVertices"();  -- Table function that returns all vertices (roots)
 	
 	-- count how many vertices were returned by the previous query
 	SELECT	count(*) 
