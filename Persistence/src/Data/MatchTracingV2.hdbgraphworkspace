@@ -1,5 +1,0 @@
-GRAPH WORKSPACE "osr.scv.foundation.db.data::MatchTracingV2"
-EDGE TABLE "osr.scv.foundation.db.data::MatchResultsV2.MatchTracingRelationships"
-SOURCE COLUMN "MATCH_ROW_ID" TARGET COLUMN "RELATED_ROW_ID" KEY COLUMN "ID"
-VERTEX TABLE "osr.scv.foundation.db.data::MatchResultsV2.MatchTracingRows"
-KEY COLUMN "MATCH_ROW_ID"
