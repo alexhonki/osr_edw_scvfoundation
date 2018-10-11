@@ -14,7 +14,7 @@ BEGIN SEQUENTIAL EXECUTION
 	
 		1. Copy all the entities that are to be analysed to table MatchReviewRelationships
 		
-		2. Remove all weak links
+		2. Remove all the weak links
 		
 		3. Complete the Graph table - with the vertices
 		
@@ -31,10 +31,7 @@ BEGIN SEQUENTIAL EXECUTION
 	
 	DECLARE l_count_rules	INTEGER;
 	DECLARE l_total_rules	INTEGER;
-	
-	DECLARE l_policy_name	NVARCHAR(256);
-	
-	DECLARE l_empty_list	BOOLEAN;
+	DECLARE l_rule_name		NVARCHAR(50);
 	
 	DECLARE l_min_score		INTEGER;
 	
@@ -68,21 +65,15 @@ BEGIN SEQUENTIAL EXECUTION
 	-- EXECUTE IMMEDIATE 'ALTER SEQUENCE "osr.scv.foundation.db.data::SEQ_MatchTracingRelationships" RESTART WITH 1';
 	
 	-- copy edges from relationships
+	
 	IF :i_match_group  = 0 OR  :i_match_group  IS NULL THEN
 	
 		-- read all records
-		lt_relationships = 
-			SELECT		"osr.scv.foundation.db.data::SEQ_MatchTracingRelationships".NEXTVAL as "ID",
-						r."Match_ROW_ID" as "MATCH_ROW_ID",
-						t."RELATED_ROW_ID",
-						t."POLICY_NAME",
-						t."RULE_NAME",
-						t."SCORE",
-						r.GROUP_ID
-			FROM		"osr.scv.foundation.db.data::MatchResults.MatchResults"	AS r
-			LEFT OUTER JOIN "osr.scv.foundation.db.data::MatchResults.MatchTracing" AS t
-			ON			t."ROW_ID" = r."Match_ROW_ID";			
-
+		INSERT INTO "osr.scv.foundation.db.data::MatchResults.MatchTracingRelationships" 
+		(
+			SELECT		"osr.scv.foundation.db.data::SEQ_MatchTracingRelationships".NEXTVAL, t.*
+			FROM		"osr.scv.foundation.db.data::MatchResults.MatchTracing"		AS t
+		);
 		
 		-- Empty Sub-Groups table ... will rework all subgroups
 		TRUNCATE TABLE "osr.scv.foundation.db.data::MatchResults.SubGroups";
@@ -90,43 +81,33 @@ BEGIN SEQUENTIAL EXECUTION
 	ELSE
 	
 		-- limit the select to the records matching L_match_group
-		-- INSERT INTO "osr.scv.foundation.db.data::MatchResults.MatchTracingRelationships" 
-		lt_relationships = 
-			SELECT		"osr.scv.foundation.db.data::SEQ_MatchTracingRelationships".NEXTVAL as "ID",
-						r."Match_ROW_ID" as "MATCH_ROW_ID",
-						t."RELATED_ROW_ID",
-						t."POLICY_NAME",
-						t."RULE_NAME",
-						t."SCORE",
-						r.GROUP_ID
-			FROM		"osr.scv.foundation.db.data::MatchResults.MatchResults"	AS r
-			LEFT OUTER JOIN "osr.scv.foundation.db.data::MatchResults.MatchTracing" AS t
+		INSERT INTO "osr.scv.foundation.db.data::MatchResults.MatchTracingRelationships" 
+		(
+			SELECT		"osr.scv.foundation.db.data::SEQ_MatchTracingRelationships".NEXTVAL, t.*
+			FROM		"osr.scv.foundation.db.data::MatchResults.MatchTracing"	AS t
+			INNER JOIN	"osr.scv.foundation.db.data::MatchResults.MatchResults"	AS r
 			ON			t."ROW_ID" = r."Match_ROW_ID"
-			WHERE		r."GROUP_ID"	= :i_match_group ;
-
-		-- delete only the records included in L_match_group
-		DELETE	FROM "osr.scv.foundation.db.data::MatchResults.SubGroups"
-		WHERE	"MATCH_ROW"
-		IN		(
-			SELECT	"MATCH_ROW_ID" as "MATCH_ROW"
-			FROM	:lt_relationships
-			UNION	ALL
-			SELECT	"RELATED_ROW_ID" as "MATCH_ROW"
-			FROM	:lt_relationships
+			WHERE	
+			(
+				:i_match_group  = 0 OR
+				r."GROUP_ID"	= :i_match_group 
+			)
 		);
-
+		
+		-- do not emapty table.. we will rely on thi procedure's delta abilities to handle the new records
+		
 	END IF;
 	
 	/***********************************************************************************************************************
-		2. Identify all weak links
+		2. Remove all the weak links
 	***********************************************************************************************************************/
 	
 	-- first read all rules (they should be three to start with)
 	lt_rules =
-		SELECT	"POLICY_NAME",
+		SELECT	"RULE_NAME",
 				"MIN_SCORE",
-				row_number() OVER (Order by POLICY_NAME) As row_number   -- get a counter that will be used to access data
-		FROM	"osr.scv.foundation.db.data::MatchResults.MatchWeakLinksPolicies";
+				row_number() OVER (Order by RULE_NAME) As row_number   -- get a counter that will be used to access data
+		FROM	"osr.scv.foundation.db.data::MatchResults.MatchWeakLinks";
 	
 	-- count total number of rules
 	SELECT	count(row_number)
@@ -136,90 +117,27 @@ BEGIN SEQUENTIAL EXECUTION
 	-- start with one
 	l_count_rules = 1;
 	
-	-- list of deletions is empaty
-	l_empty_list = TRUE;
-	
 	-- loop over rules
 	WHILE :l_count_rules <= :l_total_rules DO
 		
 		-- read next rule
-		SELECT "POLICY_NAME",
+		SELECT "RULE_NAME",
 				"MIN_SCORE"
-		INTO	l_policy_name,
+		INTO	l_rule_name,
 				l_min_score
 		FROM	:lt_rules
 		WHERE	 row_number = l_count_rules;
 		
-		IF l_empty_list = TRUE THEN
-			-- delete links that match that rule data based on read rule
-			-- DELETE	FROM "osr.scv.foundation.db.data::MatchResults.MatchTracingRelationships"
-			
-			lt_deletions = 
-			SELECT	"ID", "GROUP_ID"
-			FROM	:lt_relationships -- "osr.scv.foundation.db.data::SEQ_MatchTracingRelationships"
-			WHERE	"POLICY_NAME" = l_policy_name
-			AND		SCORE		< :l_min_score; 	
-			
-			l_empty_list = FALSE;
-			
-		ELSE
-			lt_deletions = 
-			SELECT	"ID", "GROUP_ID"
-			FROM	:lt_deletions
-			UNION ALL
-			SELECT	"ID", "GROUP_ID"
-			FROM	:lt_relationships -- "osr.scv.foundation.db.data::SEQ_MatchTracingRelationships
-			WHERE	"POLICY_NAME" = l_policy_name
-			AND		SCORE		< :l_min_score; 
-			
-		END IF;
+		-- delete links that match that rule data based on read rule
+		DELETE	FROM "osr.scv.foundation.db.data::MatchResults.MatchTracingRelationships"
+		WHERE	"RULE_NAME" = l_rule_name
+		AND		SCORE		< :l_min_score; 
 		
 		-- increment counter
 		l_count_rules = :l_count_rules + 1;
 		
 	END WHILE;
 	
-	/***********************************************************************************************************************
-		3. Split lists .. only the ones with deletions will remain in the GRAPH for analysis
-	***********************************************************************************************************************/	
-	
-	-- GROUPS that include deletions ... will go to osr.scv.foundation.db.data::MatchResults.MatchTracingRelationships
-	INSERT	INTO "osr.scv.foundation.db.data::MatchResults.MatchTracingRelationships" 
-	SELECT		"ID",
-				"MATCH_ROW_ID",
-				"RELATED_ROW_ID",
-				"POLICY_NAME",
-				"RULE_NAME",
-				"SCORE"
-	FROM		:lt_relationships
-	WHERE		"RELATED_ROW_ID" IS NOT NULL -- these were rows that belong to original groups but that have no outward relationship
-	AND			ID	NOT IN -- do not copy the weak links
-	(   
-		SELECT 	"ID" 
-		FROM	:lt_deletions
-	)	
-	AND			"GROUP_ID" IN -- but ONLY copy GROUPS that do have weak links
-	(
-		SELECT 	DISTINCT "GROUP_ID" 
-		FROM	:lt_deletions
-	);
-	
-	-- query var for groups with 1 component
-	lt_groups_with_1 = 
-		SELECT	DISTINCT("MATCH_ROW_ID")	AS "MATCH_ROW",
-				"GROUP_ID"
-		FROM	:lt_relationships
-		WHERE	"GROUP_ID" NOT IN -- ONLY copy GROUPS that do NOT have weak links
-		(
-			SELECT 	DISTINCT "GROUP_ID" 
-			FROM	:lt_deletions
-		); 
-		
-	-- GROUPS that DO NOT include deletions ... will go straight to SubGroupss
-	INSERT	INTO "osr.scv.foundation.db.data::MatchResults.SubGroups"
-	SELECT	DISTINCT("MATCH_ROW"),
-			-1 * "GROUP_ID" 	AS "GROUP_TAG"  -- multiply by -1 to avoid collisions with new keys 
-	FROM	:lt_groups_with_1;	
 	
 	/***********************************************************************************************************************
 		3. Complete the Graph table with all vertices 
@@ -227,15 +145,22 @@ BEGIN SEQUENTIAL EXECUTION
 
 	TRUNCATE TABLE  "osr.scv.foundation.db.data::MatchResults.MatchTracingRows";
 	
+	-- now I am ready to fill up the table of members
 	INSERT INTO "osr.scv.foundation.db.data::MatchResults.MatchTracingRows"
-	SELECT		DISTINCT("MATCH_ROW_ID") AS "MATCH_ROW_ID",
-				"GROUP_ID"
-	FROM		:lt_relationships
-	WHERE "GROUP_ID" IN -- but ONLY copy GROUPS that do have weak links
 	(
-		SELECT 	DISTINCT "GROUP_ID" 
-		FROM	:lt_deletions
-	);	
+		SELECT	DISTINCT "MATCH_ROW"
+		
+		FROM 
+		(
+			SELECT	"MATCH_ROW"
+			FROM	"osr.scv.foundation.db.data::MatchResults.MatchTracingRelationships"
+			UNION	
+			SELECT	"RELATED_ROW" AS "MATCH_ROW"
+			FROM	"osr.scv.foundation.db.data::MatchResults.MatchTracingRelationships"
+		)
+	);
+	
+	
 
 	
 	
@@ -275,7 +200,7 @@ BEGIN SEQUENTIAL EXECUTION
 					SELECT 	"PARENT",
 							"MATCH_ROW",
 							MIN("DEPTH")
-					FROM	"osr.scv.foundation.db.views::MatchTrackingBFT"
+					FROM	"osr.scv.foundation.db.data::MatchTrackingBFT"
 							(placeholder."$$startVertice$$"=> :V_VERTICE)
 					GROUP BY "PARENT" , "MATCH_ROW";
 					
@@ -298,7 +223,7 @@ BEGIN SEQUENTIAL EXECUTION
 				IN 
 				(
 					SELECT DISTINCT "GROUP_TAG"
-					FROM			:lt_existing_groups
+					FROM	:lt_existing_groups
 				);
 				
 					
@@ -309,9 +234,9 @@ BEGIN SEQUENTIAL EXECUTION
 							:V_VERTICE AS "GROUP_TAG"
 					FROM	
 					(
-						SELECT	"MATCH_ROW" 
+						SELECT	"MATCH_ROW"
 						FROM	:lt_new_groups
-						UNION	ALL
+						UNION
 						SELECT	"MATCH_ROW"
 						FROM	:lt_existing_groups
 					)
@@ -326,29 +251,6 @@ BEGIN SEQUENTIAL EXECUTION
 
 	END IF;
 	
-	
-	-- now add the orfaned Groups from  "osr.scv.foundation.db.data::MatchResults.MatchTracingRows
-
-	-- query var for groups with 1 component
-	lt_groups_with_1_from_graph = 
-		SELECT	DISTINCT("MATCH_ROW"),
-				"GROUP_ID"
-		FROM	"osr.scv.foundation.db.data::MatchResults.MatchTracingRows"
-		WHERE	"MATCH_ROW" NOT IN -- ONLY copy GROUPS that do NOT have weak links
-		(
-			SELECT 	DISTINCT "MATCH_ROW" 
-			FROM	"osr.scv.foundation.db.data::MatchResults.MatchTracingRelationships"
-			UNION
-			SELECT 	DISTINCT "RELATED_ROW"  AS "MATCH_ROW" 
-			FROM	"osr.scv.foundation.db.data::MatchResults.MatchTracingRelationships"			
-		); 
-		
-	-- GROUPS that DO NOT include deletions ... will go straight to SubGroupss
-	INSERT	INTO "osr.scv.foundation.db.data::MatchResults.SubGroups"
-	SELECT	DISTINCT("MATCH_ROW"),
-			-1 * "GROUP_ID" 	AS "GROUP_TAG"  -- multiply by -1 to avoid collisions with new keys 
-	FROM	:lt_groups_with_1_from_graph;	
-
 
 	-- Set return code
 	o_return_code	:=  'SUCCESS';
