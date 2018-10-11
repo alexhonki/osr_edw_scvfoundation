@@ -1,17 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="osr.scv.foundation.db.views::MatchTrackingBFT" applyPrivilegeType="NONE" dataCategory="DEFAULT" schemaVersion="3.0" outputViewType="Projection" cacheInvalidationPeriod="NONE" enforceSqlExecution="false">
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="osr.scv.foundation.db.data::MatchTrackingBFT" applyPrivilegeType="NONE" dataCategory="DEFAULT" schemaVersion="3.0" outputViewType="Projection" cacheInvalidationPeriod="NONE" enforceSqlExecution="false">
 <descriptions defaultDescription="MatchTrackingBFT"/>
 <localVariables>
   <variable id="startVertice" parameter="true">
-    <descriptions defaultDescription="startVertice"/>
-    <variableProperties mandatory="false">
+    <descriptions defaultDescription="Start Vertice"/>
+    <variableProperties datatype="INTEGER" mandatory="false" length="10" scale="0">
       <valueDomain type="empty"/>
       <selection multiLine="false" type="Single"/>
-      <derivationRule inputEnabled="true"/>
+      <derivationRule inputEnabled="true">
+        <resourceUri>osr.scv.foundation.db.data::MatchResults.MatchTracingRows</resourceUri>
+        <resultElementName>MATCH_ROW</resultElementName>
+      </derivationRule>
       <defaultRange/>
     </variableProperties>
-  </variable>
-</localVariables>
+  </variable></localVariables>
 <variableMappings/>
 <dataSources/>
 <calculationViews>
@@ -26,7 +28,7 @@
       <startVerticesParameter>startVertice</startVerticesParameter>
       <direction>outgoing</direction>
       <minDepth>0</minDepth>
-      <maxDepth>99</maxDepth>
+      <maxDepth>100</maxDepth>
       <vertexFilter></vertexFilter>
       <edgeFilter></edgeFilter>
     </getNeighborhoodParameterization>
@@ -34,18 +36,24 @@
 </calculationViews>
 <logicalModel id="Graph_1">
   <attributes>
-    <attribute id="MATCH_ROW" order="1" displayAttribute="false" attributeHierarchyActive="false">
+    <attribute id="MATCH_ROW" order="2" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="MATCH_ROW"/>
       <keyMapping columnObjectName="Graph_1" columnName="MATCH_ROW"/>
     </attribute>
-  </attributes>
-  <calculatedAttributes/>
-  <baseMeasures>
-    <measure id="DEPTH" order="2" aggregationType="sum" measureType="simple">
+    <attribute id="DEPTH" order="3" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="DEPTH"/>
-      <measureMapping columnObjectName="Graph_1" columnName="DEPTH"/>
-    </measure>
-  </baseMeasures>
+      <keyMapping columnObjectName="Graph_1" columnName="DEPTH"/>
+    </attribute>
+  </attributes>
+  <calculatedAttributes>
+    <calculatedAttribute id="PARENT" order="1" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="PARENT"/>
+      <keyCalculation datatype="INTEGER" expressionLanguage="COLUMN_ENGINE">
+        <formula>'$$startVertice$$'</formula>
+      </keyCalculation>
+      </calculatedAttribute>
+  </calculatedAttributes>
+  <baseMeasures/>
   <calculatedMeasures/>
   <restrictedMeasures/>
 </logicalModel>
@@ -56,7 +64,7 @@
     </shape>
   
     <shape expanded="true" modelObjectName="Graph_1" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="110" y="227"/>
+      <upperLeftCorner x="100" y="197"/>
       <rectangleSize height="30" width="160"/>
     </shape>
   </shapes>
