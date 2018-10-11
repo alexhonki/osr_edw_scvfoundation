@@ -12,7 +12,8 @@
 		"request": "2.79.0",
 		"util": "0.10.3",
 		"swagger-ui-express": "4.0.1",
-		"@sap/xssec": "^1.0.5"
+		"@sap/xssec": "^1.0.5",
+		"@sap/logging": "^3.0.0"
 	},
 	"description": "OSR SCV Foundation Services Module",
 	"devDependencies": {
