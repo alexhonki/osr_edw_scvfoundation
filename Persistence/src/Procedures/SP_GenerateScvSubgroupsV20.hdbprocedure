@@ -148,7 +148,7 @@ BEGIN SEQUENTIAL EXECUTION
 	-- now I am ready to fill up the table of members
 	INSERT INTO "osr.scv.foundation.db.data::MatchResults.MatchTracingRows"
 	(
-		SELECT	DISTINCT "MATCH_ROW",0
+		SELECT	DISTINCT "MATCH_ROW"
 		
 		FROM 
 		(
