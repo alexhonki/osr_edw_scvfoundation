@@ -84,6 +84,7 @@ context MatchResults {
     /*@@layout{"layoutInfo":{}}*/
     entity MatchTracingRows {
         key MATCH_ROW : Integer not null;
+        GROUP_ID     : Integer;
     };
 
     /*@@layout{"layoutInfo":{}}*/
