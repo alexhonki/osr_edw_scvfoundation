@@ -228,6 +228,7 @@ BEGIN SEQUENTIAL EXECUTION
 	TRUNCATE TABLE  "osr.scv.foundation.db.data::MatchResults.MatchTracingRows";
 	
 	INSERT INTO "osr.scv.foundation.db.data::MatchResults.MatchTracingRows"
+	("MATCH_ROW_ID","GROUP_ID")
 	SELECT		DISTINCT("MATCH_ROW_ID") AS "MATCH_ROW_ID",
 				"GROUP_ID"
 	FROM		:lt_relationships
