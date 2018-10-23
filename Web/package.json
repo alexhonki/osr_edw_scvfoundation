@@ -1,7 +1,7 @@
 {
 	"name": "osr.scvWeb-approuter",
 	"engines": {
-		"node": ">=4.0.0 <7.0.0"
+		"node": ">=6.0.0 <9.0.0"
 	},
 	"dependencies": {
 		"@sap/approuter": "2.9.1"
