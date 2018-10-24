@@ -1,5 +1,5 @@
 {
-	"xsappname": "OSR_SCV_FOUNDATION",
+	"xsappname": "OSR_SCV_FOUNDATION_TEST",
 	"scopes": [{
 		"name": "$XSAPPNAME.REVIEW",
 		"description": "SCV Foundation Review"
