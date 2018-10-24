@@ -12,8 +12,7 @@
 		"express": "4.16.2",
 		"passport": "0.3.2",
 		"@sap/xsenv": "1.2.9",
-		"@sap/dwf-dws-client": "~2.3.3",
-    	"@sap/xsjs-test": "2.0.16"
+		"@sap/dwf-dws-client": "~2.3.3"
 	},
 	"scripts": {
 		"start": "node app.js"
