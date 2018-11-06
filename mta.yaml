@@ -32,8 +32,6 @@ modules:
     type: nodejs
     path: Services
     build-parameters:
-      builder: grunt
-      timeout: 15m
     provides:
       - name: Services_api
         properties:
