@@ -7,6 +7,4 @@ context TestResults {
         O_TEST_ID     : String(50);
         O_RETURN_CODE : String(10);
     };
-    
-
 };

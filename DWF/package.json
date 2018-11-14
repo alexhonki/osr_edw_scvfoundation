@@ -13,8 +13,7 @@
 		}
 	},
 	"scripts": {
-		"start": "node node_modules/@sap/dwf-deploy/main.js",
-		"generate": "node node_modules/@sap/dwf-generator/main.js ./"
+		"start": "node node_modules/@sap/dwf-deploy/main.js"
 	},
 	"engines": {
 		"node": ">=6.9.1"

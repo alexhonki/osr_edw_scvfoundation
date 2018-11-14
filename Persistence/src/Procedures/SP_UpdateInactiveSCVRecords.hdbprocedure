@@ -19,7 +19,13 @@ BEGIN
 	-- Return: Partner number and Block Flag
 	lt_different_person_on =	SELECT a.PARTNER, a.XBLCK FROM "osr.scv.foundation.db.synonyms::BUT000" a
 								WHERE XBLCK = 'X' and XDELE = 'X' and NAME_FIRST LIKE 'De-duplicated - same as BP%' 
-								and a.PARTNER IN (SELECT SOURCE_ID FROM "osr.scv.foundation.db.data::SCVFoundation.PersonRms")
+								and a.Z_RUN_SEQ_ID IN	(SELECT DISTINCT Z_RUN_SEQ_ID FROM (
+																						SELECT a.PARTNER, MAX (a.Z_RUN_SEQ_ID) as Z_RUN_SEQ_ID FROM "osr.scv.foundation.db.synonyms::BUT000" a
+																						INNER JOIN (SELECT SOURCE_ID FROM "osr.scv.foundation.db.data::SCVFoundation.PersonRms") b
+																						ON a.PARTNER = b.SOURCE_ID
+																						GROUP BY a.PARTNER
+																						)
+														)
 								EXCEPT 
 								SELECT b.SOURCE_ID, b.INACTIVE FROM "osr.scv.foundation.db.data::SCVFoundation.PersonRms" b
 								;
@@ -31,7 +37,13 @@ BEGIN
 	
 	--Turn off the flag 
 	lt_different_person_off =	SELECT a.PARTNER, a.XBLCK FROM "osr.scv.foundation.db.synonyms::BUT000" a
-								WHERE XBLCK = '' and XDELE = '' and a.PARTNER IN (SELECT SOURCE_ID FROM "osr.scv.foundation.db.data::SCVFoundation.PersonRms")
+								WHERE XBLCK = '' and XDELE = '' and a.Z_RUN_SEQ_ID IN (SELECT DISTINCT Z_RUN_SEQ_ID FROM (
+																															SELECT a.PARTNER, MAX (a.Z_RUN_SEQ_ID) as Z_RUN_SEQ_ID FROM "osr.scv.foundation.db.synonyms::BUT000" a
+																															INNER JOIN (SELECT SOURCE_ID FROM "osr.scv.foundation.db.data::SCVFoundation.PersonRms") b
+																															ON a.PARTNER = b.SOURCE_ID
+																															GROUP BY a.PARTNER
+																														)
+																					)
 								EXCEPT 
 								SELECT b.SOURCE_ID, b.INACTIVE FROM "osr.scv.foundation.db.data::SCVFoundation.PersonRms" b
 								;

@@ -10,16 +10,6 @@ modules:
       - name: OsrScvFoundationContainer
         properties:
           TARGET_CONTAINER: '~{hdi-container-name}'
-      - name: OSR-EDW-SOURCE-RMS-grantor
-        group: SERVICE_REPLACEMENTS
-        properties:
-          key: logical-OSR-EDW-SOURCE-RMS-grantor
-          service: '~{OSR-EDW-SOURCE-RMS-grantor-service}'
-      - name: OSR-EDW-SOURCE-TMR-grantor
-        group: SERVICE_REPLACEMENTS
-        properties:
-          key: logical-OSR-EDW-SOURCE-TMR-grantor
-          service: '~{OSR-EDW-SOURCE-TMR-grantor-service}'
       - name: OSR-EDW-PLATFORM-grantor
         group: SERVICE_REPLACEMENTS
         properties:
@@ -32,8 +22,6 @@ modules:
     type: nodejs
     path: Services
     build-parameters:
-      builder: grunt
-      timeout: 15m
     provides:
       - name: Services_api
         properties:
@@ -87,18 +75,6 @@ resources:
     properties:
       hdi-container-name: '${service-name}'
     type: com.sap.xs.hdi-container
-  - name: OSR-EDW-SOURCE-RMS-grantor
-    properties:
-      OSR-EDW-SOURCE-RMS-grantor-service: '${service-name}'
-    parameters:
-      service-name: OSR_EDW_SOURCE_RMS-deploy
-    type: org.cloudfoundry.existing-service
-  - name: OSR-EDW-SOURCE-TMR-grantor
-    properties:
-      OSR-EDW-SOURCE-TMR-grantor-service: '${service-name}'
-    parameters:
-      service-name: OSR_EDW_SOURCE_TMR-deploy
-    type: org.cloudfoundry.existing-service
   - name: scv-ext-access-grantor
     type: org.cloudfoundry.existing-service
     description: scv-ext-access-grantor
