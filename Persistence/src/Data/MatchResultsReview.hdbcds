@@ -19,7 +19,7 @@ context MatchResultsReview {
             TIMESTAMP : UTCTimestamp;
             USER      : String(200);
             ACTION    : String(20);
-            STRATEGY  : String(20);
+            STRATEGY  : String(20); 
     };
 
     /*@@layout{"layoutInfo":{}}*/
