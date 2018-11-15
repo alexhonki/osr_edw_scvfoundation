@@ -2,7 +2,7 @@ PROCEDURE "osr.scv.foundation.db.Procedures.Test::SP_TestMatchResultsIntegrity" 
 
 	OUT o_results "osr.scv.foundation.db.data::TestResults.Results"
 
-)
+) 
    LANGUAGE SQLSCRIPT
    SQL SECURITY INVOKER
    --DEFAULT SCHEMA <default_schema_name>

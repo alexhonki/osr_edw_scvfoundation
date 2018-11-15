@@ -1,0 +1,49 @@
+PROCEDURE "osr.scv.foundation.db.Procedures.Test::SP_TestGenerateSCVSubgroupsV21" (
+	IN  I_ENTITY_ID  INTEGER,
+	OUT O_RESULT INTEGER
+
+)
+   LANGUAGE SQLSCRIPT 
+   SQL SECURITY INVOKER
+   --DEFAULT SCHEMA <default_schema_name>
+   READS SQL DATA AS
+
+BEGIN
+   
+
+   /************************************************************************************************************************************
+    	
+    	Test case:	Integrity of Match Result data set - other tests
+
+		Test ID:	'Match results other test'
+		
+		Standard TEST SQL Prodedure
+		
+		Returning table O_RESULTS contains:
+		
+		[O_TEST_ID, O_RETURN_CODE]
+
+   ************************************************************************************************************************************
+   
+   Log:
+  
+   
+   SI007 - R.Silva - 27.09.2018
+   Reformat and comment test procedure to serve as a model for others
+ 
+   ************************************************************************************************************************************/  
+   
+	DECLARE l_test_id		NVARCHAR(50);
+	DECLARE l_count_groups	INTEGER;
+   
+	l_test_id = 'Generate SugGroup';
+	
+	-- test .. determine the number of subgroups created by this entity
+	SELECT		count(distinct "GROUP_TAG") into O_RESULT
+	FROM		"osr.scv.foundation.db.data::MatchResults.MatchResults" as a
+	inner join	"osr.scv.foundation.db.data::MatchResults.SubGroups"	as b
+	on			a."Match_ROW_ID" = b."MATCH_ROW"
+	where		entity_id = :I_ENTITY_ID;
+	
+
+END

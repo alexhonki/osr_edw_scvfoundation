@@ -4,7 +4,7 @@ PROCEDURE "osr.scv.foundation.db.Procedures.Test::SP_TestMatchResultsOtherTest" 
 	OUT o_return_code	NVARCHAR(10)
 	--OUT o_message		NVARCHAR(200)
 
-)
+) 
    LANGUAGE SQLSCRIPT
    SQL SECURITY INVOKER
    --DEFAULT SCHEMA <default_schema_name>
