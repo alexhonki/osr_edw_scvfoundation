@@ -35,17 +35,12 @@ var options = {
 			reports: ["json"]
 		},
 		dir: testResultsDir,
-<<<<<<< HEAD
-		filename: coverageFile
-	}
-=======
 		filename: coverageFile,
 		instrumentation: {
 			includes: ["**/Test*.xsjslib"],
 		},
 		verbose: false
 	} 
->>>>>>> SI007
 };
 
 //configure HANA
