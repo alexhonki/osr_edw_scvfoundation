@@ -40,7 +40,7 @@ var options = {
 			includes: ["**/Test*.xsjslib"],
 		},
 		verbose: false
-	}
+	} 
 };
 
 //configure HANA
