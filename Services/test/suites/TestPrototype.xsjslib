@@ -5,7 +5,7 @@ var tableDataSet = $.import('sap.hana.testtools.unit.util', 'tableDataSet');
 //var connection = $.db.getConnection();
 /**
  * Test suite: Match Review
- */
+ */ 
 describe("Match Prototype Test Suite", function() {
 	//var testEnvironment = null;
 	//var sqlExecutor = new SqlExecutor(connection);
