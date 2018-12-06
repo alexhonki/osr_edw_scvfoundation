@@ -16,7 +16,7 @@
 	},
 	"description": "OSR SCV Foundation Services Module",
 	"devDependencies": {
-		"@sap/xsjs-test": "2.0.9",
+		"@sap/xsjs-test": "2.0.16",
 		"grunt": "0.4.5",
     	"grunt-cli": "1.2.0",
     	"grunt-eslint": "19.0.0",

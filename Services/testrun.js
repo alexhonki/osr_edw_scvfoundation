@@ -26,7 +26,7 @@ var options = {
 	test: {
 		format: "xml",
 		// package: "OSR_SCV_FOUNDATION.Services.test.suites/",
-		pattern: "test/suits/*",
+        pattern: ".*Test",
 		reportdir: testResultsDir,
 		filename: testResultFileName
 	},
