@@ -14,8 +14,8 @@ module.exports = function (grunt) {
             }
         }
     });
-    grunt.loadNpmTasks("grunt-eslint");
-    grunt.loadNpmTasks("grunt-execute");
-    grunt.registerTask("default", []);
-    grunt.registerTask("ci_build", ["eslint", "execute:test"]);
+    // grunt.loadNpmTasks("grunt-eslint");
+    // grunt.loadNpmTasks("grunt-execute");
+    // grunt.registerTask("default", []);
+    // grunt.registerTask("ci_build", ["eslint", "execute:test"]);
 };
