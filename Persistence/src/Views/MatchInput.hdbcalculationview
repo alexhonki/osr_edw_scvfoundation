@@ -110,10 +110,10 @@
       <viewAttribute id="MATCH_PERSON">
         <descriptions defaultDescription="MATCH_PERSON"/>
       </viewAttribute>
-      <viewAttribute id="Cleanse_TABLE_ID_BUT000" aggregationType="sum">
+      <viewAttribute id="Cleanse_TABLE_ID_BUT000">
         <descriptions defaultDescription="Cleanse_TABLE_ID"/>
       </viewAttribute>
-      <viewAttribute id="Cleanse_ROW_ID_BUT" aggregationType="sum">
+      <viewAttribute id="Cleanse_ROW_ID_BUT">
         <descriptions defaultDescription="Cleanse_ROW_ID"/>
       </viewAttribute>
     
@@ -132,7 +132,7 @@
         <descriptions defaultDescription="NAMEMIDDLE"/>
       </viewAttribute>
     
-      <viewAttribute id="Z_RUN_SEQ_ID" aggregationType="sum">
+      <viewAttribute id="Z_RUN_SEQ_ID">
         <descriptions defaultDescription="Z_RUN_SEQ_ID"/>
       </viewAttribute>
     </viewAttributes>
@@ -184,14 +184,7 @@
     
       <mapping xsi:type="Calculation:AttributeMapping" target="Z_RUN_SEQ_ID" source="Z_RUN_SEQ_ID"/>
     </input>
-    <filter>((lower(&quot;NAME_LAST&quot;) NOT LIKE '%duplicat%' AND &quot;NAME_LAST&quot; NOT LIKE '%&amp;%' AND lower(&quot;NAME_LAST&quot;) NOT LIKE '%trust%' AND lower(&quot;NAME_LAST&quot;) NOT LIKE '%executor%' AND lower(&quot;NAME_LAST&quot;) NOT LIKE '%copy%' AND (&quot;NAME_LAST&quot; NOT LIKE  '%0%') AND (&quot;NAME_LAST&quot; NOT LIKE  '%1%')AND (&quot;NAME_LAST&quot; NOT LIKE  '%2%')AND (&quot;NAME_LAST&quot; NOT LIKE  '%3%')AND (&quot;NAME_LAST&quot; NOT LIKE  '%4%')AND (&quot;NAME_LAST&quot; NOT LIKE  '%5%')AND (&quot;NAME_LAST&quot; NOT LIKE  '%6%')AND (&quot;NAME_LAST&quot; NOT LIKE  '%7%')AND (&quot;NAME_LAST&quot; NOT LIKE  '%8%')AND (&quot;NAME_LAST&quot; NOT LIKE  '%9%') AND (&quot;NAME_LAST&quot; NOT LIKE '% and %') AND (&quot;NAME_LAST&quot; NOT LIKE '% and') AND (&quot;NAME_LAST&quot; NOT LIKE 'and %'))
-    AND
-(lower(&quot;NAME_FIRST&quot;) NOT LIKE '%duplicat%' AND &quot;NAME_FIRST&quot; NOT LIKE '%&amp;%' AND lower(&quot;NAME_FIRST&quot;) NOT LIKE '%trust%' AND lower(&quot;NAME_FIRST&quot;) NOT LIKE '%executor%' AND lower(&quot;NAME_FIRST&quot;) NOT LIKE '%copy%' AND (&quot;NAME_FIRST&quot; NOT LIKE  '%0%') AND (&quot;NAME_FIRST&quot; NOT LIKE  '%1%')AND (&quot;NAME_FIRST&quot; NOT LIKE  '%2%')AND (&quot;NAME_FIRST&quot; NOT LIKE  '%3%')AND (&quot;NAME_FIRST&quot; NOT LIKE  '%4%')AND (&quot;NAME_FIRST&quot; NOT LIKE  '%5%')AND (&quot;NAME_FIRST&quot; NOT LIKE  '%6%')AND (&quot;NAME_FIRST&quot; NOT LIKE  '%7%')AND (&quot;NAME_FIRST&quot; NOT LIKE  '%8%')AND (&quot;NAME_FIRST&quot; NOT LIKE  '%9%') AND (&quot;NAME_FIRST&quot; NOT LIKE '% and %') AND (&quot;NAME_FIRST&quot; NOT LIKE '% and') AND (&quot;NAME_FIRST&quot; NOT LIKE 'and %'))
-    AND
-(lower(&quot;NAMEMIDDLE&quot;) NOT LIKE '%duplicat%' AND &quot;NAMEMIDDLE&quot; NOT LIKE '%&amp;%' AND lower(&quot;NAMEMIDDLE&quot;) NOT LIKE '%trust%' AND lower(&quot;NAMEMIDDLE&quot;) NOT LIKE '%executor%' AND lower(&quot;NAMEMIDDLE&quot;) NOT LIKE '%copy%' AND (&quot;NAMEMIDDLE&quot; NOT LIKE  '%0%') AND (&quot;NAMEMIDDLE&quot; NOT LIKE  '%1%')AND (&quot;NAMEMIDDLE&quot; NOT LIKE  '%2%')AND (&quot;NAMEMIDDLE&quot; NOT LIKE  '%3%')AND (&quot;NAMEMIDDLE&quot; NOT LIKE  '%4%')AND (&quot;NAMEMIDDLE&quot; NOT LIKE  '%5%')AND (&quot;NAMEMIDDLE&quot; NOT LIKE  '%6%')AND (&quot;NAMEMIDDLE&quot; NOT LIKE  '%7%')AND (&quot;NAMEMIDDLE&quot; NOT LIKE  '%8%')AND (&quot;NAMEMIDDLE&quot; NOT LIKE  '%9%') AND (&quot;NAMEMIDDLE&quot; NOT LIKE '% and %') AND (&quot;NAMEMIDDLE&quot; NOT LIKE '% and') AND (&quot;NAMEMIDDLE&quot; NOT LIKE 'and %'))
-
-)
- OR ((&quot;NAME_FIRST&quot; LIKE 'De-duplicated - same as BP%' ) )
+    <filter>&quot;NAME_FIRST&quot; LIKE 'De-duplicated - same as BP%' 
  </filter>
   </calculationView>
   <calculationView xsi:type="Calculation:ProjectionView" id="P_TimedependendAddressUsage">
@@ -803,10 +796,10 @@
       <viewAttribute id="MATCH_PHONE2">
         <descriptions defaultDescription="MATCH_PHONE2"/>
       </viewAttribute>
-      <viewAttribute id="Cleanse_TABLE_ID" aggregationType="sum">
+      <viewAttribute id="Cleanse_TABLE_ID">
         <descriptions defaultDescription="Cleanse_TABLE_ID"/>
       </viewAttribute>
-      <viewAttribute id="Z_RUN_SEQ_ID" aggregationType="sum">
+      <viewAttribute id="Z_RUN_SEQ_ID">
         <descriptions defaultDescription="Z_RUN_SEQ_ID"/>
       </viewAttribute>
     
@@ -855,7 +848,7 @@
       <viewAttribute id="ADDR_ASMT_TYPE">
         <descriptions defaultDescription="ADDR_ASMT_TYPE"/>
       </viewAttribute>
-      <viewAttribute id="Cleanse_ROW_ID" aggregationType="sum">
+      <viewAttribute id="Cleanse_ROW_ID">
         <descriptions defaultDescription="Cleanse_ROW_ID"/>
       </viewAttribute>
     
@@ -1686,10 +1679,10 @@
       <viewAttribute id="MATCH_PERSON_GN_STD6">
         <descriptions defaultDescription="MATCH_PERSON_GN_STD6"/>
       </viewAttribute>
-      <viewAttribute id="Cleanse_TABLE_ID_RTA_T" aggregationType="sum">
+      <viewAttribute id="Cleanse_TABLE_ID_RTA_T">
         <descriptions defaultDescription="Cleanse_TABLE_ID"/>
       </viewAttribute>
-      <viewAttribute id="Cleanse_ROW_ID_RTA_T" aggregationType="sum">
+      <viewAttribute id="Cleanse_ROW_ID_RTA_T">
         <descriptions defaultDescription="Cleanse_ROW_ID"/>
       </viewAttribute>
       <viewAttribute id="MATCH_PERSON_GN">
@@ -1829,13 +1822,13 @@
       <viewAttribute id="NAME">
         <descriptions defaultDescription="NAME"/>
       </viewAttribute>
-      <viewAttribute id="ROWNUMBER" aggregationType="sum">
+      <viewAttribute id="ROWNUMBER">
         <descriptions defaultDescription="ROWNUMBER"/>
       </viewAttribute>
       <viewAttribute id="ERROR">
         <descriptions defaultDescription="ERROR"/>
       </viewAttribute>
-      <viewAttribute id="PARTITION" aggregationType="sum">
+      <viewAttribute id="PARTITION">
         <descriptions defaultDescription="PARTITION"/>
       </viewAttribute>
       <viewAttribute id="GEO_ASMT_LEVEL">
@@ -2055,7 +2048,7 @@
       <viewAttribute id="MATCH_PHONE2">
         <descriptions defaultDescription="MATCH_PHONE2"/>
       </viewAttribute>
-      <viewAttribute id="Z_RUN_SEQ_ID" aggregationType="sum">
+      <viewAttribute id="Z_RUN_SEQ_ID">
         <descriptions defaultDescription="Z_RUN_SEQ_ID"/>
       </viewAttribute>
       <viewAttribute id="DATE_OF_BIRTH">
@@ -2064,19 +2057,19 @@
       <viewAttribute id="ADDR_ASMT_INFO">
         <descriptions defaultDescription="ADDR_ASMT_INFO"/>
       </viewAttribute>
-      <viewAttribute id="Cleanse_TABLE_ID" aggregationType="sum">
+      <viewAttribute id="Cleanse_TABLE_ID">
         <descriptions defaultDescription="Cleanse_TABLE_ID"/>
       </viewAttribute>
       <viewAttribute id="CUSTOMER_REF">
         <descriptions defaultDescription="CUSTOMER_REF"/>
       </viewAttribute>
-      <viewAttribute id="Cleanse_ROW_ID" aggregationType="sum">
+      <viewAttribute id="Cleanse_ROW_ID">
         <descriptions defaultDescription="Cleanse_ROW_ID"/>
       </viewAttribute>
-      <viewAttribute id="ADDR_LATITUDE" aggregationType="sum">
+      <viewAttribute id="ADDR_LATITUDE">
         <descriptions defaultDescription="ADDR_LATITUDE"/>
       </viewAttribute>
-      <viewAttribute id="ADDR_LONGITUDE" aggregationType="sum">
+      <viewAttribute id="ADDR_LONGITUDE">
         <descriptions defaultDescription="ADDR_LONGITUDE"/>
       </viewAttribute>
       <viewAttribute id="CURRENT_POSTAL_ADDR_EFf_DT">
