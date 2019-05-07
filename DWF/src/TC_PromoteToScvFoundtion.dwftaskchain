@@ -19,7 +19,7 @@
         "parameterValues": [
           {
             "id": "taskChainId",
-            "value": "src#TC_PromoteRecords"
+            "value": "osr.scv.ind.foundation#TC_PromoteRecords"
           }
         ]
       },
@@ -38,7 +38,7 @@
         "parameterValues": [
           {
             "id": "taskChainId",
-            "value": "src#TC_MoveRowsToSCV"
+            "value": "osr.scv.ind.foundation#TC_MoveRowsToSCV"
           }
         ]
       },
@@ -57,7 +57,7 @@
         "parameterValues": [
           {
             "id": "taskChainId",
-            "value": "src#TC_GenerateScvSearchTable"
+            "value": "osr.scv.ind.foundation#TC_GenerateScvSearchTable"
           }
         ]
       },

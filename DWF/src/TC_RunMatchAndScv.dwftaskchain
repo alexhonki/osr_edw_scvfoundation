@@ -19,7 +19,7 @@
         "parameterValues": [
           {
             "id": "taskChainId",
-            "value": "src#TC_RunMatchProcesses"
+            "value": "osr.scv.ind.foundation#TC_RunMatchProcesses"
           }
         ]
       },
@@ -38,7 +38,7 @@
         "parameterValues": [
           {
             "id": "taskChainId",
-            "value": "src#TC_PromoteToScvFoundtion"
+            "value": "osr.scv.ind.foundation#TC_PromoteToScvFoundtion"
           }
         ]
       },

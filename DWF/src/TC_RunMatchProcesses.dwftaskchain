@@ -19,7 +19,7 @@
         "parameterValues": [
           {
             "id": "taskChainId",
-            "value": "src#TC_RunMatch"
+            "value": "osr.scv.ind.foundation#TC_RunMatch"
           }
         ]
       },
@@ -38,7 +38,7 @@
         "parameterValues": [
           {
             "id": "taskChainId",
-            "value": "src#TC_GenerateMatchResultsHash"
+            "value": "osr.scv.ind.foundation#TC_GenerateMatchResultsHash"
           }
         ]
       },
@@ -57,7 +57,7 @@
         "parameterValues": [
           {
             "id": "taskChainId",
-            "value": "src#TC_ResetMatchTables"
+            "value": "osr.scv.ind.foundation#TC_ResetMatchTables"
           }
         ]
       },
@@ -76,7 +76,7 @@
         "parameterValues": [
           {
             "id": "taskChainId",
-            "value": "src#TC_GenerateSubGroups"
+            "value": "osr.scv.ind.foundation#TC_GenerateSubGroups"
           }
         ]
       },
@@ -95,7 +95,7 @@
         "parameterValues": [
           {
             "id": "taskChainId",
-            "value": "src#TC_PrepareReview"
+            "value": "osr.scv.ind.foundation#TC_PrepareReview"
           }
         ]
       },
@@ -114,7 +114,7 @@
         "parameterValues": [
           {
             "id": "taskChainId",
-            "value": "src#TC_CopyMatchInfo"
+            "value": "osr.scv.ind.foundation#TC_CopyMatchInfo"
           }
         ]
       },
@@ -133,7 +133,7 @@
         "parameterValues": [
           {
             "id": "taskChainId",
-            "value": "src#TC_GenerateScvDeltaGroups"
+            "value": "osr.scv.ind.foundation#TC_GenerateScvDeltaGroups"
           }
         ]
       },
