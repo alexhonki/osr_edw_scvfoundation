@@ -922,6 +922,16 @@
             <annotations key="name" value="DATE"/>
           </annotations>
         </annotations>
+        <annotations key="policy">
+          <annotations key="name" value="CustSourceSystem, CustSourceId">
+          </annotations>
+          <annotations key="component">
+            <annotations key="name" value="CustSourceSystem"/>
+          </annotations>
+          <annotations key="component">
+            <annotations key="name" value="CustSourceId"/>
+          </annotations>
+        </annotations>
       </annotations>
       <annotations key="dataSources">
         <annotations key="dataSource">
