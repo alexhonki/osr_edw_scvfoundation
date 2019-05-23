@@ -946,7 +946,7 @@ lt_address_entities_date_tmr =
 												FROM "osr.scv.foundation.db.data::MatchResults.MatchResultsShadow" a
 												INNER JOIN "osr.scv.foundation.db.synonyms::TMR_CustContact" b
 												ON a."SYSTEM_ID" = b."CUSTOMER_REF"
-												WHERE SOURCE_SYSTEM = 'TMR' and LENGTH (b.SMS_CONTACT_NUMBER) >= 8 and b.CUSTOMER_REF = '81862565'
+												WHERE SOURCE_SYSTEM = 'TMR' and LENGTH (b.SMS_CONTACT_NUMBER) >= 8-- and b.CUSTOMER_REF = '81862565'
 												GROUP BY a.ENTITY_ID, a.SOURCE_SYSTEM, a.SYSTEM_ID, b.LAST_UPDATED, b.SMS_CONTACT_NUMBER
 -- DELETE AFTER TESTING
 --												AND NAME != 'TMR_CUST_MAIN_FY1702.txt'												
