@@ -882,8 +882,7 @@ lt_address_entities_date_tmr =
 																		   GROUP BY SCV_ID, SOURCE_SYSTEM, SYSTEM_ID, VALID_FROM, VALID_TO, CONTACT_ID, CONTACT_NUMBER, NUMBER_EXT, NUMBER_TYPE, CHECKSUM
 																		   );						 
 	
-	-- Are there any email addresses coming from RMS?
-	
+
 	lt_contact_entities_tmr_custMain_number = 
 							SELECT CONTACT_ID, SCV_ID,
 							       ENTITY_ID, SOURCE_SYSTEM, SYSTEM_ID, UPDATED_AT, CONTACT_PHONE_NO, NUMBER_TYPE, 
@@ -1013,7 +1012,172 @@ lt_address_entities_date_tmr =
 																		  GROUP BY CONTACT_EMAIL_ID, SCV_ID, SOURCE_SYSTEM, SYSTEM_ID,'','', EMAIL_ADDRESS, '', 'TMR: Customer main table', CHECKSUM, STD_EMAIL, STD_CHECKSUM, UPDATED_AT
 																		 )
 	;
+	-- ### SCV RMS Email ##############################################################################################################	
 	
+		UPSERT "osr.scv.foundation.db.data::SCVFoundation.ContactEmail"
+	(
+	"SCV_ID",
+	"SOURCE",
+	"SOURCE_ID",
+	"VALID_FROM",
+	"VALID_TO",
+	"CONTACT_EMAIL_ID",
+	"CONTACT_EMAIL",
+	"EMAIL_TYPE",
+	"EMAIL_DESC",
+	"CHECKSUM",
+	"STD_EMAIL",
+	"STD_CHECKSUM",
+	"LAST_UPDATED",
+	"SCV_LOAD_ID"
+	)
+		SELECT 
+			"SCV_ID",
+			"SOURCE",
+			"SOURCE_ID",
+			"VALID_FROM",
+			"VALID_TO",
+			"CONTACT_EMAIL_ID",
+			"CONTACT_EMAIL",
+			"EMAIL_TYPE",
+			"EMAIL_DESC",
+			"CHECKSUM",
+			"STD_EMAIL",
+			"STD_CHECKSUM",
+			"LAST_UPDATED",
+			"SCV_LOAD_ID"
+			FROM (
+						
+					SELECT distinct 
+					prms.SCV_ID											as SCV_ID,
+					prms.SOURCE											as SOURCE,
+					prms.SOURCE_ID										as SOURCE_ID, 
+					adr6.VALID_FROM										as VALID_FROM,
+					adr6.VALID_TO										as VALID_TO,
+					MAX(adr6.Z_RUN_SEQ_ID)								as CONTACT_EMAIL_ID,
+					adr6.SMTP_ADDR 										as CONTACT_EMAIL, 
+					''													as EMAIL_TYPE,
+					'RMS Email'											as EMAIL_DESC,
+					HASH_SHA256(TO_BINARY(TO_VARCHAR(adr6.SMTP_ADDR)))	as CHECKSUM,
+					STD_EMAIL											as STD_EMAIL,
+					HASH_SHA256(TO_BINARY(TO_VARCHAR(STD_EMAIL)))		as STD_CHECKSUM,
+					''													as LAST_UPDATED,
+					:l_load_id											as SCV_LOAD_ID
+					FROM "osr.scv.foundation.db.data::SCVFoundation.PersonRms" as prms
+					INNER JOIN "osr.scv.foundation.db.synonyms::BUT021_FS" as fs
+					ON prms.SOURCE_ID = fs.PARTNER
+					INNER JOIN (select
+								ADDRNUMBER,
+								MAX(Z_RUN_SEQ_ID) as Z_RUN_SEQ_ID,
+								MIN(CASE WHEN SUBSTRING(to_nvarchar(VALID_FROM),1,4) < '1900' THEN DATS_TO_DATE('19000101') ELSE TO_DATE(SUBSTRING(to_nvarchar(VALID_FROM),1,8)) END) as VALID_FROM,
+								MAX(CASE WHEN SUBSTRING(to_nvarchar(VALID_TO)  ,1,4) < '1900' THEN DATS_TO_DATE('99991231') ELSE TO_DATE(SUBSTRING(to_nvarchar(VALID_TO)  ,1,8)) END) as VALID_TO,
+								SMTP_ADDR,
+								STD_EMAIL
+								FROM "osr.scv.foundation.db.synonyms::ADR6"
+								GROUP BY 
+								ADDRNUMBER,
+								SMTP_ADDR,
+								STD_EMAIL
+								) as adr6
+					ON adr6.ADDRNUMBER = fs.ADDRNUMBER
+					WHERE LENGTH(SMTP_ADDR) > 5 
+					GROUP BY 
+					prms.SCV_ID,
+					prms.SOURCE,
+					prms.SOURCE_ID,
+					adr6.VALID_FROM,
+					adr6.VALID_TO,
+					adr6.SMTP_ADDR, 
+					adr6.STD_EMAIL
+		)
+		WHERE 
+		"SCV_ID"  = "SCV_ID"	and 
+		SOURCE = 'RMS'			and	
+		EMAIL_DESC = 'RMS Email' and
+		SOURCE_ID = SOURCE_ID
+				
+	;
+	
+	-- ### SCV RMS Phone ##############################################################################################################		
+	
+	UPSERT "osr.scv.foundation.db.data::SCVFoundation.ContactNumber"
+	(
+	"SCV_ID",
+	"SOURCE",
+	"SOURCE_ID",
+	"VALID_FROM",
+	"VALID_TO",
+	"CONTACT_ID",
+	"CONTACT_NUMBER",
+	"NUMBER_EXT",
+	"NUMBER_TYPE",
+	"NUMBER_DESC",
+	"CHECKSUM",
+	"LAST_UPDATED",
+	"SCV_LOAD_ID"
+	)
+		SELECT
+			"SCV_ID",
+			"SOURCE",
+			"SOURCE_ID",
+			"VALID_FROM",
+			"VALID_TO",
+			"CONTACT_ID",
+			"CONTACT_NUMBER",
+			"NUMBER_EXT",
+			"NUMBER_TYPE",
+			"NUMBER_DESC",
+			"CHECKSUM",
+			"LAST_UPDATED",
+			"SCV_LOAD_ID"
+		FROM (	
+				SELECT distinct
+				prms.SCV_ID																	as SCV_ID,
+				prms.SOURCE																	as SOURCE,
+				prms.SOURCE_ID																as SOURCE_ID, 
+				adr2.VALID_FROM																as VALID_FROM,	
+				adr2.VALID_TO																as VALID_TO,
+				MAX(adr2.Z_RUN_SEQ_ID)														as CONTACT_ID,
+				SUBSTRING(adr2.TEL_NUMBER,1,20)												as CONTACT_NUMBER, 
+				''																			as NUMBER_EXT,
+				'PHO'																		as NUMBER_TYPE,
+				'RMS Phone ADR2'															as NUMBER_DESC,
+				HASH_SHA256(TO_BINARY(TO_VARCHAR(SUBSTRING(adr2.TEL_NUMBER,1,20))))			as CHECKSUM,
+				''																			as LAST_UPDATED,
+				:l_load_id																	as SCV_LOAD_ID
+				FROM "osr.scv.foundation.db.data::SCVFoundation.PersonRms" as prms
+				INNER JOIN "osr.scv.foundation.db.synonyms::BUT021_FS" as fs
+				ON prms.SOURCE_ID = fs.PARTNER
+				INNER JOIN (select
+							ADDRNUMBER,
+							MAX(Z_RUN_SEQ_ID) as Z_RUN_SEQ_ID,
+							MIN(CASE WHEN SUBSTRING(to_nvarchar(VALID_FROM),1,4) < '1900' THEN DATS_TO_DATE('19000101') ELSE TO_DATE(SUBSTRING(to_nvarchar(VALID_FROM),1,8)) END) as VALID_FROM,
+							MAX(CASE WHEN SUBSTRING(to_nvarchar(VALID_TO)  ,1,4) < '1900' THEN DATS_TO_DATE('99991231') ELSE TO_DATE(SUBSTRING(to_nvarchar(VALID_TO)  ,1,8)) END) as VALID_TO,
+							TEL_NUMBER
+							FROM "osr.scv.foundation.db.synonyms::ADR2"
+							GROUP BY 
+							ADDRNUMBER,
+							TEL_NUMBER
+							) as adr2
+				ON adr2.ADDRNUMBER = fs.ADDRNUMBER
+				WHERE LENGTH(TEL_NUMBER) >= 8 and TEL_NUMBER NOT LIKE '%00000000%' and TEL_NUMBER NOT LIKE '%0000 0000%'
+				GROUP BY 
+				prms.SCV_ID,
+				prms.SOURCE,
+				prms.SOURCE_ID, 
+				adr2.VALID_FROM,
+				adr2.VALID_TO,
+				adr2.TEL_NUMBER 
+		)
+		WHERE 
+		"SCV_ID"  = "SCV_ID"			and 
+		SOURCE = 'RMS'					and
+		NUMBER_DESC = 'RMS Phone ADR2'	and
+		SOURCE_ID = SOURCE_ID
+	;
+
+
+
 
 	INSERT INTO "osr.scv.foundation.db.data::SCVFoundation.EntityMappingHistory" ( 
 																					SELECT :l_load_id, a.SCV_ID_SEQ_CONTROL, a.SCV_ID, a.ENTITY_ID, a.MATCH_ROW_ID , b."HASH" FROM #lt_entity_mappings as a
@@ -1021,12 +1185,8 @@ lt_address_entities_date_tmr =
 																					ON a.MATCH_ROW_ID = b.MATCH_ROW_ID
 																				);	
 																				
-	
-	/*
-		TODO: Curtis to provide table for SCV load details
-			- Number of SCV IDs created (new records for non-existing SCV IDs)
-			- Number of SCV IDs updated (new records for existing SCV IDs)
-	*/
+
+
 	
 	-- ### Update SCV Foundation #################################################################################################
 	-- Reason for the Commit: all the SCV foundation table need to be loaded before the below procedure can run. These procedure use the write data in the tables in calculations.
