@@ -7,5 +7,6 @@
   "osr.scv.foundation.db.synonyms::TMR_CustContact": {},
   "osr.scv.foundation.db.synonyms::TMR_CustMain": {},
   "osr.scv.foundation.db.synonyms::ACTIVE_PROCEDURES": {},
-  "osr.scv.foundation.db.synonyms::ACTIVE_STATEMENTS": {}
+  "osr.scv.foundation.db.synonyms::ACTIVE_STATEMENTS": {},
+  "osr.scv.foundation.db.synonyms::RMS_BUT100":{}
 }

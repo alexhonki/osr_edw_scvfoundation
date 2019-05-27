@@ -1,0 +1,42 @@
+FUNCTION "osr.scv.foundation.db.functions::TF_GetRoyaltyBP"( )
+       RETURNS TABLE (PARTNER NVARCHAR(10))
+       SQL SECURITY INVOKER AS 
+
+BEGIN
+/******************************************************************************************************************************************************************************    
+      Returns list of Business Partners(BPs) that belongs only to Royalties Business line
+      Definition: If a BP has one or combination of the roles ZRCLI, ZRAHD, ZRHD, ZRSL + the basic role MKK then it is a Royalty only BP 
+      Royalty only BP(s) needs to be excluded from SCV organisation Matching Process
+******************************************************************************************************************************************************************************    
+      Change log:
+   
+      27.05.2019 - Curtis Parente  - Build function
+      
+ ******************************************************************************************************************************************************************************/    
+
+	return 
+		SELECT	"PARTNER"
+		FROM	"osr.scv.foundation.db.synonyms::RMS_BUT100"
+		WHERE (	"PARTNER" IN 
+			(
+				SELECT "PARTNER"
+		        FROM 
+		        (
+		            SELECT  DISTINCT "PARTNER", 
+		                    "RLTYP", 
+		                    CASE
+		                        WHEN ("RLTYP" IN ('ZRCLI', 'ZRAHD', 'ZRHD', 'ZRSL')) THEN '1'
+		                        ELSE '0'
+		                    END AS "ROYROLE_FLAG", 
+		                    CASE
+		                        WHEN ("RLTYP" NOT IN ('ZRCLI', 'ZRAHD', 'ZRHD', 'ZRSL', 'MKK')) THEN '1'
+		                        ELSE '0'
+		                    END AS "OTHERROLE_FLAG"
+		            FROM   "osr.scv.foundation.db.synonyms::RMS_BUT100"
+		        )
+		        GROUP BY "PARTNER"
+		        HAVING MAX("ROYROLE_FLAG") = 1
+		        AND MAX("OTHERROLE_FLAG") = 0)
+			)
+		GROUP BY "PARTNER";
+END;

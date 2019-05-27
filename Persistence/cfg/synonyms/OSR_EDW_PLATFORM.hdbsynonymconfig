@@ -52,5 +52,11 @@
       "object": "osr.hana.platform::CV_ACTIVE_STATEMENTS",
       "schema.configure": "logical-OSR-EDW-PLATFORM-grantor/schema"
     }
+  },
+  "osr.scv.foundation.db.synonyms::RMS_BUT100": {
+    "target": {
+      "object": "osr.edw.staging.md.rms.proxy::CV_BUT100",
+      "schema.configure": "logical-OSR-EDW-PLATFORM-grantor/schema"
+    }
   }
 }

@@ -81,6 +81,7 @@ return	SELECT
        "NAME_FIRST",
        "NAMEMIDDLE"
        FROM "osr.scv.foundation.db.synonyms::BUT000"
+       WHERE "BU_GROUP" NOT LIKE '%OLGR%' AND "AUGRP" NOT LIKE '%OFT%' 
        GROUP BY 
        "CLIENT" ,
        "PARTNER" ,
