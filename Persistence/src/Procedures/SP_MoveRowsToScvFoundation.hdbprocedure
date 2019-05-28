@@ -291,8 +291,21 @@ BEGIN
 	
 	lt_person_entities_rms = 
 							SELECT SCV_ID, 
-								   Z_RUN_SEQ_ID, ENTITY_ID, SOURCE_SYSTEM, SYSTEM_ID, VALID_FROM, VALID_TO, SCV_NAME_FIRST, SCV_NAME_MIDDLE, SCV_NAME_LAST, BIRTH_DATE, DEATH_DATE,
-								   STD_PERSON_GN, STD_PERSON_GN2, STD_PERSON_FN, XBLCK,-- XDELE,
+								   MAX(Z_RUN_SEQ_ID) as Z_RUN_SEQ_ID, 
+								   ENTITY_ID, 
+								   SOURCE_SYSTEM, 
+								   SYSTEM_ID, 
+								   VALID_FROM, 
+								   VALID_TO, 
+								   SCV_NAME_FIRST, 
+								   SCV_NAME_MIDDLE, 
+								   SCV_NAME_LAST, 
+								   BIRTH_DATE, 
+								   DEATH_DATE,
+								   STD_PERSON_GN, 
+								   STD_PERSON_GN2, 
+								   STD_PERSON_FN, 
+								   XBLCK,
 								   CHECKSUM,
 								   STD_CHECKSUM
 							FROM (
@@ -321,11 +334,23 @@ BEGIN
 															WHERE SCV_ID = ma.SCV_ID)
 							) 
 							GROUP BY
-							SCV_ID, 
-							Z_RUN_SEQ_ID, ENTITY_ID, SOURCE_SYSTEM, SYSTEM_ID, VALID_FROM, VALID_TO, SCV_NAME_FIRST, SCV_NAME_MIDDLE, SCV_NAME_LAST, BIRTH_DATE, DEATH_DATE,
-							STD_PERSON_GN, STD_PERSON_GN2, STD_PERSON_FN, XBLCK,--XDELE,
-							CHECKSUM,
-							STD_CHECKSUM
+								SCV_ID, 
+								ENTITY_ID, 
+								SOURCE_SYSTEM, 
+								SYSTEM_ID, 
+								VALID_FROM, 
+								VALID_TO, 
+								SCV_NAME_FIRST, 
+								SCV_NAME_MIDDLE, 
+								SCV_NAME_LAST, 
+								BIRTH_DATE, 
+								DEATH_DATE,
+								STD_PERSON_GN, 
+								STD_PERSON_GN2, 
+								STD_PERSON_FN, 
+								XBLCK,
+								CHECKSUM,
+								STD_CHECKSUM
 						 ;
 						 
 	INSERT INTO "osr.scv.foundation.db.data::SCVFoundation.PersonRms" (SELECT SCV_ID, SOURCE_SYSTEM, SYSTEM_ID, VALID_FROM, VALID_TO,Z_RUN_SEQ_ID, SCV_NAME_LAST, SCV_NAME_MIDDLE, SCV_NAME_FIRST, BIRTH_DATE, DEATH_DATE, CHECKSUM, STD_PERSON_GN, STD_PERSON_GN2, STD_PERSON_FN, STD_CHECKSUM, XBLCK, :l_load_id--XDELE 
@@ -514,29 +539,51 @@ lt_person_entities_date_tmr =
 		a.STD_PERSON_FN = b."STD_PERSON_FN"  
 	;
 
-
-
-	
-						
-	-- TODO: Add master data, most importantly add VALID_FROM and VALID_TO for records with same SCV_ID, SOURCE_SYSTEM and SYSTEM_ID
-	-- Question: Do we need to aggregate on first name, middle name and last name instead? Would we lose any information, we don't know what exactly triggered the duplication
-    --           of records?
-	
 	-- ### SCV address ##############################################################################################################
 	
 		lt_address_entities_rms = 
-								SELECT ADDRESS_RMS_ID, SCV_ID,
-									   SOURCE_SYSTEM, SYSTEM_ID, ADDRNUMBER, ADR_KIND, VALID_FROM, VALID_TO, CITY1, POST_CODE1, STREET, HOUSE_NUM1, COUNTRY, REGION, PERS_ADDR, MC_CITY1, MC_STREET, TIME_ZONE, ADRC_UUID,
-									   CHECKSUM,
-									   STD_ADDR_COUNTRY_2CHAR, STD_ADDR_COUNTRY_NAME, STD_ADDR_BUILDING_NAME, STD_ADDR_ADDRESS_DELIVERY, STD_ADDR_PRIM_ADDRESS,
-	                				   STD_ADDR_PRIM_NAME_FULL, STD_ADDR_PRIM_NAME, STD_ADDR_PRIM_TYPE, STD_ADDR_PRIM_NUMBER, STD_ADDR_LOCALITY, STD_ADDR_REGION, STD_ADDR_POSTCODE1,
-	                				   ADDR_LATITUDE, ADDR_LONGITUDE,
-	                				   STD_CHECKSUM
+								SELECT 
+									MAX(ADDRESS_RMS_ID) as ADDRESS_RMS_ID, 
+									SCV_ID,
+									SOURCE_SYSTEM, 
+									SYSTEM_ID, 
+									ADDRNUMBER, 
+									ADR_KIND, 
+									VALID_FROM, 
+									VALID_TO, 
+									CITY1, 
+									POST_CODE1, 
+									STREET, 
+									HOUSE_NUM1, 
+									COUNTRY, 
+									REGION, 
+									PERS_ADDR, 
+									MC_CITY1, 
+									MC_STREET, 
+									TIME_ZONE, 
+									ADRC_UUID,
+									CHECKSUM,
+									STD_ADDR_COUNTRY_2CHAR, 
+									STD_ADDR_COUNTRY_NAME, 
+									STD_ADDR_BUILDING_NAME, 
+									STD_ADDR_ADDRESS_DELIVERY, 
+									STD_ADDR_PRIM_ADDRESS,
+	                				STD_ADDR_PRIM_NAME_FULL, 
+	                				STD_ADDR_PRIM_NAME, 
+	                				STD_ADDR_PRIM_TYPE, 
+	                				STD_ADDR_PRIM_NUMBER, 
+	                				STD_ADDR_LOCALITY, 
+	                				STD_ADDR_REGION, 
+	                				STD_ADDR_POSTCODE1,
+	                				ADDR_LATITUDE, 
+	                				ADDR_LONGITUDE,
+	                				STD_CHECKSUM
 								FROM (
 								SELECT ma.SCV_ID, mr.* FROM 
 								(
 									SELECT mk.*, lt.ADDR_LATITUDE, lt.ADDR_LONGITUDE FROM 
-													(SELECT DISTINCT  b.Z_RUN_SEQ_ID||'|'||c.Z_RUN_SEQ_ID as ADDRESS_RMS_ID, a.ENTITY_ID, a.SOURCE_SYSTEM, a.SYSTEM_ID, b.ADDRNUMBER, b.ADR_KIND, CASE WHEN SUBSTRING(to_nvarchar(b.VALID_FROM),1,4) < 1900 THEN DATS_TO_DATE('19000101') ELSE DATS_TO_DATE(SUBSTRING(to_nvarchar(b.VALID_FROM),1,8)) END  AS VALID_FROM, CASE WHEN SUBSTRING(to_nvarchar(b.VALID_TO),1,4) < 1900 THEN DATS_TO_DATE('19000101') ELSE DATS_TO_DATE(SUBSTRING(to_nvarchar(b.VALID_TO),1,8)) END  AS VALID_TO, c.CITY1, c.POST_CODE1, c.STREET, c.HOUSE_NUM1, c.COUNTRY, c.REGION, c.PERS_ADDR, c.MC_CITY1, c.MC_STREET, c.TIME_ZONE, c.ADRC_UUID, 
+													(SELECT DISTINCT  b.Z_RUN_SEQ_ID||'|'||c.Z_RUN_SEQ_ID as ADDRESS_RMS_ID, 
+													a.ENTITY_ID, a.SOURCE_SYSTEM, a.SYSTEM_ID, b.ADDRNUMBER, b.ADR_KIND, CASE WHEN SUBSTRING(to_nvarchar(b.VALID_FROM),1,4) < 1900 THEN DATS_TO_DATE('19000101') ELSE DATS_TO_DATE(SUBSTRING(to_nvarchar(b.VALID_FROM),1,8)) END  AS VALID_FROM, CASE WHEN SUBSTRING(to_nvarchar(b.VALID_TO),1,4) < 1900 THEN DATS_TO_DATE('19000101') ELSE DATS_TO_DATE(SUBSTRING(to_nvarchar(b.VALID_TO),1,8)) END  AS VALID_TO, c.CITY1, c.POST_CODE1, c.STREET, c.HOUSE_NUM1, c.COUNTRY, c.REGION, c.PERS_ADDR, c.MC_CITY1, c.MC_STREET, c.TIME_ZONE, c.ADRC_UUID, 
 	                							    -- Create checksum for RMS MD fields for domain ADDRESS
     												HASH_SHA256(TO_BINARY(TO_VARCHAR(c.CITY1)), TO_BINARY(TO_VARCHAR(c.POST_CODE1)), TO_BINARY(TO_VARCHAR(c.STREET)), TO_BINARY(TO_VARCHAR(c.HOUSE_NUM1)), TO_BINARY(TO_VARCHAR(c.COUNTRY)),
     												TO_BINARY(TO_VARCHAR(c.REGION)), TO_BINARY(TO_VARCHAR(c.PERS_ADDR)), TO_BINARY(TO_VARCHAR(c.MC_CITY1)), TO_BINARY(TO_VARCHAR(c.STREET))) as CHECKSUM,
@@ -575,13 +622,30 @@ lt_person_entities_date_tmr =
 															FROM "osr.scv.foundation.db.data::SCVFoundation.AddressRms"
 															WHERE SCV_ID = ma.SCV_ID)
 							) 
-							GROUP BY ADDRESS_RMS_ID, SCV_ID,
-									   SOURCE_SYSTEM, SYSTEM_ID, ADDRNUMBER, ADR_KIND, VALID_FROM, VALID_TO, CITY1, POST_CODE1, STREET, HOUSE_NUM1, COUNTRY, REGION, PERS_ADDR, MC_CITY1, MC_STREET, TIME_ZONE, ADRC_UUID,
-									   CHECKSUM,
-									   STD_ADDR_COUNTRY_2CHAR, STD_ADDR_COUNTRY_NAME, STD_ADDR_BUILDING_NAME, STD_ADDR_ADDRESS_DELIVERY, STD_ADDR_PRIM_ADDRESS,
-	                				   STD_ADDR_PRIM_NAME_FULL, STD_ADDR_PRIM_NAME, STD_ADDR_PRIM_TYPE, STD_ADDR_PRIM_NUMBER, STD_ADDR_LOCALITY, STD_ADDR_REGION, STD_ADDR_POSTCODE1,
-	                				   ADDR_LATITUDE, ADDR_LONGITUDE,
-	                				   STD_CHECKSUM 
+							GROUP BY  
+								SCV_ID,
+								SOURCE_SYSTEM, 
+								SYSTEM_ID, 
+								ADDRNUMBER, 
+								ADR_KIND, 
+								VALID_FROM, 
+								VALID_TO, 
+								CITY1, 
+								POST_CODE1, 
+								STREET, 
+								HOUSE_NUM1, 
+								COUNTRY, 
+								REGION, 
+								PERS_ADDR, 
+								MC_CITY1, 
+								MC_STREET, 
+								TIME_ZONE, 
+								ADRC_UUID,
+								CHECKSUM,
+								STD_ADDR_COUNTRY_2CHAR, STD_ADDR_COUNTRY_NAME, STD_ADDR_BUILDING_NAME, STD_ADDR_ADDRESS_DELIVERY, STD_ADDR_PRIM_ADDRESS,
+	                			STD_ADDR_PRIM_NAME_FULL, STD_ADDR_PRIM_NAME, STD_ADDR_PRIM_TYPE, STD_ADDR_PRIM_NUMBER, STD_ADDR_LOCALITY, STD_ADDR_REGION, STD_ADDR_POSTCODE1,
+	                			ADDR_LATITUDE, ADDR_LONGITUDE,
+	                			STD_CHECKSUM 
 						 ;
 	
 	INSERT INTO "osr.scv.foundation.db.data::SCVFoundation.AddressRms" (
@@ -884,9 +948,16 @@ lt_address_entities_date_tmr =
 	
 
 	lt_contact_entities_tmr_custMain_number = 
-							SELECT CONTACT_ID, SCV_ID,
-							       ENTITY_ID, SOURCE_SYSTEM, SYSTEM_ID, UPDATED_AT, CONTACT_PHONE_NO, NUMBER_TYPE, 
-							       CHECKSUM
+							SELECT 
+								MAX(CONTACT_ID) as CONTACT_ID, 
+								SCV_ID,
+							    ENTITY_ID, 
+							    SOURCE_SYSTEM, 
+							    SYSTEM_ID, 
+							    UPDATED_AT, 
+							    CONTACT_PHONE_NO, 
+							    NUMBER_TYPE, 
+							    CHECKSUM
 							FROM (
 							SELECT ma.SCV_ID, mr.* FROM 
 							(
@@ -927,9 +998,15 @@ lt_address_entities_date_tmr =
 													FROM "osr.scv.foundation.db.data::SCVFoundation.ContactNumber"
 													WHERE SCV_ID = ma.SCV_ID)
 						   )
-						   GROUP BY CONTACT_ID, SCV_ID,
-									ENTITY_ID, SOURCE_SYSTEM, SYSTEM_ID, UPDATED_AT, CONTACT_PHONE_NO, NUMBER_TYPE,
-							        CHECKSUM
+						   GROUP BY 
+								SCV_ID,
+								ENTITY_ID, 
+								SOURCE_SYSTEM, 
+								SYSTEM_ID, 
+								UPDATED_AT, 
+								CONTACT_PHONE_NO, 
+								NUMBER_TYPE,
+							    CHECKSUM
 						 ;
 	
 	
@@ -1014,85 +1091,85 @@ lt_address_entities_date_tmr =
 	;
 	-- ### SCV RMS Email ##############################################################################################################	
 	
-		UPSERT "osr.scv.foundation.db.data::SCVFoundation.ContactEmail"
+	UPSERT "osr.scv.foundation.db.data::SCVFoundation.ContactEmail"
 	(
-	"SCV_ID",
-	"SOURCE",
-	"SOURCE_ID",
-	"VALID_FROM",
-	"VALID_TO",
-	"CONTACT_EMAIL_ID",
-	"CONTACT_EMAIL",
-	"EMAIL_TYPE",
-	"EMAIL_DESC",
-	"CHECKSUM",
-	"STD_EMAIL",
-	"STD_CHECKSUM",
-	"LAST_UPDATED",
-	"SCV_LOAD_ID"
+		"SCV_ID",
+		"SOURCE",
+		"SOURCE_ID",
+		"VALID_FROM",
+		"VALID_TO",
+		"CONTACT_EMAIL_ID",
+		"CONTACT_EMAIL",
+		"EMAIL_TYPE",
+		"EMAIL_DESC",
+		"CHECKSUM",
+		"STD_EMAIL",
+		"STD_CHECKSUM",
+		"LAST_UPDATED",
+		"SCV_LOAD_ID"
 	)
-		SELECT 
-			"SCV_ID",
-			"SOURCE",
-			"SOURCE_ID",
-			"VALID_FROM",
-			"VALID_TO",
-			"CONTACT_EMAIL_ID",
-			"CONTACT_EMAIL",
-			"EMAIL_TYPE",
-			"EMAIL_DESC",
-			"CHECKSUM",
-			"STD_EMAIL",
-			"STD_CHECKSUM",
-			"LAST_UPDATED",
-			"SCV_LOAD_ID"
-			FROM (
-						
-					SELECT distinct 
-					prms.SCV_ID											as SCV_ID,
-					prms.SOURCE											as SOURCE,
-					prms.SOURCE_ID										as SOURCE_ID, 
-					adr6.VALID_FROM										as VALID_FROM,
-					adr6.VALID_TO										as VALID_TO,
-					MAX(adr6.Z_RUN_SEQ_ID)								as CONTACT_EMAIL_ID,
-					adr6.SMTP_ADDR 										as CONTACT_EMAIL, 
-					''													as EMAIL_TYPE,
-					'RMS Email'											as EMAIL_DESC,
-					HASH_SHA256(TO_BINARY(TO_VARCHAR(adr6.SMTP_ADDR)))	as CHECKSUM,
-					STD_EMAIL											as STD_EMAIL,
-					HASH_SHA256(TO_BINARY(TO_VARCHAR(STD_EMAIL)))		as STD_CHECKSUM,
-					''													as LAST_UPDATED,
-					:l_load_id											as SCV_LOAD_ID
-					FROM "osr.scv.foundation.db.data::SCVFoundation.PersonRms" as prms
-					INNER JOIN "osr.scv.foundation.db.synonyms::BUT021_FS" as fs
-					ON prms.SOURCE_ID = fs.PARTNER
-					INNER JOIN (select
-								ADDRNUMBER,
-								MAX(Z_RUN_SEQ_ID) as Z_RUN_SEQ_ID,
-								MIN(CASE WHEN SUBSTRING(to_nvarchar(VALID_FROM),1,4) < '1900' THEN DATS_TO_DATE('19000101') ELSE TO_DATE(SUBSTRING(to_nvarchar(VALID_FROM),1,8)) END) as VALID_FROM,
-								MAX(CASE WHEN SUBSTRING(to_nvarchar(VALID_TO)  ,1,4) < '1900' THEN DATS_TO_DATE('99991231') ELSE TO_DATE(SUBSTRING(to_nvarchar(VALID_TO)  ,1,8)) END) as VALID_TO,
-								SMTP_ADDR,
-								STD_EMAIL
-								FROM "osr.scv.foundation.db.synonyms::ADR6"
-								GROUP BY 
-								ADDRNUMBER,
-								SMTP_ADDR,
-								STD_EMAIL
-								) as adr6
-					ON adr6.ADDRNUMBER = fs.ADDRNUMBER
-					WHERE LENGTH(SMTP_ADDR) > 5 
-					GROUP BY 
-					prms.SCV_ID,
-					prms.SOURCE,
-					prms.SOURCE_ID,
-					adr6.VALID_FROM,
-					adr6.VALID_TO,
-					adr6.SMTP_ADDR, 
-					adr6.STD_EMAIL
+			SELECT 
+				"SCV_ID",
+				"SOURCE",
+				"SOURCE_ID",
+				"VALID_FROM",
+				"VALID_TO",
+				"CONTACT_EMAIL_ID",
+				"CONTACT_EMAIL",
+				"EMAIL_TYPE",
+				"EMAIL_DESC",
+				"CHECKSUM",
+				"STD_EMAIL",
+				"STD_CHECKSUM",
+				"LAST_UPDATED",
+				"SCV_LOAD_ID"
+				FROM (
+							
+						SELECT distinct 
+						prms.SCV_ID											as SCV_ID,
+						prms.SOURCE											as SOURCE,
+						prms.SOURCE_ID										as SOURCE_ID, 
+						adr6.VALID_FROM										as VALID_FROM,
+						adr6.VALID_TO										as VALID_TO,
+						MAX(adr6.Z_RUN_SEQ_ID)								as CONTACT_EMAIL_ID,
+						adr6.SMTP_ADDR 										as CONTACT_EMAIL, 
+						''													as EMAIL_TYPE,
+						'RMS Email'											as EMAIL_DESC,
+						HASH_SHA256(TO_BINARY(TO_VARCHAR(adr6.SMTP_ADDR)))	as CHECKSUM,
+						STD_EMAIL											as STD_EMAIL,
+						HASH_SHA256(TO_BINARY(TO_VARCHAR(STD_EMAIL)))		as STD_CHECKSUM,
+						''													as LAST_UPDATED,
+						:l_load_id											as SCV_LOAD_ID
+						FROM "osr.scv.foundation.db.data::SCVFoundation.PersonRms" as prms
+						INNER JOIN "osr.scv.foundation.db.synonyms::BUT021_FS" as fs
+						ON prms.SOURCE_ID = fs.PARTNER
+						INNER JOIN (select
+									ADDRNUMBER,
+									MAX(Z_RUN_SEQ_ID) as Z_RUN_SEQ_ID,
+									MIN(CASE WHEN SUBSTRING(to_nvarchar(VALID_FROM),1,4) < '1900' THEN DATS_TO_DATE('19000101') ELSE TO_DATE(SUBSTRING(to_nvarchar(VALID_FROM),1,8)) END) as VALID_FROM,
+									MAX(CASE WHEN SUBSTRING(to_nvarchar(VALID_TO)  ,1,4) < '1900' THEN DATS_TO_DATE('99991231') ELSE TO_DATE(SUBSTRING(to_nvarchar(VALID_TO)  ,1,8)) END) as VALID_TO,
+									SMTP_ADDR,
+									STD_EMAIL
+									FROM "osr.scv.foundation.db.synonyms::ADR6"
+									GROUP BY 
+									ADDRNUMBER,
+									SMTP_ADDR,
+									STD_EMAIL
+									) as adr6
+						ON adr6.ADDRNUMBER = fs.ADDRNUMBER
+						WHERE LENGTH(SMTP_ADDR) > 5 
+						GROUP BY 
+						prms.SCV_ID,
+						prms.SOURCE,
+						prms.SOURCE_ID,
+						adr6.VALID_FROM,
+						adr6.VALID_TO,
+						adr6.SMTP_ADDR, 
+						adr6.STD_EMAIL
 		)
 		WHERE 
-		"SCV_ID"  = "SCV_ID"	and 
-		SOURCE = 'RMS'			and	
+		"SCV_ID"  = "SCV_ID"	 and 
+		SOURCE = 'RMS'			 and	
 		EMAIL_DESC = 'RMS Email' and
 		SOURCE_ID = SOURCE_ID
 				
