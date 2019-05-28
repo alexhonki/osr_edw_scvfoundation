@@ -45,7 +45,7 @@ BEGIN
  *****************************/ 
 return	SELECT 
        "CLIENT" ,
-       "PARTNER" ,
+       but."PARTNER" ,
        "TYPE" ,
        "BPKIND" ,
        "SOURCE" ,
@@ -80,11 +80,13 @@ return	SELECT
        "NAME_LAST",
        "NAME_FIRST",
        "NAMEMIDDLE"
-       FROM "osr.scv.foundation.db.synonyms::BUT000"
+       FROM "osr.scv.foundation.db.synonyms::BUT000" as but
+       INNER JOIN (SELECT DISTINCT PARTNER FROM "osr.scv.foundation.db.functions::TF_GetRoyaltyBP"()) as roy
+       ON but.PARTNER = roy.PARTNER
        WHERE "BU_GROUP" NOT LIKE '%OLGR%' AND "AUGRP" NOT LIKE '%OFT%' 
        GROUP BY 
        "CLIENT" ,
-       "PARTNER" ,
+       but."PARTNER" ,
        "TYPE" ,
        "BPKIND" ,
        "SOURCE" ,
