@@ -1,3 +1,0 @@
-SEQUENCE "osr.scv.foundation.db.data::SEQ_MatchTracingRelationships"
-RESET BY SELECT IFNULL(MAX(ID), 0) + 1
-FROM "osr.scv.foundation.db.data::MatchResults.MatchTracingRelationships"

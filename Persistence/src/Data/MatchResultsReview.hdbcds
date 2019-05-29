@@ -19,7 +19,7 @@ context MatchResultsReview {
             TIMESTAMP : UTCTimestamp;
             USER      : String(200);
             ACTION    : String(20);
-            STRATEGY  : String(20); 
+            STRATEGY  : String(20);
     };
 
     /*@@layout{"layoutInfo":{}}*/
@@ -72,38 +72,6 @@ context MatchResultsReview {
             MATCH_PERSON_FN          : String(50);
             ACTION_RESOLVED_STATUS   : String(10);
             SHOW_IN_REVIEW           : String(1);
-    }
-    technical configuration {
-        index index_0 on (PROMOTED_TO_SCV);
-    };
-
-    entity ReviewShadow {
-        key MATCH_ROW                : Integer;
-        key SOURCE_SYSTEM            : String(10);
-        key SYSTEM_ID                : String(10);
-            ENTITY_ID                : String(20);
-            GROUP_ID                 : Integer;
-            REVIEW_GROUP             : String(1);
-            GROUP_COUNT              : Integer;
-            GROUP_ROW_COUNT          : Integer;
-            GROUP_CATEGORY           : Integer;
-            FIRST_NAME               : String(50);
-            MIDDLE_NAME              : String(50);
-            LAST_NAME                : String(80);
-            RELATED_ROW              : Integer;
-            SCORE                    : Integer;
-            AVG_SCORE                : Integer;
-            STRATEGY                 : String(10);
-            STRATEGY_RESOLVED        : String(10);
-            STRATEGY_RESOLVED_STATUS : String(10);
-            PROMOTED_TO_SCV          : String(1);
-            PROMOTION_TIMESTAMP      : UTCTimestamp;
-            PROMOTED_BY              : String(10);
-            RMS_DUPLICATES           : Integer;
-            ACTION                   : String(20);
-            ACTION_RESOLVED          : String(20);
-            MATCH_PERSON_FN          : String(80);
-            ACTION_RESOLVED_STATUS   : String(10);
     }
     technical configuration {
         index index_0 on (PROMOTED_TO_SCV);
