@@ -2081,8 +2081,8 @@
       <viewAttribute id="ADDR_LONGITUDE">
         <descriptions defaultDescription="ADDR_LONGITUDE"/>
       </viewAttribute>
-      <viewAttribute id="CURRENT_POSTAL_ADDR_EFf_DT">
-        <descriptions defaultDescription="CURRENT_POSTAL_ADDR_EFf_DT"/>
+      <viewAttribute id="CURRENT_POSTAL_ADDR_EFF_DT">
+        <descriptions defaultDescription="CURRENT_POSTAL_ADDR_EFF_DT"/>
       </viewAttribute>
       <viewAttribute id="CUSTOMER_TYPE">
         <descriptions defaultDescription="CUSTOMER_TYPE"/>
@@ -2126,7 +2126,7 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_COUNTRY" source="MATCH_ADDR_COUNTRY"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_PRIM_NAME" source="MATCH_ADDR_PRIM_NAME"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_FLOOR" source="MATCH_ADDR_FLOOR"/>
-      <mapping xsi:type="Calculation:AttributeMapping" target="CURRENT_POSTAL_ADDR_EFf_DT" source="CURRENT_POSTAL_ADDR_EFf_DT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CURRENT_POSTAL_ADDR_EFF_DT" source="CURRENT_POSTAL_ADDR_EFF_DT"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="ADDR_SCRIPT_CODE" source="ADDR_SCRIPT_CODE"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_PERSON_GN2_STD4" source="MATCH_PERSON_GN2_STD4"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="MATCH_ADDR_POSTCODE1" source="MATCH_ADDR_POSTCODE1"/>

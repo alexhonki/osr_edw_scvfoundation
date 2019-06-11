@@ -1,0 +1,16 @@
+{
+	"logical-OSR-EDW-SOURCE-DATA-INFO-grantor": {
+		"object_owner": { 
+			"container_roles": [
+				"osr.edw.data.info::read_user_g#"
+				
+			]
+		},
+		"application_user": {
+			"container_roles": [
+				"osr.edw.data.info::read_user"
+			]
+		}
+	}
+} 
+ 

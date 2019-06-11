@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" xmlns:Variable="http://www.sap.com/ndb/BiModelVariable.ecore" id="osr.scv.foundation.db.views.Metadata::CV_Metadata_TMR" applyPrivilegeType="NONE" dataCategory="DIMENSION" dimensionType="STANDARD" schemaVersion="3.0" outputViewType="Projection" cacheInvalidationPeriod="NONE" enforceSqlExecution="false">
+<descriptions defaultDescription="CV_Metadata_TMR"/>
+<localVariables/>
+<variableMappings>
+  <mapping xsi:type="Variable:ConstantVariableMapping" dataSource="osr.scv.foundation.db.synonyms::MetadataRecordsBySource" value="TMR">
+    <targetVariable name="IP_SOURCE" resourceUri="osr.scv.foundation.db.synonyms::MetadataRecordsBySource"/>
+  </mapping>
+</variableMappings>
+<dataSources>
+  <DataSource id="osr.scv.foundation.db.synonyms::MetadataRecordsBySource">
+    <resourceUri>osr.scv.foundation.db.synonyms::MetadataRecordsBySource</resourceUri>
+  </DataSource>
+</dataSources>
+<calculationViews/>
+<logicalModel id="osr.scv.foundation.db.synonyms::MetadataRecordsBySource">
+  <attributes>
+    <attribute id="META_FILE_NAME" order="1" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="META_FILE_NAME"/>
+      <keyMapping columnObjectName="MetadataRecordsBySource" columnName="META_FILE_NAME"/>
+    </attribute>
+    <attribute id="FROM_DATE" order="2" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="FROM_DATE"/>
+      <keyMapping columnObjectName="MetadataRecordsBySource" columnName="FROM_DATE"/>
+    </attribute>
+    <attribute id="TO_DATE" order="3" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="TO_DATE"/>
+      <keyMapping columnObjectName="MetadataRecordsBySource" columnName="TO_DATE"/>
+    </attribute>
+  </attributes>
+  <calculatedAttributes/>
+  <baseMeasures/>
+  <calculatedMeasures/>
+  <restrictedMeasures/>
+</logicalModel>
+<layout>
+  <shapes>
+    <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+      <upperLeftCorner x="40" y="85"/>
+    </shape>
+  </shapes>
+</layout>
+</Calculation:scenario>

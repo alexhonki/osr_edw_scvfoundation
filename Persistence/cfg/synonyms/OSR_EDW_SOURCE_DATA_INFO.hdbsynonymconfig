@@ -1,0 +1,8 @@
+{
+   "osr.scv.foundation.db.synonyms::MetadataRecordsBySource": {
+    "target": {
+      "object": "osr.edw.source.data.info.db.Views::CV_MetadataRecordsBySource",
+      "schema.configure": "logical-OSR-EDW-SOURCE-DATA-INFO-grantor/schema"
+    }
+  }
+}
