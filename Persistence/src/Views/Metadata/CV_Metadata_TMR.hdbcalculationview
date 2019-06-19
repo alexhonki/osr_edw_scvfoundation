@@ -2,30 +2,52 @@
 <Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" xmlns:Variable="http://www.sap.com/ndb/BiModelVariable.ecore" id="osr.scv.foundation.db.views.Metadata::CV_Metadata_TMR" applyPrivilegeType="NONE" dataCategory="DIMENSION" dimensionType="STANDARD" schemaVersion="3.0" outputViewType="Projection" cacheInvalidationPeriod="NONE" enforceSqlExecution="false">
 <descriptions defaultDescription="CV_Metadata_TMR"/>
 <localVariables/>
-<variableMappings>
-  <mapping xsi:type="Variable:ConstantVariableMapping" dataSource="osr.scv.foundation.db.synonyms::MetadataRecordsBySource" value="TMR">
-    <targetVariable name="IP_SOURCE" resourceUri="osr.scv.foundation.db.synonyms::MetadataRecordsBySource"/>
-  </mapping>
-</variableMappings>
+<variableMappings/>
 <dataSources>
   <DataSource id="osr.scv.foundation.db.synonyms::MetadataRecordsBySource">
     <resourceUri>osr.scv.foundation.db.synonyms::MetadataRecordsBySource</resourceUri>
   </DataSource>
 </dataSources>
-<calculationViews/>
-<logicalModel id="osr.scv.foundation.db.synonyms::MetadataRecordsBySource">
+<calculationViews>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_1" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="META_FILE_NAME">
+        <descriptions defaultDescription="META_FILE_NAME"/>
+      </viewAttribute>
+      <viewAttribute id="FROM_DATE">
+        <descriptions defaultDescription="FROM_DATE"/>
+      </viewAttribute>
+      <viewAttribute id="TO_DATE">
+        <descriptions defaultDescription="TO_DATE"/>
+      </viewAttribute>
+      <viewAttribute id="HAS_LOADED_IN_EDW">
+        <descriptions defaultDescription="HAS_LOADED_IN_EDW"/>
+      </viewAttribute>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="osr.scv.foundation.db.synonyms::MetadataRecordsBySource">
+      <mapping xsi:type="Calculation:AttributeMapping" target="META_FILE_NAME" source="META_FILE_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FROM_DATE" source="FROM_DATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TO_DATE" source="TO_DATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="HAS_LOADED_IN_EDW" source="HAS_LOADED_IN_EDW"/>
+    </input>
+    <filter>&quot;HAS_LOADED_IN_EDW&quot; = 'Y'</filter>
+  </calculationView>
+</calculationViews>
+<logicalModel id="Projection_1">
   <attributes>
     <attribute id="META_FILE_NAME" order="1" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="META_FILE_NAME"/>
-      <keyMapping columnObjectName="MetadataRecordsBySource" columnName="META_FILE_NAME"/>
+      <keyMapping columnObjectName="Projection_1" columnName="META_FILE_NAME"/>
     </attribute>
     <attribute id="FROM_DATE" order="2" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="FROM_DATE"/>
-      <keyMapping columnObjectName="MetadataRecordsBySource" columnName="FROM_DATE"/>
+      <keyMapping columnObjectName="Projection_1" columnName="FROM_DATE"/>
     </attribute>
     <attribute id="TO_DATE" order="3" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="TO_DATE"/>
-      <keyMapping columnObjectName="MetadataRecordsBySource" columnName="TO_DATE"/>
+      <keyMapping columnObjectName="Projection_1" columnName="TO_DATE"/>
     </attribute>
   </attributes>
   <calculatedAttributes/>
@@ -36,7 +58,14 @@
 <layout>
   <shapes>
     <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
-      <upperLeftCorner x="40" y="85"/>
+      <upperLeftCorner x="92" y="112"/>
+    
+      <rectangleSize width="160"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="Projection_1" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="92" y="217"/>
+      <rectangleSize height="30" width="160"/>
     </shape>
   </shapes>
 </layout>
