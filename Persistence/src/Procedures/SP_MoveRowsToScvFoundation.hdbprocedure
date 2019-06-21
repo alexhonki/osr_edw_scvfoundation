@@ -542,13 +542,14 @@ lt_person_entities_date_tmr =
 							
 		UPDATE "osr.scv.foundation.db.data::SCVFoundation.PersonTmr" a 
 		SET 	a.VALID_TO = b.UPDATED_TO,
-				a.VALID_FROM = b.UPDATED_FROM
+				a.VALID_FROM = b.UPDATED_FROM,
+				a."UPDATED_AT" = b.UPDATE_AT2
 		FROM "osr.scv.foundation.db.data::SCVFoundation.PersonTmr" a , :lt_person_entities_date_tmr b
 		WHERE 
 		a."SCV_ID" = b."SCV_ID" AND
 	--	b."SOURCE" = 'TMR' AND
 		a."SOURCE_ID" =  b."CUSTOMER_REF" AND
-		a."UPDATED_AT" = b.UPDATE_AT2 AND
+	--	a."UPDATED_AT" = b.UPDATE_AT2 AND
 		a."LAST_NAME" = b."FAMILY_ORG_NAME" AND
 		a."MIDDLE_NAME" = b."MIDDLE_NAME" AND
 		a."FIRST_NAME" = b."FIRST_NAME" AND
@@ -899,13 +900,14 @@ lt_address_entities_date_tmr =
 	
 	UPDATE "osr.scv.foundation.db.data::SCVFoundation.AddressTmr" a 
 		SET 	a.VALID_TO = b.UPDATED_TO,
-				a.VALID_FROM = b.UPDATED_FROM
+				a.VALID_FROM = b.UPDATED_FROM,
+				a."LAST_CONTACT_DATE" = b.UPDATE_AT2
 		FROM "osr.scv.foundation.db.data::SCVFoundation.AddressTmr" a , :lt_address_entities_date_tmr b
 		WHERE 
 		a."SCV_ID" = b."SCV_ID" AND
 	--	b."SOURCE" = 'TMR' AND
 		a."SOURCE_ID" =  b."CUSTOMER_REF" AND
-		a."LAST_CONTACT_DATE" = b.UPDATE_AT2 AND
+	--	a."LAST_CONTACT_DATE" = b.UPDATE_AT2 AND
 		a."FLOOR" = b."FLOOR"  AND 
 		a.UNIT = b."UNIT"  AND  
 		a.BUILDING_NAME = b."BUILDING_NAME"  AND  
