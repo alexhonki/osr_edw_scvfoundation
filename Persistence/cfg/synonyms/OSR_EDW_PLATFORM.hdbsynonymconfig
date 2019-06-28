@@ -35,9 +35,21 @@
       "schema.configure": "logical-OSR-EDW-PLATFORM-grantor/schema"
     }
   },
+  "osr.scv.foundation.db.source.synonyms::TMR_CustContact": {
+    "target": {
+      "object": "osr.edw.source.md.tmr.proxy::CV_CUSTCONTACT",
+      "schema.configure": "logical-OSR-EDW-PLATFORM-grantor/schema"
+    }
+  },  
   "osr.scv.foundation.db.synonyms::TMR_CustMain": {
     "target": {
       "object": "osr.edw.propagation.md.tmr.proxy::CV_CUSTMAIN",
+      "schema.configure": "logical-OSR-EDW-PLATFORM-grantor/schema"
+    }
+  },
+  "osr.scv.foundation.db.source.synonyms::TMR_CustMain": {
+    "target": {
+      "object": "osr.edw.source.md.tmr.proxy::CV_CUSTMAIN",
       "schema.configure": "logical-OSR-EDW-PLATFORM-grantor/schema"
     }
   },
