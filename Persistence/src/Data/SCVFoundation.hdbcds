@@ -182,12 +182,12 @@ context SCVFoundation {
 
     /*@@layout{"layoutInfo":{}}*/
     entity ContactNumber {
-        	SCV_ID         : String(10);
-        	SOURCE         : String(10);
-        key	SOURCE_ID      : String(10);
-        	VALID_FROM     : LocalDate;
-        	VALID_TO       : LocalDate;
-            CONTACT_ID     : String(32);
+            SCV_ID         : String(10);
+            SOURCE         : String(10);
+        key SOURCE_ID      : String(10);
+            VALID_FROM     : LocalDate;
+            VALID_TO       : LocalDate;
+        	CONTACT_ID     : String(32);
         key CONTACT_NUMBER : String(20);
             NUMBER_EXT     : String(20);
         key NUMBER_TYPE    : String(10);
