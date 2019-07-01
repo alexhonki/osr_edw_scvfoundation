@@ -184,13 +184,13 @@ context SCVFoundation {
     entity ContactNumber {
             SCV_ID         : String(10);
             SOURCE         : String(10);
-            SOURCE_ID      : String(10);
+        key SOURCE_ID      : String(10);
             VALID_FROM     : LocalDate;
             VALID_TO       : LocalDate;
-        key CONTACT_ID     : String(32);
-            CONTACT_NUMBER : String(20);
+        	CONTACT_ID     : String(32);
+        key CONTACT_NUMBER : String(20);
             NUMBER_EXT     : String(20);
-            NUMBER_TYPE    : String(10);
+        key NUMBER_TYPE    : String(10);
             NUMBER_DESC    : String(256);
             CHECKSUM       : Binary(32);
             LAST_UPDATED   : LocalDate;
@@ -199,13 +199,13 @@ context SCVFoundation {
 
     /*@@layout{"layoutInfo":{}}*/
     entity ContactEmail {
-        key SCV_ID           : String(10);
-        key SOURCE           : String(10);
+        	SCV_ID           : String(10);
+        	SOURCE           : String(10);
         key SOURCE_ID        : String(10);
-        key VALID_FROM       : LocalDate;
-        key VALID_TO         : LocalDate;
-        key CONTACT_EMAIL_ID : String(32);
-            CONTACT_EMAIL    : String(200);
+        	VALID_FROM       : LocalDate;
+        	VALID_TO         : LocalDate;
+        	CONTACT_EMAIL_ID : String(32);
+        key CONTACT_EMAIL    : String(200);
             EMAIL_TYPE       : String(10);
             EMAIL_DESC       : String(256);
             CHECKSUM         : Binary(32);
