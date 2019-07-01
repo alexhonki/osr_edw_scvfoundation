@@ -182,11 +182,11 @@ context SCVFoundation {
 
     /*@@layout{"layoutInfo":{}}*/
     entity ContactNumber {
-        key SCV_ID         : String(10);
-        key SOURCE         : String(10);
-        key SOURCE_ID      : String(10);
-        key VALID_FROM     : LocalDate;
-        key VALID_TO       : LocalDate;
+            SCV_ID         : String(10);
+            SOURCE         : String(10);
+            SOURCE_ID      : String(10);
+            VALID_FROM     : LocalDate;
+            VALID_TO       : LocalDate;
         key CONTACT_ID     : String(32);
             CONTACT_NUMBER : String(20);
             NUMBER_EXT     : String(20);
@@ -217,34 +217,34 @@ context SCVFoundation {
 
     /*@@layout{"layoutInfo":{}}*/
     entity Search {
-        SCV_ID                      : Integer;
-        SOURCE                      : String(20);
-        SOURCE_ID                   : String(20);
-        SEARCH_STRING               : String(1024);
-        SEARCH_STRING_CLEANSED      : String(1024);
-        ADR_CHECKSUM                : Binary(32);
-        ADR_STD_CHECKSUM            : Binary(32);
-        SEARCH_STRING_LT12          : String(1024);
-        SEARCH_STRING_CLEANSED_LT12 : String(1024);
-		SEARCH_STRING_CLEANSED_LT12_1 : String(1024);
+        SCV_ID                        : Integer;
+        SOURCE                        : String(20);
+        SOURCE_ID                     : String(20);
+        SEARCH_STRING                 : String(1024);
+        SEARCH_STRING_CLEANSED        : String(1024);
+        ADR_CHECKSUM                  : Binary(32);
+        ADR_STD_CHECKSUM              : Binary(32);
+        SEARCH_STRING_LT12            : String(1024);
+        SEARCH_STRING_CLEANSED_LT12   : String(1024);
+        SEARCH_STRING_CLEANSED_LT12_1 : String(1024);
         SEARCH_STRING_CLEANSED_LT12_2 : String(1024);
         SEARCH_STRING_CLEANSED_LT12_3 : String(1024);
         SEARCH_STRING_CLEANSED_LT12_4 : String(1024);
     }
     technical configuration {
-        fulltext index idx_fulltext               on (SEARCH_STRING)
+        fulltext index idx_fulltext                 on (SEARCH_STRING)
             token separators '|'
             text mining off
             search only on;
-        fulltext index idx_fulltext_cleansed      on (SEARCH_STRING_CLEANSED)
+        fulltext index idx_fulltext_cleansed        on (SEARCH_STRING_CLEANSED)
             token separators '|'
             text mining off
             search only on;
-        fulltext index idx_fulltext_lt12          on (SEARCH_STRING_LT12)
+        fulltext index idx_fulltext_lt12            on (SEARCH_STRING_LT12)
             token separators '|'
             text mining off
             search only on;
-        fulltext index idx_fulltext_cleansed_lt12 on (SEARCH_STRING_CLEANSED_LT12)
+        fulltext index idx_fulltext_cleansed_lt12   on (SEARCH_STRING_CLEANSED_LT12)
             token separators '|'
             text mining off
             search only on;
@@ -263,7 +263,7 @@ context SCVFoundation {
         fulltext index idx_fulltext_cleansed_lt12_4 on (SEARCH_STRING_CLEANSED_LT12_4)
             token separators '|'
             text mining off
-            search only on;            
+            search only on;
     };
 
     /*@@layout{"layoutInfo":{}}*/
