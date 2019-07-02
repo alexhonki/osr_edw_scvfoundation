@@ -1249,105 +1249,97 @@ lt_address_entities_date_tmr =
 		b.UPDATED_TO AS UPDATED_TO
 		FROM (
 			SELECT 
-			tmr."CUSTOMER_REF", "FLOOR", UNIT, BUILDING_NAME, STREET_NO, STREET_NAME, STREET_TYPE, STREET_SUFFIX, SUBURB, POSTCODE, STATE, COUNTRY,
-    		STD_ADDR_COUNTRY_2CHAR, STD_ADDR_COUNTRY_NAME, STD_ADDR_BUILDING_NAME, STD_ADDR_ADDRESS_DELIVERY, STD_ADDR_PRIM_ADDRESS, STD_ADDR_PRIM_NAME_FULL,
-    		STD_ADDR_PRIM_NAME, STD_ADDR_PRIM_TYPE, STD_ADDR_PRIM_NUMBER, STD_ADDR_LOCALITY, STD_ADDR_REGION, STD_ADDR_POSTCODE1,
-			MAX ("Z_RUN_SEQ_ID") AS "Z_RUN_SEQ_ID",MAX (LAST_CONTACT_UPDATE_DT) AS UPDATE_AT2, LAST_VALUE(ADDR_LATITUDE ORDER BY "Z_RUN_SEQ_ID") AS ADDR_LATITUDE2, LAST_VALUE(ADDR_LONGITUDE ORDER BY "Z_RUN_SEQ_ID") AS ADDR_LONGITUDE2,
-			MIN(TO_DATE("VALID_FROM"))	as UPDATED_FROM,
-			MAX(TO_DATE("VALID_TO")) 	as UPDATED_TO
-			FROM "osr.scv.foundation.db.synonyms::TMR_CustMain" as tmr
-			INNER JOIN (
-				-- Calculates the Valid To and From based on the source
-									select 
-									a.CUSTOMER_REF,
-									a.NAME,
-									COALESCE (b.VALID_FROM, a.VALID_FROM) as VALID_FROM,
-									CASE
-									WHEN todate."VALID_FROM" IS NULL
-									THEN TO_DATE('9999-12-31', 'YYYY-MM-DD')
-									ELSE ADD_DAYS (todate."VALID_FROM", -1)
-									END as "VALID_TO",
-									a.ROW_NUM
-									from (
-											select 
-											a.CUSTOMER_REF,
-											a.NAME,
-											COALESCE(b.VALID_FROM, ADD_DAYS(todate."VALID_TO", +1)) as VALID_FROM,
-											CASE
-											WHEN a."NAME" is not null and a."NAME"=
-													(	SELECT MAX("NAME")
-														FROM "osr.scv.foundation.db.source.synonyms::TMR_CustMain"
-													)
-											THEN '9999-12-31'
-											ELSE a.VALID_TO
-											END  AS "VALID_TO",
-											a.ROW_NUM
-											from (
-													select distinct
+				tmr."CUSTOMER_REF", "FLOOR", UNIT, BUILDING_NAME, STREET_NO, STREET_NAME, STREET_TYPE, STREET_SUFFIX, SUBURB, POSTCODE, STATE, COUNTRY,
+	    		STD_ADDR_COUNTRY_2CHAR, STD_ADDR_COUNTRY_NAME, STD_ADDR_BUILDING_NAME, STD_ADDR_ADDRESS_DELIVERY, STD_ADDR_PRIM_ADDRESS, STD_ADDR_PRIM_NAME_FULL,
+	    		STD_ADDR_PRIM_NAME, STD_ADDR_PRIM_TYPE, STD_ADDR_PRIM_NUMBER, STD_ADDR_LOCALITY, STD_ADDR_REGION, STD_ADDR_POSTCODE1,
+				MAX ("Z_RUN_SEQ_ID") AS "Z_RUN_SEQ_ID",MAX (LAST_CONTACT_UPDATE_DT) AS UPDATE_AT2, LAST_VALUE(ADDR_LATITUDE ORDER BY "Z_RUN_SEQ_ID") AS ADDR_LATITUDE2, LAST_VALUE(ADDR_LONGITUDE ORDER BY "Z_RUN_SEQ_ID") AS ADDR_LONGITUDE2,
+				MIN(TO_DATE("VALID_FROM"))	as UPDATED_FROM,
+				MAX(TO_DATE("VALID_TO")) 	as UPDATED_TO
+				FROM "osr.scv.foundation.db.synonyms::TMR_CustMain" as tmr
+				INNER JOIN (
+					-- Calcualtes the Valid To and From based on the source
+							select 
+							a.CUSTOMER_REF,
+							a.NAME,
+							COALESCE(b.VALID_FROM, ADD_DAYS(todate."VALID_TO", +1)) as VALID_FROM,
+							CASE
+							WHEN a."NAME" is not null and a."NAME"=
+									(	SELECT MAX("NAME")
+										FROM "osr.scv.foundation.db.source.synonyms::TMR_CustMain"
+									)
+							THEN '9999-12-31'
+							ELSE a.VALID_TO
+							END  AS "VALID_TO",
+							a.ROW_NUM
+							from (
+									select distinct
+							CUSTOMER_REF,
+							"NAME",
+							TO_DATE as "VALID_TO",
+							ROW_NUMBER() OVER (PARTITION BY "CUSTOMER_REF" ORDER BY "NAME" ASC) AS "ROW_NUM"
+							from "osr.scv.foundation.db.synonyms::TMR_CustMain" as tmr
+							    INNER JOIN "osr.scv.foundation.db.views.Metadata::CV_Metadata_TMR" as dim
+							    ON tmr.NAME =dim.META_FILE_NAME
+							group by CUSTOMER_REF,"NAME", TO_DATE
+							order by CUSTOMER_REF, "NAME"
+							)as a
+							LEFT OUTER JOIN (select distinct
 											CUSTOMER_REF,
-											"NAME",
-											TO_DATE as "VALID_TO",
-											ROW_NUMBER() OVER (PARTITION BY "CUSTOMER_REF" ORDER BY "NAME" ASC) AS "ROW_NUM"
-											from "osr.scv.foundation.db.synonyms::TMR_CustMain" as tmr
-											    INNER JOIN "osr.scv.foundation.db.views.Metadata::CV_Metadata_TMR" as dim
-											    ON tmr.NAME =dim.META_FILE_NAME
-											group by CUSTOMER_REF,"NAME", TO_DATE
-											order by CUSTOMER_REF, "NAME"
-											)as a
-											LEFT OUTER JOIN (select distinct
-															CUSTOMER_REF,
-															MIN(FROM_DATE) as "VALID_FROM"
-															from "osr.scv.foundation.db.source.synonyms::TMR_CustMain" as tmr
-													        INNER JOIN "osr.scv.foundation.db.views.Metadata::CV_Metadata_TMR" as dim
-														    ON tmr.NAME =dim.META_FILE_NAME
-															group by "CUSTOMER_REF") b
-											on a.ROW_NUM = 1 and a.CUSTOMER_REF=b.CUSTOMER_REF
-											LEFT OUTER JOIN(select distinct
-											    		   CUSTOMER_REF,
-											               "NAME",
-											               TO_DATE as "VALID_TO",
-											               ROW_NUMBER() OVER (PARTITION BY "CUSTOMER_REF" ORDER BY "NAME" ASC) AS "ROW_NUM"
-													      from "osr.scv.foundation.db.synonyms::TMR_CustMain" as tmr
-													      INNER JOIN "osr.scv.foundation.db.views.Metadata::CV_Metadata_TMR" as dim
-														  ON tmr.NAME =dim.META_FILE_NAME
-													      group by CUSTOMER_REF,"NAME",TO_DATE
-													      order by CUSTOMER_REF,"NAME") todate
-											ON a.row_num = (todate.row_num) +1 and a.CUSTOMER_REF = todate.CUSTOMER_REF
-			) as dim
-			ON tmr."NAME" =dim."NAME" 
-			AND tmr.customer_ref = dim.customer_ref
-			GROUP BY tmr."CUSTOMER_REF", "FLOOR", UNIT, BUILDING_NAME, STREET_NO, STREET_NAME, STREET_TYPE, STREET_SUFFIX, SUBURB, POSTCODE, STATE, COUNTRY,
-				    STD_ADDR_COUNTRY_2CHAR, STD_ADDR_COUNTRY_NAME, STD_ADDR_BUILDING_NAME, STD_ADDR_ADDRESS_DELIVERY, STD_ADDR_PRIM_ADDRESS, STD_ADDR_PRIM_NAME_FULL,
-				    STD_ADDR_PRIM_NAME, STD_ADDR_PRIM_TYPE, STD_ADDR_PRIM_NUMBER, STD_ADDR_LOCALITY, STD_ADDR_REGION, STD_ADDR_POSTCODE1
-		)b 
-		INNER JOIN "osr.scv.foundation.db.data::SCVFoundation.AddressTmr" f
-		ON 
-		b."CUSTOMER_REF" = f."SOURCE_ID" AND
-		b."FLOOR" = f."FLOOR"  AND 
-		b.UNIT = f."UNIT"  AND  
-		b.BUILDING_NAME = f."BUILDING_NAME"  AND  
-		b.STREET_NO = f."STREET_NO"  AND  
-		b.STREET_NAME = f."STREET_NAME"  AND  
-		b.STREET_TYPE = f."STREET_TYPE"  AND  
-		b.STREET_SUFFIX = f."STREET_SUFFIX"  AND 
-		b.SUBURB = f."SUBURB"  AND 
-		b.POSTCODE = f."POSTCODE"  AND 
-		b.STATE = f."STATE"  AND  
-		b.COUNTRY = f."COUNTRY"  AND 
-		b.STD_ADDR_COUNTRY_2CHAR = f."STD_ADDR_COUNTRY_2CHAR"  AND  
-		b.STD_ADDR_COUNTRY_NAME = f."STD_ADDR_COUNTRY_NAME"  AND  
-		b.STD_ADDR_BUILDING_NAME = f."STD_ADDR_BUILDING_NAME"  AND 
-		b.STD_ADDR_ADDRESS_DELIVERY = f."STD_ADDR_ADDRESS_DELIVERY"  AND 
-		b.STD_ADDR_PRIM_ADDRESS = f."STD_ADDR_PRIM_ADDRESS"  AND 
-		b.STD_ADDR_PRIM_NAME_FULL = f."STD_ADDR_PRIM_NAME_FULL"  AND 
-		b.STD_ADDR_PRIM_NAME = f."STD_ADDR_PRIM_NAME"  AND 
-		b.STD_ADDR_PRIM_TYPE = f."STD_ADDR_PRIM_TYPE"  AND 
-		b.STD_ADDR_PRIM_NUMBER = f."STD_ADDR_PRIM_NUMBER"  AND 
-		b.STD_ADDR_LOCALITY = f."STD_ADDR_LOCALITY"  AND 
-		b.STD_ADDR_REGION = f."STD_ADDR_REGION"  AND 
-		b.STD_ADDR_POSTCODE1 = f."STD_ADDR_POSTCODE1" 
-		;
+											MIN(FROM_DATE) as "VALID_FROM"
+											from "osr.scv.foundation.db.source.synonyms::TMR_CustMain" as tmr
+									        INNER JOIN "osr.scv.foundation.db.views.Metadata::CV_Metadata_TMR" as dim
+										    ON tmr.NAME =dim.META_FILE_NAME
+											group by "CUSTOMER_REF") b
+							on a.ROW_NUM = 1 and a.CUSTOMER_REF=b.CUSTOMER_REF
+							LEFT OUTER JOIN(select distinct
+							    		   CUSTOMER_REF,
+							               "NAME",
+							               TO_DATE as "VALID_TO",
+							               ROW_NUMBER() OVER (PARTITION BY "CUSTOMER_REF" ORDER BY "NAME" ASC) AS "ROW_NUM"
+									      from "osr.scv.foundation.db.synonyms::TMR_CustMain" as tmr
+									      INNER JOIN "osr.scv.foundation.db.views.Metadata::CV_Metadata_TMR" as dim
+										  ON tmr.NAME =dim.META_FILE_NAME
+									      group by CUSTOMER_REF,"NAME",TO_DATE
+									      order by CUSTOMER_REF,"NAME") todate
+							ON a.row_num = (todate.row_num) +1 and a.CUSTOMER_REF = todate.CUSTOMER_REF
+				) as dim
+				ON tmr."NAME" =dim."NAME" 
+				AND tmr.customer_ref = dim.customer_ref
+				where tmr.customer_ref = '100551529'
+				GROUP BY tmr."CUSTOMER_REF", "FLOOR", UNIT, BUILDING_NAME, STREET_NO, STREET_NAME, STREET_TYPE, STREET_SUFFIX, SUBURB, POSTCODE, STATE, COUNTRY,
+					    STD_ADDR_COUNTRY_2CHAR, STD_ADDR_COUNTRY_NAME, STD_ADDR_BUILDING_NAME, STD_ADDR_ADDRESS_DELIVERY, STD_ADDR_PRIM_ADDRESS, STD_ADDR_PRIM_NAME_FULL,
+					    STD_ADDR_PRIM_NAME, STD_ADDR_PRIM_TYPE, STD_ADDR_PRIM_NUMBER, STD_ADDR_LOCALITY, STD_ADDR_REGION, STD_ADDR_POSTCODE1
 	
+				
+			)b 
+		--	WHERE CUSTOMER_REF = '62183274' --and DATE_OF_BIRTH != '1900-01-01'
+			INNER JOIN "osr.scv.foundation.db.data::SCVFoundation.AddressTmr" f
+			ON 
+			b."CUSTOMER_REF" = f."SOURCE_ID" AND
+			b."FLOOR" = f."FLOOR"  AND 
+			b.UNIT = f."UNIT"  AND  
+			b.BUILDING_NAME = f."BUILDING_NAME"  AND  
+			b.STREET_NO = f."STREET_NO"  AND  
+			b.STREET_NAME = f."STREET_NAME"  AND  
+			b.STREET_TYPE = f."STREET_TYPE"  AND  
+			b.STREET_SUFFIX = f."STREET_SUFFIX"  AND 
+			b.SUBURB = f."SUBURB"  AND 
+			b.POSTCODE = f."POSTCODE"  AND 
+			b.STATE = f."STATE"  AND  
+			b.COUNTRY = f."COUNTRY"  AND 
+			b.STD_ADDR_COUNTRY_2CHAR = f."STD_ADDR_COUNTRY_2CHAR"  AND  
+			b.STD_ADDR_COUNTRY_NAME = f."STD_ADDR_COUNTRY_NAME"  AND  
+			b.STD_ADDR_BUILDING_NAME = f."STD_ADDR_BUILDING_NAME"  AND 
+			b.STD_ADDR_ADDRESS_DELIVERY = f."STD_ADDR_ADDRESS_DELIVERY"  AND 
+			b.STD_ADDR_PRIM_ADDRESS = f."STD_ADDR_PRIM_ADDRESS"  AND 
+			b.STD_ADDR_PRIM_NAME_FULL = f."STD_ADDR_PRIM_NAME_FULL"  AND 
+			b.STD_ADDR_PRIM_NAME = f."STD_ADDR_PRIM_NAME"  AND 
+			b.STD_ADDR_PRIM_TYPE = f."STD_ADDR_PRIM_TYPE"  AND 
+			b.STD_ADDR_PRIM_NUMBER = f."STD_ADDR_PRIM_NUMBER"  AND 
+			b.STD_ADDR_LOCALITY = f."STD_ADDR_LOCALITY"  AND 
+			b.STD_ADDR_REGION = f."STD_ADDR_REGION"  AND 
+			b.STD_ADDR_POSTCODE1 = f."STD_ADDR_POSTCODE1" 
+			;
 	
 	
 
