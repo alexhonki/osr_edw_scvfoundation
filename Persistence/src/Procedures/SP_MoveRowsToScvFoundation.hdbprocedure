@@ -582,7 +582,7 @@ BEGIN
 INSERT INTO "osr.scv.foundation.db.data::SCVFoundation.PersonTmr" (SELECT SCV_ID, SOURCE_SYSTEM, SYSTEM_ID, UPDATED_FROM, UPDATED_TO ,Z_RUN_SEQ_ID, UPDATED_AT, SCV_NAME_LAST, SCV_NAME_MIDDLE, SCV_NAME_FIRST, BIRTH_DATE, DEATH_DATE, CHECKSUM, STD_PERSON_GN, STD_PERSON_GN2, STD_PERSON_FN, STD_CHECKSUM, :l_load_id FROM :lt_person_entities_tmr
 	GROUP BY Z_RUN_SEQ_ID, SCV_ID, SOURCE_SYSTEM, SYSTEM_ID, UPDATED_FROM ,UPDATED_TO ,UPDATED_AT, SCV_NAME_LAST, SCV_NAME_MIDDLE, SCV_NAME_FIRST, BIRTH_DATE, DEATH_DATE, CHECKSUM, STD_PERSON_GN, STD_PERSON_GN2, STD_PERSON_FN, STD_CHECKSUM);						 
 
-
+COMMIT; 
 	
 /*
 Calculate the correct Valid To and From dates and update the SCV foudation with the correct values.
@@ -1364,7 +1364,7 @@ lt_address_entities_date_tmr =
 							 
 
 	-- ### SCV contact ##############################################################################################################
-	
+/*	
 	lt_contact_entities_rms_number = 
 								SELECT SCV_ID, CONTACT_ID,
 									   ENTITY_ID, SOURCE_SYSTEM, SYSTEM_ID, VALID_FROM, VALID_TO,
@@ -1436,8 +1436,11 @@ lt_address_entities_date_tmr =
 																		   FROM :lt_contact_entities_rms_number
 																		   GROUP BY SCV_ID, SOURCE_SYSTEM, SYSTEM_ID, VALID_FROM, VALID_TO, CONTACT_ID, CONTACT_NUMBER, NUMBER_EXT, NUMBER_TYPE, CHECKSUM
 																		   );						 
-	
+*/	
+	-- ### SCV Tmr Phone ##############################################################################################################
 
+
+/*	
 	lt_contact_entities_tmr_custMain_number = 
 							SELECT 
 								MAX(CONTACT_ID) as CONTACT_ID, 
@@ -1505,8 +1508,125 @@ lt_address_entities_date_tmr =
 								NUMBER_TYPE,
 							    CHECKSUM
 						 ;
+*/	
+
+--DELETE FROM "osr.scv.foundation.db.data::SCVFoundation.ContactNumber" where source = 'TMR'; 
+
+	UPSERT "osr.scv.foundation.db.data::SCVFoundation.ContactNumber"
+(
+	"SCV_ID",
+	"SOURCE",
+	"SOURCE_ID",
+	"VALID_FROM",
+	"VALID_TO",
+	"CONTACT_ID",
+	"CONTACT_NUMBER",
+	"NUMBER_EXT",
+	"NUMBER_TYPE",
+	"NUMBER_DESC",
+	"CHECKSUM",
+	"LAST_UPDATED",
+	"SCV_LOAD_ID"
+)
+
+	SELECT 
+		"SCV_ID",
+		"SOURCE",
+		"SOURCE_ID",
+		"VALID_FROM",
+		"VALID_TO",
+		"CONTACT_ID",
+		"CONTACT_NUMBER",
+		"NUMBER_EXT",
+		"NUMBER_TYPE",
+		"NUMBER_DESC",
+		"CHECKSUM",
+		"LAST_UPDATED",
+		"SCV_LOAD_ID"
+		FROM (
+	
+							SELECT 
+								"SCV_ID"																									as "SCV_ID",
+								"SOURCE"																									as "SOURCE", 
+							    "SOURCE_ID" 																								as "SOURCE_ID",
+								MIN(TO_DATE(dim."VALID_FROM"))																				as "VALID_FROM",
+								MAX(TO_DATE(dim."VALID_TO")) 																				as "VALID_TO",	
+								MAX(Z_RUN_SEQ_ID||'|'||'PHO')																				as "CONTACT_ID", 
+								"CONTACT_PHONE_NO"																							as "CONTACT_NUMBER", 
+								''																											as "NUMBER_EXT",
+							    'PHO'																										as "NUMBER_TYPE", 
+							    'Tmr CustMain Pho'																							as "NUMBER_DESC",
+							    HASH_SHA256(TO_BINARY(TO_VARCHAR(MAX(CONTACT_PHONE_EFFECT_DT))), TO_BINARY(TO_VARCHAR(CONTACT_PHONE_NO)))	as "CHECKSUM",
+							    MAX(CONTACT_PHONE_EFFECT_DT)																				as "LAST_UPDATED",
+								:l_load_id																									as "SCV_LOAD_ID"
+							    FROM "osr.scv.foundation.db.data::SCVFoundation.PersonTmr"as ptmr
+								INNER JOIN "osr.scv.foundation.db.synonyms::TMR_CustMain" as cm
+								ON ptmr.SOURCE_ID = cm.CUSTOMER_REF
+								INNER JOIN (
+											select 
+											a.CUSTOMER_REF,
+											a.NAME,
+											COALESCE (b.VALID_FROM, a.VALID_FROM) as VALID_FROM,
+											CASE
+											WHEN todate."VALID_FROM" IS NULL
+											THEN TO_DATE('9999-12-31', 'YYYY-MM-DD')
+											ELSE ADD_DAYS (todate."VALID_FROM", -1)
+											END as "VALID_TO",
+											a.ROW_NUM
+											from (
+													select distinct
+													CUSTOMER_REF,
+													"NAME",
+													FROM_DATE as "VALID_FROM",
+													ROW_NUMBER() OVER (PARTITION BY "CUSTOMER_REF" ORDER BY "NAME" ASC) AS "ROW_NUM"
+													from "osr.scv.foundation.db.synonyms::TMR_CustMain" as tmr
+													    INNER JOIN "osr.scv.foundation.db.views.Metadata::CV_Metadata_TMR" as dim
+													    ON tmr.NAME =dim.META_FILE_NAME
+							--			where customer_ref = '100009130' and LENGTH (CONTACT_PHONE_NO) >= 8					    
+													group by CUSTOMER_REF,"NAME", FROM_DATE
+													order by CUSTOMER_REF, "NAME"
+													)as a
+														LEFT OUTER JOIN (select distinct
+																		CUSTOMER_REF,
+																		MIN(FROM_DATE) as "VALID_FROM"
+																		from "osr.scv.foundation.db.source.synonyms::TMR_CustMain" as tmr
+																        INNER JOIN "osr.scv.foundation.db.views.Metadata::CV_Metadata_TMR" as dim
+																	    ON tmr.NAME =dim.META_FILE_NAME
+							--			where customer_ref = '100009130' and LENGTH (CONTACT_PHONE_NO) >= 8							    
+																		group by "CUSTOMER_REF") b
+														on a.ROW_NUM = 1 and a.CUSTOMER_REF=b.CUSTOMER_REF
+															LEFT OUTER JOIN(select distinct
+															    		   CUSTOMER_REF,
+															               "NAME",
+															               FROM_DATE as "VALID_FROM",
+															               ROW_NUMBER() OVER (PARTITION BY "CUSTOMER_REF" ORDER BY "NAME" ASC) AS "ROW_NUM"
+																	      from "osr.scv.foundation.db.synonyms::TMR_CustMain" as tmr
+																	      INNER JOIN "osr.scv.foundation.db.views.Metadata::CV_Metadata_TMR" as dim
+																		  ON tmr.NAME =dim.META_FILE_NAME
+							--			where customer_ref = '100009130' and LENGTH (CONTACT_PHONE_NO) >= 8		
+																	      group by CUSTOMER_REF,"NAME",FROM_DATE
+																	      order by CUSTOMER_REF,"NAME") todate
+															ON a.row_num = (todate.row_num) -1 and a.CUSTOMER_REF = todate.CUSTOMER_REF
+								) as dim
+								ON cm."NAME" =dim."NAME" 
+								AND ptmr.SOURCE_ID = dim.CUSTOMER_REF
+--								where SOURCE_ID ='100009130' and LENGTH (CONTACT_PHONE_NO) >= 8
+								where LENGTH (CONTACT_PHONE_NO) >= 8
+								GROUP BY 
+								"SCV_ID",
+								"SOURCE", 
+							    "SOURCE_ID", 
+								"CONTACT_PHONE_NO"
+		)	
+--		WHERE 
+--		"SCV_ID"  = "SCV_ID"				and 
+--		"SOURCE" = 'TMR'					and	
+--		"NUMBER_DESC" = 'Tmr CustMain Pho'	and
+--		"SOURCE_ID" = "SOURCE_ID"
+		;
 	
 	
+/*	
 	lt_contact_entities_tmr_custContact_number = 
 										SELECT CONTACT_ID, SCV_ID,
 										       ENTITY_ID, SOURCE_SYSTEM, SYSTEM_ID, UPDATED_AT, CONTACT_PHONE_NO, NUMBER_TYPE,
@@ -1537,8 +1657,121 @@ lt_address_entities_date_tmr =
 										         ENTITY_ID, SOURCE_SYSTEM, SYSTEM_ID, UPDATED_AT, CONTACT_PHONE_NO, NUMBER_TYPE,
 										         CHECKSUM
 										;
+*/
+	-- ### SCV Tmr Sms ##############################################################################################################
+UPSERT "osr.scv.foundation.db.data::SCVFoundation.ContactNumber"
+(
+	"SCV_ID",
+	"SOURCE",
+	"SOURCE_ID",
+	"VALID_FROM",
+	"VALID_TO",
+	"CONTACT_ID",
+	"CONTACT_NUMBER",
+	"NUMBER_EXT",
+	"NUMBER_TYPE",
+	"NUMBER_DESC",
+	"CHECKSUM",
+	"LAST_UPDATED",
+	"SCV_LOAD_ID"
+)
+
+	SELECT 
+		"SCV_ID",
+		"SOURCE",
+		"SOURCE_ID",
+		"VALID_FROM",
+		"VALID_TO",
+		"CONTACT_ID",
+		"CONTACT_NUMBER",
+		"NUMBER_EXT",
+		"NUMBER_TYPE",
+		"NUMBER_DESC",
+		"CHECKSUM",
+		"LAST_UPDATED",
+		"SCV_LOAD_ID"
+		FROM (
 	
-	
+							SELECT 
+								"SCV_ID"																									as "SCV_ID",
+								"SOURCE"																									as "SOURCE", 
+							    "SOURCE_ID" 																								as "SOURCE_ID",
+								MIN(TO_DATE(dim."VALID_FROM"))																				as "VALID_FROM",
+								MAX(TO_DATE(dim."VALID_TO")) 																				as "VALID_TO",	
+								MAX(Z_RUN_SEQ_ID||'|'||'SMS')																				as "CONTACT_ID", 
+								"SMS_CONTACT_NUMBER"																						as "CONTACT_NUMBER", 
+								''																											as "NUMBER_EXT",
+							    'SMS'																										as "NUMBER_TYPE", 
+							    'Tmr CustContact SMS'																						as "NUMBER_DESC",
+							    HASH_SHA256(TO_BINARY(TO_VARCHAR(MAX(LAST_UPDATED))), TO_BINARY(TO_VARCHAR(SMS_CONTACT_NUMBER)))			as "CHECKSUM"		,
+							    MAX("LAST_UPDATED")																							as "LAST_UPDATED",
+							    :l_load_id																									as "SCV_LOAD_ID"
+							    FROM "osr.scv.foundation.db.data::SCVFoundation.PersonTmr"as ptmr
+								INNER JOIN "osr.scv.foundation.db.synonyms::TMR_CustContact" as cm
+								ON ptmr.SOURCE_ID = cm.CUSTOMER_REF
+								INNER JOIN (
+											select 
+											a.CUSTOMER_REF,
+											a.NAME,
+											COALESCE (b.VALID_FROM, a.VALID_FROM) as VALID_FROM,
+											CASE
+											WHEN todate."VALID_FROM" IS NULL
+											THEN TO_DATE('9999-12-31', 'YYYY-MM-DD')
+											ELSE ADD_DAYS (todate."VALID_FROM", -1)
+											END as "VALID_TO",
+											a.ROW_NUM
+											from (
+													select distinct
+													CUSTOMER_REF,
+													"NAME",
+													FROM_DATE as "VALID_FROM",
+													ROW_NUMBER() OVER (PARTITION BY "CUSTOMER_REF" ORDER BY "NAME" ASC) AS "ROW_NUM"
+													from "osr.scv.foundation.db.synonyms::TMR_CustContact" as tmr
+													    INNER JOIN "osr.scv.foundation.db.views.Metadata::CV_Metadata_TMR" as dim
+													    ON tmr.NAME =dim.META_FILE_NAME
+--										where customer_ref = '100009130' and LENGTH (SMS_CONTACT_NUMBER) >= 8					    
+													group by CUSTOMER_REF,"NAME", FROM_DATE
+													order by CUSTOMER_REF, "NAME"
+													)as a
+														LEFT OUTER JOIN (select distinct
+																		CUSTOMER_REF,
+																		MIN(FROM_DATE) as "VALID_FROM"
+																		from "osr.scv.foundation.db.source.synonyms::TMR_CustContact" as tmr
+																        INNER JOIN "osr.scv.foundation.db.views.Metadata::CV_Metadata_TMR" as dim
+																	    ON tmr.NAME =dim.META_FILE_NAME
+--										where customer_ref = '100009130' and LENGTH (SMS_CONTACT_NUMBER) >= 8							    
+																		group by "CUSTOMER_REF") b
+														on a.ROW_NUM = 1 and a.CUSTOMER_REF=b.CUSTOMER_REF
+															LEFT OUTER JOIN(select distinct
+															    		   CUSTOMER_REF,
+															               "NAME",
+															               FROM_DATE as "VALID_FROM",
+															               ROW_NUMBER() OVER (PARTITION BY "CUSTOMER_REF" ORDER BY "NAME" ASC) AS "ROW_NUM"
+																	      from "osr.scv.foundation.db.synonyms::TMR_CustContact" as tmr
+																	      INNER JOIN "osr.scv.foundation.db.views.Metadata::CV_Metadata_TMR" as dim
+																		  ON tmr.NAME =dim.META_FILE_NAME
+--										where customer_ref = '100009130' and LENGTH (SMS_CONTACT_NUMBER) >= 8		
+																	      group by CUSTOMER_REF,"NAME",FROM_DATE
+																	      order by CUSTOMER_REF,"NAME") todate
+															ON a.row_num = (todate.row_num) -1 and a.CUSTOMER_REF = todate.CUSTOMER_REF
+								) as dim
+								ON cm."NAME" =dim."NAME" 
+								AND ptmr.SOURCE_ID = dim.CUSTOMER_REF
+--								where SOURCE_ID ='100009130' and LENGTH (SMS_CONTACT_NUMBER) >= 8
+								where LENGTH (SMS_CONTACT_NUMBER) >= 8
+								GROUP BY 
+								"SCV_ID",
+								"SOURCE", 
+							    "SOURCE_ID", 
+								"SMS_CONTACT_NUMBER"
+		)	
+--		WHERE 
+--		"SCV_ID"  = "SCV_ID"					and 
+--		"SOURCE" = 'TMR'						and	
+--		"NUMBER_DESC" = 'Tmr CustContact SMS'	and
+--		"SOURCE_ID" = "SOURCE_ID"
+		;
+/*	
 	INSERT INTO "osr.scv.foundation.db.data::SCVFoundation.ContactNumber" (
 																			SELECT SCV_ID, SOURCE_SYSTEM, SYSTEM_ID, '', '',CONTACT_ID, CONTACT_PHONE_NO, '', NUMBER_TYPE, DESC, CHECKSUM, UPDATED_AT, :l_load_id 
 																			FROM (
@@ -1551,7 +1784,126 @@ lt_address_entities_date_tmr =
 																			GROUP BY CONTACT_ID, SCV_ID, SOURCE_SYSTEM, SYSTEM_ID, '','', CONTACT_PHONE_NO, '', NUMBER_TYPE, DESC, CHECKSUM, UPDATED_AT
 																		   )
 	;							 
+*/	
+	-- ### SCV Tmr Email ##############################################################################################################
+--DELETE FROM "osr.scv.foundation.db.data::SCVFoundation.ContactEmail" where source = 'TMR'; 	
 	
+UPSERT "osr.scv.foundation.db.data::SCVFoundation.ContactEmail" 
+(
+	"SCV_ID",
+	"SOURCE",
+	"SOURCE_ID",
+	"VALID_FROM",
+	"VALID_TO",
+	"CONTACT_EMAIL_ID",
+	"CONTACT_EMAIL",
+	"EMAIL_TYPE",
+	"EMAIL_DESC",
+	"CHECKSUM",
+	"STD_EMAIL",
+	"STD_CHECKSUM",
+	"LAST_UPDATED",
+	"SCV_LOAD_ID"
+)
+
+	SELECT 
+		"SCV_ID",
+		"SOURCE",
+		"SOURCE_ID",
+		"VALID_FROM",
+		"VALID_TO",
+		"CONTACT_EMAIL_ID",
+		"CONTACT_EMAIL",
+		"EMAIL_TYPE",
+		"EMAIL_DESC",
+		"CHECKSUM",
+		"STD_EMAIL",
+		"STD_CHECKSUM",
+		"LAST_UPDATED",
+		"SCV_LOAD_ID"
+		FROM (
+							SELECT 
+								"SCV_ID"																									as "SCV_ID",
+								"SOURCE"																									as "SOURCE", 
+							    "SOURCE_ID" 																								as "SOURCE_ID",
+								MIN(TO_DATE(dim."VALID_FROM"))																				as "VALID_FROM",
+								MAX(TO_DATE(dim."VALID_TO")) 																				as "VALID_TO",	
+								MAX(Z_RUN_SEQ_ID||'|'||'EMAIL')																				as "CONTACT_EMAIL_ID", 
+								"EMAIL_ADDRESS"																								as "CONTACT_EMAIL", 
+							    'Email'																										as "EMAIL_TYPE", 
+							    'Tmr CustContact Email'																						as "EMAIL_DESC",
+							    HASH_SHA256(TO_BINARY(TO_VARCHAR(MAX(LAST_UPDATED))), TO_BINARY(TO_VARCHAR(EMAIL_ADDRESS)))					as "CHECKSUM"		,
+							    "STD_EMAIL"																									as "STD_EMAIL",
+							    HASH_SHA256(TO_BINARY(TO_VARCHAR(MAX(LAST_UPDATED))), TO_BINARY(TO_VARCHAR(STD_EMAIL)))						as "STD_CHECKSUM"		,
+							    MAX(LAST_UPDATED)																							as "LAST_UPDATED",
+								:l_load_id																									as "SCV_LOAD_ID"
+							    FROM "osr.scv.foundation.db.data::SCVFoundation.PersonTmr"as ptmr
+								INNER JOIN "osr.scv.foundation.db.synonyms::TMR_CustContact" as cm
+								ON ptmr.SOURCE_ID = cm.CUSTOMER_REF
+								INNER JOIN (
+											select 
+											a.CUSTOMER_REF,
+											a.NAME,
+											COALESCE (b.VALID_FROM, a.VALID_FROM) as VALID_FROM,
+											CASE
+											WHEN todate."VALID_FROM" IS NULL
+											THEN TO_DATE('9999-12-31', 'YYYY-MM-DD')
+											ELSE ADD_DAYS (todate."VALID_FROM", -1)
+											END as "VALID_TO",
+											a.ROW_NUM
+											from (
+													select distinct
+													CUSTOMER_REF,
+													"NAME",
+													FROM_DATE as "VALID_FROM",
+													ROW_NUMBER() OVER (PARTITION BY "CUSTOMER_REF" ORDER BY "NAME" ASC) AS "ROW_NUM"
+													from "osr.scv.foundation.db.synonyms::TMR_CustContact" as tmr
+													    INNER JOIN "osr.scv.foundation.db.views.Metadata::CV_Metadata_TMR" as dim
+													    ON tmr.NAME =dim.META_FILE_NAME
+							--			where customer_ref = '68841801' and LENGTH (EMAIL_ADDRESS) > 5				    
+													group by CUSTOMER_REF,"NAME", FROM_DATE
+													order by CUSTOMER_REF, "NAME"
+													)as a
+														LEFT OUTER JOIN (select distinct
+																		CUSTOMER_REF,
+																		MIN(FROM_DATE) as "VALID_FROM"
+																		from "osr.scv.foundation.db.source.synonyms::TMR_CustContact" as tmr
+																        INNER JOIN "osr.scv.foundation.db.views.Metadata::CV_Metadata_TMR" as dim
+																	    ON tmr.NAME =dim.META_FILE_NAME
+							--			where customer_ref = '68841801' and LENGTH (EMAIL_ADDRESS) > 5							    
+																		group by "CUSTOMER_REF") b
+														on a.ROW_NUM = 1 and a.CUSTOMER_REF=b.CUSTOMER_REF
+															LEFT OUTER JOIN(select distinct
+															    		   CUSTOMER_REF,
+															               "NAME",
+															               FROM_DATE as "VALID_FROM",
+															               ROW_NUMBER() OVER (PARTITION BY "CUSTOMER_REF" ORDER BY "NAME" ASC) AS "ROW_NUM"
+																	      from "osr.scv.foundation.db.synonyms::TMR_CustContact" as tmr
+																	      INNER JOIN "osr.scv.foundation.db.views.Metadata::CV_Metadata_TMR" as dim
+																		  ON tmr.NAME =dim.META_FILE_NAME
+							--			where customer_ref = '68841801' and LENGTH (EMAIL_ADDRESS) > 5		
+																	      group by CUSTOMER_REF,"NAME",FROM_DATE
+																	      order by CUSTOMER_REF,"NAME") todate
+															ON a.row_num = (todate.row_num) -1 and a.CUSTOMER_REF = todate.CUSTOMER_REF
+								) as dim
+								ON cm."NAME" =dim."NAME" 
+								AND ptmr.SOURCE_ID = dim.CUSTOMER_REF
+--								where SOURCE_ID ='68841801' and LENGTH (EMAIL_ADDRESS) > 5
+								where LENGTH (EMAIL_ADDRESS) > 5
+								GROUP BY 
+								"SCV_ID",
+								"SOURCE", 
+							    "SOURCE_ID", 
+								"EMAIL_ADDRESS",
+								"STD_EMAIL"
+		)	
+--		WHERE 
+--		"SCV_ID"  = "SCV_ID"					and 
+--		"SOURCE" = 'TMR'						and	
+--		"EMAIL_DESC" = 'Tmr CustContact Email'	and
+--		"SOURCE_ID" = "SOURCE_ID"
+		;										
+/*
 	lt_contact_entities_tmr_custContact_email =
 										SELECT CONTACT_EMAIL_ID, SCV_ID, ENTITY_ID, SOURCE_SYSTEM, SYSTEM_ID, UPDATED_AT, EMAIL_ADDRESS, STD_EMAIL, CHECKSUM, STD_CHECKSUM
 										FROM (
@@ -1586,8 +1938,11 @@ lt_address_entities_date_tmr =
 																		  GROUP BY CONTACT_EMAIL_ID, SCV_ID, SOURCE_SYSTEM, SYSTEM_ID,'','', EMAIL_ADDRESS, '', 'TMR: Customer main table', CHECKSUM, STD_EMAIL, STD_CHECKSUM, UPDATED_AT
 																		 )
 	;
-	-- ### SCV RMS Email ##############################################################################################################	
 	
+*/	
+	-- ### SCV RMS Email ##############################################################################################################	
+--DELETE FROM "osr.scv.foundation.db.data::SCVFoundation.ContactEmail" where source = 'RMS'; 	
+
 	UPSERT "osr.scv.foundation.db.data::SCVFoundation.ContactEmail"
 	(
 		"SCV_ID",
@@ -1664,15 +2019,16 @@ lt_address_entities_date_tmr =
 						adr6.SMTP_ADDR, 
 						adr6.STD_EMAIL
 		)
-		WHERE 
-		"SCV_ID"  = "SCV_ID"	 and 
-		SOURCE = 'RMS'			 and	
-		EMAIL_DESC = 'RMS Email' and
-		SOURCE_ID = SOURCE_ID
+--		WHERE 
+--		"SCV_ID"  = "SCV_ID"	 and 
+--		SOURCE = 'RMS'			 and	
+--		EMAIL_DESC = 'RMS Email' and
+--		SOURCE_ID = SOURCE_ID
 				
 	;
 	
 	-- ### SCV RMS Phone ##############################################################################################################		
+--DELETE FROM "osr.scv.foundation.db.data::SCVFoundation.ContactNumber" where source = 'RMS'; 		
 	
 	UPSERT "osr.scv.foundation.db.data::SCVFoundation.ContactNumber"
 	(
@@ -1743,11 +2099,11 @@ lt_address_entities_date_tmr =
 				adr2.VALID_TO,
 				adr2.TEL_NUMBER 
 		)
-		WHERE 
-		"SCV_ID"  = "SCV_ID"			and 
-		SOURCE = 'RMS'					and
-		NUMBER_DESC = 'RMS Phone ADR2'	and
-		SOURCE_ID = SOURCE_ID
+--		WHERE 
+--		"SCV_ID"  = "SCV_ID"			and 
+--		SOURCE = 'RMS'					and
+--		NUMBER_DESC = 'RMS Phone ADR2'	and
+--		SOURCE_ID = SOURCE_ID
 	;
 
 
