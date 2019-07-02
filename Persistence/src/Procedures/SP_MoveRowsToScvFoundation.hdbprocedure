@@ -512,48 +512,51 @@ BEGIN
 											MAX (LAST_CONTACT_UPDATE_DT) AS UPDATE_AT2
 												FROM "osr.scv.foundation.db.synonyms::TMR_CustMain" as tmr
 												INNER JOIN (
-													-- Calcualtes the Valid To and From based on the source
+													-- Calculates the Valid To and From based on the source
 																		select 
 																		a.CUSTOMER_REF,
 																		a.NAME,
-																		COALESCE (b.VALID_FROM, a.VALID_FROM) as VALID_FROM,
+																		COALESCE(b.VALID_FROM, ADD_DAYS(todate."VALID_TO", +1)) as VALID_FROM,
 																		CASE
-																		WHEN todate."VALID_FROM" IS NULL
-																		THEN TO_DATE('9999-12-31', 'YYYY-MM-DD')
-																		ELSE ADD_DAYS (todate."VALID_FROM", -1)
-																		END as "VALID_TO",
+																		WHEN a."NAME" is not null and a."NAME"=
+																				(	SELECT MAX("NAME")
+																					FROM "osr.scv.foundation.db.source.synonyms::TMR_CustMain"
+																				)
+																		THEN '9999-12-31'
+																		ELSE a.VALID_TO
+																		END  AS "VALID_TO",
 																		a.ROW_NUM
 																		from (
 																				select distinct
-																				CUSTOMER_REF,
-																				"NAME",
-																				FROM_DATE as "VALID_FROM",
-																				ROW_NUMBER() OVER (PARTITION BY "CUSTOMER_REF" ORDER BY "NAME" ASC) AS "ROW_NUM"
-																				from "osr.scv.foundation.db.synonyms::TMR_CustMain" as tmr
-																				    INNER JOIN "osr.scv.foundation.db.views.Metadata::CV_Metadata_TMR" as dim
-																				    ON tmr.NAME =dim.META_FILE_NAME
-																				group by CUSTOMER_REF,"NAME", FROM_DATE
-																				order by CUSTOMER_REF, "NAME"
-																				)as a
-																					LEFT OUTER JOIN (select distinct
-																									CUSTOMER_REF,
-																									MIN(FROM_DATE) as "VALID_FROM"
-																									from "osr.scv.foundation.db.source.synonyms::TMR_CustMain" as tmr
-																							        INNER JOIN "osr.scv.foundation.db.views.Metadata::CV_Metadata_TMR" as dim
-																								    ON tmr.NAME =dim.META_FILE_NAME
-																									group by "CUSTOMER_REF") b
-																					on a.ROW_NUM = 1 and a.CUSTOMER_REF=b.CUSTOMER_REF
-																						LEFT OUTER JOIN(select distinct
-																						    		   CUSTOMER_REF,
-																						               "NAME",
-																						               FROM_DATE as "VALID_FROM",
-																						               ROW_NUMBER() OVER (PARTITION BY "CUSTOMER_REF" ORDER BY "NAME" ASC) AS "ROW_NUM"
-																								      from "osr.scv.foundation.db.synonyms::TMR_CustMain" as tmr
-																								      INNER JOIN "osr.scv.foundation.db.views.Metadata::CV_Metadata_TMR" as dim
-																									  ON tmr.NAME =dim.META_FILE_NAME
-																								      group by CUSTOMER_REF,"NAME",FROM_DATE
-																								      order by CUSTOMER_REF,"NAME") todate
-																						ON a.row_num = (todate.row_num) -1 and a.CUSTOMER_REF = todate.CUSTOMER_REF
+																		CUSTOMER_REF,
+																		"NAME",
+																		TO_DATE as "VALID_TO",
+																		ROW_NUMBER() OVER (PARTITION BY "CUSTOMER_REF" ORDER BY "NAME" ASC) AS "ROW_NUM"
+																		from "osr.scv.foundation.db.synonyms::TMR_CustMain" as tmr
+																		    INNER JOIN "osr.scv.foundation.db.views.Metadata::CV_Metadata_TMR" as dim
+																		    ON tmr.NAME =dim.META_FILE_NAME
+																		group by CUSTOMER_REF,"NAME", TO_DATE
+																		order by CUSTOMER_REF, "NAME"
+																		)as a
+																		LEFT OUTER JOIN (select distinct
+																						CUSTOMER_REF,
+																						MIN(FROM_DATE) as "VALID_FROM"
+																						from "osr.scv.foundation.db.source.synonyms::TMR_CustMain" as tmr
+																				        INNER JOIN "osr.scv.foundation.db.views.Metadata::CV_Metadata_TMR" as dim
+																					    ON tmr.NAME =dim.META_FILE_NAME
+																						group by "CUSTOMER_REF") b
+																		on a.ROW_NUM = 1 and a.CUSTOMER_REF=b.CUSTOMER_REF
+																		LEFT OUTER JOIN(select distinct
+																		    		   CUSTOMER_REF,
+																		               "NAME",
+																		               TO_DATE as "VALID_TO",
+																		               ROW_NUMBER() OVER (PARTITION BY "CUSTOMER_REF" ORDER BY "NAME" ASC) AS "ROW_NUM"
+																				      from "osr.scv.foundation.db.synonyms::TMR_CustMain" as tmr
+																				      INNER JOIN "osr.scv.foundation.db.views.Metadata::CV_Metadata_TMR" as dim
+																					  ON tmr.NAME =dim.META_FILE_NAME
+																				      group by CUSTOMER_REF,"NAME",TO_DATE
+																				      order by CUSTOMER_REF,"NAME") todate
+																		ON a.row_num = (todate.row_num) +1 and a.CUSTOMER_REF = todate.CUSTOMER_REF
 												) as dim
 												ON tmr."NAME" =dim."NAME" 
 												AND tmr.customer_ref = dim.customer_ref
@@ -664,48 +667,51 @@ lt_person_entities_date_tmr =
 							MAX (LAST_CONTACT_UPDATE_DT) AS UPDATE_AT2
 								FROM "osr.scv.foundation.db.synonyms::TMR_CustMain" as tmr
 								INNER JOIN (
-									-- Calcualtes the Valid To and From based on the source
-														select 
-														a.CUSTOMER_REF,
-														a.NAME,
-														COALESCE (b.VALID_FROM, a.VALID_FROM) as VALID_FROM,
-														CASE
-														WHEN todate."VALID_FROM" IS NULL
-														THEN TO_DATE('9999-12-31', 'YYYY-MM-DD')
-														ELSE ADD_DAYS (todate."VALID_FROM", -1)
-														END as "VALID_TO",
-														a.ROW_NUM
-														from (
-																select distinct
-																CUSTOMER_REF,
-																"NAME",
-																FROM_DATE as "VALID_FROM",
-																ROW_NUMBER() OVER (PARTITION BY "CUSTOMER_REF" ORDER BY "NAME" ASC) AS "ROW_NUM"
-																from "osr.scv.foundation.db.synonyms::TMR_CustMain" as tmr
-																    INNER JOIN "osr.scv.foundation.db.views.Metadata::CV_Metadata_TMR" as dim
-																    ON tmr.NAME =dim.META_FILE_NAME
-																group by CUSTOMER_REF,"NAME", FROM_DATE
-																order by CUSTOMER_REF, "NAME"
-																)as a
-																	LEFT OUTER JOIN (select distinct
-																					CUSTOMER_REF,
-																					MIN(FROM_DATE) as "VALID_FROM"
-																					from "osr.scv.foundation.db.source.synonyms::TMR_CustMain" as tmr
-																			        INNER JOIN "osr.scv.foundation.db.views.Metadata::CV_Metadata_TMR" as dim
-																				    ON tmr.NAME =dim.META_FILE_NAME
-																					group by "CUSTOMER_REF") b
-																	on a.ROW_NUM = 1 and a.CUSTOMER_REF=b.CUSTOMER_REF
-																		LEFT OUTER JOIN(select distinct
-																		    		   CUSTOMER_REF,
-																		               "NAME",
-																		               FROM_DATE as "VALID_FROM",
-																		               ROW_NUMBER() OVER (PARTITION BY "CUSTOMER_REF" ORDER BY "NAME" ASC) AS "ROW_NUM"
-																				      from "osr.scv.foundation.db.synonyms::TMR_CustMain" as tmr
-																				      INNER JOIN "osr.scv.foundation.db.views.Metadata::CV_Metadata_TMR" as dim
-																					  ON tmr.NAME =dim.META_FILE_NAME
-																				      group by CUSTOMER_REF,"NAME",FROM_DATE
-																				      order by CUSTOMER_REF,"NAME") todate
-																		ON a.row_num = (todate.row_num) -1 and a.CUSTOMER_REF = todate.CUSTOMER_REF
+									-- Calculates the Valid To and From based on the source
+											select 
+											a.CUSTOMER_REF,
+											a.NAME,
+											COALESCE(b.VALID_FROM, ADD_DAYS(todate."VALID_TO", +1)) as VALID_FROM,
+											CASE
+											WHEN a."NAME" is not null and a."NAME"=
+													(	SELECT MAX("NAME")
+														FROM "osr.scv.foundation.db.source.synonyms::TMR_CustMain"
+													)
+											THEN '9999-12-31'
+											ELSE a.VALID_TO
+											END  AS "VALID_TO",
+											a.ROW_NUM
+											from (
+													select distinct
+											CUSTOMER_REF,
+											"NAME",
+											TO_DATE as "VALID_TO",
+											ROW_NUMBER() OVER (PARTITION BY "CUSTOMER_REF" ORDER BY "NAME" ASC) AS "ROW_NUM"
+											from "osr.scv.foundation.db.synonyms::TMR_CustMain" as tmr
+											    INNER JOIN "osr.scv.foundation.db.views.Metadata::CV_Metadata_TMR" as dim
+											    ON tmr.NAME =dim.META_FILE_NAME
+											group by CUSTOMER_REF,"NAME", TO_DATE
+											order by CUSTOMER_REF, "NAME"
+											)as a
+											LEFT OUTER JOIN (select distinct
+															CUSTOMER_REF,
+															MIN(FROM_DATE) as "VALID_FROM"
+															from "osr.scv.foundation.db.source.synonyms::TMR_CustMain" as tmr
+													        INNER JOIN "osr.scv.foundation.db.views.Metadata::CV_Metadata_TMR" as dim
+														    ON tmr.NAME =dim.META_FILE_NAME
+															group by "CUSTOMER_REF") b
+											on a.ROW_NUM = 1 and a.CUSTOMER_REF=b.CUSTOMER_REF
+											LEFT OUTER JOIN(select distinct
+											    		   CUSTOMER_REF,
+											               "NAME",
+											               TO_DATE as "VALID_TO",
+											               ROW_NUMBER() OVER (PARTITION BY "CUSTOMER_REF" ORDER BY "NAME" ASC) AS "ROW_NUM"
+													      from "osr.scv.foundation.db.synonyms::TMR_CustMain" as tmr
+													      INNER JOIN "osr.scv.foundation.db.views.Metadata::CV_Metadata_TMR" as dim
+														  ON tmr.NAME =dim.META_FILE_NAME
+													      group by CUSTOMER_REF,"NAME",TO_DATE
+													      order by CUSTOMER_REF,"NAME") todate
+											ON a.row_num = (todate.row_num) +1 and a.CUSTOMER_REF = todate.CUSTOMER_REF
 								) as dim
 								ON tmr."NAME" =dim."NAME" 
 								AND tmr.customer_ref = dim.customer_ref
@@ -1060,48 +1066,51 @@ lt_person_entities_date_tmr =
 												MAX(TO_DATE("VALID_TO")) 	as UPDATED_TO
 												FROM "osr.scv.foundation.db.synonyms::TMR_CustMain" as tmr
 												INNER JOIN (
-													-- Calcualtes the Valid To and From based on the source
+													-- Calculates the Valid To and From based on the source
 																		select 
 																		a.CUSTOMER_REF,
 																		a.NAME,
-																		COALESCE (b.VALID_FROM, a.VALID_FROM) as VALID_FROM,
+																		COALESCE(b.VALID_FROM, ADD_DAYS(todate."VALID_TO", +1)) as VALID_FROM,
 																		CASE
-																		WHEN todate."VALID_FROM" IS NULL
-																		THEN TO_DATE('9999-12-31', 'YYYY-MM-DD')
-																		ELSE ADD_DAYS (todate."VALID_FROM", -1)
-																		END as "VALID_TO",
+																		WHEN a."NAME" is not null and a."NAME"=
+																				(	SELECT MAX("NAME")
+																					FROM "osr.scv.foundation.db.source.synonyms::TMR_CustMain"
+																				)
+																		THEN '9999-12-31'
+																		ELSE a.VALID_TO
+																		END  AS "VALID_TO",
 																		a.ROW_NUM
 																		from (
 																				select distinct
-																				CUSTOMER_REF,
-																				"NAME",
-																				FROM_DATE as "VALID_FROM",
-																				ROW_NUMBER() OVER (PARTITION BY "CUSTOMER_REF" ORDER BY "NAME" ASC) AS "ROW_NUM"
-																				from "osr.scv.foundation.db.synonyms::TMR_CustMain" as tmr
-																				    INNER JOIN "osr.scv.foundation.db.views.Metadata::CV_Metadata_TMR" as dim
-																				    ON tmr.NAME =dim.META_FILE_NAME
-																				group by CUSTOMER_REF,"NAME", FROM_DATE
-																				order by CUSTOMER_REF, "NAME"
-																				)as a
-																					LEFT OUTER JOIN (select distinct
-																									CUSTOMER_REF,
-																									MIN(FROM_DATE) as "VALID_FROM"
-																									from "osr.scv.foundation.db.source.synonyms::TMR_CustMain" as tmr
-																							        INNER JOIN "osr.scv.foundation.db.views.Metadata::CV_Metadata_TMR" as dim
-																								    ON tmr.NAME =dim.META_FILE_NAME
-																									group by "CUSTOMER_REF") b
-																					on a.ROW_NUM = 1 and a.CUSTOMER_REF=b.CUSTOMER_REF
-																						LEFT OUTER JOIN(select distinct
-																						    		   CUSTOMER_REF,
-																						               "NAME",
-																						               FROM_DATE as "VALID_FROM",
-																						               ROW_NUMBER() OVER (PARTITION BY "CUSTOMER_REF" ORDER BY "NAME" ASC) AS "ROW_NUM"
-																								      from "osr.scv.foundation.db.synonyms::TMR_CustMain" as tmr
-																								      INNER JOIN "osr.scv.foundation.db.views.Metadata::CV_Metadata_TMR" as dim
-																									  ON tmr.NAME =dim.META_FILE_NAME
-																								      group by CUSTOMER_REF,"NAME",FROM_DATE
-																								      order by CUSTOMER_REF,"NAME") todate
-																						ON a.row_num = (todate.row_num) -1 and a.CUSTOMER_REF = todate.CUSTOMER_REF
+																		CUSTOMER_REF,
+																		"NAME",
+																		TO_DATE as "VALID_TO",
+																		ROW_NUMBER() OVER (PARTITION BY "CUSTOMER_REF" ORDER BY "NAME" ASC) AS "ROW_NUM"
+																		from "osr.scv.foundation.db.synonyms::TMR_CustMain" as tmr
+																		    INNER JOIN "osr.scv.foundation.db.views.Metadata::CV_Metadata_TMR" as dim
+																		    ON tmr.NAME =dim.META_FILE_NAME
+																		group by CUSTOMER_REF,"NAME", TO_DATE
+																		order by CUSTOMER_REF, "NAME"
+																		)as a
+																		LEFT OUTER JOIN (select distinct
+																						CUSTOMER_REF,
+																						MIN(FROM_DATE) as "VALID_FROM"
+																						from "osr.scv.foundation.db.source.synonyms::TMR_CustMain" as tmr
+																				        INNER JOIN "osr.scv.foundation.db.views.Metadata::CV_Metadata_TMR" as dim
+																					    ON tmr.NAME =dim.META_FILE_NAME
+																						group by "CUSTOMER_REF") b
+																		on a.ROW_NUM = 1 and a.CUSTOMER_REF=b.CUSTOMER_REF
+																		LEFT OUTER JOIN(select distinct
+																		    		   CUSTOMER_REF,
+																		               "NAME",
+																		               TO_DATE as "VALID_TO",
+																		               ROW_NUMBER() OVER (PARTITION BY "CUSTOMER_REF" ORDER BY "NAME" ASC) AS "ROW_NUM"
+																				      from "osr.scv.foundation.db.synonyms::TMR_CustMain" as tmr
+																				      INNER JOIN "osr.scv.foundation.db.views.Metadata::CV_Metadata_TMR" as dim
+																					  ON tmr.NAME =dim.META_FILE_NAME
+																				      group by CUSTOMER_REF,"NAME",TO_DATE
+																				      order by CUSTOMER_REF,"NAME") todate
+																		ON a.row_num = (todate.row_num) +1 and a.CUSTOMER_REF = todate.CUSTOMER_REF
 												) as dim
 												ON tmr."NAME" =dim."NAME" 
 												AND tmr.customer_ref = dim.customer_ref
@@ -1248,7 +1257,7 @@ lt_address_entities_date_tmr =
 			MAX(TO_DATE("VALID_TO")) 	as UPDATED_TO
 			FROM "osr.scv.foundation.db.synonyms::TMR_CustMain" as tmr
 			INNER JOIN (
-				-- Calcualtes the Valid To and From based on the source
+				-- Calculates the Valid To and From based on the source
 									select 
 									a.CUSTOMER_REF,
 									a.NAME,
@@ -1260,36 +1269,50 @@ lt_address_entities_date_tmr =
 									END as "VALID_TO",
 									a.ROW_NUM
 									from (
-											select distinct
+											select 
+											a.CUSTOMER_REF,
+											a.NAME,
+											COALESCE(b.VALID_FROM, ADD_DAYS(todate."VALID_TO", +1)) as VALID_FROM,
+											CASE
+											WHEN a."NAME" is not null and a."NAME"=
+													(	SELECT MAX("NAME")
+														FROM "osr.scv.foundation.db.source.synonyms::TMR_CustMain"
+													)
+											THEN '9999-12-31'
+											ELSE a.VALID_TO
+											END  AS "VALID_TO",
+											a.ROW_NUM
+											from (
+													select distinct
 											CUSTOMER_REF,
 											"NAME",
-											FROM_DATE as "VALID_FROM",
+											TO_DATE as "VALID_TO",
 											ROW_NUMBER() OVER (PARTITION BY "CUSTOMER_REF" ORDER BY "NAME" ASC) AS "ROW_NUM"
 											from "osr.scv.foundation.db.synonyms::TMR_CustMain" as tmr
 											    INNER JOIN "osr.scv.foundation.db.views.Metadata::CV_Metadata_TMR" as dim
 											    ON tmr.NAME =dim.META_FILE_NAME
-											group by CUSTOMER_REF,"NAME", FROM_DATE
+											group by CUSTOMER_REF,"NAME", TO_DATE
 											order by CUSTOMER_REF, "NAME"
 											)as a
-												LEFT OUTER JOIN (select distinct
-																CUSTOMER_REF,
-																MIN(FROM_DATE) as "VALID_FROM"
-																from "osr.scv.foundation.db.source.synonyms::TMR_CustMain" as tmr
-														        INNER JOIN "osr.scv.foundation.db.views.Metadata::CV_Metadata_TMR" as dim
-															    ON tmr.NAME =dim.META_FILE_NAME
-																group by "CUSTOMER_REF") b
-												on a.ROW_NUM = 1 and a.CUSTOMER_REF=b.CUSTOMER_REF
-													LEFT OUTER JOIN(select distinct
-													    		   CUSTOMER_REF,
-													               "NAME",
-													               FROM_DATE as "VALID_FROM",
-													               ROW_NUMBER() OVER (PARTITION BY "CUSTOMER_REF" ORDER BY "NAME" ASC) AS "ROW_NUM"
-															      from "osr.scv.foundation.db.synonyms::TMR_CustMain" as tmr
-															      INNER JOIN "osr.scv.foundation.db.views.Metadata::CV_Metadata_TMR" as dim
-																  ON tmr.NAME =dim.META_FILE_NAME
-															      group by CUSTOMER_REF,"NAME",FROM_DATE
-															      order by CUSTOMER_REF,"NAME") todate
-													ON a.row_num = (todate.row_num) -1 and a.CUSTOMER_REF = todate.CUSTOMER_REF
+											LEFT OUTER JOIN (select distinct
+															CUSTOMER_REF,
+															MIN(FROM_DATE) as "VALID_FROM"
+															from "osr.scv.foundation.db.source.synonyms::TMR_CustMain" as tmr
+													        INNER JOIN "osr.scv.foundation.db.views.Metadata::CV_Metadata_TMR" as dim
+														    ON tmr.NAME =dim.META_FILE_NAME
+															group by "CUSTOMER_REF") b
+											on a.ROW_NUM = 1 and a.CUSTOMER_REF=b.CUSTOMER_REF
+											LEFT OUTER JOIN(select distinct
+											    		   CUSTOMER_REF,
+											               "NAME",
+											               TO_DATE as "VALID_TO",
+											               ROW_NUMBER() OVER (PARTITION BY "CUSTOMER_REF" ORDER BY "NAME" ASC) AS "ROW_NUM"
+													      from "osr.scv.foundation.db.synonyms::TMR_CustMain" as tmr
+													      INNER JOIN "osr.scv.foundation.db.views.Metadata::CV_Metadata_TMR" as dim
+														  ON tmr.NAME =dim.META_FILE_NAME
+													      group by CUSTOMER_REF,"NAME",TO_DATE
+													      order by CUSTOMER_REF,"NAME") todate
+											ON a.row_num = (todate.row_num) +1 and a.CUSTOMER_REF = todate.CUSTOMER_REF
 			) as dim
 			ON tmr."NAME" =dim."NAME" 
 			AND tmr.customer_ref = dim.customer_ref
@@ -1566,47 +1589,47 @@ lt_address_entities_date_tmr =
 											select 
 											a.CUSTOMER_REF,
 											a.NAME,
-											COALESCE (b.VALID_FROM, a.VALID_FROM) as VALID_FROM,
+											COALESCE(b.VALID_FROM, ADD_DAYS(todate."VALID_TO", +1)) as VALID_FROM,
 											CASE
-											WHEN todate."VALID_FROM" IS NULL
-											THEN TO_DATE('9999-12-31', 'YYYY-MM-DD')
-											ELSE ADD_DAYS (todate."VALID_FROM", -1)
-											END as "VALID_TO",
+											WHEN a."NAME" is not null and a."NAME"=
+													(	SELECT MAX("NAME")
+														FROM "osr.scv.foundation.db.source.synonyms::TMR_CustMain"
+													)
+											THEN '9999-12-31'
+											ELSE a.VALID_TO
+											END  AS "VALID_TO",
 											a.ROW_NUM
 											from (
 													select distinct
-													CUSTOMER_REF,
-													"NAME",
-													FROM_DATE as "VALID_FROM",
-													ROW_NUMBER() OVER (PARTITION BY "CUSTOMER_REF" ORDER BY "NAME" ASC) AS "ROW_NUM"
-													from "osr.scv.foundation.db.synonyms::TMR_CustMain" as tmr
-													    INNER JOIN "osr.scv.foundation.db.views.Metadata::CV_Metadata_TMR" as dim
-													    ON tmr.NAME =dim.META_FILE_NAME
-							--			where customer_ref = '100009130' and LENGTH (CONTACT_PHONE_NO) >= 8					    
-													group by CUSTOMER_REF,"NAME", FROM_DATE
-													order by CUSTOMER_REF, "NAME"
-													)as a
-														LEFT OUTER JOIN (select distinct
-																		CUSTOMER_REF,
-																		MIN(FROM_DATE) as "VALID_FROM"
-																		from "osr.scv.foundation.db.source.synonyms::TMR_CustMain" as tmr
-																        INNER JOIN "osr.scv.foundation.db.views.Metadata::CV_Metadata_TMR" as dim
-																	    ON tmr.NAME =dim.META_FILE_NAME
-							--			where customer_ref = '100009130' and LENGTH (CONTACT_PHONE_NO) >= 8							    
-																		group by "CUSTOMER_REF") b
-														on a.ROW_NUM = 1 and a.CUSTOMER_REF=b.CUSTOMER_REF
-															LEFT OUTER JOIN(select distinct
-															    		   CUSTOMER_REF,
-															               "NAME",
-															               FROM_DATE as "VALID_FROM",
-															               ROW_NUMBER() OVER (PARTITION BY "CUSTOMER_REF" ORDER BY "NAME" ASC) AS "ROW_NUM"
-																	      from "osr.scv.foundation.db.synonyms::TMR_CustMain" as tmr
-																	      INNER JOIN "osr.scv.foundation.db.views.Metadata::CV_Metadata_TMR" as dim
-																		  ON tmr.NAME =dim.META_FILE_NAME
-							--			where customer_ref = '100009130' and LENGTH (CONTACT_PHONE_NO) >= 8		
-																	      group by CUSTOMER_REF,"NAME",FROM_DATE
-																	      order by CUSTOMER_REF,"NAME") todate
-															ON a.row_num = (todate.row_num) -1 and a.CUSTOMER_REF = todate.CUSTOMER_REF
+											CUSTOMER_REF,
+											"NAME",
+											TO_DATE as "VALID_TO",
+											ROW_NUMBER() OVER (PARTITION BY "CUSTOMER_REF" ORDER BY "NAME" ASC) AS "ROW_NUM"
+											from "osr.scv.foundation.db.synonyms::TMR_CustMain" as tmr
+											    INNER JOIN "osr.scv.foundation.db.views.Metadata::CV_Metadata_TMR" as dim
+											    ON tmr.NAME =dim.META_FILE_NAME
+											group by CUSTOMER_REF,"NAME", TO_DATE
+											order by CUSTOMER_REF, "NAME"
+											)as a
+											LEFT OUTER JOIN (select distinct
+															CUSTOMER_REF,
+															MIN(FROM_DATE) as "VALID_FROM"
+															from "osr.scv.foundation.db.source.synonyms::TMR_CustMain" as tmr
+													        INNER JOIN "osr.scv.foundation.db.views.Metadata::CV_Metadata_TMR" as dim
+														    ON tmr.NAME =dim.META_FILE_NAME
+															group by "CUSTOMER_REF") b
+											on a.ROW_NUM = 1 and a.CUSTOMER_REF=b.CUSTOMER_REF
+											LEFT OUTER JOIN(select distinct
+											    		   CUSTOMER_REF,
+											               "NAME",
+											               TO_DATE as "VALID_TO",
+											               ROW_NUMBER() OVER (PARTITION BY "CUSTOMER_REF" ORDER BY "NAME" ASC) AS "ROW_NUM"
+													      from "osr.scv.foundation.db.synonyms::TMR_CustMain" as tmr
+													      INNER JOIN "osr.scv.foundation.db.views.Metadata::CV_Metadata_TMR" as dim
+														  ON tmr.NAME =dim.META_FILE_NAME
+													      group by CUSTOMER_REF,"NAME",TO_DATE
+													      order by CUSTOMER_REF,"NAME") todate
+											ON a.row_num = (todate.row_num) +1 and a.CUSTOMER_REF = todate.CUSTOMER_REF
 								) as dim
 								ON cm."NAME" =dim."NAME" 
 								AND ptmr.SOURCE_ID = dim.CUSTOMER_REF
@@ -1713,47 +1736,47 @@ UPSERT "osr.scv.foundation.db.data::SCVFoundation.ContactNumber"
 											select 
 											a.CUSTOMER_REF,
 											a.NAME,
-											COALESCE (b.VALID_FROM, a.VALID_FROM) as VALID_FROM,
+											COALESCE(b.VALID_FROM, ADD_DAYS(todate."VALID_TO", +1)) as VALID_FROM,
 											CASE
-											WHEN todate."VALID_FROM" IS NULL
-											THEN TO_DATE('9999-12-31', 'YYYY-MM-DD')
-											ELSE ADD_DAYS (todate."VALID_FROM", -1)
-											END as "VALID_TO",
+											WHEN a."NAME" is not null and a."NAME"=
+													(	SELECT MAX("NAME")
+														FROM "osr.scv.foundation.db.source.synonyms::TMR_CustMain"
+													)
+											THEN '9999-12-31'
+											ELSE a.VALID_TO
+											END  AS "VALID_TO",
 											a.ROW_NUM
 											from (
 													select distinct
-													CUSTOMER_REF,
-													"NAME",
-													FROM_DATE as "VALID_FROM",
-													ROW_NUMBER() OVER (PARTITION BY "CUSTOMER_REF" ORDER BY "NAME" ASC) AS "ROW_NUM"
-													from "osr.scv.foundation.db.synonyms::TMR_CustContact" as tmr
-													    INNER JOIN "osr.scv.foundation.db.views.Metadata::CV_Metadata_TMR" as dim
-													    ON tmr.NAME =dim.META_FILE_NAME
---										where customer_ref = '100009130' and LENGTH (SMS_CONTACT_NUMBER) >= 8					    
-													group by CUSTOMER_REF,"NAME", FROM_DATE
-													order by CUSTOMER_REF, "NAME"
-													)as a
-														LEFT OUTER JOIN (select distinct
-																		CUSTOMER_REF,
-																		MIN(FROM_DATE) as "VALID_FROM"
-																		from "osr.scv.foundation.db.source.synonyms::TMR_CustContact" as tmr
-																        INNER JOIN "osr.scv.foundation.db.views.Metadata::CV_Metadata_TMR" as dim
-																	    ON tmr.NAME =dim.META_FILE_NAME
---										where customer_ref = '100009130' and LENGTH (SMS_CONTACT_NUMBER) >= 8							    
-																		group by "CUSTOMER_REF") b
-														on a.ROW_NUM = 1 and a.CUSTOMER_REF=b.CUSTOMER_REF
-															LEFT OUTER JOIN(select distinct
-															    		   CUSTOMER_REF,
-															               "NAME",
-															               FROM_DATE as "VALID_FROM",
-															               ROW_NUMBER() OVER (PARTITION BY "CUSTOMER_REF" ORDER BY "NAME" ASC) AS "ROW_NUM"
-																	      from "osr.scv.foundation.db.synonyms::TMR_CustContact" as tmr
-																	      INNER JOIN "osr.scv.foundation.db.views.Metadata::CV_Metadata_TMR" as dim
-																		  ON tmr.NAME =dim.META_FILE_NAME
---										where customer_ref = '100009130' and LENGTH (SMS_CONTACT_NUMBER) >= 8		
-																	      group by CUSTOMER_REF,"NAME",FROM_DATE
-																	      order by CUSTOMER_REF,"NAME") todate
-															ON a.row_num = (todate.row_num) -1 and a.CUSTOMER_REF = todate.CUSTOMER_REF
+											CUSTOMER_REF,
+											"NAME",
+											TO_DATE as "VALID_TO",
+											ROW_NUMBER() OVER (PARTITION BY "CUSTOMER_REF" ORDER BY "NAME" ASC) AS "ROW_NUM"
+											from "osr.scv.foundation.db.synonyms::TMR_CustMain" as tmr
+											    INNER JOIN "osr.scv.foundation.db.views.Metadata::CV_Metadata_TMR" as dim
+											    ON tmr.NAME =dim.META_FILE_NAME
+											group by CUSTOMER_REF,"NAME", TO_DATE
+											order by CUSTOMER_REF, "NAME"
+											)as a
+											LEFT OUTER JOIN (select distinct
+															CUSTOMER_REF,
+															MIN(FROM_DATE) as "VALID_FROM"
+															from "osr.scv.foundation.db.source.synonyms::TMR_CustMain" as tmr
+													        INNER JOIN "osr.scv.foundation.db.views.Metadata::CV_Metadata_TMR" as dim
+														    ON tmr.NAME =dim.META_FILE_NAME
+															group by "CUSTOMER_REF") b
+											on a.ROW_NUM = 1 and a.CUSTOMER_REF=b.CUSTOMER_REF
+											LEFT OUTER JOIN(select distinct
+											    		   CUSTOMER_REF,
+											               "NAME",
+											               TO_DATE as "VALID_TO",
+											               ROW_NUMBER() OVER (PARTITION BY "CUSTOMER_REF" ORDER BY "NAME" ASC) AS "ROW_NUM"
+													      from "osr.scv.foundation.db.synonyms::TMR_CustMain" as tmr
+													      INNER JOIN "osr.scv.foundation.db.views.Metadata::CV_Metadata_TMR" as dim
+														  ON tmr.NAME =dim.META_FILE_NAME
+													      group by CUSTOMER_REF,"NAME",TO_DATE
+													      order by CUSTOMER_REF,"NAME") todate
+											ON a.row_num = (todate.row_num) +1 and a.CUSTOMER_REF = todate.CUSTOMER_REF
 								) as dim
 								ON cm."NAME" =dim."NAME" 
 								AND ptmr.SOURCE_ID = dim.CUSTOMER_REF
@@ -1844,47 +1867,47 @@ UPSERT "osr.scv.foundation.db.data::SCVFoundation.ContactEmail"
 											select 
 											a.CUSTOMER_REF,
 											a.NAME,
-											COALESCE (b.VALID_FROM, a.VALID_FROM) as VALID_FROM,
+											COALESCE(b.VALID_FROM, ADD_DAYS(todate."VALID_TO", +1)) as VALID_FROM,
 											CASE
-											WHEN todate."VALID_FROM" IS NULL
-											THEN TO_DATE('9999-12-31', 'YYYY-MM-DD')
-											ELSE ADD_DAYS (todate."VALID_FROM", -1)
-											END as "VALID_TO",
+											WHEN a."NAME" is not null and a."NAME"=
+													(	SELECT MAX("NAME")
+														FROM "osr.scv.foundation.db.source.synonyms::TMR_CustMain"
+													)
+											THEN '9999-12-31'
+											ELSE a.VALID_TO
+											END  AS "VALID_TO",
 											a.ROW_NUM
 											from (
 													select distinct
-													CUSTOMER_REF,
-													"NAME",
-													FROM_DATE as "VALID_FROM",
-													ROW_NUMBER() OVER (PARTITION BY "CUSTOMER_REF" ORDER BY "NAME" ASC) AS "ROW_NUM"
-													from "osr.scv.foundation.db.synonyms::TMR_CustContact" as tmr
-													    INNER JOIN "osr.scv.foundation.db.views.Metadata::CV_Metadata_TMR" as dim
-													    ON tmr.NAME =dim.META_FILE_NAME
-							--			where customer_ref = '68841801' and LENGTH (EMAIL_ADDRESS) > 5				    
-													group by CUSTOMER_REF,"NAME", FROM_DATE
-													order by CUSTOMER_REF, "NAME"
-													)as a
-														LEFT OUTER JOIN (select distinct
-																		CUSTOMER_REF,
-																		MIN(FROM_DATE) as "VALID_FROM"
-																		from "osr.scv.foundation.db.source.synonyms::TMR_CustContact" as tmr
-																        INNER JOIN "osr.scv.foundation.db.views.Metadata::CV_Metadata_TMR" as dim
-																	    ON tmr.NAME =dim.META_FILE_NAME
-							--			where customer_ref = '68841801' and LENGTH (EMAIL_ADDRESS) > 5							    
-																		group by "CUSTOMER_REF") b
-														on a.ROW_NUM = 1 and a.CUSTOMER_REF=b.CUSTOMER_REF
-															LEFT OUTER JOIN(select distinct
-															    		   CUSTOMER_REF,
-															               "NAME",
-															               FROM_DATE as "VALID_FROM",
-															               ROW_NUMBER() OVER (PARTITION BY "CUSTOMER_REF" ORDER BY "NAME" ASC) AS "ROW_NUM"
-																	      from "osr.scv.foundation.db.synonyms::TMR_CustContact" as tmr
-																	      INNER JOIN "osr.scv.foundation.db.views.Metadata::CV_Metadata_TMR" as dim
-																		  ON tmr.NAME =dim.META_FILE_NAME
-							--			where customer_ref = '68841801' and LENGTH (EMAIL_ADDRESS) > 5		
-																	      group by CUSTOMER_REF,"NAME",FROM_DATE
-																	      order by CUSTOMER_REF,"NAME") todate
-															ON a.row_num = (todate.row_num) -1 and a.CUSTOMER_REF = todate.CUSTOMER_REF
+											CUSTOMER_REF,
+											"NAME",
+											TO_DATE as "VALID_TO",
+											ROW_NUMBER() OVER (PARTITION BY "CUSTOMER_REF" ORDER BY "NAME" ASC) AS "ROW_NUM"
+											from "osr.scv.foundation.db.synonyms::TMR_CustMain" as tmr
+											    INNER JOIN "osr.scv.foundation.db.views.Metadata::CV_Metadata_TMR" as dim
+											    ON tmr.NAME =dim.META_FILE_NAME
+											group by CUSTOMER_REF,"NAME", TO_DATE
+											order by CUSTOMER_REF, "NAME"
+											)as a
+											LEFT OUTER JOIN (select distinct
+															CUSTOMER_REF,
+															MIN(FROM_DATE) as "VALID_FROM"
+															from "osr.scv.foundation.db.source.synonyms::TMR_CustMain" as tmr
+													        INNER JOIN "osr.scv.foundation.db.views.Metadata::CV_Metadata_TMR" as dim
+														    ON tmr.NAME =dim.META_FILE_NAME
+															group by "CUSTOMER_REF") b
+											on a.ROW_NUM = 1 and a.CUSTOMER_REF=b.CUSTOMER_REF
+											LEFT OUTER JOIN(select distinct
+											    		   CUSTOMER_REF,
+											               "NAME",
+											               TO_DATE as "VALID_TO",
+											               ROW_NUMBER() OVER (PARTITION BY "CUSTOMER_REF" ORDER BY "NAME" ASC) AS "ROW_NUM"
+													      from "osr.scv.foundation.db.synonyms::TMR_CustMain" as tmr
+													      INNER JOIN "osr.scv.foundation.db.views.Metadata::CV_Metadata_TMR" as dim
+														  ON tmr.NAME =dim.META_FILE_NAME
+													      group by CUSTOMER_REF,"NAME",TO_DATE
+													      order by CUSTOMER_REF,"NAME") todate
+											ON a.row_num = (todate.row_num) +1 and a.CUSTOMER_REF = todate.CUSTOMER_REF
 								) as dim
 								ON cm."NAME" =dim."NAME" 
 								AND ptmr.SOURCE_ID = dim.CUSTOMER_REF
