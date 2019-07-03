@@ -533,6 +533,13 @@ BEGIN
 																		TO_DATE as "VALID_TO",
 																		ROW_NUMBER() OVER (PARTITION BY "CUSTOMER_REF" ORDER BY "NAME" ASC) AS "ROW_NUM"
 																		from "osr.scv.foundation.db.synonyms::TMR_CustMain" as tmr
+																		INNER JOIN (
+																					SELECT 
+																					DISTINCT "SYSTEM_ID"
+																					FROM "osr.scv.foundation.db.data::MatchResults.MatchResultsShadow"
+																					where SOURCE_SYSTEM = 'TMR'	
+																					) as mr
+																					ON tmr.CUSTOMER_REF = mr.SYSTEM_ID
 																		    INNER JOIN "osr.scv.foundation.db.views.Metadata::CV_Metadata_TMR" as dim
 																		    ON tmr.NAME =dim.META_FILE_NAME
 																		group by CUSTOMER_REF,"NAME", TO_DATE
@@ -688,6 +695,13 @@ lt_person_entities_date_tmr =
 											TO_DATE as "VALID_TO",
 											ROW_NUMBER() OVER (PARTITION BY "CUSTOMER_REF" ORDER BY "NAME" ASC) AS "ROW_NUM"
 											from "osr.scv.foundation.db.synonyms::TMR_CustMain" as tmr
+											INNER JOIN (
+														SELECT 
+														DISTINCT "SYSTEM_ID"
+														FROM "osr.scv.foundation.db.data::MatchResults.MatchResultsShadow"
+														where SOURCE_SYSTEM = 'TMR'	
+														) as mr
+														ON tmr.CUSTOMER_REF = mr.SYSTEM_ID
 											    INNER JOIN "osr.scv.foundation.db.views.Metadata::CV_Metadata_TMR" as dim
 											    ON tmr.NAME =dim.META_FILE_NAME
 											group by CUSTOMER_REF,"NAME", TO_DATE
@@ -1087,6 +1101,13 @@ lt_person_entities_date_tmr =
 																		TO_DATE as "VALID_TO",
 																		ROW_NUMBER() OVER (PARTITION BY "CUSTOMER_REF" ORDER BY "NAME" ASC) AS "ROW_NUM"
 																		from "osr.scv.foundation.db.synonyms::TMR_CustMain" as tmr
+																		INNER JOIN (
+																					SELECT 
+																					DISTINCT "SOURCE_ID"
+																					FROM "osr.scv.foundation.db.data::SCVFoundation.PersonTmr"
+																					where SOURCE = 'TMR'	
+																					) as mr
+																					ON tmr.CUSTOMER_REF = mr.SOURCE_ID
 																		    INNER JOIN "osr.scv.foundation.db.views.Metadata::CV_Metadata_TMR" as dim
 																		    ON tmr.NAME =dim.META_FILE_NAME
 																		group by CUSTOMER_REF,"NAME", TO_DATE
@@ -1278,6 +1299,13 @@ lt_address_entities_date_tmr =
 							TO_DATE as "VALID_TO",
 							ROW_NUMBER() OVER (PARTITION BY "CUSTOMER_REF" ORDER BY "NAME" ASC) AS "ROW_NUM"
 							from "osr.scv.foundation.db.synonyms::TMR_CustMain" as tmr
+							INNER JOIN (
+										SELECT 
+										DISTINCT "SOURCE_ID"
+										FROM "osr.scv.foundation.db.data::SCVFoundation.PersonTmr"
+										where SOURCE = 'TMR'	
+										) as mr
+										ON tmr.CUSTOMER_REF = mr.SOURCE_ID
 							    INNER JOIN "osr.scv.foundation.db.views.Metadata::CV_Metadata_TMR" as dim
 							    ON tmr.NAME =dim.META_FILE_NAME
 							group by CUSTOMER_REF,"NAME", TO_DATE
@@ -1598,6 +1626,13 @@ lt_address_entities_date_tmr =
 											TO_DATE as "VALID_TO",
 											ROW_NUMBER() OVER (PARTITION BY "CUSTOMER_REF" ORDER BY "NAME" ASC) AS "ROW_NUM"
 											from "osr.scv.foundation.db.synonyms::TMR_CustMain" as tmr
+											INNER JOIN (
+														SELECT 
+														DISTINCT "SOURCE_ID"
+														FROM "osr.scv.foundation.db.data::SCVFoundation.PersonTmr"
+														where SOURCE = 'TMR'	
+														) as mr
+														ON tmr.CUSTOMER_REF = mr.SOURCE_ID
 											    INNER JOIN "osr.scv.foundation.db.views.Metadata::CV_Metadata_TMR" as dim
 											    ON tmr.NAME =dim.META_FILE_NAME
 											group by CUSTOMER_REF,"NAME", TO_DATE
@@ -1745,6 +1780,13 @@ UPSERT "osr.scv.foundation.db.data::SCVFoundation.ContactNumber"
 											TO_DATE as "VALID_TO",
 											ROW_NUMBER() OVER (PARTITION BY "CUSTOMER_REF" ORDER BY "NAME" ASC) AS "ROW_NUM"
 											from "osr.scv.foundation.db.synonyms::TMR_CustMain" as tmr
+											INNER JOIN (
+														SELECT 
+														DISTINCT "SOURCE_ID"
+														FROM "osr.scv.foundation.db.data::SCVFoundation.PersonTmr"
+														where SOURCE = 'TMR'	
+														) as mr
+														ON tmr.CUSTOMER_REF = mr.SOURCE_ID
 											    INNER JOIN "osr.scv.foundation.db.views.Metadata::CV_Metadata_TMR" as dim
 											    ON tmr.NAME =dim.META_FILE_NAME
 											group by CUSTOMER_REF,"NAME", TO_DATE
@@ -1876,6 +1918,13 @@ UPSERT "osr.scv.foundation.db.data::SCVFoundation.ContactEmail"
 											TO_DATE as "VALID_TO",
 											ROW_NUMBER() OVER (PARTITION BY "CUSTOMER_REF" ORDER BY "NAME" ASC) AS "ROW_NUM"
 											from "osr.scv.foundation.db.synonyms::TMR_CustMain" as tmr
+											INNER JOIN (
+														SELECT 
+														DISTINCT "SOURCE_ID"
+														FROM "osr.scv.foundation.db.data::SCVFoundation.PersonTmr"
+														where SOURCE = 'TMR'	
+														) as mr
+														ON tmr.CUSTOMER_REF = mr.SOURCE_ID
 											    INNER JOIN "osr.scv.foundation.db.views.Metadata::CV_Metadata_TMR" as dim
 											    ON tmr.NAME =dim.META_FILE_NAME
 											group by CUSTOMER_REF,"NAME", TO_DATE
