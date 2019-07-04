@@ -1767,7 +1767,7 @@ UPSERT "osr.scv.foundation.db.data::SCVFoundation.ContactNumber"
 											CASE
 											WHEN a."NAME" is not null and a."NAME"=
 													(	SELECT MAX("NAME")
-														FROM "osr.scv.foundation.db.source.synonyms::TMR_CustMain"
+														FROM "osr.scv.foundation.db.source.synonyms::TMR_CustContact"
 													)
 											THEN '9999-12-31'
 											ELSE a.VALID_TO
@@ -1779,7 +1779,7 @@ UPSERT "osr.scv.foundation.db.data::SCVFoundation.ContactNumber"
 											"NAME",
 											TO_DATE as "VALID_TO",
 											ROW_NUMBER() OVER (PARTITION BY "CUSTOMER_REF" ORDER BY "NAME" ASC) AS "ROW_NUM"
-											from "osr.scv.foundation.db.synonyms::TMR_CustMain" as tmr
+											from "osr.scv.foundation.db.synonyms::TMR_CustContact" as tmr
 											INNER JOIN (
 														SELECT 
 														DISTINCT "SOURCE_ID"
@@ -1795,7 +1795,7 @@ UPSERT "osr.scv.foundation.db.data::SCVFoundation.ContactNumber"
 											LEFT OUTER JOIN (select distinct
 															CUSTOMER_REF,
 															MIN(FROM_DATE) as "VALID_FROM"
-															from "osr.scv.foundation.db.source.synonyms::TMR_CustMain" as tmr
+															from "osr.scv.foundation.db.source.synonyms::TMR_CustContact" as tmr
 													        INNER JOIN "osr.scv.foundation.db.views.Metadata::CV_Metadata_TMR" as dim
 														    ON tmr.NAME =dim.META_FILE_NAME
 															group by "CUSTOMER_REF") b
@@ -1805,7 +1805,7 @@ UPSERT "osr.scv.foundation.db.data::SCVFoundation.ContactNumber"
 											               "NAME",
 											               TO_DATE as "VALID_TO",
 											               ROW_NUMBER() OVER (PARTITION BY "CUSTOMER_REF" ORDER BY "NAME" ASC) AS "ROW_NUM"
-													      from "osr.scv.foundation.db.synonyms::TMR_CustMain" as tmr
+													      from "osr.scv.foundation.db.synonyms::TMR_CustContact" as tmr
 													      INNER JOIN "osr.scv.foundation.db.views.Metadata::CV_Metadata_TMR" as dim
 														  ON tmr.NAME =dim.META_FILE_NAME
 													      group by CUSTOMER_REF,"NAME",TO_DATE
@@ -1905,7 +1905,7 @@ UPSERT "osr.scv.foundation.db.data::SCVFoundation.ContactEmail"
 											CASE
 											WHEN a."NAME" is not null and a."NAME"=
 													(	SELECT MAX("NAME")
-														FROM "osr.scv.foundation.db.source.synonyms::TMR_CustMain"
+														FROM "osr.scv.foundation.db.source.synonyms::TMR_CustContact"
 													)
 											THEN '9999-12-31'
 											ELSE a.VALID_TO
@@ -1917,7 +1917,7 @@ UPSERT "osr.scv.foundation.db.data::SCVFoundation.ContactEmail"
 											"NAME",
 											TO_DATE as "VALID_TO",
 											ROW_NUMBER() OVER (PARTITION BY "CUSTOMER_REF" ORDER BY "NAME" ASC) AS "ROW_NUM"
-											from "osr.scv.foundation.db.synonyms::TMR_CustMain" as tmr
+											from "osr.scv.foundation.db.synonyms::TMR_CustContact" as tmr
 											INNER JOIN (
 														SELECT 
 														DISTINCT "SOURCE_ID"
@@ -1933,7 +1933,7 @@ UPSERT "osr.scv.foundation.db.data::SCVFoundation.ContactEmail"
 											LEFT OUTER JOIN (select distinct
 															CUSTOMER_REF,
 															MIN(FROM_DATE) as "VALID_FROM"
-															from "osr.scv.foundation.db.source.synonyms::TMR_CustMain" as tmr
+															from "osr.scv.foundation.db.source.synonyms::TMR_CustContact" as tmr
 													        INNER JOIN "osr.scv.foundation.db.views.Metadata::CV_Metadata_TMR" as dim
 														    ON tmr.NAME =dim.META_FILE_NAME
 															group by "CUSTOMER_REF") b
@@ -1943,7 +1943,7 @@ UPSERT "osr.scv.foundation.db.data::SCVFoundation.ContactEmail"
 											               "NAME",
 											               TO_DATE as "VALID_TO",
 											               ROW_NUMBER() OVER (PARTITION BY "CUSTOMER_REF" ORDER BY "NAME" ASC) AS "ROW_NUM"
-													      from "osr.scv.foundation.db.synonyms::TMR_CustMain" as tmr
+													      from "osr.scv.foundation.db.synonyms::TMR_CustContact" as tmr
 													      INNER JOIN "osr.scv.foundation.db.views.Metadata::CV_Metadata_TMR" as dim
 														  ON tmr.NAME =dim.META_FILE_NAME
 													      group by CUSTOMER_REF,"NAME",TO_DATE
