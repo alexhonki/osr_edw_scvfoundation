@@ -1600,7 +1600,7 @@ lt_address_entities_date_tmr =
 							    'PHO'																										as "NUMBER_TYPE", 
 							    'Tmr CustMain Pho'																							as "NUMBER_DESC",
 							    HASH_SHA256(TO_BINARY(TO_VARCHAR(CONTACT_PHONE_NO)))														as "CHECKSUM",
-							    MAX(LAST_UPDATED)																							as "LAST_UPDATED",
+							    MAX(LAST_CONTACT_UPDATE_DT)																					as "LAST_UPDATED",
 								:l_load_id																									as "SCV_LOAD_ID"
 							    FROM "osr.scv.foundation.db.data::SCVFoundation.PersonTmr"as ptmr
 								INNER JOIN "osr.scv.foundation.db.synonyms::TMR_CustMain" as cm
