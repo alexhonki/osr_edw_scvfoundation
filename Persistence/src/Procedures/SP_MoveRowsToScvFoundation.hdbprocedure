@@ -1599,8 +1599,8 @@ lt_address_entities_date_tmr =
 								''																											as "NUMBER_EXT",
 							    'PHO'																										as "NUMBER_TYPE", 
 							    'Tmr CustMain Pho'																							as "NUMBER_DESC",
-							    HASH_SHA256(TO_BINARY(TO_VARCHAR(MAX(CONTACT_PHONE_EFFECT_DT))), TO_BINARY(TO_VARCHAR(CONTACT_PHONE_NO)))	as "CHECKSUM",
-							    MAX(CONTACT_PHONE_EFFECT_DT)																				as "LAST_UPDATED",
+							    HASH_SHA256(TO_BINARY(TO_VARCHAR(CONTACT_PHONE_NO)))														as "CHECKSUM",
+							    MAX(LAST_UPDATED)																							as "LAST_UPDATED",
 								:l_load_id																									as "SCV_LOAD_ID"
 							    FROM "osr.scv.foundation.db.data::SCVFoundation.PersonTmr"as ptmr
 								INNER JOIN "osr.scv.foundation.db.synonyms::TMR_CustMain" as cm
@@ -1753,7 +1753,7 @@ UPSERT "osr.scv.foundation.db.data::SCVFoundation.ContactNumber"
 								''																											as "NUMBER_EXT",
 							    'SMS'																										as "NUMBER_TYPE", 
 							    'Tmr CustContact SMS'																						as "NUMBER_DESC",
-							    HASH_SHA256(TO_BINARY(TO_VARCHAR(MAX(LAST_UPDATED))), TO_BINARY(TO_VARCHAR(SMS_CONTACT_NUMBER)))			as "CHECKSUM"		,
+							    HASH_SHA256( TO_BINARY(TO_VARCHAR(SMS_CONTACT_NUMBER)))														as "CHECKSUM"		,
 							    MAX("LAST_UPDATED")																							as "LAST_UPDATED",
 							    :l_load_id																									as "SCV_LOAD_ID"
 							    FROM "osr.scv.foundation.db.data::SCVFoundation.PersonTmr"as ptmr
@@ -1889,9 +1889,9 @@ UPSERT "osr.scv.foundation.db.data::SCVFoundation.ContactEmail"
 								"EMAIL_ADDRESS"																								as "CONTACT_EMAIL", 
 							    'Email'																										as "EMAIL_TYPE", 
 							    'Tmr CustContact Email'																						as "EMAIL_DESC",
-							    HASH_SHA256(TO_BINARY(TO_VARCHAR(MAX(LAST_UPDATED))), TO_BINARY(TO_VARCHAR(EMAIL_ADDRESS)))					as "CHECKSUM"		,
+							    HASH_SHA256(TO_BINARY(TO_VARCHAR(EMAIL_ADDRESS)))															as "CHECKSUM"		,
 							    "STD_EMAIL"																									as "STD_EMAIL",
-							    HASH_SHA256(TO_BINARY(TO_VARCHAR(MAX(LAST_UPDATED))), TO_BINARY(TO_VARCHAR(STD_EMAIL)))						as "STD_CHECKSUM"		,
+							    HASH_SHA256( TO_BINARY(TO_VARCHAR(STD_EMAIL)))																as "STD_CHECKSUM"		,
 							    MAX(LAST_UPDATED)																							as "LAST_UPDATED",
 								:l_load_id																									as "SCV_LOAD_ID"
 							    FROM "osr.scv.foundation.db.data::SCVFoundation.PersonTmr"as ptmr
