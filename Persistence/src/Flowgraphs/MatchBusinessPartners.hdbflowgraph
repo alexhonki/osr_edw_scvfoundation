@@ -840,7 +840,7 @@
         </annotations>
       </annotations>
       <annotations key="sideEffectData">
-        <annotations key="level" value="full">
+        <annotations key="level" value="basic">
         </annotations>
         <annotations key="matchTracingMaxRows" value="all">
         </annotations>
