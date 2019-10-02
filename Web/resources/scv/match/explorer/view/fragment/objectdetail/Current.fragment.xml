@@ -49,6 +49,9 @@
       <core:Title text="Identification" />
       <Label text="{i18n>current.dob}" />
       <Text text="{personModel>/BIRTH_DATE}" />
+      
+      <Label text="{i18n>current.dod}" />
+      <Text text="{personModel>/DEATH_DATE}" />
 
       <Label text="{i18n>current.driver_license}" />
       <!--<Text text="{personModel>/DRIVER_LICENSE}" />-->
