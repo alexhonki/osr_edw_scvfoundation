@@ -107,10 +107,10 @@ context SCVFoundation {
             LAST_NAME      : String(80);
             MIDDLE_NAME    : String(40);
             FIRST_NAME     : String(40);
-            ALSOKNOWNAS	   : String(255);
+            ALSO_KNOWN_AS  : String(100);
             BIRTH_DATE     : LocalDate;
             DEATH_DATE     : LocalDate;
-            AGEATDEATH     : String(10);
+            AGE_AT_DEATH   : Integer;
             CHECKSUM       : Binary(32);
             STD_PERSON_GN  : String(50);
             STD_PERSON_GN2 : String(50);
@@ -216,7 +216,7 @@ context SCVFoundation {
         key VALID_FROM                 : LocalDate;
         key VALID_TO                   : LocalDate;
         key ADDRESS_BDM_ID             : String(32);
-            ADDRLINE1				   : String(200);
+            ADDR_LINE1				   : String(200);
             SUBURB                     : String(46);
             POSTCODE                   : String(10);
             STATE                      : String(3);
