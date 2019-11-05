@@ -97,6 +97,33 @@ context SCVFoundation {
     };
 
     /*@@layout{"layoutInfo":{}}*/
+    entity PersonBdm {
+        key SCV_ID         : String(20);
+        key SOURCE         : String(10);
+        key SOURCE_ID      : String(10);
+        key VALID_FROM     : LocalDate;
+        key VALID_TO       : LocalDate;
+        key PERSON_BDM_ID  : String(32);
+            LAST_NAME      : String(80);
+            MIDDLE_NAME    : String(40);
+            FIRST_NAME     : String(40);
+            ALSO_KNOWN_AS  : String(100);
+            BIRTH_DATE     : LocalDate;
+            DEATH_DATE     : LocalDate;
+            AGE_AT_DEATH   : Integer;
+            CHECKSUM       : Binary(32);
+            STD_PERSON_GN  : String(50);
+            STD_PERSON_GN2 : String(50);
+            STD_PERSON_FN  : String(50);
+            STD_CHECKSUM   : Binary(32);
+            SCV_LOAD_ID    : Integer;
+    }
+    technical configuration {
+        fuzzy search index on (LAST_NAME);
+        fuzzy search index on (FIRST_NAME);
+        fuzzy search index on (MIDDLE_NAME);
+    };
+    /*@@layout{"layoutInfo":{}}*/
     entity AddressRms {
         key SCV_ID                    : String(10);
         key SOURCE                    : String(10);
@@ -179,6 +206,39 @@ context SCVFoundation {
             LAST_CONTACT_DATE          : LocalDate; /* either when source DB get updated OR when a user update the date*/
             SCV_LOAD_ID                : Integer;
     };
+    
+    /*@@layout{"layoutInfo":{}}*/
+    entity AddressBdm {
+        key SCV_ID                     : String(10);
+        key SOURCE                     : String(10);
+        key SOURCE_ID                  : String(10);
+        key ADDRESS_ID                 : String(10);
+        key VALID_FROM                 : LocalDate;
+        key VALID_TO                   : LocalDate;
+        key ADDRESS_BDM_ID             : String(32);
+            ADDR_LINE1				   : String(200);
+            SUBURB                     : String(46);
+            POSTCODE                   : String(10);
+            STATE                      : String(3);
+            COUNTRY                    : String(3);
+            CHECKSUM                   : Binary(32);
+            STD_ADDR_COUNTRY_2CHAR     : String(2);
+            STD_ADDR_COUNTRY_NAME      : String(100);
+            STD_ADDR_BUILDING_NAME     : String(100);
+            STD_ADDR_ADDRESS_DELIVERY  : String(100);
+            STD_ADDR_PRIM_ADDRESS      : String(100);
+            STD_ADDR_PRIM_NAME_FULL    : String(100);
+            STD_ADDR_PRIM_NAME         : String(100);
+            STD_ADDR_PRIM_TYPE         : String(40);
+            STD_ADDR_PRIM_NUMBER       : String(20);
+            STD_ADDR_LOCALITY          : String(64);
+            STD_ADDR_REGION            : String(64);
+            STD_ADDR_POSTCODE1         : String(10);
+            ADDR_LATITUDE              : BinaryFloat default 0.00;
+            ADDR_LONGITUDE             : BinaryFloat default 0.00;
+            STD_CHECKSUM               : Binary(32);
+            SCV_LOAD_ID                : Integer;
+    };    
 
     /*@@layout{"layoutInfo":{}}*/
     entity ContactNumber {
