@@ -90,7 +90,8 @@
 			}]
 		},
 		"config": {
-			"unstructuredSearch": "/scv/match/srv/xs/explorer/unstructuredSearch.xsjs"
+			"unstructuredSearch": "/scv/match/srv/xs/explorer/unstructuredSearch.xsjs",
+			"apiPoint": "/scv/match/srv/rest/"
 		},
 		"routing": {
 			"config": {

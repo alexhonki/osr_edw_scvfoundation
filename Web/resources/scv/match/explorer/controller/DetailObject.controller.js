@@ -8,7 +8,7 @@ sap.ui.define([
 	"sap/ui/model/json/JSONModel",
 	"osr/scv/match/explorer/asset/lib/Formatters",
 	"sap/m/Text"
-], function(SuperController, JSONModel, Formatters, Text) {
+], function (SuperController, JSONModel, Formatters, Text) {
 	"use strict";
 
 	let DetailObject = SuperController.extend("osr.scv.match.explorer.controller.DetailObject", {
@@ -18,7 +18,7 @@ sap.ui.define([
 		 * Run on initialize
 		 * @return {[type]} [description]
 		 */
-		onInit: function() {
+		onInit: function () {
 
 			//setting up of all models to serve if needed.
 			//some are binded straight away
@@ -36,7 +36,7 @@ sap.ui.define([
 		 * @param  {[type]} oEvent [description]
 		 * @return {[type]}        [description]
 		 */
-		_onRouteMatched: function(oEvent) {
+		_onRouteMatched: function (oEvent) {
 			let oController = this;
 
 			oController.oPageParam = oEvent.getParameter("arguments");
@@ -70,7 +70,7 @@ sap.ui.define([
 		 * @param  {[Object]} oEvent [as described]
 		 * @return {[type]}        [description]
 		 */
-		onViewLinkPressed: function(oEvent) {
+		onViewLinkPressed: function (oEvent) {
 			let oController = this;
 			let sWhichLink = oEvent.getSource().data().sWhichLink;
 
@@ -91,7 +91,7 @@ sap.ui.define([
 		 * @param  {[String]} sScvId [scvId of the entity.]
 		 * @return {[type]}        [description]
 		 */
-		_readPostalData: function(sScvId) {
+		_readPostalData: function (sScvId) {
 			let oController = this;
 			//make sure its a valid PO box with the year 9999 for valid to and the string contain Po Box 
 			oController.getModel("scvExplorerModel").read("/addressParameters" + "(IP_SCV_ID='" + sScvId +
@@ -99,7 +99,7 @@ sap.ui.define([
 					urlParameters: {
 						"$orderby": "S_VALID_TO desc"
 					},
-					success: function(data) {
+					success: function (data) {
 
 						let oResult = {};
 						// if there is a PO Box coming in through for this particular SCV ID
@@ -121,7 +121,7 @@ sap.ui.define([
 						}
 
 					},
-					error: function(oMessage) {
+					error: function (oMessage) {
 						console.log(oMessage);
 					}
 				});
@@ -132,7 +132,7 @@ sap.ui.define([
 		 * @param  {[String]} sScvId [scvId of the entity.]
 		 * @return {[type]}        [description]
 		 */
-		_readPersonData: function(sScvId) {
+		_readPersonData: function (sScvId) {
 			let oController = this;
 			oController.getView().byId("person-table").bindRows("scvExplorerModel>/personParameters(IP_SCV_ID='" + sScvId + "')/Results");
 		},
@@ -142,7 +142,7 @@ sap.ui.define([
 		 * @param  {[String]} sScvId [the SCV ID of a particular object.]
 		 * @return {[type]}        [description]
 		 */
-		_readAddressesData: function(sScvId) {
+		_readAddressesData: function (sScvId) {
 
 			let oController = this;
 			oController.getView().byId("history-address-table").bindRows("scvExplorerModel>/addressParameters(IP_SCV_ID='" + sScvId +
@@ -154,7 +154,7 @@ sap.ui.define([
 					urlParameters: {
 						"$orderby": "S_VALID_TO desc"
 					},
-					success: function(data) {
+					success: function (data) {
 
 						// if there are more than 0 addresses then set the data. 
 						if (data.results.length > 0) {
@@ -167,7 +167,7 @@ sap.ui.define([
 						}
 
 					},
-					error: function(oMessage) {
+					error: function (oMessage) {
 						console.log(oMessage);
 					}
 				});
@@ -179,14 +179,14 @@ sap.ui.define([
 		 * @param  {[type]} sScvId [String for the SCV ID that being passed in the URL]
 		 * @return {[type]}        [description]
 		 */
-		_readScvContactData: function(sScvId) {
+		_readScvContactData: function (sScvId) {
 
 			let oController = this;
 			oController.getModel("scvExplorerModel").read("/contactParameters" + "(IP_SCV_ID='" + sScvId + "')/Results", {
 				urlParameters: {
 					"$orderby": "SOURCE desc,S_LAST_UPDATED desc,S_VALID_TO desc"
 				},
-				success: function(data) {
+				success: function (data) {
 
 					// grab the very top one for the current person. 
 					if (data.results.length > 0) {
@@ -195,7 +195,7 @@ sap.ui.define([
 					}
 
 				},
-				error: function(oMessage) {
+				error: function (oMessage) {
 					console.log(oMessage);
 				}
 			});
@@ -211,7 +211,7 @@ sap.ui.define([
 		 * @param  {[type]} oEvent [description]
 		 * @return {[type]}        [description]
 		 */
-		_readCurrentPersonData: function(sScvId) {
+		_readCurrentPersonData: function (sScvId) {
 			let oController = this;
 			oController.getModel("scvExplorerModel").read("/personParameters(IP_SCV_ID='" + sScvId + "')/Results", {
 				//both url to filter and order the result set.
@@ -219,19 +219,47 @@ sap.ui.define([
 					"$orderby": "SOURCE desc,UPDATED_AT desc, VALID_TO desc, RMS_SCV_LOAD_ID desc",
 					"$filter": "substringof('9999',S_VALID_TO)"
 				},
-				success: function(data) {
+				success: function (data) {
 
 					// grab the very top one for the current person. 
 					if (data.results.length > 0) {
 						//set the data for for the entire view information. 
 						oController.getModel("viewModel").setData(data.results[0], true);
 
+						let sApiUrl = oController.getOwnerComponent().getMetadata().getConfig("apiPoint");
+						let oPayload = {
+							scvId: oController.oPageParam.scvId
+						};
+						
+						//call BDM table after, to determine whether there's data there, if yes
+						//replace it with the BDM else stay as RMS
+						$.ajax(sApiUrl + "getPersonBdm", {
+							data: oPayload,
+							success: function (data) {
+								//check that DEATH_DATE exist else do not do anything.
+								if (data.Results[0].DEATH_DATE.length > 0) {
+									let sDeathDate = moment(data.Results[0].DEATH_DATE).format("DD/MM/YYYY");
+									//transform the person data to reflect for current.
+									oController.getModel("personModel").setProperty("/DEATH_DATE", sDeathDate);
+								}
+							},
+							error: function (error) {
+								//check for http error and serve accordingly.
+								if (error.status === 403) {
+									oController.sendMessageToast("You do not have enough authorisation please contact your system admin.");
+								} else {
+									oController.sendMessageToast("Something went wrong, our apologies. Please close the browser, re-open and try again.");
+								}
+
+							}
+						});
+
 						//transform the person data to reflect for current.
 						oController._transformPersonData(data.results, "person");
 					}
 
 				},
-				error: function(oMessage) {
+				error: function (oMessage) {
 					console.log(oMessage);
 				}
 			});
@@ -250,7 +278,7 @@ sap.ui.define([
 		 * @param  {[STring]} sPath [e.g person, contact]
 		 * @return {[type]}        [description]
 		 */
-		_transformPersonData: function(oData, sPath) {
+		_transformPersonData: function (oData, sPath) {
 
 			let oController = this;
 			let oResult = {};
@@ -279,12 +307,12 @@ sap.ui.define([
 				//loop through all the results set. 
 				for (i = 0; i < oData.length; i++) {
 					if (oData[i].SOURCE === "RMS") {
-						
+
 						//check whether the same RMS BP Number already exist or not. 
 						if (aBpNumberChecker.indexOf(oData[i].SOURCE_ID) === -1) {
 							aBpNumberChecker.push(oData[i].SOURCE_ID);
 							//build a text control and add it into the VBox control.
-							
+
 							oText = new Text({
 								text: oData[i].SOURCE_ID
 							});
@@ -371,7 +399,7 @@ sap.ui.define([
 		 * Force the back button to go to homepage, without
 		 * taking into account the history of where it was from.
 		 */
-		onNavBack: function() {
+		onNavBack: function () {
 
 			this.getRouter().navTo("appHome");
 

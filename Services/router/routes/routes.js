@@ -1,8 +1,8 @@
 /*eslint no-console: 0, no-unused-vars: 0, no-shadow: 0, quotes: 0, no-use-before-define: 0, new-cap:0 */
 "use strict";
 var express = require("express");
-
-module.exports = function() {
+var routeHelper = require("./routesHelper");
+module.exports = function () {
 
 	var appRouter = express.Router();
 	var async = require("async");
@@ -14,17 +14,17 @@ module.exports = function() {
 	 * @param {string} req - Request
 	 * @param {string} res - Response
 	 */
-	appRouter.get("/stats", function(req, res) {
+	appRouter.get("/stats", function (req, res) {
 		var client = req.db;
 
 		var stmt =
 			"SELECT 'KPI_001' as KPI, 'Total number of groups' as KPI_INFO, MAX(GROUP_ID) as VALUE from (SELECT * FROM \"osr.scv.foundation.db.data::MatchResultsBase.MatchResults\" ORDER BY GROUP_ID ASC) " +
-			"UNION ALL " + 
+			"UNION ALL " +
 			"SELECT 'KPI_002' as KPI, 'Number of groups with different IDs within each group' as KPI_INFO, count(*) as VALUE FROM ( " +
 			"SELECT GROUP_ID, SOURCE_SYSTEM FROM (SELECT * FROM \"osr.scv.foundation.db.data::MatchResultsBase.MatchResults\" ORDER BY GROUP_ID ASC) " +
 			"GROUP BY GROUP_ID, SOURCE_SYSTEM " +
 			"HAVING COUNT(DISTINCT SYSTEM_ID) > 1 AND GROUP_ID IS NOT NULL)" +
-			"UNION ALL " + 
+			"UNION ALL " +
 			"SELECT 'KPI_003' as KPI, 'Number of groups with different IDs within each group for system RMS only' as KPI_INFO, count(*) as VALUE FROM ( " +
 			"SELECT GROUP_ID, SOURCE_SYSTEM FROM (SELECT * FROM \"osr.scv.foundation.db.data::MatchResultsBase.MatchResults\" ORDER BY GROUP_ID ASC) " +
 			"GROUP BY GROUP_ID, SOURCE_SYSTEM " +
@@ -37,13 +37,13 @@ module.exports = function() {
 
 			function prepare(callback) {
 				client.prepare(stmt,
-					function(err, statement) {
+					function (err, statement) {
 						callback(null, err, statement);
 					});
 			},
 
 			function execute(err, statement, callback) {
-				statement.exec([], function(execErr, results) {
+				statement.exec([], function (execErr, results) {
 					callback(null, execErr, results);
 				});
 			},
@@ -63,6 +63,13 @@ module.exports = function() {
 				callback();
 			}
 		]);
+	});
+
+	// Get the count of RMS Relationship for a particular group id
+	appRouter.get("/getPersonBdm", function (req, res) {
+
+		routeHelper.getPersonBdm(req, res);
+
 	});
 
 	/**

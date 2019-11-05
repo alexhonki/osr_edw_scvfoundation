@@ -1,11 +1,11 @@
 {
 	"authenticationMethod": "route",
-	"routes": [ {
+	"routes": [{
 		"source": "/scv/match/srv/xs/test/(.*)(.xsjs)",
 		"destination": "Services_url",
 		"authenticationType": "xsuaa",
 		"scope": "$XSAPPNAME.REVIEW"
-	},{
+	}, {
 		"source": "/scv/match/srv/xs/review/(.*)(.xsjs)",
 		"destination": "Services_url",
 		"csrfProtection": false,
@@ -21,13 +21,12 @@
 		"destination": "Services_url",
 		"authenticationType": "xsuaa",
 		"scope": "$XSAPPNAME.REVIEW"
-	}
-	, {
+	}, {
 		"source": "/scv/match/srv/xs/review/(.*)(.xsodata)",
 		"destination": "Services_url",
 		"authenticationType": "xsuaa",
 		"scope": "$XSAPPNAME.REVIEW"
-	},{
+	}, {
 		"source": "/scv/match/srv/xs/supervisor/(.*)(.xsjs)",
 		"destination": "Services_url",
 		"csrfProtection": false,
@@ -49,12 +48,18 @@
 		"authenticationType": "xsuaa",
 		"scope": "$XSAPPNAME.EXPLORER"
 	}, {
+		"source": "/scv/match/srv/rest/(.*)",
+		"destination": "Services_url",
+		"csrfProtection": true,
+		"scope": "$XSAPPNAME.EXPLORER",
+		"authenticationType": "xsuaa"
+	}, {
 		"source": "^/(.*)$",
 		"localDir": "resources",
-		"scope": ["$XSAPPNAME.REVIEW","$XSAPPNAME.SUPERVISOR", "$XSAPPNAME.EXPLORER"],
+		"scope": ["$XSAPPNAME.REVIEW", "$XSAPPNAME.SUPERVISOR", "$XSAPPNAME.EXPLORER"],
 		"replace": {
 			"pathSuffixes": ["index.html", "odataTest.html"],
 			"vars": ["ui5liburl"]
-	}
+		}
 	}]
 }
