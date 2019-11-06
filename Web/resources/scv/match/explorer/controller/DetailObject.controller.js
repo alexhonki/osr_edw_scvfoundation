@@ -291,7 +291,7 @@ sap.ui.define([
 				oResult.STD_PERSON_GN = oData[0].STD_PERSON_GN;
 				oResult.STD_PERSON_GN2 = oData[0].STD_PERSON_GN2;
 				oResult.BIRTH_DATE = moment(oData[0].BIRTH_DATE).format("DD/MM/YYYY");
-				oResult.DEATH_DATE = oData[0].DEATH_DATE ? moment(oData[0].DEATH_DATE).format("DD/MM/YYYY") : "-";
+				oResult.DEATH_DATE = oData[0].DEATH_DATE ? moment(oData[0].DEATH_DATE).format("DD/MM/YYYY") : "";
 				oResult.DRIVER_LICENSE = "";
 				oResult.BP_NUMBER = "";
 
