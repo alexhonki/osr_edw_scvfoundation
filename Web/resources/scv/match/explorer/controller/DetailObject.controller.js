@@ -233,6 +233,7 @@ sap.ui.define([
 							//take the very first available DOD and put it into the UI.
 							if (aRmsValues[0].DEATH_DATE) {
 								oController.getModel("viewModel").setProperty("/DEATH_DATE", aRmsValues[0].DEATH_DATE);
+								data.results[0].DEATH_DATE = aRmsValues[0].DEATH_DATE; //place here because formatter take the very first result
 							}
 
 						}
