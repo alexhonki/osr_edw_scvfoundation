@@ -226,11 +226,22 @@ sap.ui.define([
 						//set the data for for the entire view information. 
 						oController.getModel("viewModel").setData(data.results[0], true);
 
+						//check for RMS record for date of death. 
+						//in the event there is an RMS data 
+						let aRmsValues = data.results.filter((result) => result.SOURCE === "RMS");
+						if (aRmsValues.length > 0) {
+							//take the very first available DOD and put it into the UI.
+							if (aRmsValues[0].DEATH_DATE) {
+								oController.getModel("viewModel").setProperty("/DEATH_DATE", aRmsValues[0].DEATH_DATE);
+							}
+
+						}
+
 						let sApiUrl = oController.getOwnerComponent().getMetadata().getConfig("apiPoint");
 						let oPayload = {
 							scvId: oController.oPageParam.scvId
 						};
-						
+
 						//call BDM table after, to determine whether there's data there, if yes
 						//replace it with the BDM else stay as RMS
 						$.ajax(sApiUrl + "getPersonBdm", {
