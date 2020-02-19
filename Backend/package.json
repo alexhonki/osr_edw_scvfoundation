@@ -11,13 +11,13 @@
 		"body-parser": "1.17.2",
 		"express": "4.15.3",
 		"passport": "0.3.2",
-		"@sap/xsenv": "^1.2.6",
-		"@sap/dwf-dws-client": "2.2.16"
+		"@sap/xsenv": "2.2.0",
+		"@sap/dwf-dws-client": "2.4.3"
 	},
 	"scripts": {
 		"start": "node app.js"
 	}, 
 	"engines": {
-		"node": "6.x"
+		"node": "8.x"
 	}
 }

@@ -1,12 +1,13 @@
 {
 	"name": "osr.scvWeb-approuter",
-	"engines": {
-		"node": ">=6.0.0 <7.0.0"
-	},
+
 	"dependencies": {
-		"@sap/approuter": "5.0.0"
+		"@sap/approuter": "6.8.0"
 	},
 	"scripts": {
 		"start": "node node_modules/@sap/approuter/approuter.js"
+	},
+	"engines": {
+		"node": "8.x"
 	}
 }
