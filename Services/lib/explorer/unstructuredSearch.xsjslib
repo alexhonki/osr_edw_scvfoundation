@@ -91,31 +91,32 @@ function transformResults(oResultRows) {
 	for (let i = 0; i < oResultRows.length; i++) {
 
 		//pre-process the result and split base on "|"
-		let aSplitResult = oResultRows[i].SEARCH_STRING_CLEANSED.split("|");
+		let aSplitResult = oResultRows[i][1].split("|");
 
 		//if it does not exist add it into the result.
-		if (aIdChecker.indexOf(oResultRows[i].SCV_ID) === -1) {
+		if (aIdChecker.indexOf(oResultRows[i][0]) === -1) {
 
 			//push this SCV ID into the array for checking next.
-			aIdChecker.push(oResultRows[i].SCV_ID);
-
+			aIdChecker.push(oResultRows[i][0]);
+			oResultRows[i].oResult = {};
+			oResultRows[i].oResult.SCV_ID = oResultRows[i][0];
 			//determine to check whether it is 3 names or not.
 			//the entity contain a middle name or not. 
 			if (aSplitResult.length === 10) {
-				oResultRows[i].FIRST_NAME = aSplitResult[0];
-				oResultRows[i].LAST_NAME = aSplitResult[1];
-				oResultRows[i].CITY = aSplitResult[3];
-				oResultRows[i].DOB = this._reverseStringDOB(aSplitResult[2]);
-				oResultRows[i].POSTAL_CODE = aSplitResult[4];
+				oResultRows[i].oResult.FIRST_NAME = aSplitResult[0];
+				oResultRows[i].oResult.LAST_NAME = aSplitResult[1];
+				oResultRows[i].oResult.CITY = aSplitResult[3];
+				oResultRows[i].oResult.DOB = this._reverseStringDOB(aSplitResult[2]);
+				oResultRows[i].oResult.POSTAL_CODE = aSplitResult[4];
 			} else if (aSplitResult.length === 11) {
-				oResultRows[i].FIRST_NAME = aSplitResult[0] + " " + aSplitResult[1];
-				oResultRows[i].LAST_NAME = aSplitResult[2];
-				oResultRows[i].CITY = aSplitResult[4];
-				oResultRows[i].DOB = this._reverseStringDOB(aSplitResult[3]);
-				oResultRows[i].POSTAL_CODE = aSplitResult[5];
+				oResultRows[i].oResult.FIRST_NAME = aSplitResult[0] + " " + aSplitResult[1];
+				oResultRows[i].oResult.LAST_NAME = aSplitResult[2];
+				oResultRows[i].oResult.CITY = aSplitResult[4];
+				oResultRows[i].oResult.DOB = this._reverseStringDOB(aSplitResult[3]);
+				oResultRows[i].oResult.POSTAL_CODE = aSplitResult[5];
 			}
 
-			oFinalData.push(oResultRows[i]);
+			oFinalData.push(oResultRows[i].oResult);
 
 			//if this is done and its empty, remove the last inserted
 			// if (oResultRows[i].CITY === "" || oResultRows[i].POSTAL_CODE === "") {
@@ -125,18 +126,18 @@ function transformResults(oResultRows) {
 			// 	oFinalData.push(oResultRows[i]);
 			// }
 
-		} else if (aIdChecker.indexOf(oResultRows[i].SCV_ID) !== -1) { //an entity id already exist
+		} else if (aIdChecker.indexOf(oResultRows[i][0]) !== -1) { //an entity id already exist
 			//check that the entity id address oFinalData is not empty
 
 			if (aSplitResult.length === 10) {
 
-				this._checkAddressIsNotEmpty(oFinalData, aSplitResult.length, aSplitResult[3], aSplitResult[4], oResultRows[i].SCV_ID);
+				this._checkAddressIsNotEmpty(oFinalData, aSplitResult.length, aSplitResult[3], aSplitResult[4], oResultRows[i][0]);
 				// oResultRows[i].CITY = aSplitResult[3];
 				// oResultRows[i].POSTAL_CODE = aSplitResult[4];
 
 			} else if (aSplitResult.length === 11) {
 
-				this._checkAddressIsNotEmpty(oFinalData, aSplitResult.length, aSplitResult[4], aSplitResult[5], oResultRows[i].SCV_ID);
+				this._checkAddressIsNotEmpty(oFinalData, aSplitResult.length, aSplitResult[4], aSplitResult[5], oResultRows[i][0]);
 				// oResultRows[i].CITY = aSplitResult[4];
 				// oResultRows[i].POSTAL_CODE = aSplitResult[5];
 
