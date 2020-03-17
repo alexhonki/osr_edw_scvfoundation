@@ -26,21 +26,18 @@ module.exports = {
 				SOURCE_ID,
 				VALID_FROM,
 				VALID_TO,
-				PERSON_BDM_ID,
+				TO_VARCHAR(PERSON_BDM_ID) AS PERSON_BDM_ID,
 				LAST_NAME,
-				MIDDLE_NAME,
 				FIRST_NAME,
 				ALSO_KNOWN_AS,
 				BIRTH_DATE,
 				DEATH_DATE,
 				AGE_AT_DEATH,
-				CHECKSUM,
 				STD_PERSON_GN,
 				STD_PERSON_GN2,
 				STD_PERSON_FN,
-				STD_CHECKSUM,
-				SCV_LOAD_ID
-			FROM "osr.scv.foundation.db.data::SCVFoundation.PersonBdm" WHERE SCV_ID = '${sScvId}'`;
+				SCV_LOAD_ID 
+				FROM "osr.scv.foundation.db.data::SCVFoundation.PersonBdm" WHERE SCV_ID = '${sScvId}'`;
 
 			let client = oRequest.db;
 			let oController = this;
